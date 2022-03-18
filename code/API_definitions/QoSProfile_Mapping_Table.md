@@ -1,5 +1,5 @@
 # QoS Profiles Mapping Table (REFERENCE DRAFT)
-<br>
+
 | Profiles | User Info | 5Qi mapping |
 | -------- | --------- | ----------- |
 | LOW\_LATENCY | Latency stays stable under congestion (throughput upto 2Mbps) | 7 |
