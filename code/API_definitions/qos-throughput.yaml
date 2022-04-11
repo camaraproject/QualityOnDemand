@@ -146,7 +146,7 @@ paths:
           description: Successful notification
           content: {}
       security:
-        - apiKey: []
+        - oAuth2ClientCredentials: []
 components:
   schemas:
     SessionId:
