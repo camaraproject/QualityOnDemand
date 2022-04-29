@@ -13,8 +13,11 @@ The API offers the Application Developers and Users to request for pre-defined l
 * Ability to prioritise an Data Communication links (App-Flows) to ensure request latency within the single App-Flow of the Application,
 * Prioritise each App-Flow to ensure request latency of the Application,
 * Choosing between different QoS Profiles of Latency classes (e.g. Small ,Medium, Large) for the App-Flow.
-Once proper QoS Latency class is requested, Application users get a prioritised service even in the case of congestion.The API will be used by Application developers to integrate traffic policies which can be defined statically or dynamically by Usersto choose between Latency classes to get a service more tailored for their specific use case.
 
+<span style="color: var(--vscode-unotes-wysList); font-family: var(--vscode-editor-font-family); font-size: 1em; font-weight: var(--vscode-editor-font-weight);">Once proper QoS Latency class is requested, Application users get a prioritised service even in the case of congestion.
+The API will be used by Application developers to integrate traffic policies which can be defined statically or dynamically by Users to choose between Latency classes
+to get a service more tailored for their specific use case.</span>
+<br>
 ## 2\. Quick Start
 
 The usage of the stable bandwidth API is based on Telco QoS sessions (abstracted by the API), QoS Latency Classes and input parameters which define data communication links.

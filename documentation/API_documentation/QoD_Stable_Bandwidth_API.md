@@ -4,7 +4,7 @@ Telco QoS solution is element of modern 4G/5G Operator Networks deployments and 
 The QoS framework described by the 3GPP spec defines components such as PDU Session, App/QoS Flows, Packet Filters and many others [].
 
 The Quality-On-Demand (QoD) API for Stable Bandwidth abstracts those detailed internals of QoS Telco framework, and provides to Developers and other Users
-interface to manage Bandwidth provided by Telco networks without necessity to have in-depth knowledge of the 5G System complexity.
+interface to manage Bandwidth exposed by Telco networks without necessity to have in-depth knowledge of the 5G System complexity.
 
 ## 1. Introduction
 
@@ -94,7 +94,7 @@ Following QoS-Bandwidth spec is defined to enable API user (Developer) to reques
 
 Since CAMARA QoD API is based on REST design principles and blueprints, well defined community HTTP defined status
 codes and families are followed [[https://restfulapi.net/http-status-codes/](https://restfulapi.net/http-status-codes/)] .
-Details of HTTP based error/exception codes for the QoD API are described Section 5.2 of each API REST based method.
+Details of HTTP based error/exception codes for the QoD API are described Section 4.2 of each API REST based method.
 
 ### 4.4 Policies
 
