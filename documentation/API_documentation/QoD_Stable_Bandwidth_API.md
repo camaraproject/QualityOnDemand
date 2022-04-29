@@ -57,6 +57,7 @@ Following QoS-Bandwidth spec is defined to enable API user (Developer) to reques
 | THROUGHPUT\_M | Medium class of throughput profile - for example DL (Downlink) up-to 30Mbps |
 | THROUGHPUT\_L | Large class of throughput profile - for example DL (Downlink) up-to 100Mbps |
 <br>
+
 ### Endpoint-Definitions
 
 <span class="colour" style="color:rgb(23, 43, 77)">The example Base-URL RESTful Stable Bandwidth API endpoint is <span class="colour" style="color:rgb(53, 114, 176)">[[https://application-server.com/5g-throughput\](https://application-server.com/5g-throughput)](https://application-server.com/5g-throughput](https://application-server.com/5g-throughput)). </span></span>
@@ -68,6 +69,7 @@ Following QoS-Bandwidth spec is defined to enable API user (Developer) to reques
 | GET<br> \<base-url>/qos-senf/v1/sessions/{sessionId} | **Query for Bandwidth** | Querying for QoS "bandwidth" session information details |
 | DELETE<br> \<base-url>/qos-senf/v1/sessions/{sessionId} | **Delete Bandwidth  Session** | Deleting a QoS "bandwidth" session |
 <br>
+
 #### **QoD Create Bandwidth QoS Session Operation**
 <br>
 | **Create Bandwidth QoS Session** |
@@ -84,11 +86,13 @@ Following QoS-Bandwidth spec is defined to enable API user (Developer) to reques
 <br>
 #### QoD Delete Bandwidth QoS Session
 <br>
+
 | **Deleting QoS Bandwidth session** |
 | ------------------------------ |
 | **HTTP Request**<br>  DELETE\<base-url>/qos-senf/v1/sessions/{sessionId}<br>**Query Parameters**<br>  No query parameters are defined.<br>**Path Parameters**<br>  sessionId: Session ID that need to terminated.<br>**Request Body Parameters**<br>  No request body parameters are defined.<br><br>**Response**<br> **204:** Session deleted<br> **401:** Un-authorized, missing or incorrect authentication.<br> **404:** Session not found |
 <br>
 <br>
+
 ## **Errors**
 <br>
 Since CAMARA QoD API is based on REST design principles and blueprints, well defined community HTTP defined status
