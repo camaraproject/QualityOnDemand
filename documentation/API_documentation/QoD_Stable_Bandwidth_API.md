@@ -42,7 +42,7 @@ The *Application Developer* uses the stable Bandwidth *API*  to control t
 to Applications running on *User Equipment (UE)* mobile terminals\*.\*
 
 Following diagram shows the interaction of the different components.
-<img src="./resources/QoD_bandwidth_overview.png" alt="QoD_BM" title="QoD Bandwidth Management" width="650" height="400">
+<img src="./resources/QoD_bandwidth_overview.png" alt="QoD_BM" title="QoD Bandwidth Management" width="650" height="350">
 
 * Telco QoD Bandwidth API component which plays role of Telco Network Exposure to Application Developers and Users (UE terminals),
 * 5G System Infrastructure, which provides QoS architectural and technological solution used by the QoD Latency API.
