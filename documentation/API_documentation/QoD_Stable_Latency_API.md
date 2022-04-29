@@ -53,7 +53,7 @@ Following QoS-Latency spec is defined to enable API user (Developer) to request 
 <br>
 ### 4.2 Endpoint-Definitions
 
-<span class="colour" style="color:rgb(23, 43, 77)">The example Base-URL RESTful Stable Latency API endpoint is <span class="colour" style="color:rgb(53, 114, 176)">[[https://application-server.com/5g-throughput\](https://application-server.com/5g-throughput)](https://application-server.com/5g-latency%5D(https://application-server.com/5g-latency)). </span></span>
+<span class="colour" style="color:rgb(23, 43, 77)">The example Base-URL RESTful Stable Latency API endpoint is <span class="colour" style="color:rgb(53, 114, 176)">[[https://application-server.com/5g-latency\](https://application-server.com/5g-latency)](https://application-server.com/5g-latency%5D(https://application-server.com/5g-latency)). </span></span>
 <span class="colour" style="color:rgb(23, 43, 77)"><span class="colour" style="color:rgb(36, 41, 47)">Following table defines API endpoints of exposed REST based for QoD Latency management operations. </span></span>
 
 | **Endpoint** | **Operation** | **Description** |
