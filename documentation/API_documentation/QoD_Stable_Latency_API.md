@@ -83,6 +83,7 @@ Following is an example of QoS-Latency definition to enable API user (Developer)
 | ---------------------------- |
 | **HTTP Request**<br>  DELETE\<base-url>/qos-senf/v1/sessions/{sessionId}<br>**Query Parameters**<br>  No query parameters are defined.<br>**Path Parameters**<br>  sessionId: Session ID that need to terminated.<br>**Request Body Parameters**<br>  No request body parameters are defined.<br><br>**Response**<br> **204:** Session deleted<br> **401:** Un-authorized, missing or incorrect authentication.<br> **404:** Session not found |
 <br>
+
 ### 4.3 Errors
 
 Since CAMARA QoD API is based on REST design principles and blueprints, well defined community HTTP defined status
