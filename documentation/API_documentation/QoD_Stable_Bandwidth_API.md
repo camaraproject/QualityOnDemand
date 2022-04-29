@@ -42,10 +42,9 @@ The *Application Developer* uses the stable Bandwidth *API*  to control t
 to Applications running on *User Equipment (UE)* mobile terminals\*.\*
 
 Following diagram shows the interaction of the different components.
+* Telco QoD Bandwidth API component which is Telco Network Exposure Function to Application Developers and Users (UE terminals),
+* 5G System Infrastructure, which provides QoS architectural and technological solution used by the QoD Bandwidth API.
 <img src="./resources/QoD_bandwidth_overview.png" alt="QoD_BM" title="QoD Bandwidth Management" width="650" height="350">
-
-* Telco QoD Bandwidth API component which plays role of Telco Network Exposure to Application Developers and Users (UE terminals),
-* 5G System Infrastructure, which provides QoS architectural and technological solution used by the QoD Latency API.
 
 Details how CAMARA QoS Bandwidth profiles maps into Telco Operator QoS classes might differ but sample blueprint
 proposed by the CAMARA is agreed [].
