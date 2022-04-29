@@ -46,8 +46,10 @@ Following diagram shows the interaction of the different components.
 * Telco QoD Bandwidth API component which is Telco Network Exposure Function to Application Developers and Users (UE terminals),
 * 5G System Infrastructure, which provides QoS architectural and technological solution used by the QoD Bandwidth API.
 
-<img src="./resources/QoD_bandwidth_overview.png" alt="QoD_BM" title="QoD Bandwidth Management" width="650" height="350"> Details how CAMARA QoS Bandwidth profiles maps into Telco Operator QoS classes might differ but sample blueprint
-proposed by the CAMARA is agreed [].
+<img src="./resources/QoD_bandwidth_overview.png" alt="QoD_BM" title="QoD Bandwidth Management" width="650" height="350">
+
+Details how CAMARA QoS Bandwidth profiles maps into Telco Operator QoS classes might differ but sample blueprint
+proposed by the CAMARA is agreed [2].
 Following QoS-Bandwidth spec is defined to enable API user (Developer) to request QoS Bandwidth class profile.
 
 | **QoD Bandwidth Profile** | **Details** |
@@ -56,6 +58,7 @@ Following QoS-Bandwidth spec is defined to enable API user (Developer) to reques
 | *THROUGHPUT\_M* | Medium class of throughput profile - for example DL (Downlink) up-to 30Mbps |
 | *THROUGHPUT\_L* | Large class of throughput profile - for example DL (Downlink) up-to 100Mbps |
 <br>
+
 ### 4.2 Endpoint-Definitions
 
 <span class="colour" style="color:rgb(23, 43, 77)">The example Base-URL RESTful Stable Bandwidth API endpoint is <span class="colour" style="color:rgb(53, 114, 176)">[[https://application-server.com/5g-throughput\](https://application-server.com/5g-throughput)](https://application-server.com/5g-throughput%5D(https://application-server.com/5g-throughput)). </span></span>
@@ -67,6 +70,7 @@ Following QoS-Bandwidth spec is defined to enable API user (Developer) to reques
 | GET<br> \<base-url>/qos-senf/v1/sessions/{sessionId} | **Query for Bandwidth** | Querying for QoS "bandwidth" session information details |
 | DELETE<br> \<base-url>/qos-senf/v1/sessions/{sessionId} | **Delete Bandwidth Session** | Deleting a QoS "bandwidth" session |
 <br>
+
 #### QoD Create Bandwidth QoS Session Operation
 
 | **Create Bandwidth QoS Session** |
@@ -80,6 +84,7 @@ Following QoS-Bandwidth spec is defined to enable API user (Developer) to reques
 | **HTTP Request**<br> GET\<base-url>/qos-senf/v1/sessions/{sessionId}<br>**Query Parameters**<br> No query parameters are defined.<br>**Path Parameters**<br> sessionId: Session id that was obtained from the Create QoS Session operation.<br>**Request Body Parameters**<br> No request body parameters are defined.<br>**Response**<br><br> **200: Session information returned.**<br>  Response body:<br>   **duration:** Session duration in seconds.<br>   **ueAddr:** The ipv4 address of the user equipment.<br>   **asAddr:** The ipv4 address of the application server.<br>   **uePort (optional):** The requested port(s) on the user equipment.<br>   **asPort (optional):** The requested port(s) on the user equipment.<br>   **protocolIn:** The used transport protocol for the uplink.<br>   **protocolOut:** The used transport protocol for the downlink.<br>   **qos:** Qualifier of the requested throughput profile.<br>   **notificationUri (optional):** URI of the callback receiver.<br>   **notificationAuthToken (optional):** Authentication token for callback API.<br>   **id:** Session ID in UUID format.<br>   **startedAt:** Timestamp of session start in seconds since unix epoch.<br>   **expiresAt:** Timestamp of session expiration if the session was not deleted in seconds since unix epoch.<br><br> **401:** Un-authorised, missing or incorrect authentication.<br> **404:** Session not found.<br> **503:** Service temporarily unavailable. |
 <br>
 <br>
+
 #### QoD Delete Bandwidth QoS Session
 
 | **Deleting QoS Bandwidth session** |
@@ -93,25 +98,21 @@ codes and families are followed [[https://restfulapi.net/http-status-codes/](ht
 Details of HTTP based error/exception codes for the QoD API are described Section 4.2 of each API REST based method.
 
 ### 4.4 Policies
-
 N/A
 
 ### 4.5 Code Snippets
-
 N/A
 
 ### 4.6 FAQ's
-
 N/A
 
 ### 4.7 Terms
-
 N/A
 
 ### **4.8 Release Notes**
-
 N/A
 <br>
-## References
 
+## References
 [1] 3GPP TS 23.501; System architecture for the 5G System (5GS)
+[2] Camara QoS/QCI mapping table - [https://github.com/camaraproject/QualityOnDemand/blob/main/code/API\_definitions/QoSProfile\_Mapping\_Table.md](https://github.com/camaraproject/QualityOnDemand/blob/main/code/API_definitions/QoSProfile_Mapping_Table.md)
