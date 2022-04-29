@@ -91,6 +91,7 @@ Following QoS-Bandwidth spec is defined to enable API user (Developer) to reques
 | ------------------------------ |
 | **HTTP Request**<br>  DELETE\<base-url>/qos-senf/v1/sessions/{sessionId}<br>**Query Parameters**<br>  No query parameters are defined.<br>**Path Parameters**<br>  sessionId: Session ID that need to terminated.<br>**Request Body Parameters**<br>  No request body parameters are defined.<br><br>**Response**<br> **204:** Session deleted<br> **401:** Un-authorized, missing or incorrect authentication.<br> **404:** Session not found |
 <br>
+
 ### 4.3 Errors
 
 Since CAMARA QoD API is based on REST design principles and blueprints, well defined community HTTP defined status
@@ -114,5 +115,5 @@ N/A
 <br>
 
 ## References
-[1] 3GPP TS 23.501; System architecture for the 5G System (5GS)
+[1] 3GPP TS 23.501; System architecture for the 5G System (5GS) 
 [2] Camara QoS/QCI mapping table - [https://github.com/camaraproject/QualityOnDemand/blob/main/code/API\_definitions/QoSProfile\_Mapping\_Table.md](https://github.com/camaraproject/QualityOnDemand/blob/main/code/API_definitions/QoSProfile_Mapping_Table.md)
