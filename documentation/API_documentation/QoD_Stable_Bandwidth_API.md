@@ -1,7 +1,7 @@
 # Overview
 
 Telco QoS solution is element of modern 4G/5G Operator Networks deployments and based on well defined architectural framework.
-The QoS framework which is described by 3GPP spec elements and define components such as PDU Session, App/QoS Flows, Packet Filters and many others [].
+The QoS framework described by the 3GPP spec defines components such as PDU Session, App/QoS Flows, Packet Filters and many others [].
 
 The Quality-On-Demand (QoD) API for Stable Bandwidth abstracts those detailed internals of QoS Telco framework, and provides to Developers and other Users
 interface to manage Bandwidth provided by Telco networks without necessity to have in-depth knowledge of the 5G System complexity.
@@ -84,6 +84,7 @@ Following QoS-Bandwidth spec is defined to enable API user (Developer) to reques
 | **HTTP Request**<br> GET\<base-url>/qos-senf/v1/sessions/{sessionId}<br>**Query Parameters**<br> No query parameters are defined.<br>**Path Parameters**<br> sessionId: Session id that was obtained from the Create QoS Session operation.<br>**Request Body Parameters**<br> No request body parameters are defined.<br>**Response**<br><br> **200: Session information returned.**<br>  Response body:<br>   **duration:** Session duration in seconds.<br>   **ueAddr:** The ipv4 address of the user equipment.<br>   **asAddr:** The ipv4 address of the application server.<br>   **uePort (optional):** The requested port(s) on the user equipment.<br>   **asPort (optional):** The requested port(s) on the user equipment.<br>   **protocolIn:** The used transport protocol for the uplink.<br>   **protocolOut:** The used transport protocol for the downlink.<br>   **qos:** Qualifier of the requested throughput profile.<br>   **notificationUri (optional):** URI of the callback receiver.<br>   **notificationAuthToken (optional):** Authentication token for callback API.<br>   **id:** Session ID in UUID format.<br>   **startedAt:** Timestamp of session start in seconds since unix epoch.<br>   **expiresAt:** Timestamp of session expiration if the session was not deleted in seconds since unix epoch.<br><br> **401:** Un-authorised, missing or incorrect authentication.<br> **404:** Session not found.<br> **503:** Service temporarily unavailable. |
 <br>
 <br>
+
 #### QoD Delete Bandwidth QoS Session
 <br>
 
@@ -94,7 +95,7 @@ Following QoS-Bandwidth spec is defined to enable API user (Developer) to reques
 <br>
 
 ## **Errors**
-<br>
+
 Since CAMARA QoD API is based on REST design principles and blueprints, well defined community HTTP defined status
 codes and families are followed [[https://restfulapi.net/http-status-codes/](https://restfulapi.net/http-status-codes/)] .
 Details of HTTP based error/exception codes for the QoD API are described Section 5.2 of each API REST based method.
@@ -119,5 +120,4 @@ N/A
 
 N/A
 
-<br>
 <br>
