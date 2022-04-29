@@ -43,14 +43,16 @@ Following diagram shows the interaction of the different components.
 
 Following diagram shows the interaction of the different components.
 <img src="./resources/QoD_latency_overview.png" alt="QoD_LM" title="QoD Latency Management" width="650" height="350">
+
 Details how CAMARA QoS Latency profiles maps into Telco Operator QoS classes might differ but sample blueprint
 proposed by the CAMARA is agreed [].
-Following QoS-Latency spec is defined to enable API user (Developer) to request QoS Bandwidth class profile.
+Following is an example of QoS-Latency definition to enable API user (Developer) to request QoS Bandwidth class profile.
 
 | **QoD Latency Profile** | **Details** |
 | ------------------- | ------- |
 | LOW\_Latency | API developer is requesting Telco QoS Session for the specified data communication link<br>with stable "latency" under congestion (e.g. throughput up-to 2Mbps). |
 <br>
+
 ### 4.2 Endpoint-Definitions
 
 <span class="colour" style="color:rgb(23, 43, 77)">The example Base-URL RESTful Stable Latency API endpoint is <span class="colour" style="color:rgb(53, 114, 176)">[[https://application-server.com/5g-latency\](https://application-server.com/5g-latency)](https://application-server.com/5g-latency%5D(https://application-server.com/5g-latency)). </span></span>
