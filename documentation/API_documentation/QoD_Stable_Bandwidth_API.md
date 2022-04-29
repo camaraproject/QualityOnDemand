@@ -6,7 +6,7 @@ The QoS framework described by the 3GPP spec defines components such as PDU Sess
 The Quality-On-Demand (QoD) API for Stable Bandwidth abstracts those detailed internals of QoS Telco framework, and provides to Developers and other Users
 interface to manage Bandwidth provided by Telco networks without necessity to have in-depth knowledge of the 5G System complexity.
 
-## Introduction
+## 1. Introduction
 
 The API offers the Application Developers and Users to request for stable Bandwidth "class" for required transferred data size volumes between
 Application Clients and backend Services.
@@ -20,7 +20,7 @@ Once proper QoS Bandwidth class is requested, Application users get a prioritise
 The API will be used by Application developers to integrate traffic policies which can be defined statically or dynamically by Users
 to choose between Bandwidth classes to get a service more tailored for their specific use case.
 
-## Quick Start
+## 2. Quick Start
 
 The usage of the stable bandwidth API is based on Telco QoS sessions (abstracted by the API), QoS Bandwidth Classes and input parameters which define data communication links.
 Within the CAMARA QoD Bandwidth API, QoS session can be created, queried and deleted and appropriate QoS bandwidth classes specified to ensure requested "Bandwidth".
@@ -29,14 +29,14 @@ according to Operators specification and requirements, technology, internal poli
 
 The Stable Bandwidth API follows common design assumptions [] based on REST (resource predictable URL's, JSON-encoded responses, response codes, etc).
 
-## Authentication and Authorization
+## 3. Authentication and Authorization
 
 It can be assumed that Authentication and Authorization method might differ among final implementations and be specific to operator and vendor technology.
 For the purpose of the CAMARA, the authentication against the 5G latency API is done using the HTTP Header field key, and "Authorization" with the API key that will provided by the CAMARA Integrator.
 
-## API Documentation
+## 4. API Documentation
 
-### Details
+### 4.1 Details
 
 The *Application Developer* uses the stable Bandwidth *API*  to control the bandwidth of the 5G network App-Flows/QoS sessions provided
 to Applications running on *User Equipment (UE)* mobile terminals\*.\*
@@ -58,7 +58,7 @@ Following QoS-Bandwidth spec is defined to enable API user (Developer) to reques
 | THROUGHPUT\_L | Large class of throughput profile - for example DL (Downlink) up-to 100Mbps |
 <br>
 
-### Endpoint-Definitions
+### 4.2 Endpoint-Definitions
 
 <span class="colour" style="color:rgb(23, 43, 77)">The example Base-URL RESTful Stable Bandwidth API endpoint is <span class="colour" style="color:rgb(53, 114, 176)">[[https://application-server.com/5g-throughput\](https://application-server.com/5g-throughput)](https://application-server.com/5g-throughput](https://application-server.com/5g-throughput)). </span></span>
 <span class="colour" style="color:rgb(23, 43, 77)"><span class="colour" style="color:rgb(36, 41, 47)">Following table defines API endpoints of exposed REST based for QoD Bandwidth management operations. </span></span>
@@ -95,29 +95,29 @@ Following QoS-Bandwidth spec is defined to enable API user (Developer) to reques
 <br>
 <br>
 
-## **Errors**
+## 4.3 Errors
 
 Since CAMARA QoD API is based on REST design principles and blueprints, well defined community HTTP defined status
 codes and families are followed [[https://restfulapi.net/http-status-codes/](https://restfulapi.net/http-status-codes/)] .
 Details of HTTP based error/exception codes for the QoD API are described Section 5.2 of each API REST based method.
 
-## **Policies**
+## 4.4 Policies
 
 N/A
 
-## **Code Snippets**
+## 4.5 Code Snippets
 
 N/A
 
-## **FAQ's**
+## 4.6 FAQ's
 
 N/A
 
-## **Terms**
+## 4.7 Terms
 
 N/A
 
-## **Release Notes**
+## 4.8 Release Notes
 
 N/A
 
