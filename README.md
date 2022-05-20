@@ -14,4 +14,4 @@ Repository to describe, develop, document and test the QualityOnDemand API famil
 ## Meetings
 * Meetings are held virtually
 * Schedule: bi-weekly, Friday, 2 PM CEST
-* Meeting link: [Webex](https://dtag.webex.com/dtag/j.php?MTID=md22a2bbe2af203f5a468bd3401e0da37)
+* Meeting link: Announced in the Invitaion/Calendar (MS-Teams). 
