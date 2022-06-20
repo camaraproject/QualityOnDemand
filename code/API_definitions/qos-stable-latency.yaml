@@ -8,10 +8,13 @@ info:
   license:
     name: Apache 2.0
     url: https://www.apache.org/licenses/LICENSE-2.0.html
-  version: 1.2.0
+  version: 1.2.1
 externalDocs:
   description: Product documentation
   url: https://github.com/camaraproject/
+security:
+  - oAuth2ClientCredentials: []
+  - apiKey: []
 servers:
   - url: '{apiRoot}/{basePath}'
     variables:
@@ -19,8 +22,8 @@ servers:
         default: http://localhost:9091
         description: API root
       basePath:
-        default: qos-latency-senf/v1
-        description: base path for the qos latency API
+        default: qos-senf/v1
+        description: Base path for the QoS-SeNF API
 paths:
   /sessions:
     post:
@@ -47,11 +50,14 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/SessionInfo'
+        400:
+          description: Invalid input
+          content: {}
         401:
           description: Unauthorized
           content: {}
-        400:
-          description: Invalid input
+        403:
+          description: Forbidden
           content: {}
         409:
           description: Conflict
@@ -93,7 +99,10 @@ paths:
                 $ref: '#/components/schemas/SessionInfo'
         401:
           description: Unauthorized
-          content: { }
+          content: {}
+        403:
+          description: Forbidden
+          content: {}
         404:
           description: Session not found
           content: {}
@@ -121,10 +130,19 @@ paths:
           content: {}
         401:
           description: Unauthorized
-          content: { }
+          content: {}
+        403:
+          description: Forbidden
+          content: {}
         404:
           description: Session not found
           content: {}
+        503:
+          description: Service unavailable
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorInfo'
   /notifications:
     post:
       tags:
@@ -147,7 +165,20 @@ paths:
           content: {}
       security:
         - oAuth2ClientCredentials: []
+        - apiKey: []
 components:
+  securitySchemes:
+    oAuth2ClientCredentials:
+      type: oauth2
+      flows:
+        clientCredentials:
+          tokenUrl: '{tokenUrl}'
+          scopes: {}
+    apiKey:
+      type: apiKey
+      description: API key to authorize requests
+      name: apikey
+      in: query
   schemas:
     SessionId:
       type: string
@@ -276,14 +307,3 @@ components:
         message:
           type: string
           description: Detailed error description
-  securitySchemes:
-    oAuth2ClientCredentials:
-      type: oauth2
-      description: This API uses OAuth 2 with the client credentials grant flow.
-      flows:
-        clientCredentials:
-          tokenUrl: https://example.com/auth/realms/Sample/protocol/openid-connect/token
-          scopes:
-            { }
-security:
-  - oAuth2ClientCredentials: []
