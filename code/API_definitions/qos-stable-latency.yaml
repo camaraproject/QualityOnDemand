@@ -22,7 +22,7 @@ servers:
         default: http://localhost:9091
         description: API root
       basePath:
-        default: qos-senf/v1
+        default: qos-latency-senf/v1
         description: Base path for the QoS-SeNF API
 paths:
   /sessions:
