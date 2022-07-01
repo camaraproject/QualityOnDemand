@@ -14,7 +14,6 @@ externalDocs:
   url: https://github.com/camaraproject/
 security:
   - oAuth2ClientCredentials: []
-  - apiKey: []
 servers:
   - url: '{apiRoot}/{basePath}'
     variables:
@@ -165,7 +164,6 @@ paths:
           content: {}
       security:
         - oAuth2ClientCredentials: []
-        - apiKey: []
 components:
   securitySchemes:
     oAuth2ClientCredentials:
@@ -174,11 +172,6 @@ components:
         clientCredentials:
           tokenUrl: '{tokenUrl}'
           scopes: {}
-    apiKey:
-      type: apiKey
-      description: API key to authorize requests
-      name: apikey
-      in: query
   schemas:
     SessionId:
       type: string
