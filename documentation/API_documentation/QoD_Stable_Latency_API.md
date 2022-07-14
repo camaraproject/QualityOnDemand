@@ -7,6 +7,7 @@
 There are many real-world use cases which could exploit the potential of programmable networks. Several of these use case implementations are still work in progress or have not been operationalized as developers have no means to configure or request stable latency or bandwidth during congestion from a mobile network operator which is critical. Use cases from industrial (IoT), VR/Gaming, broadcasting, autonomous driving and many others fall in such a category since they demand network communication quality and are sensitive to any change in transmission conditions.
 
 The QoD latency API offers the application developers and users the capability to request for stable latency for a specified App-Flow(s) between application clients and backend services (Application Servers). The developer has a pre-defined set of QoS\_Profiles which he could choose from depending on his latency requirements.
+
 <img src="./resources/QoD_latency_overview.PNG" alt="QoD_LM" title="QoD Latency API Overview">
 
 ## 2\. Quick Start
@@ -57,6 +58,7 @@ Based on the API, QoS sessions can be created, queried, and deleted. Once a prop
 Following diagram shows the interaction between different components
 
 <br>
+
 <img src="./resources/QoD_latency_details.PNG" alt="QoD_LM" title="QoD Latency Management API">
 
 The below table shows sample QoS profiles and are subject to service provider customizations.
@@ -76,18 +78,21 @@ This sample is taken from the agreed sample (example) set from the Camara-projec
 | GET<br> \<base-url>/qos-senf/v1/sessions/{sessionId} | **Query for Latency** | Querying for QoS "latency" session information details |
 | DELETE<br> \<base-url>/qos-senf/v1/sessions/{sessionId} | **Delete Latency Session** | Deleting a QoS "latency" session |
 <br>
+
 #### QoD Create Latency QoS Session Operation
 
 | **Create Latency QoS Session** |
 | -------------------------- |
 | **HTTP Request**<br> POST \<base-url>/qos-senf/v1/sessions<br>**Query Parameters**<br> No query parameters are defined.<br>**Path Parameters**<br> No path parameters are defined.<br>**Request Body Parameters**<br> **duration (optional)**: Session duration in seconds. Maximal value of 24 hours is used if not set.<br> **ueAddr:** The IPv4 address of the user equipment. It can contain a single IP address or a range, using a mask.<br>  Format: \<address>[/\<mask>]<br>   - address : an IPv4 number in dotted-quad form 1.2.3.4. Only this exact IP number will match the flow control rule.<br>   - address/mask : an IP number as above with a mask width of the form 1.2.3.4/24.<br>    *In this case, all IP numbers from 1.2.3.0 to 1.2.3.255 will match. The bit width MUST be valid for the IP  version.*<br> **asAddr:** The IPv4 address of the application server. It can contain a single IP address or a range, using a mask.<br> <br> **uePort (optional):** A list of single ports or port ranges on the user equipment.<br>  Ports may be specified as <\{port\|port\-port\}\[\,ports\[\,\.\.\.\]\]\>\.<br>   The '-' notation specifies a range of ports (including boundaries).<br>   Example: '5010-5020,5021,5022'<br> **asPort (optional):** A list of single ports or port ranges on the application server.<br> **protocolIn:** The used transport protocol for the uplink.<br>  TCP - TCP protocol<br>  UDP - UDP protocol<br>  ANY - all protocols<br> **protocolOut :** The used transport protocol for the downlink.<br>  TCP - TCP protocol<br>  UDP - UDP protocol<br>  ANY - all protocols<br> **qos:** Qualifier for the requested latency profile.<br>  <span class="highlight" style="background-color:rgb(255, 255, 255)"><span class="colour" style="color:rgb(23, 43, 77)"><span class="font" style="font-family:-apple-system, &quot;system-ui&quot;, &quot;Segoe UI&quot;, Roboto, Oxygen, Ubuntu, &quot;Fira Sans&quot;, &quot;Droid Sans&quot;, &quot;Helvetica Neue&quot;, sans-serif"><span class="size" style="font-size:14px"></span></span></span></span>LOW\_LATENCY - to request the higher quality<br> **notificationUri (optional):** URI of the callback receiver. Allows asynchronous delivery of session related events .<br><span class="s1">&nbsp; Example: '[<span class="s2">https://application-server.com/notifications</span>](https://application-server.com/notifications)'</span><br> **notificationAuthToken (optional):** Authentification token for callback API.<br>  Example: 'c8974e592c2fa383d4a3960714'<br><br>**Response**<br> **201: Session created**<br>  Response body:<br>   **duration:** Session duration in seconds.<br>   **ueAddr:** The ipv4 address of the user equipment.<br>   **asAddr:** The ipv4 address of the application server.<br>   **uePort (optional):** The requested port(s) on the user equipment.<br>   **asPort (optional):** The requested port(s) on the user equipment.<br>   **protocolIn:** The used transport protocol for the uplink.<br>   **protocolOut:** The used transport protocol for the downlink.<br>   **qos:** Qualifier of the requested throughput profile.<br>   **notificationUri (optional):** URI of the callback receiver.<br>   **notificationAuthToken (optional):** Authentication token for callback API.<br>   **id:** Session ID in UUID format.<br>    Example: 123e4567-e89b-12d3-a456-426614174000<br>   **startedAt:** Timestamp of session start in seconds since unix epoch.<br>    Example: 1639479600<br>   **expiresAt**: Timestamp of session expiration if the session was not deleted in seconds since unix epoch.<br><br> **400:** **Invalid input.**<br> **401:** **Un-authorized, missing or incorrect authentication.**<br> **405:** **Invalid input**<br> **500:** **Session not created**<br> **503:** **Service temporarily unavailable** |
 <br>
+
 #### QoD Query for Latency QoS Session
 
 | **Quering QoS Session Latency information** |
 | --------------------------------------- |
 | **HTTP Request**<br> GET\<base-url>/qos-senf/v1/sessions/{sessionId}<br>**Query Parameters**<br> No query parameters are defined.<br>**Path Parameters**<br> sessionId: Session id that was obtained from the Create QoS Session operation.<br>**Request Body Parameters**<br> No request body parameters are defined.<br>**Response**<br><br> **200: Session information returned.**<br>  Response body:<br>   **duration:** Session duration in seconds.<br>   **ueAddr:** The ipv4 address of the user equipment.<br>   **asAddr:** The ipv4 address of the application server.<br>   **uePort (optional):** The requested port(s) on the user equipment.<br>   **asPort (optional):** The requested port(s) on the user equipment.<br>   **protocolIn:** The used transport protocol for the uplink.<br>   **protocolOut:** The used transport protocol for the downlink.<br>   **qos:** Qualifier of the requested Latency profile.<br>   **notificationUri (optional):** URI of the callback receiver.<br>   **notificationAuthToken (optional):** Authentication token for callback API.<br>   **id:** Session ID in UUID format.<br>   **startedAt:** Timestamp of session start in seconds since unix epoch.<br>   **expiresAt:** Timestamp of session expiration if the session was not deleted in seconds since unix epoch.<br><br> **401:** Un-authorised, missing or incorrect authentication.<br> **404:** Session not found.<br> **503:** Service temporarily unavailable. |
 <br>
+
 #### QoD Delete Latency QoS Session
 
 | **Deleting QoS Latency session** |
@@ -170,7 +175,10 @@ N/A
 
 ## References
 
-[1]: 3GPP TS 23.501 : System architecture for the 5G System (5GS); Stage 2 (Release 17), V17.4.0 (2022-03)
-\[2\]: Camara QoS/QCI mapping table \- [https://github.com/camaraproject/QualityOnDemand/blob/main/code/API\_definitions/QoSProfile\_Mapping\_Table.md](https://github.com/camaraproject/QualityOnDemand/blob/main/code/API_definitions/QoSProfile_Mapping_Table.md)
-\[3\]: Camara Commonalities : Authentication and Authorization Concept for Service APIs \- [https://github.com/camaraproject/WorkingGroups/blob/main/Commonalities/documentation/Working/CAMARA-AuthN-AuthZ-Concept.md](https://github.com/camaraproject/WorkingGroups/blob/main/Commonalities/documentation/Working/CAMARA-AuthN-AuthZ-Concept.md)
-\[4\]: HTTP Status codes spec\. \- [https://restfulapi.net/http-status-codes/](https://restfulapi.net/http-status-codes/)
+[1] 3GPP TS 23.501: System architecture for the 5G System (5GS); Stage 2 (Release 17), V17.4.0 (2022-03)
+
+[2] Camara QoS/QCI mapping table https://github.com/camaraproject/QualityOnDemand/blob/main/code/API_definitions/QoSProfile_Mapping_Table.md
+
+[3] Camara Commonalities : Authentication and Authorization Concept for Service APIs https://github.com/camaraproject/WorkingGroups/blob/main/Commonalities/documentation/Working/CAMARA-AuthN-AuthZ-Concept.md
+
+[4] HTTP Status codes spec https://restfulapi.net/http-status-codes/
