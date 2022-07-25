@@ -8,3 +8,4 @@
 | Telefonica | Jose A Ordonez Lucena |
 | TELUS | Ali Tizghadam |
 | Vodafone | Eric Murray |
+| Verizon/ 5GFF| Syed Rehman |
