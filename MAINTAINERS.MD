@@ -1,7 +1,6 @@
 | Org                    | Name                                                |
 | -----------------------| ----------------------------------------------------|
-| Deutsche Telekom AG | Marcin Jarcab |
-| Deutsche Telekom AG | Mariusz Sozanski |
+| Deutsche Telekom AG | Herbert Damker |
 | Ericsson | Emil Zhang |
 | Intel | Petar Torre |
 | KDDI | Toshi Wakayama |
