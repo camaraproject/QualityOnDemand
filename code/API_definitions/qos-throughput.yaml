@@ -19,7 +19,7 @@ servers:
         default: http://localhost:9091
         description: API root
       basePath:
-        default: qos-throughput-api/v0
+        default: qod-throughput-api/v0
         description: base path for the QoS throughput API
 paths:
   /sessions:
