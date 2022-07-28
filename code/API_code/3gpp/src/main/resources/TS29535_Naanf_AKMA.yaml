@@ -1,0 +1,139 @@
+openapi: 3.0.0
+info:
+  title: 3gpp-akma
+  version: 1.0.0-alpha.2
+  description: |
+    API for Naanf_AKMA.
+    © 2021, 3GPP Organizational Partners (ARIB, ATIS, CCSA, ETSI, TSDSI, TTA, TTC).
+    All rights reserved.
+externalDocs:
+  description: 3GPP TS 29.535 V17.1.0; 5G System; AKMA Anchor Services.
+  url: 'http://www.3gpp.org/ftp/Specs/archive/29_series/29.535/'
+security:
+  - {}
+  - oAuth2ClientCredentials: []
+servers:
+  - url: '{apiRoot}/naanf-akma/v1'
+    variables:
+      apiRoot:
+        default: https://example.com
+        description: apiRoot as defined in clause 4.4 of 3GPP TS 29.501.
+paths:
+  /register-anchorkey:
+    post:
+      summary: Store AKMA related key material.
+      operationId: RegisterAKMAKey
+      tags:
+        - Register the AKMA related key material
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AkmaKeyInfo'
+      responses:
+        '200':
+          description: The requested information was returned successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AkmaKeyInfo'
+        '307':
+          $ref: 'TS29571_CommonData.yaml#/components/responses/307'
+        '308':
+          $ref: 'TS29571_CommonData.yaml#/components/responses/308'
+        '400':
+          $ref: 'TS29571_CommonData.yaml#/components/responses/400'
+        '401':
+          $ref: 'TS29571_CommonData.yaml#/components/responses/401'
+        '403':
+          $ref: 'TS29571_CommonData.yaml#/components/responses/403'
+        '404':
+          $ref: 'TS29571_CommonData.yaml#/components/responses/404'
+        '411':
+          $ref: 'TS29571_CommonData.yaml#/components/responses/411'
+        '413':
+          $ref: 'TS29571_CommonData.yaml#/components/responses/413'
+        '415':
+          $ref: 'TS29571_CommonData.yaml#/components/responses/415'
+        '429':
+          $ref: 'TS29571_CommonData.yaml#/components/responses/429'
+        '500':
+          $ref: 'TS29571_CommonData.yaml#/components/responses/500'
+        '503':
+          $ref: 'TS29571_CommonData.yaml#/components/responses/503'
+        default:
+          $ref: 'TS29571_CommonData.yaml#/components/responses/default'
+  /retrieve-applicationkey:
+    post:
+      summary: Request to retrieve AKMA Application Key information.
+      operationId: GetAKMAAPPKeyMaterial
+      tags:
+        - Retrieve the AKMA Application key material (Collection)
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: 'TS29522_AKMA.yaml#/components/schemas/AkmaAfKeyRequest'
+      responses:
+        '200':
+          description: The requested information was returned successfully.
+          content:
+            application/json:
+              schema:
+                $ref: 'TS29522_AKMA.yaml#/components/schemas/AkmaAfKeyData'
+        '204':
+          description: No Content (The requested AKMA Application material does not exist.)
+        '307':
+          $ref: 'TS29571_CommonData.yaml#/components/responses/307'
+        '308':
+          $ref: 'TS29571_CommonData.yaml#/components/responses/308'
+        '400':
+          $ref: 'TS29571_CommonData.yaml#/components/responses/400'
+        '401':
+          $ref: 'TS29571_CommonData.yaml#/components/responses/401'
+        '403':
+          $ref: 'TS29571_CommonData.yaml#/components/responses/403'
+        '404':
+          $ref: 'TS29571_CommonData.yaml#/components/responses/404'
+        '411':
+          $ref: 'TS29571_CommonData.yaml#/components/responses/411'
+        '413':
+          $ref: 'TS29571_CommonData.yaml#/components/responses/413'
+        '415':
+          $ref: 'TS29571_CommonData.yaml#/components/responses/415'
+        '429':
+          $ref: 'TS29571_CommonData.yaml#/components/responses/429'
+        '500':
+          $ref: 'TS29571_CommonData.yaml#/components/responses/500'
+        '503':
+          $ref: 'TS29571_CommonData.yaml#/components/responses/503'
+        default:
+          $ref: 'TS29571_CommonData.yaml#/components/responses/default'
+components:
+  securitySchemes:
+    oAuth2ClientCredentials:
+      type: oauth2
+      flows:
+        clientCredentials:
+          tokenUrl: '{nrfApiRoot}/oauth2/token'
+          scopes:
+            naanf_akma: Access to the Naanf_AKMA API
+  schemas: 
+    AkmaKeyInfo:
+      description: Represents AKMA related key material.
+      type: object
+      properties:
+        suppFeat:
+          $ref: 'TS29571_CommonData.yaml#/components/schemas/SupportedFeatures'
+        supi:
+          $ref: 'TS29571_CommonData.yaml#/components/schemas/Supi'
+        aKId:
+          $ref: 'TS29522_AKMA.yaml#/components/schemas/AKId'
+        kAkma:
+          type: string
+      required:
+        - supi
+        - aKId
+        - kAkma

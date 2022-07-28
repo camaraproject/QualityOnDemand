@@ -1,0 +1,5 @@
+scef:
+  server:
+    apiroot: http://localhost:8081
+    scsasid: scs
+  debug: true
