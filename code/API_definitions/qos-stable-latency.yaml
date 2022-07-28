@@ -8,10 +8,12 @@ info:
   license:
     name: Apache 2.0
     url: https://www.apache.org/licenses/LICENSE-2.0.html
-  version: 1.2.0
+  version: 0.1.0
 externalDocs:
   description: Product documentation
   url: https://github.com/camaraproject/
+security:
+  - oAuth2ClientCredentials: []
 servers:
   - url: '{apiRoot}/{basePath}'
     variables:
@@ -19,7 +21,7 @@ servers:
         default: http://localhost:9091
         description: API root
       basePath:
-        default: qos-latency-senf/v1
+        default: qos-latency-api/v0
         description: base path for the qos latency API
 paths:
   /sessions:
@@ -47,12 +49,15 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/SessionInfo'
-        401:
-          description: Unauthorized
-          content: {}
         400:
           description: Invalid input
-          content: {}
+          content: { }
+        401:
+          description: Unauthorized
+          content: { }
+        403:
+          description: Forbidden
+          content: { }
         409:
           description: Conflict
           content:
@@ -71,6 +76,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorInfo'
+
   /sessions/{sessionId}:
     get:
       tags:
@@ -94,15 +100,19 @@ paths:
         401:
           description: Unauthorized
           content: { }
+        403:
+          description: Forbidden
+          content: { }
         404:
           description: Session not found
-          content: {}
+          content: { }
         503:
           description: Service unavailable
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorInfo'
+
     delete:
       tags:
         - QoS sessions
@@ -118,13 +128,23 @@ paths:
       responses:
         204:
           description: Session deleted
-          content: {}
+          content: { }
         401:
           description: Unauthorized
           content: { }
+        403:
+          description: Forbidden
+          content: { }
         404:
           description: Session not found
-          content: {}
+          content: { }
+        503:
+          description: Service unavailable
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorInfo'
+
   /notifications:
     post:
       tags:
@@ -148,6 +168,14 @@ paths:
       security:
         - oAuth2ClientCredentials: []
 components:
+  securitySchemes:
+    oAuth2ClientCredentials:
+      type: oauth2
+      description: This API uses OAuth 2 with the client credentials grant flow.
+      flows:
+        clientCredentials:
+          tokenUrl: '{tokenUrl}'
+          scopes: { }
   schemas:
     SessionId:
       type: string
@@ -276,14 +304,3 @@ components:
         message:
           type: string
           description: Detailed error description
-  securitySchemes:
-    oAuth2ClientCredentials:
-      type: oauth2
-      description: This API uses OAuth 2 with the client credentials grant flow.
-      flows:
-        clientCredentials:
-          tokenUrl: https://example.com/auth/realms/Sample/protocol/openid-connect/token
-          scopes:
-            { }
-security:
-  - oAuth2ClientCredentials: []
