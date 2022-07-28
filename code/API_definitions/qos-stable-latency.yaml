@@ -10,8 +10,8 @@ info:
     url: https://www.apache.org/licenses/LICENSE-2.0.html
   version: 0.1.0
 externalDocs:
-  description: Product documentation
-  url: https://github.com/camaraproject/
+  description: Product documentation at Camara
+  url: https://github.com/camaraproject/QualityOnDemand/tree/main/documentation/API_documentation
 security:
   - oAuth2ClientCredentials: []
 servers:
@@ -164,7 +164,7 @@ paths:
       responses:
         '204':
           description: Successful notification
-          content: {}
+          content: { }
       security:
         - oAuth2ClientCredentials: []
 components:
