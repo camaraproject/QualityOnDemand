@@ -21,7 +21,7 @@ servers:
         default: http://localhost:9091
         description: API root
       basePath:
-        default: qos-latency-api/v0
+        default: qod-latency-api/v0
         description: base path for the qos latency API
 paths:
   /sessions:
