@@ -56,7 +56,7 @@ can be understood as NEF/SCEF.
 | SCEF_SERVER_SUPPORTEDFEATURES    | A list of supported features used as described in subclause 5.8. (3GPP)                                                   |
 | SCEF_AUTH_OAUTH_TOKEN            | OAuth authentication token for calling SCEF endpoint                                                                      |
 | SCEF_NOTIFICATIONS_URL           | URL for delivering (POST) notifications from SCEF, it should include the path /3gpp-as-session-with-qos/v1/notifications  |
-| QOD_QOS_REFERENCES               | QoS reference for predefined specific AVP QoS parameter set                                                               |
+| QOD_QOS_REFERENCES               | QoS reference for predefined specific QoS parameter set                                                               |
 | SPRING_REDIS_HOST                | Redis server host                                                                                                         |
 | SPRING_REDIS_PORT                | Port where the Redis server is listening                                                                                  |
 | EXPIRATION_TIME-BEFORE-HANDLING  | How many seconds before expiration, should an ExpiredSessionTask be created                                               |
