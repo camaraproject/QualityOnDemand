@@ -47,7 +47,7 @@ In this method the API invoker client is registered as a confidential client wit
 
 ### 4.1 Details
 The usage of the QoD throughput API is based on QoS profile classes and parameters which define App-Flows.
-Based on the API, QoS sessions can be created, queried, and deleted. Once an offered QoS profile throughput class is requested, application users get a prioritized service with stable throughput even in the case of congestion.The QoD bandwidth API has the following characteristics:
+Based on the API, QoS sessions can be created, queried, and deleted.The QoD bandwidth API has the following characteristics:
 * A specified App-Flow is prioritized to ensure stable throughput for that flow
 * The prioritized App-Flow is described by providing additional information such as protocols, ports, uplink/downlink direction of flow etc. 
 * Stable bandwidth is requested by selecting from the list of QoS profiles made available by the service provider (e.g. Small ,Medium, Large) to map throughput requirements
