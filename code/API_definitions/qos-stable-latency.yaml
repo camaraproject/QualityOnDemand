@@ -191,16 +191,12 @@ components:
           maximum: 86400
         ueAddr:
           $ref: '#/components/schemas/Ipv4Addr'
-        asAddr:
-          $ref: '#/components/schemas/Ipv4Addr'
-        uePorts:
-          $ref: '#/components/schemas/PortsSpec'
-        asPorts:
-          $ref: '#/components/schemas/PortsSpec'
-        protocolIn:
-          $ref: '#/components/schemas/Protocol'
-        protocolOut:
-          $ref: '#/components/schemas/Protocol'
+        flowDescriptions:
+            type: array
+            items:
+              $ref: '#/components/schemas/IpFlowDescription'
+            minItems: 1
+            maxItems: 2
         qos:
           $ref: '#/components/schemas/QosProfile'
         notificationUri:
@@ -214,10 +210,36 @@ components:
           description: Authentification token for callback API
       required:
         - ueAddr
-        - asAddr
-        - protocolIn
-        - protocolOut
-        - qos
+        - flowDescriptions
+        - qos 
+    IpFlowDescription:
+      type: object
+      required:
+        - direction
+        - protocol
+        - ueAddr
+        - uePorts
+        - remoteAddr
+        - remotePorts        
+      properties:
+        direction:
+          $ref: '#/components/schemas/Direction'
+        protocol:
+          $ref: '#/components/schemas/Protocol'
+        ueAddr:
+          $ref: '#/components/schemas/Ipv4Addr'
+        uePorts:
+          $ref: '#/components/schemas/PortsSpec'
+        remoteAddr:
+          $ref: '#/components/schemas/Ipv4Addr'
+        remotePorts: 
+          $ref: '#/components/schemas/PortsSpec'
+    Direction: 
+      type: string
+      enum:
+        - DOWNLINK
+        - UPLINK
+        - BIDIRECTION
     Ipv4Addr:
       type: string
       format: ipv4
