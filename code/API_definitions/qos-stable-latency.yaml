@@ -237,8 +237,8 @@ components:
     Direction: 
       type: string
       enum:
-        - DOWNLINK
-        - UPLINK
+        - TO_UE
+        - FROM_UE
         - BIDIRECTION
     Ipv4Addr:
       type: string
