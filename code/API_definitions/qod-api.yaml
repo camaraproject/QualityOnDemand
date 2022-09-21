@@ -1,0 +1,467 @@
+openapi: 3.0.3
+info:
+  title: QoD for enhanced communication
+  description: Service Enabling Network Function API for QoS control
+  termsOfService: http://swagger.io/terms/
+  contact:
+    email: project-email@sample.com
+  license:
+    name: Apache 2.0
+    url: https://www.apache.org/licenses/LICENSE-2.0.html
+  version: 0.8.0
+externalDocs:
+  description: Product documentation at Camara
+  url: https://github.com/camaraproject/
+security:
+  - oAuth2ClientCredentials: []
+servers:
+  - url: "{apiRoot}/{basePath}"
+    variables:
+      apiRoot:
+        default: http://localhost:9091
+        description: API root
+      basePath:
+        default: qod/v0
+        description: Base path for the QoD API
+paths:
+  /sessions:
+    post:
+      tags:
+        - QoS sessions
+      summary: Creates a new session
+      description: Creates a new QoS session on demand
+      operationId: createSession
+      requestBody:
+        description: Creates a new session
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateSession"
+        required: true
+      callbacks:
+        notifications:
+          "{$request.body#/notificationUrl}/notifications":
+            $ref: "#/paths/~1notifications"
+      responses:
+        "201":
+          description: Session created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SessionInfo"
+        "400":
+          description: Invalid input
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorInfo"
+              examples:
+                Generic400:
+                  summary: Schema validation failed
+                  value: 
+                    code: INVALID_INPUT
+                    message: "Schema validation failed at  ..."
+                MsisdnRequired:
+                  summary: msisdn is required as part of ueId
+                  value: 
+                    code: INVALID_INPUT
+                    message: "Expected property is missing: ueId.msisdn"
+                IPv4Required:
+                  summary: ipv4addr is required as part of ueId
+                  value: 
+                    code: INVALID_INPUT
+                    message: "Expected property is missing: ueId.ipv4addr"
+                IPRequired:
+                  summary: Some IP address is required as part of ueId
+                  value: 
+                    code: INVALID_INPUT
+                    message: "Expected property is missing: ueId.ipv4addr or ueId.ipv6addr"
+                UePortsRequired:
+                  summary: uePorts is required
+                  value: 
+                    code: INVALID_INPUT
+                    message: "Expected property is missing: uePorts"
+                QoSRequired:
+                  summary: qos is required
+                  value: 
+                    code: INVALID_INPUT
+                    message: "Expected property is missing: qos"
+                UePortsRangesNotAllowed:
+                  summary: Ranges at uePorts are not allowed
+                  value: 
+                    code: INVALID_INPUT
+                    message: "Ranges not allowed: uePorts"
+        "401":
+          $ref: "#/components/responses/Generic401"
+        "403":
+          $ref: "#/components/responses/Generic403"
+        "409":
+          description: Conflict
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorInfo"
+              example:
+                code: CONFLICT
+                message: "Another session is created for the same UE"
+        "500":
+          description: Server error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorInfo"
+              example:
+                code: INTERNAL
+                message: "Session could not be created"
+        "503":
+          $ref: "#/components/responses/Generic503"
+  /sessions/{sessionId}:
+    get:
+      tags:
+        - QoS sessions
+      summary: "Get session information"
+      operationId: getSession
+      parameters:
+        - name: sessionId
+          in: path
+          description: Session ID that was obtained from the createSession operation
+          required: true
+          schema:
+            $ref: "#/components/schemas/SessionId"
+      responses:
+        "200":
+          description: Contains information about active session
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SessionInfo"
+        "401":
+          $ref: "#/components/responses/Generic401"
+        "403":
+          $ref: "#/components/responses/Generic403"
+        "404":
+          $ref: "#/components/responses/SessionNotFound404"
+        "503":
+          $ref: "#/components/responses/Generic503"
+    delete:
+      tags:
+        - QoS sessions
+      summary: "Free resources related to QoS session"
+      operationId: deleteSession
+      parameters:
+        - name: sessionId
+          in: path
+          description: Session ID that was obtained from the createSession operation
+          required: true
+          schema:
+            $ref: "#/components/schemas/SessionId"
+      responses:
+        "204":
+          description: Session deleted
+        "401":
+          $ref: "#/components/responses/Generic401"
+        "403":
+          $ref: "#/components/responses/Generic403"
+        "404":
+          $ref: "#/components/responses/SessionNotFound404"
+        "503":
+          $ref: "#/components/responses/Generic503"
+  /notifications:
+    post:
+      tags:
+        - Session notifications callback
+      summary: "Session notifications callback"
+      description: |
+        Important: this endpoint is to be implemented by the API consumer.
+        The QoD server will call this endpoint whenever any network related event occurs.
+        Currently only SESSION_TERMINATED event is implemented. Any other network events are ignored.
+      operationId: postNotification
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Notification"
+      responses:
+        "204":
+          description: Successful notification
+        "400":
+          $ref: "#/components/responses/Generic400"
+        "401":
+          $ref: "#/components/responses/Generic401"
+        "403":
+          $ref: "#/components/responses/Generic403"
+        "503":
+          $ref: "#/components/responses/Generic503"
+      security:
+        - apiKey: []
+components:
+  securitySchemes:
+    oAuth2ClientCredentials:
+      type: oauth2
+      description: This API uses OAuth 2 with the client credentials grant flow.
+      flows:
+        clientCredentials:
+          tokenUrl: "{tokenUrl}"
+          scopes: {}
+    apiKey:
+      type: apiKey
+      description: API key to authorize requests
+      name: apikey
+      in: query
+  schemas:
+    SessionId:
+      type: string
+      format: uuid
+      description: Session ID in UUID format
+    SessionInfo:
+      description: Session related information.
+      allOf:
+        - $ref: "#/components/schemas/CreateSession"
+        - type: object
+          required:
+            - id
+            - duration
+            - startedAt
+            - expiresAt
+          properties:
+            id:
+              $ref: "#/components/schemas/SessionId"
+            startedAt:
+              type: integer
+              example: 1639479600
+              description: Timestamp of session start in seconds since unix epoch
+              format: int64
+            expiresAt:
+              type: integer
+              example: 1639566000
+              description: Timestamp of session expiration if the session was not deleted, in seconds since unix epoch
+              format: int64
+            messages:
+              type: array
+              items:
+                $ref: "#/components/schemas/Message"
+    CreateSession:
+      description: Data type with attributes required for creating a session
+      type: object
+      properties:
+        duration:
+          type: integer
+          example: 86400
+          description: |
+            Session duration in seconds. Maximal value of 24 hours is used if not set.
+            After session has expired the client will receive SESSION_TERMINATED event. See notification callback.
+          format: int32
+          minimum: 1
+          maximum: 86400
+          default: 86400
+        ueId:
+          $ref: "#/components/schemas/UeId"
+        asId:
+          $ref: "#/components/schemas/AsId"
+        uePorts:
+          $ref: "#/components/schemas/PortsSpec"
+        asPorts:
+          $ref: "#/components/schemas/PortsSpec"
+        qos:
+          $ref: "#/components/schemas/QosProfile"
+        notificationUri:
+          type: string
+          format: uri
+          example: "https://application-server.com/notifications"
+          description: Allows asynchronous delivery of session related events
+        notificationAuthToken:
+          type: string
+          example: "c8974e592c2fa383d4a3960714"
+          description: Authentification token for callback API
+      required:
+        - ueId
+        - asId
+        - qos
+    Port:
+      type: integer
+      minimum: 0
+      maximum: 65535
+    PortsSpec:
+      type: object
+      minProperties: 1
+      properties:
+        ranges:
+          type: array
+          minItems: 1
+          items:
+            type: object
+            required:
+              - from
+              - to
+            properties:
+              from:
+                $ref: "#/components/schemas/Port"
+              to:
+                $ref: "#/components/schemas/Port"
+        ports:
+          type: array
+          minItems: 1
+          items:
+            $ref: "#/components/schemas/Port"
+      example:
+        ranges:
+          - from: 5010
+            to: 5020
+        ports:
+          - 5060
+          - 5070
+      description: |
+        Ports may be specified as a list of ranges or single ports.
+    QosProfile:
+      type: string
+      enum:
+        - QOS_E
+        - QOS_S
+        - QOS_M
+        - QOS_L
+      description: |
+        * `QOS_E` - Qualifier for enhanced communication profile
+        * `QOS_S` - Qualifier for the requested QoS profile _S_
+        * `QOS_M` - Qualifier for the requested QoS profile _M_
+        * `QOS_L` - Qualifier for the requested QoS profile _L_
+    Notification:
+      type: object
+      required:
+        - sessionId
+        - event
+      properties:
+        sessionId:
+          $ref: "#/components/schemas/SessionId"
+        event:
+          $ref: "#/components/schemas/SessionEvent"
+    SessionEvent:
+      type: string
+      enum:
+        - SESSION_TERMINATED
+    ErrorInfo:
+      type: object
+      required:
+        - code
+        - message
+      properties:
+        code:
+          type: string
+          description: Code given to this error
+        message:
+          type: string
+          description: Detailed error description
+    UeId:
+      type: object
+      minProperties: 1
+      properties:
+        externalId:
+          $ref: "#/components/schemas/ExternalId"
+        msisdn:
+          $ref: "#/components/schemas/MSISDN"
+        ipv4addr:
+          $ref: "#/components/schemas/Ipv4Addr"
+        ipv6addr:
+          $ref: "#/components/schemas/Ipv6Addr"
+      description: User equipment identifier
+    AsId:
+      type: object
+      minProperties: 1
+      properties:
+        ipv4addr:
+          $ref: "#/components/schemas/Ipv4Addr"
+        ipv6addr:
+          $ref: "#/components/schemas/Ipv6Addr"
+      description: Application server identifier
+    ExternalId:
+      type: string
+      example: "123456789@domain.com"
+    MSISDN:
+      type: string
+      pattern: '^\+?[0-9]{5,15}$'
+      example: "123456789"
+      description: Subscriber number in E.164 format (starting with country code). Optionally prefixed with '+'.
+    Ipv4Addr:
+      type: string
+      format: ipv4
+      pattern: '^([01]?\d\d?|2[0-4]\d|25[0-5])(?:\.(?:[01]?\d\d?|2[0-4]\d|25[0-5])){3}(\/([0-9]|[1-2][0-9]|3[0-2]))?$'
+      example: "192.168.0.1/24"
+      description: |
+        IPv4 address may be specified in form <address/mask> as:
+          - address - an IPv4 number in dotted-quad form 1.2.3.4. Only this exact IP number will match the flow control rule.
+          - address/mask - an IP number as above with a mask width of the form 1.2.3.4/24.
+            In this case, all IP numbers from 1.2.3.0 to 1.2.3.255 will match. The bit width MUST be valid for the IP version.
+    Ipv6Addr:
+      type: string
+      format: ipv6
+      allOf:
+        - pattern: '^((:|(0?|([1-9a-f][0-9a-f]{0,3}))):)((0?|([1-9a-f][0-9a-f]{0,3})):){0,6}(:|(0?|([1-9a-f][0-9a-f]{0,3})))(\/(([0-9])|([0-9]{2})|(1[0-1][0-9])|(12[0-8])))?$'
+        - pattern: '^((([^:]+:){7}([^:]+))|((([^:]+:)*[^:]+)?::(([^:]+:)*[^:]+)?))(\/.+)?$'
+      example: "2001:db8:85a3:8d3:1319:8a2e:370:7344"
+      description: |
+        IPv6 address, following IETF 5952 format, may be specified in form <address/mask> as:
+          - address - The /128 subnet is optional for single addresses:
+            - 2001:db8:85a3:8d3:1319:8a2e:370:7344
+            - 2001:db8:85a3:8d3:1319:8a2e:370:7344/128
+          - address/mask - an IP v6 number with a mask:
+            - 2001:db8:85a3:8d3::0/64
+            - 2001:db8:85a3:8d3::/64
+    Message:
+      type: object
+      properties:
+        severity:
+          type: string
+          enum: ["INFO", "WARNING"]
+          description: Message severity
+        description:
+          type: string
+          description: Detailed message text
+      required:
+        - severity
+        - description
+  responses:
+    Generic400:
+      description: Invalid input
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ErrorInfo"
+          example:
+            code: INVALID_INPUT
+            message: "Schema validation failed at  ..."
+    Generic401:
+      description: Unauthorized
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ErrorInfo"
+          example:
+            code: UNAUTHORIZED
+            message: "Authorization failed: ..."
+    Generic403:
+      description: Forbidden
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ErrorInfo"
+          example:
+            code: FORBIDDEN
+            message: "Operation not allowed: ..."
+    SessionNotFound404:
+      description: Session not found
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ErrorInfo"
+          example:
+            code: NOT_FOUND
+            message: "Session Id does not exist"
+    Generic503:
+      description: Service unavailable
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ErrorInfo"
+          example:
+            code: SERVICE_UNAVALIBLE
+            message: "Service unavailable"
