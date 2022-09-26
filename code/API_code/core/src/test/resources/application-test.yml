@@ -1,0 +1,20 @@
+scef:
+  server:
+    apiroot: http://localhost:9000
+    scsasid: scs
+    flowid:
+      throughput-l: -1
+  debug: true
+
+# QoD specific configuration
+qod:
+  expiration: # settings for session expiration handling (in seconds)
+    time-before-handling: 20
+    trigger-interval: 1
+    lock-time: 2
+
+# Redis
+spring:
+  redis:
+    host: localhost
+    port: 6370

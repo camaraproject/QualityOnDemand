@@ -1,0 +1,18 @@
+# Server
+server:
+  port: 9091
+
+# Client
+senf:
+  rest:
+    baseurl: https://3gppserver.unknown/v1
+
+# Health
+management:
+  server:
+    port: 9092
+  health:
+    probes:
+      enabled: true
+  info:
+    enabled: true

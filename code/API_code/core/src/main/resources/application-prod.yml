@@ -1,0 +1,24 @@
+# Server
+server:
+  port: 9091
+
+# Client
+senf:
+  rest:
+    baseurl: https://3gppserver.unknown/v1
+
+# Logging
+logging:
+  file:
+    path: /tmp/qod-api-service-logs
+  config: classpath:logback-spring.xml
+
+# Health
+management:
+  server:
+    port: 9092
+  health:
+    probes:
+      enabled: true
+  info:
+    enabled: true

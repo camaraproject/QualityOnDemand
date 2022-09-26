@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+    <!-- Log Appender -->
+    <!-- replace function is needed to prevent CRLF injection (https://find-sec-bugs.github.io/bugs.htm#CRLF_INJECTION_LOGS) -->
+    <appender name="ConsoleAppender" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>
+                %d{dd-MM-yyyy HH:mm:ss.SSS} [%thread] %-5level %logger{36}.%M - %replace(%msg){'[\r\n]', ''}%n
+            </pattern>
+        </encoder>
+    </appender>
+
+    <!-- Spring profile based logging -->
+    <springProfile name="local">
+        <root level="INFO">
+            <appender-ref ref="ConsoleAppender"/>
+        </root>
+        <logger name="com.camara" additivity="false" level="DEBUG">
+            <appender-ref ref="ConsoleAppender"/>
+        </logger>
+        <logger name="org.springframework" level="DEBUG"/>
+    </springProfile>
+
+    <springProfile name="dev">
+        <root level="INFO">
+            <appender-ref ref="ConsoleAppender"/>
+        </root>
+        <logger name="com.camara" additivity="false" level="DEBUG">
+            <appender-ref ref="ConsoleAppender"/>
+        </logger>
+        <logger name="org.springframework" level="INFO"/>
+    </springProfile>
+
+    <springProfile name="prod">
+        <root level="INFO">
+            <appender-ref ref="ConsoleAppender"/>
+        </root>
+        <logger name="com.camara" additivity="false" level="INFO">
+            <appender-ref ref="ConsoleAppender"/>
+        </logger>
+        <logger name="org.springframework" level="INFO"/>
+    </springProfile>
+
+    <springProfile name="test">
+        <root level="ERROR">
+            <appender-ref ref="ConsoleAppender"/>
+        </root>
+        <logger name="com.camara" additivity="false" level="INFO">
+            <appender-ref ref="ConsoleAppender"/>
+        </logger>
+        <logger name="org.springframework" level="ERROR">
+            <appender-ref ref="ConsoleAppender"/>
+        </logger>
+    </springProfile>
+</configuration>

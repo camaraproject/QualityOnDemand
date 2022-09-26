@@ -1,0 +1,66 @@
+# Server
+server:
+  port: 9091
+
+# Client
+#senf:
+#  rest:
+#    baseurl: https://3gppserver.unknown/v1
+
+# T8 reference point, SCEF EP, see http://www.3gpp.org/ftp/Specs/archive/29_series/29.122/
+scef:
+  server:
+    apiroot: https://example.com
+    scsasid: scs
+    flowid:
+      low-latency: 3
+      throughput-s: 4
+      throughput-m: 5
+      throughput-l: 6
+    supportedFeatures: 003C
+  notifications:
+    url: http://127.0.0.1/notifications
+  auth:
+    type: basic
+    username: foo
+    password: secret
+    oauth:
+      token: <auth token>
+  debug: false
+
+# QoD specific configuration
+qod:
+  qos:
+    references:
+      low-latency: qod_1
+      throughput-s: qod_2
+      throughput-m: qod_3
+      throughput-l: qod_4
+  expiration: # settings for session expiration handling (in seconds)
+    time-before-handling: 20
+    trigger-interval: 10
+    lock-time: 2
+  mask-sensible-data: true # if set to true, sensible data is masked in response body
+  allow-multiple-ueaddr: true # if set to true, network segments are allowed for ueAddr
+# Logging
+logging:
+  file:
+    path: /tmp/qod-api-service-logs
+  config: classpath:logback-spring.xml
+
+# Health
+management:
+  server:
+    port: 9092
+  health:
+    probes:
+      enabled: true
+      show-details: always
+  info:
+    enabled: true
+
+# Redis
+spring:
+  redis:
+    host: localhost
+    port: 6379
