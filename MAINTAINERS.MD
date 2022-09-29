@@ -7,3 +7,4 @@
 | Telefonica | Jose A Ordonez Lucena |
 | Vodafone | Eric Murray |
 | Verizon/ 5GFF| Syed Rehman |
+| KDDI | Toshi (Toshiyasu) Wakayama |
