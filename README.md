@@ -24,3 +24,6 @@ Repository to describe, develop, document and test the QualityOnDemand API famil
 * Meeting link: Announced in the Invitation/Calendar (MS-Teams). 
 https://teams.microsoft.com/l/meetup-join/19%3ameeting_MjQwOTdhMGMtMDQ1OC00M2JmLWFiMzgtMmE3NzE1YWUzOGQ0%40thread.v2/0?context=%7b%22Tid%22%3a%22bde4dffc-4b60-4cf6-8b04-a5eeb25f5c4f%22%2c%22Oid%22%3a%22b5b45062-3d14-4a71-98a7-9d4be96a208f%22%7d
 
+## Contributorship and mailing list
+* To subscribe / unsubscribe to the mailing list of this Sub Project and thus be / resign as Contributor please visit <https://lists.camaraproject.org/g/sp-qod>.
+* A message to all Contributors of this Sub Project can be sent using <sp-qod@lists.camaraproject.org>.
