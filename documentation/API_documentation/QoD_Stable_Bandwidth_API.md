@@ -31,7 +31,7 @@ Define throughput requirements of the application and identify QoS profile class
 Describes the precise flow the developer wants to prioritize and have stable bandwidth for. This flow is described using source and destination IP addresses, ports and protocols with flow direction.
 
 **Duration**
-Define the number of seconds for which the QoD session should be created. This parameter is optional and if not specified, the session is either deleted on user request or if default expiration limit has been reached (24 hours in reference implmentation).
+Define the number of seconds for which the QoD session should be created. This parameter is optional and if not specified, the session is either deleted on user request or if default expiration limit has been reached (24 hours in reference implementation).
 
 **Notification URL and token**
 Developers have a chance to specify callback URL on which notifications (eg. session termination) regarding the session can be received from the service provider. This is also an optional parameter.
