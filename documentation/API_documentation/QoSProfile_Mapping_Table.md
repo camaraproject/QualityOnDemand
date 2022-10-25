@@ -6,14 +6,13 @@ Example 1;
 
 | QOS Profiles labels | Network Service Description | Network Service Constraints |
 |----------| --------- | ----------- |
-| QOS\_E   | Latency stays stable under congestion (throughput upto 2Mbps). The application bitrate should not exceed 2Mbps. | The service is only provided, when the UE is located within the preparedgeographical area, as defined agreed in the Service Level Agreement. 
-The access to the network service is restricted to a maximal number of simultaneous session. |
+| QOS\_E   | Latency stays stable under congestion (throughput upto 2Mbps). The application bitrate should not exceed 2Mbps. | The service is only provided, when the UE is located within the preparedgeographical area, as defined agreed in the Service Level Agreement. The access to the network service is restricted to a maximal number of simultaneous session. |
 | QOS\_L   | DL upto 100Mbps (unlimited?). The 5G System throughput is assured prioritized up to 100Mbps. When there is a At high load, the throughput is capped at 100Mbps and can be degraded to lower effective throughput (without a minimum level).  | The service is only provided, when the UE is located within the home network. |
 | QOS\_M   |DL upto 30Mbps. The 5G System throughput is assuredprioritized up to 30Mbps. When there is a At high load, the throughput is capped at 30Mbps and can be degraded to lower effective throughput (without a minimum level). | The service is only provided, when the UE is located within the home network. |
 | QOS\_S   | DL upto 10Mbps. The 5G System throughput is assuredprioritized up to 10Mbps. When there is aAt high load, the throughput is capped at 10Mbps and can be degraded to lower effective throughput (without a minimum level). | The service is only provided, when the UE is located within the home network. |
 
 **Note:**
-This table is only an example that can be used within Camara for validating the QoD APIs
+This table QOS profile labels is only an example that can be used within Camara for validating the QoD APIs
 
 | QOS Profiles labels | Network Service Description | Network Service Constraints |
 |----------| --------- | ----------- |
