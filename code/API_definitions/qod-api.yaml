@@ -8,7 +8,7 @@ info:
   license:
     name: Apache 2.0
     url: https://www.apache.org/licenses/LICENSE-2.0.html
-  version: 0.8.0
+  version: 0.9.0
 externalDocs:
   description: Product documentation at Camara
   url: https://github.com/camaraproject/
@@ -224,6 +224,7 @@ components:
             - duration
             - startedAt
             - expiresAt
+            - qosStatus
           properties:
             id:
               $ref: "#/components/schemas/SessionId"
@@ -237,6 +238,8 @@ components:
               example: 1639566000
               description: Timestamp of session expiration if the session was not deleted, in seconds since unix epoch
               format: int64
+            qosStatus:
+              $ref: "#/components/schemas/QosStatus"
             messages:
               type: array
               items:
@@ -329,16 +332,24 @@ components:
       type: object
       required:
         - sessionId
-        - event
+        - eventReport
       properties:
         sessionId:
           $ref: "#/components/schemas/SessionId"
-        event:
+        eventReport:
           $ref: "#/components/schemas/SessionEvent"
     SessionEvent:
-      type: string
-      enum:
-        - SESSION_TERMINATED
+      type: object
+      required:
+        - event
+      properties:
+        event:
+          type: string
+          enum:
+            - SESSION_TERMINATED
+            - QOS_STATUS_CHANGED
+        qosStatus:
+          $ref: "#/components/schemas/QosStatus"
     ErrorInfo:
       type: object
       required:
@@ -419,6 +430,17 @@ components:
       required:
         - severity
         - description
+
+    QosStatus:
+      type: string
+      enum:
+        - REQUESTED
+        - PROVIDED
+        - REJECTED
+      description: |
+        * `REQUESTED` - QoS has been requested by creating a session
+        * `PROVIDED` - The requested QoS has been provided by the network
+        * `REJECTED` - The requested QoS has been rejected by the network
   responses:
     Generic400:
       description: Invalid input
