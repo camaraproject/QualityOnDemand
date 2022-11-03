@@ -20,7 +20,7 @@ Repository to describe, develop, document and test the QualityOnDemand API famil
 
 ## Meetings
 * Meetings are held virtually
-* Schedule: bi-weekly, Friday, 2 PM CEST
+* Schedule: bi-weekly, Friday, 2 PM CET
 * Meeting link: <a href="https://teams.microsoft.com/l/meetup-join/19%3ameeting_MGM3YTBjYWYtNGVmNy00Mjk1LWJhMTktZjI1M2NjNzg2ZDFh%40thread.v2/0?context=%7b%22Tid%22%3a%22bde4dffc-4b60-4cf6-8b04-a5eeb25f5c4f%22%2c%22Oid%22%3a%2237ff36be-0e4d-42c3-ac06-7b904f0f6b24%22%7d">Microsoft Teams Meeting</a> 
 
 
