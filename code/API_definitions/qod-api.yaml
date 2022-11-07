@@ -357,7 +357,7 @@ components:
               enum:
                 - DURATION_EXPIRES
                 - NETWORK_TERMINATES
-                - UNKONWN
+                - UNKNOWN
     ErrorInfo:
       type: object
       required:
