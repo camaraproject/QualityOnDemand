@@ -346,10 +346,18 @@ components:
         event:
           type: string
           enum:
-            - SESSION_TERMINATED
             - QOS_STATUS_CHANGED
         qosStatus:
-          $ref: "#/components/schemas/QosStatus"
+          type: object
+          properties:
+            status:
+              $ref: "#/components/schemas/QosStatus"
+            reason:
+              type: string
+              enum:
+                - DURATION_EXPIRES
+                - NETWORK_TERMINATES
+                - UNKONWN
     ErrorInfo:
       type: object
       required:
@@ -435,12 +443,12 @@ components:
       type: string
       enum:
         - REQUESTED
-        - PROVIDED
-        - REJECTED
+        - AVAILABLE
+        - UNAVAILABLE
       description: |
         * `REQUESTED` - QoS has been requested by creating a session
-        * `PROVIDED` - The requested QoS has been provided by the network
-        * `REJECTED` - The requested QoS has been rejected by the network
+        * `AVAILABLE` - The requested QoS has been provided by the network
+        * `UNAVAILABLE` - The requested QoS cannot fulfil by the network
   responses:
     Generic400:
       description: Invalid input
