@@ -2,7 +2,7 @@
 
 Here are two possible examples of mapping tables from QoS Profiles to provided connectivity characteristics. The intention of the examples is to illustrate a different usages of the defined QoS Profile labels. The first example focuses on a wide area network usage. The second example describes a case, where the network is specially prepared in well define geographical areas for supporting Quality on Demand needs.
 
-Example 1: Considering wide-area network usage.
+## Example 1: Considering wide-area network usage.
 | QOS Profile labels | Network Service Description | Network Service Constraints |
 |----------| --------- | ----------- |
 | QOS\_E   | Latency stays stable under congestion (throughput upto 500kbps). The application bitrate should not exceed 500kbps. | The service is only provided, when the UE is located within the geographical area, according to the agreement with the CSP.<br>The access to the network service is restricted to a maximal number of simultaneous session. |
@@ -13,7 +13,7 @@ Example 1: Considering wide-area network usage.
 **Note:**
 The QOS profile labels in the table can be used within Camara for validating the QoD APIs.
 
-Example 2: Considering confined area network usage.
+## Example 2: Considering confined area network usage.
 | QOS Profile labels | Network Service Description | Network Service Constraints |
 |----------| --------- | ----------- |
 | QOS\_E   | Latency stays stable under congestion (throughput upto 500kbps). The application bitrate should not exceed 500kbps. | The service is only provided, when the UE is located within the geographical area, according to the agreement with the CSP.<br>The access to the network service is restricted to a maximal number of simultaneous session. |
