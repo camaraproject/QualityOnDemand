@@ -4,7 +4,8 @@
 | Ericsson | Emil Zhang |
 | Intel | Petar Torre |
 | Orange | Sylvain Morel |
-| Telefonica | Jose A Ordonez Lucena |
+| Telefonica | Jose Luis Urien |
+| Telefonica | Jesus Peña| 
 | Vodafone | Eric Murray |
 | Verizon/ 5GFF| Syed Rehman |
 | KDDI | Toshi (Toshiyasu) Wakayama |
