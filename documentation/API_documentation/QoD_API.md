@@ -70,10 +70,10 @@ This sample is taken from the agreed sample (example) set from the Camara-projec
 
 | **QoD profile** | **Details** |
 | ------------------- | ------- |
-| QOS\_E | Enhanced communication class with with stable latency under congestion (e.g. throughput up-to 2Mbps) |
-| QOS\_S | Small class of throughput profile - for example DL (Downlink) up-to 10Mbps |
-| QOS\_M | Medium class of throughput profile - for example DL (Downlink) up-to 30Mbps |
-| QOS\_L | Large class of throughput profile - for example DL (Downlink) up-to 100Mbps |
+| QOS_E | Enhanced communication class with with stable latency under congestion (e.g. throughput up-to 2Mbps) |
+| QOS_S | Small class of throughput profile - for example DL (Downlink) up-to 10Mbps |
+| QOS_M | Medium class of throughput profile - for example DL (Downlink) up-to 30Mbps |
+| QOS_L | Large class of throughput profile - for example DL (Downlink) up-to 100Mbps |
 
 ### 4.3 Endpoint Definitions
 
