@@ -1,6 +1,6 @@
 # Overview
 
-<span class="colour" style="color:rgb(0, 0, 0)">The Quality-On-Demand (QoD) API provides programmable interface for developers and other users (capabilities consumers) to request stable latency or throughput managed by Telco networks without the necessity to have an in-depth knowledge of the 4G/5G system or the overall complexity of the Telecom Systems [1].</span> 
+<span class="colour" style="color:rgb(0, 0, 0)">The Quality-On-Demand (QoD) API provides programmable interface for developers and other users (capabilities consumers) to request stable latency or throughput managed by Telco networks without the necessity to have an in-depth knowledge of the 4G/5G system or the overall complexity of the Telecom Systems [[1]](#1).</span> 
 
 ## 1\. Introduction
 
@@ -41,7 +41,7 @@ Sample API invocations are presented in Section 4.6.
 
 The QoD Service API makes use of the client credentials grant which is applicable for server to server use cases involving trusted partners
 or clients without any protected user data involved.
-In this method the API invoker client is registered as a confidential client with an authorization grant type of client_credentials [3].
+In this method the API invoker client is registered as a confidential client with an authorization grant type of client_credentials [[3]](#3).
 
 ## 4\. API Documentation
 
@@ -66,7 +66,7 @@ Following diagram shows the interaction between different components
 <img src="./resources/QoD_details.PNG" alt="QoD_LM" title="QoD Management API">
 
 The below table shows sample QoS profiles and are subject to service provider customizations.
-This sample is taken from the agreed sample (example) set from the Camara-project [2].
+This sample is taken from the agreed sample (example) set from the Camara-project [[2]](#2).
 
 | **QoD profile** | **Details** |
 | ------------------- | ------- |
@@ -90,14 +90,14 @@ Following table defines API endpoints of exposed REST based for QoD management o
 
 | **Create QoD Session** |
 | -------------------------- |
-| **HTTP Request**<br> POST \<base-url>/qod-api/v0/sessions<br>**Query Parameters**<br> No query parameters are defined.<br>**Path Parameters**<br> No path parameters are defined.<br>**Request Body Parameters**<br> **duration (optional)**: Session duration in seconds. Maximal value of 24 hours is used if not set. e.g. 86400<br> **ueId:** The identifier for the user equipment(device). The developer can choose one of the below specified user equipment identifiers:<br>  - IPv4 address (supports mask) e.g. 192.168.0.1/24<br> - ipv6 address (supports mask) e.g. 2001:db8:85a3:8d3:1319:8a2e:370:7344<br> - msisdn (including country code and optionally could be prefixed by "+" sign) e.g. 004912345678923 <br> - externalId [5]  assigned by the Mobile network Operator for the user equipment. e.g. 123456789@domain.com <br> **asId:** The identifier used for application server. The developer can choose from one of the below application server identifiers: <br> - ipv4 address (supports mask) e.g. 192.168.0.1/24 <br> - ipv6 address (supports mask) e.g. 2001:db8:85a3:8d3:1319:8a2e:370:7344 <br> **uePorts (optional):** A list of single ports or port ranges on the user equipment.<br> e.g. "uePorts": {"ranges": [{"from": 5010,"to": 5020}],"ports": [5060,5070]} <br>  **asPorts (optional):** A list of single ports or port ranges on the application server. e.g. "asPorts": {"ranges": [{"from": 5010,"to": 5020}],"ports": [5060,5070]}<br>  **qos:** Qualifier for the requested latency/throughput profile.<br> **notificationUri (optional):** URI of the callback receiver. Allows asynchronous delivery of session related events .<br><span class="s1">&nbsp; Example: '[https://application-server.com/notifications](https://application-server.com/notifications)'</span><br> **notificationAuthToken (optional):** Authentication token for callback API.<br><br>**Response**<br> **201: Session created**<br>  Response body:<br> **duration:** Session duration in seconds.<br> **ueId:** The identifier of the user equipment <br>   **asId:** The identifer of the application server.<br>   **uePorts (optional):** The requested port(s) on the user equipment.<br>   **asPorts (optional):** The requested port(s) on the application server.<br>  **qos:** Qualifier of the requested throughput profile.<br>   **notificationUri (optional):** URI of the callback receiver.<br>   **notificationAuthToken (optional):** Authentication token for callback API.<br>   **id:** Session ID in UUID format.<br>    Example: 123e4567-e89b-12d3-a456-426614174000<br>   **startedAt:** Timestamp of session start, in seconds since Unix epoch.<br>    Example: 1639479600<br>   **expiresAt**: Timestamp of session expiration if the session was not deleted, in seconds since Unix epoch.<br><br> **400:** **Invalid input.**<br> **401:** **Un-authorized, missing or incorrect authentication.**<br> **405:** **Invalid input**<br> **500:** **Session not created**<br> **503:** **Service temporarily unavailable** |
+| **HTTP Request**<br> POST \<base-url>/qod-api/v0/sessions<br>**Query Parameters**<br> No query parameters are defined.<br>**Path Parameters**<br> No path parameters are defined.<br>**Request Body Parameters**<br> **duration (optional)**: Session duration in seconds. Maximal value of 24 hours is used if not set. e.g. 86400<br> **ueId:** The identifier for the user equipment(device). The developer can choose one of the below specified user equipment identifiers:<br>  - IPv4 address (supports mask) e.g. 192.168.0.1/24<br> - ipv6 address (supports mask) e.g. 2001:db8:85a3:8d3:1319:8a2e:370:7344<br> - msisdn (including country code and optionally could be prefixed by "+" sign) e.g. 004912345678923 <br> - externalId [[5]](#5)  assigned by the Mobile network Operator for the user equipment. e.g. 123456789@domain.com <br> **asId:** The identifier used for application server. The developer can choose from one of the below application server identifiers: <br> - ipv4 address (supports mask) e.g. 192.168.0.1/24 <br> - ipv6 address (supports mask) e.g. 2001:db8:85a3:8d3:1319:8a2e:370:7344 <br> **uePorts (optional):** A list of single ports or port ranges on the user equipment.<br> e.g. "uePorts": {"ranges": [{"from": 5010,"to": 5020}],"ports": [5060,5070]} <br>  **asPorts (optional):** A list of single ports or port ranges on the application server. e.g. "asPorts": {"ranges": [{"from": 5010,"to": 5020}],"ports": [5060,5070]}<br>  **qos:** Qualifier for the requested latency/throughput profile. e.g. QOS_E <br> **notificationUri (optional):** URI of the callback receiver. Allows asynchronous delivery of session related events. e.g. '[https://application-server.com/notifications](https://application-server.com/notifications)'</span><br> **notificationAuthToken (optional):** Authentication token for callback API. e.g. c8974e592c2fa383d4a3960714 <br><br>**Response**<br> **201: Session created**<br>  Response body:<br> **duration:** Session duration in seconds.<br> **ueId:** The identifier of the user equipment <br>   **asId:** The identifer of the application server.<br>   **uePorts (optional):** The requested port(s) on the user equipment.<br>   **asPorts (optional):** The requested port(s) on the application server.<br>  **qos:** Qualifier of the requested throughput profile.<br>   **notificationUri (optional):** URI of the callback receiver.<br>   **notificationAuthToken (optional):** Authentication token for callback API.<br>   **id:** Session ID in UUID format.<br> e.g. 123e4567-e89b-12d3-a456-426614174000<br>   **startedAt:** Timestamp of session start, in seconds since Unix epoch.<br> e.g. 1639479600<br>   **expiresAt**: Timestamp of session expiration if the session was not deleted, in seconds since Unix epoch. e.g. 1639566000 <br><br> **400:** **Invalid input.**<br> **401:** **Un-authorized, missing or incorrect authentication.**<br> **405:** **Invalid input.**<br> **500:** **Session not created.**<br> **503:** **Service temporarily unavailable.** |
 <br>
 
 #### QoD Query for QoS Session
 
 | **Quering QoS Session information** |
 | --------------------------------------- |
-| **HTTP Request**<br> GET\<base-url>/qod-latency-api/v0/sessions/{sessionId}<br>**Query Parameters**<br> No query parameters are defined.<br>**Path Parameters**<br> sessionId: Session id that was obtained from the Create QoS Session operation.<br>**Request Body Parameters**<br> No request body parameters are defined.<br>**Response**<br><br> **200: Session information returned.**<br>  Response body:<br> **ueAddr:** The ipv4 address of the user equipment.<br>   **asAddr:** The ipv4 address of the application server.<br>   **uePorts (optional):** The requested port(s) on the user equipment which can be either be specified as ranges or .<br>   **asPort (optional):** The requested port(s) on the user equipment.<br>   **qos:** Qualifier of the requested Latency profile.<br>   **notificationUri (optional):** URI of the callback receiver.<br>   **notificationAuthToken (optional):** Authentication token for callback API.<br>   **id:** Session ID in UUID format.<br>   **startedAt:** Timestamp of session start in seconds since unix epoch.<br>   **expiresAt:** Timestamp of session expiration if the session was not deleted in seconds since unix epoch.<br><br> **401:** Un-authorized, missing or incorrect authentication.<br> **404:** Session not found.<br> **503:** Service temporarily unavailable. |
+| **HTTP Request**<br> GET\<base-url>/qod-latency-api/v0/sessions/{sessionId}<br>**Query Parameters**<br> No query parameters are defined.<br>**Path Parameters**<br> sessionId: Session id that was obtained from the Create QoS Session operation.<br>**Request Body Parameters**<br> No request body parameters are defined.<br>**Response**<br><br> **200: Session information returned.**<br>  Response body:<br> **ueId:** The identifier of the user equipment.<br>   **asId:** The identifier of the application server.<br>   **uePorts (optional):** The requested port(s) on the user equipment.<br>   **asPort (optional):** The requested port(s) on the application server.<br>   **qos:** Qualifier of the requested QoS profile.<br>   **notificationUri (optional):** URI of the callback receiver.<br>   **notificationAuthToken (optional):** Authentication token for callback API.<br>   **id:** Session ID in UUID format.<br>   **startedAt:** Timestamp of session start in seconds since Unix epoch.<br>   **expiresAt:** Timestamp of session expiration if the session was not deleted in seconds since Unix epoch.<br><br> **401:** Un-authorized, missing or incorrect authentication.<br> **404:** Session not found.<br> **503:** Service temporarily unavailable. |
 <br>
 
 #### QoD Delete QoS Session
@@ -108,10 +108,9 @@ Following table defines API endpoints of exposed REST based for QoD management o
 
 ### 4.4 Errors
 
-Since CAMARA QoD API is based on REST design principles and blueprints, well defined HTTP status
-codes and families specified by community are followed [4].
+Since CAMARA QoD API is based on REST design principles and blueprints, well defined HTTP status codes and families specified by community are followed [[4]](#4).
 
-Details of HTTP based error/exception codes for the QoD API are described in Section 4.2 of each API REST based method.
+Details of HTTP based error/exception codes for the QoD API are described in Section 4.3 of each API REST based method.
 Following table provides an overview of common error names, codes, and messages applicable to QoD API.
 
 | No | Error Name | Error Code | Error Message |
@@ -137,14 +136,14 @@ N/A
 <br>
 <span class="colour" style="color:rgb(36, 41, 47)">Snippet 1, elaborates REST based API call with "*curl"* to create a QoS session for sample streaming service with following parameters: </span>
 
-* Latency QoS session with QoS-profile "QOS_E" mapping,
-* App-Flow is specified for UE-Terminal IP address (ueAddr=10.0.0.1), Application server network (asAddr=54.204.25.0/28) and Port number (asPorts=33001).
+* QoS session with QoS-profile "QOS_E" mapping,
+* App-Flow is specified for UE-Terminal identifier (ueId=2001:db8:85a3:8d3:1319:8a2e:370:7344), Application server identifier (asAddr=54.204.25.0/28) and Port number (asPorts=33001).
 
 Please note, the credentials for API authentication purposes need to be adjusted based on target security system configuration.
 
 | Snippet 1. Create QoS session  |
 | ----------------------------------------------- |
-| curl -X 'POST' `https://sample-base-url/qod-api/v0/sessions`   <br>    -H 'accept: application/json' <br>    -H 'Content-Type: application/json'<br>    -H "Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbG...."<br>    -d '{<br>     "ueAddr": "10.0.0.1",<br>     "asAddr": "54.204.25.0/28",<br>     "asPorts": "33001",<br>     "qos": "QOS_E",<br>     "notificationUri": `https://your-callback-server.com/notifications`,<br>     "notificationAuthToken": "c8974e592c2fa383d4a3960714"<br>   }' |
+| curl -X 'POST' `https://sample-base-url/qod-api/v0/sessions`   <br>    -H 'accept: application/json' <br>    -H 'Content-Type: application/json'<br>    -H "Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbG...."<br>    -d '{<br>     "ueId": "2001:db8:85a3:8d3:1319:8a2e:370:7344",<br>     "asId": "54.204.25.0/28",<br>     "asPorts": "33001",<br>     "qos": "QOS_E",<br>     "notificationUri": `https://your-callback-server.com/notifications`,<br>     "notificationAuthToken": "c8974e592c2fa383d4a3960714"<br>   }' |
 <br>
 Snippet 2, elaborates sample QoS notification "SESSION_TERMINATION" message distributed from QoD backend to client callback function.
 
@@ -166,8 +165,8 @@ N/A
 
 ## References
 
-[1] 3GPP TS 23.501: System architecture for the 5G System (5GS); Stage 2 (Release 17), V17.4.0 (2022-03)<br>
-[2] Camara QoS/QCI mapping table https://github.com/camaraproject/QualityOnDemand/blob/main/code/API_definitions/QoSProfile_Mapping_Table.md <br>
-[3] Camara Commonalities : Authentication and Authorization Concept for Service APIs https://github.com/camaraproject/WorkingGroups/blob/main/Commonalities/documentation/Working/CAMARA-AuthN-AuthZ-Concept.md <br>
-[4] HTTP Status codes spec https://restfulapi.net/http-status-codes/
-[5] GPSI external identifier https://github.com/camaraproject/WorkingGroups/blob/main/Commonalities/documentation/UE-Identification.md
+<a name="1">[1] 3GPP TS 23.501: System architecture for the 5G System (5GS); Stage 2 (Release 17), V17.4.0 (2022-03)<br>
+<a name="2">[2] [Camara QoS/QCI mapping table](https://github.com/camaraproject/QualityOnDemand/blob/main/code/API_definitions/QoSProfile_Mapping_Table.md) <br>
+<a name="3">[3] [Camara Commonalities : Authentication and Authorization Concept for Service APIs](https://github.com/camaraproject/WorkingGroups/blob/main/Commonalities/documentation/Working/CAMARA-AuthN-AuthZ-Concept.md) <br>
+<a name="4">[4] [HTTP Status codes spec](https://restfulapi.net/http-status-codes/) <br>
+<a name="5">[5] [GPSI external identifier](https://github.com/camaraproject/WorkingGroups/blob/main/Commonalities/documentation/UE-Identification.md)
