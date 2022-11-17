@@ -33,7 +33,7 @@ At least one identifier for the user equipment out of four options: IPv4 address
 IPv4 and/or IPv6 address of the application server (application backend)
 
 **App-Flow**
-The precise IP flow the developer wants to prioritize and have stable latency or throughput for. This flow is in the current API version determined by the IP addresses of the user equipment and the application server. And can be further described with ports or port-ranges. Future version of the API might allow more detailed flow descriptions.
+The precise IP flow the developer wants to prioritize and have stable latency or throughput for. This flow is in the current API version determined by the identifiers used for the user equipment and the application server. And can be further elaborated with details such as ports or port-ranges. Future version of the API might allow more detailed flow descriptions.
 
 **Duration** 
 Number of seconds for which the QoD session should be created. This parameter is optional and if not specified, the session is either deleted on user request or if default expiration limit has been reached (24 hours in one of the example provider implementations).
