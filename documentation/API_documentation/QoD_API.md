@@ -60,11 +60,11 @@ In this method the API invoker client is registered as a confidential client wit
 The usage of the QoD API is based on QoS profile classes and parameters which define App-Flows.
 Based on the API, QoS sessions can be created, queried, and deleted. Once an offered QoS profile class is requested, application users get a prioritized service with stable latency or throughput even in the case of congestion. The QoD API has the following characteristics:
 
-* A specified App-Flow is prioritized to ensure stable latency or throughput for that flow
-* The prioritized App-Flow is described by providing information such as user equipment (UE) IP address (or other UE identifier) & application server (AS) IP addresses and port/port-ranges
-* The developer can optionally specify the duration for which they need the prioritized App-flow
-* Stable latency or throughput is requested by selecting from the list of QoS profiles made available by the service provider (e.g. QOS_E) to map latency and throughput requirements
-* The developer can optionally also specify callback URL on which notifications for the session can be sent <br>
+* A specified App-Flow is prioritized to ensure stable latency or throughput for that flow.
+* The prioritized App-Flow is described by providing information such as user equipment (UE) IP address (or other UE identifier) & application server (AS) IP addresses and port/port-ranges.
+* The developer can optionally specify the duration for which they need the prioritized App-flow.
+* Stable latency or throughput is requested by selecting from the list of QoS profiles made available by the service provider (e.g. QOS_E) to map latency and throughput requirements.
+* The developer can optionally also specify callback URL on which notifications for the session can be sent. <br>
 
 Following diagram shows the interaction between different components
 
