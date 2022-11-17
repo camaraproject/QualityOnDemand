@@ -172,7 +172,7 @@ N/A
 ## References
 
 <a name="1">[1] 3GPP TS 23.501: System architecture for the 5G System (5GS); Stage 2 (Release 17), V17.4.0 (2022-03)<br>
-<a name="2">[2] [Camara QoS/QCI mapping table](https://github.com/camaraproject/QualityOnDemand/blob/main/code/API_definitions/QoSProfile_Mapping_Table.md) <br>
-<a name="3">[3] [Camara Commonalities : Authentication and Authorization Concept for Service APIs](https://github.com/camaraproject/WorkingGroups/blob/main/Commonalities/documentation/Working/CAMARA-AuthN-AuthZ-Concept.md) <br>
+<a name="2">[2] [CAMARA QoS Profiles Mapping Table (REFERENCE DRAFT)](https://github.com/camaraproject/QualityOnDemand/blob/main/code/API_definitions/QoSProfile_Mapping_Table.md) <br>
+<a name="3">[3] [CAMARA Commonalities : Authentication and Authorization Concept for Service APIs](https://github.com/camaraproject/WorkingGroups/blob/main/Commonalities/documentation/Working/CAMARA-AuthN-AuthZ-Concept.md) <br>
 <a name="4">[4] [HTTP Status codes spec](https://restfulapi.net/http-status-codes/) <br>
 <a name="5">[5] [GPSI external identifier](https://github.com/camaraproject/WorkingGroups/blob/main/Commonalities/documentation/UE-Identification.md)
