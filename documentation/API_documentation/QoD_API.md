@@ -143,7 +143,7 @@ N/A
 <span class="colour" style="color:rgb(36, 41, 47)">Snippet 1, elaborates REST based API call with "*curl"* to create a QoS session for sample streaming service with following parameters: </span>
 
 * QoS session with QoS-profile "QOS_E" mapping,
-* App-Flow is specified for UE-Terminal identifier (ueId=2001:db8:85a3:8d3:1319:8a2e:370:7344), Application server identifier (asAddr=54.204.25.0/28) and Port number (asPorts=33001).
+* App-Flow is specified for UE-Terminal identifier (ueId=2001:db8:85a3:8d3:1319:8a2e:370:7344), Application server identifier (asId=54.204.25.0/28) and Port number (asPorts=33001).
 
 Please note, the credentials for API authentication purposes need to be adjusted based on target security system configuration.
 
