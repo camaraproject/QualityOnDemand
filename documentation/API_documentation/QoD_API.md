@@ -58,7 +58,8 @@ Based on the API, QoS sessions can be created, queried, and deleted. Once an off
 * The prioritized App-Flow is described by providing information such as source & destination IP address and port/port-ranges
 * The developer can optionally specify the duration for which they need the prioritized App-flow
 * Stable latency or throughput is requested by selecting from the list of QoS profiles made available by the service provider (e.g. QOS_E) to map latency requirements
-* The developer can optionally also specify callback URL on which notifications for the session can be sent
+* The developer can optionally also specify callback URL on which notifications for the session can be sent <br>
+
 Following diagram shows the interaction between different components
 
 <br>
