@@ -77,9 +77,9 @@ The below table shows one possible example how QoS profiles are mapped to connec
 | **QoD profile** | **Details** |
 | ------------------- | ------- |
 | QOS_E | Enhanced communication class where latency stays stable under congestion (throughput upto 500kbps). The application bitrate should not exceed 500kbps. |
-| QOS_S | Small class of throughput profile - for example The 5G System throughput is prioritized up to 20Mbps. At high load, the throughput is capped at 20Mbps and can be degraded to lower effective throughput (without a minimum level). |
+| QOS_L | Large class of throughput profile - for example The 5G System throughput is prioritized up to 20Mbps. At high load, the throughput is capped at 20Mbps and can be degraded to lower effective throughput (without a minimum level). |
 | QOS_M | Medium class of throughput profile - for example throughput is prioritized up to 8Mbps. At high load, the throughput is capped at 8Mbps and can be degraded to lower effective throughput (without a minimum level). |
-| QOS_L | Large class of throughput profile - for example throughput is prioritized up to 4Mbps. At high load, the throughput is capped at 4Mbps and can be degraded to lower effective throughput (without a minimum level). |
+| QOS_S | Small class of throughput profile - for example throughput is prioritized up to 4Mbps. At high load, the throughput is capped at 4Mbps and can be degraded to lower effective throughput (without a minimum level). |
 
 ### 4.3 Endpoint Definitions
 
