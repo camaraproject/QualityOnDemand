@@ -4,7 +4,7 @@
 
 ## 1\. Introduction
 
-Industrial (IoT), VR/Gaming, broadcasting, autonomous driving and many others scenarios demand network communication quality and are sensitive to any change in transmission conditions. Being able to request a stable latency (reduced jitter) or stable throughput from the network can improve user experience substantially.
+Industrial (IoT), VR/Gaming, live video streaming, autonomous driving and many other scenarios demand network communication quality and are sensitive to any change in transmission conditions. Being able to request a stable latency (reduced jitter) or stable throughput from the network can improve user experience substantially.
 
 The QoD API offers the application developers the capability to request for stable latency (reduced jitter) or throughput for some specified application data flows between application clients (within a User Equipment) and Application Servers (backend services). The developer has a pre-defined set of Quality of Service (QoS) Profiles which they could choose from depending on their latency or throughput requirements.
 
