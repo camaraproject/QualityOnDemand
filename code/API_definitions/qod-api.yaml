@@ -355,8 +355,8 @@ components:
             reason:
               type: string
               enum:
-                - DURATION_EXPIRES
-                - NETWORK_TERMINATES
+                - DURATION_EXPIRED
+                - NETWORK_TERMINATED
                 - UNKNOWN
     ErrorInfo:
       type: object
