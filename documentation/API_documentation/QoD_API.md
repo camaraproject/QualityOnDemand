@@ -39,7 +39,7 @@ The precise application data flow the developer wants to prioritize and have sta
 Duration (in seconds) for which the QoD session (between application client and application server) should be created. This parameter is optional. When not specified, a default session duration (e.g. 24 hours) is applied. The user may request a termination before its expiration.
 
 **Notification URL and token**
-Developers have a chance to specify callback URL on which notifications (eg. session termination) regarding the session can be received from the service provider. This is an optional parameter.
+Developers may provide a callback URL on which notifications (eg. session termination) regarding the session can be received from the service provider. This is an optional parameter.
 
 Sample API invocations are presented in Section 4.6.
 
