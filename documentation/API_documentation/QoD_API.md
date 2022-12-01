@@ -17,7 +17,7 @@ The deletion of a requested session can be triggered by the user or can be trigg
 
 Before starting to use the API, the developer needs to know about the below specified details:
 
-**Base-URL**
+**QOD service endpoint**
 The RESTful QoD API endpoint
 
 **Authentication**
