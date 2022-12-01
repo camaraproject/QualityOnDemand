@@ -32,7 +32,7 @@ At least one identifier for the user equipment out of four options: IPv4 address
 **Identifier for the application server (AS)**
 IPv4 and/or IPv6 address of the application server (application backend)
 
-**App-Flow**
+**Application data flow (between the application client and application server)**
 The precise application data flow the developer wants to prioritize and have stable latency or throughput for. This flow is in the current API version determined by the identifiers used for the user equipment and the application server. And can be further elaborated with details such as ports or port-ranges. Future version of the API might allow more detailed flow identification features.
 
 **Duration** 
