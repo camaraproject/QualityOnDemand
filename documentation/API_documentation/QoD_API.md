@@ -92,23 +92,23 @@ Following table defines API endpoints of exposed REST based for QoD management o
 | DELETE<br> \<base-url>/qod/v0/sessions/{sessionId} | **Delete QoD Session** | Deleting a QoD session |
 <br>
 
-#### QoD Create QoS Session Operation
+#### QoD Create QoS Session Resource Operations
 
-| **Create QoD Session** |
+| **Create QoD Session Resource** |
 | -------------------------- |
 | **HTTP Request**<br> POST \<base-url>/qod/v0/sessions<br>**Query Parameters**<br> No query parameters are defined.<br>**Path Parameters**<br> No path parameters are defined.<br>**Request Body Parameters**<br> **duration (optional)**: Session duration in seconds. Maximal value of 24 hours is used if not set. e.g. 86400<br> **ueId:** The identifier for the user equipment(device). The developer can choose to provide the below specified user equipment identifiers:<br>  - IPv4 address (supports mask) e.g. 192.168.0.1/24<br> - ipv6 address (supports mask) e.g. 2001:db8:85a3:8d3:1319:8a2e:370:7344<br> - msisdn (including country code and optionally could be prefixed by "+" sign) e.g. 004912345678923 <br> - externalId [[5]](#5)  assigned by the Mobile network Operator for the user equipment. e.g. 123456789@domain.com <br>NOTE: the communication service provider (CSP) might support only a subset of these options. The API invoker can provide multiple identifiers to be compatible across different CSPs. In this case the identifiers MUST belong to the same UE<br> **asId:** The identifier used for application server. The developer can choose from the below application server identifiers: <br> - ipv4 address (supports mask) e.g. 192.168.0.1/24 <br> - ipv6 address (supports mask) e.g. 2001:db8:85a3:8d3:1319:8a2e:370:7344 <br> **uePorts (optional):** A list of single ports or port ranges on the user equipment.<br> e.g. "uePorts": {"ranges": [{"from": 5010,"to": 5020}],"ports": [5060,5070]} <br>  **asPorts (optional):** A list of single ports or port ranges on the application server. e.g. "asPorts": {"ranges": [{"from": 5010,"to": 5020}],"ports": [5060,5070]}<br>  **qos:** Qualifier for the requested latency/throughput profile. e.g. QOS_E <br> **notificationUri (optional):** URI of the callback receiver. Allows asynchronous delivery of session related events. e.g. '[https://application-server.com/notifications](https://application-server.com/notifications)'</span><br> **notificationAuthToken (optional):** Authentication token for callback API. e.g. c8974e592c2fa383d4a3960714 <br><br>**Response**<br> **200: Session created**<br>  Response body:<br> **duration:** Session duration in seconds.<br> **ueId:** The identifier of the user equipment <br>   **asId:** The identifer of the application server.<br>   **uePorts (optional):** The requested port(s) on the user equipment.<br>   **asPorts (optional):** The requested port(s) on the application server.<br>  **qos:** Qualifier of the requested throughput profile.<br>   **notificationUri (optional):** URI of the callback receiver.<br>   **notificationAuthToken (optional):** Authentication token for callback API.<br>   **id:** Session ID in UUID format.<br> e.g. 123e4567-e89b-12d3-a456-426614174000<br>   **startedAt:** Timestamp of session start, in seconds since Unix epoch.<br> e.g. 1639479600<br>   **expiresAt**: Timestamp of session expiration if the session was not deleted, in seconds since Unix epoch. e.g. 1639566000 <br><br> **400:** **Invalid input.**<br> **401:** **Un-authorized. <br> **403:** Forbidden.**<br> **409:** **Conflict.**<br> **500:** **Server Error.**<br> **503:** **Service temporarily unavailable.** |
 <br>
 
-#### QoD Query for QoS Session
+#### QoD Query for QoS Session Resource
 
-| **Quering QoS Session information** |
+| **Quering QoS Session Resource information** |
 | --------------------------------------- |
 | **HTTP Request**<br> GET\<base-url>/qod-latency-api/v0/sessions/{sessionId}<br>**Query Parameters**<br> No query parameters are defined.<br>**Path Parameters**<br> sessionId: Session id that was obtained from the Create QoS Session operation.<br>**Request Body Parameters**<br> No request body parameters are defined.<br>**Response**<br><br> **200: Session information returned.**<br>  Response body:<br> **ueId:** The identifier of the user equipment.<br>   **asId:** The identifier of the application server.<br>   **uePorts (optional):** The requested port(s) on the user equipment.<br>   **asPort (optional):** The requested port(s) on the application server.<br>   **qos:** Qualifier of the requested QoS profile.<br>   **notificationUri (optional):** URI of the callback receiver.<br>   **notificationAuthToken (optional):** Authentication token for callback API.<br>   **id:** Session ID in UUID format.<br>   **startedAt:** Timestamp of session start in seconds since Unix epoch.<br>   **expiresAt:** Timestamp of session expiration if the session was not deleted in seconds since Unix epoch.<br><br> **401:** Un-authorized. <br> **403:** Forbidden. <br> **404:** Session not found.<br> **503:** Service temporarily unavailable. |
 <br>
 
-#### QoD Delete QoS Session
+#### QoD Delete QoS Session Resource
 
-| **Deleting QoS session** |
+| **Deleting QoS session resource** |
 | ---------------------------- |
 | **HTTP Request**<br>  DELETE\<base-url>/qod/v0/sessions/{sessionId}<br>**Query Parameters**<br>  No query parameters are defined.<br>**Path Parameters**<br>  sessionId: Session ID that needs to be terminated.<br>**Request Body Parameters**<br>  No request body parameters are defined.<br><br>**Response**<br> **204:** Session deleted<br> **401:** Un-authorized. <br> **403:** Forbidden.<br> **404:** Session not found.<br> **503:** Service temporarily unavailable.|
 
@@ -147,7 +147,7 @@ N/A
 
 Please note, the credentials for API authentication purposes need to be adjusted based on target security system configuration.
 
-| Snippet 1. Create QoS session  |
+| Snippet 1. Create QoS session resource  |
 | ----------------------------------------------- |
 | curl -X 'POST' `https://sample-base-url/qod/v0/sessions`   <br>    -H 'accept: application/json' <br>    -H 'Content-Type: application/json'<br>    -H "Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbG...."<br>    -d '{<br>     "ueId": {"ipv6Addr": "2001:db8:85a3:8d3:1319:8a2e:370:7344"},<br>     "asId": {"ipv4Addr": "54.204.25.0/28"},<br>     "asPorts": "33001",<br>     "qos": "QOS_E",<br>     "notificationUri": `https://your-callback-server.com/notifications`,<br>     "notificationAuthToken": "c8974e592c2fa383d4a3960714"<br>   }' |
 <br>
