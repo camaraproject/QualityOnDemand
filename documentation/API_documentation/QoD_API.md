@@ -72,14 +72,8 @@ Following diagram shows the interaction between different components
 
 <img src="./resources/QoD_details.PNG" alt="QoD_LM" title="QoD Management API">
 
-The below table shows one possible example how QoS profiles are mapped to connectivity characteristics. They are subject to agreements between the communication service provider and the API invoker. This sample is taken from from the reference draft within the CAMARA project [[2]](#2).
+How QoS profiles are mapped to connectivity characteristics are subject to agreements between the communication service provider and the API invoker. Within the CAMARA project, you can find a sample for such a mapping of QoS profiles. [[2]](#2)
 
-| **QoD profile** | **Details** |
-| ------------------- | ------- |
-| QOS_E | Enhanced communication class where latency stays stable under congestion (throughput upto 500kbps). The application bitrate should not exceed 500kbps. |
-| QOS_L | Large class of throughput profile - for example The 5G System throughput is prioritized up to 20Mbps. At high load, the throughput is capped at 20Mbps and can be degraded to lower effective throughput (without a minimum level). |
-| QOS_M | Medium class of throughput profile - for example throughput is prioritized up to 8Mbps. At high load, the throughput is capped at 8Mbps and can be degraded to lower effective throughput (without a minimum level). |
-| QOS_S | Small class of throughput profile - for example throughput is prioritized up to 4Mbps. At high load, the throughput is capped at 4Mbps and can be degraded to lower effective throughput (without a minimum level). |
 
 ### 4.3 Endpoint Definitions
 
