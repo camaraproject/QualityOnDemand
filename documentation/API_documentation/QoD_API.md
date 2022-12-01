@@ -12,7 +12,7 @@ The QoD API offers the application developers the capability to request for stab
 
 ## 2\. Quick Start
 
-The usage of the API is based on QoS session resource, which can be created (based on available QoS profiles), queried and deleted.
+The usage of the API is based on QoS session resources, which can be created (based on available QoS profiles), queried and deleted.
 The deletion of a requested session can be triggered by the  API consumer or can be triggered automatically. The automatic process is triggered either when the requested specified duration of a QoS session has reached its limit or the default session expiration time has been reached (within an example provider implementation it is set to 24hrs).
 
 Before starting to use the API, the developer needs to know about the below specified details:
@@ -32,7 +32,7 @@ At least one identifier for the user equipment out of four options: IPv4 address
 **Identifier for the application server (AS)**
 IPv4 and/or IPv6 address of the application server (application backend)
 
-**Application data flow (between the application client and application server)**
+**App-Flow (between the application client and application server)**
 The precise application data flow the developer wants to prioritize and have stable latency or throughput for. This flow is in the current API version determined by the identifiers used for the user equipment and the application server. And can be further elaborated with details such as ports or port-ranges. Future version of the API might allow more detailed flow identification features.
 
 **Duration** 
@@ -58,7 +58,7 @@ In this method the API invoker client is registered as a confidential client wit
 ### 4.2 Details
 
 The usage of the QoD API is based on QoS profile classes and parameters which define App-Flows.
-Based on the API, QoS sessions can be created, queried, and deleted. Once an offered QoS profile class is requested, application users get a prioritized service with stable latency or throughput even in the case of congestion. The QoD API has the following characteristics:
+Based on the API, QoS session resources can be created, queried, and deleted. Once an offered QoS profile class is requested, application users get a prioritized service with stable latency or throughput even in the case of congestion. The QoD API has the following characteristics:
 
 * A specified App-Flow is prioritized to ensure stable latency or throughput for that flow.
 * The prioritized App-Flow is described by providing information such as user equipment (UE) IP address (or other UE identifier) & application server (AS) IP addresses and port/port-ranges.
