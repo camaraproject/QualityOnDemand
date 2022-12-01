@@ -18,7 +18,7 @@ The deletion of a requested session can be triggered by the  API consumer or can
 Before starting to use the API, the developer needs to know about the below specified details:
 
 **QOD service endpoint**
-The RESTful QoD API endpoint
+The URL pointing to the RESTful resource of the QoS API.
 
 **Authentication**
 Security access keys such as OAuth 2.0 client credentials used by Client applications to invoke the QoD API.
