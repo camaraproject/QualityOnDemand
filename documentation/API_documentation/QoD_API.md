@@ -12,7 +12,7 @@ The QoD API offers the application developers the capability to request for stab
 
 ## 2\. Quick Start
 
-The usage of the API is based on QoS sessions, which can be created (based on available QoS profiles), queried and deleted.
+The usage of the API is based on QoS session resource, which can be created (based on available QoS profiles), queried and deleted.
 The deletion of a requested session can be triggered by the user or can be triggered automatically. The automatic process is triggered either when the user specified duration of a QoS session has reached its limit or the default session expiration time has been reached (within an example provider implementation it is set to 24hrs).
 
 Before starting to use the API, the developer needs to know about the below specified details:
