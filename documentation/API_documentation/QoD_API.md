@@ -45,7 +45,7 @@ Sample API invocations are presented in Section 4.6.
 
 ## 3\. Authentication and Authorization
 
-The QoD Service API makes use of the client credentials grant which is applicable for server to server use cases involving trusted partners
+The QoD Service API makes use of the OAUTH 2.0 client credentials grant which is applicable for server to server use cases involving trusted partners
 or clients without any protected user data involved.
 In this method the API invoker client is registered as a confidential client with an authorization grant type of client_credentials [[3]](#3).
 
