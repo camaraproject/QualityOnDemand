@@ -36,7 +36,7 @@ IPv4 and/or IPv6 address of the application server (application backend)
 The precise application data flow the developer wants to prioritize and have stable latency or throughput for. This flow is in the current API version determined by the identifiers used for the user equipment and the application server. And can be further elaborated with details such as ports or port-ranges. Future version of the API might allow more detailed flow identification features.
 
 **Duration** 
-Number of seconds for which the QoD session should be created. This parameter is optional and if not specified, the session is either deleted on user request or if default expiration limit has been reached (24 hours in one of the example provider implementations).
+Duration (in seconds) for which the QoD session (between application client and application server) should be created. This parameter is optional. When not specified, a default session duration (e.g. 24 hours) is applied. The user may request a termination before its expiration.
 
 **Notification URL and token**
 Developers have a chance to specify callback URL on which notifications (eg. session termination) regarding the session can be received from the service provider. This is an optional parameter.
