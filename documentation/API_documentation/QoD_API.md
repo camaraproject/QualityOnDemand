@@ -23,7 +23,7 @@ The URL pointing to the RESTful resource of the QoS API.
 **Authentication**
 Security access keys such as OAuth 2.0 client credentials used by Client applications to invoke the QoD API.
 
-**QoS Profile**
+**QoS Profiles and QoS profile labels**
 Latency or throughput requirements of the application mapped to relevant QoS profile class.
 
 **Identifier for the the user equipment (UE)**
