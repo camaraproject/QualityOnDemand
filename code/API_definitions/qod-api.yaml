@@ -328,36 +328,52 @@ components:
         * `QOS_S` - Qualifier for the requested QoS profile _S_
         * `QOS_M` - Qualifier for the requested QoS profile _M_
         * `QOS_L` - Qualifier for the requested QoS profile _L_
+    
     Notification:
       type: object
       required:
         - sessionId
-        - eventReport
+        - eventReports
       properties:
         sessionId:
           $ref: "#/components/schemas/SessionId"
-        eventReport:
-          $ref: "#/components/schemas/SessionEvent"
-    SessionEvent:
+        eventReports:
+          type: array
+          items:
+            $ref: "#/components/schemas/EventReport"
+          minItems: 1
+          description: Contains the reported event and applicable information
+    
+    EventReport:
       type: object
       required:
         - event
       properties:
         event:
-          type: string
-          enum:
-            - QOS_STATUS_CHANGED
-        qosStatus:
-          type: object
+          $ref: "#/components/schemas/SessionEvent"
+      discriminator:
+        propertyName: event
+        mapping:
+          QOS_STATUS_CHANGED: QosStatusChangedEventReport
+        
+    QosStatusChangedEventReport:
+      allOf:
+        - $ref: '#/components/schemas/EventReport'
+        - type: object
           properties:
-            status:
+            qoStatus:
               $ref: "#/components/schemas/QosStatus"
-            reason:
+            eventInfo:
               type: string
               enum:
                 - DURATION_EXPIRED
                 - NETWORK_TERMINATED
-                - UNKNOWN
+
+    SessionEvent:
+      type: string
+      enum:
+        - QOS_STATUS_CHANGED
+    
     ErrorInfo:
       type: object
       required:
@@ -448,7 +464,8 @@ components:
       description: |
         * `REQUESTED` - QoS has been requested by creating a session
         * `AVAILABLE` - The requested QoS has been provided by the network
-        * `UNAVAILABLE` - The requested QoS cannot fulfil by the network
+        * `UNAVAILABLE` - The requested QoS cannot be provided by the network due to some reason
+
   responses:
     Generic400:
       description: Invalid input
