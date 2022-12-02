@@ -360,6 +360,8 @@ components:
       allOf:
         - $ref: '#/components/schemas/EventReport'
         - type: object
+          required:
+            - qosStatus
           properties:
             qoStatus:
               $ref: "#/components/schemas/QosStatus"
