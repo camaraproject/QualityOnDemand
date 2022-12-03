@@ -347,7 +347,7 @@ components:
     EventReport:
       type: object
       required:
-        - event
+        - eventType
       properties:
         event:
           $ref: "#/components/schemas/SessionEvent"
