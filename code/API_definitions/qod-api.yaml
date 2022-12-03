@@ -350,7 +350,7 @@ components:
         - eventType
       properties:
         eventType:
-          $ref: "#/components/schemas/SessionEvent"
+          $ref: "#/components/schemas/SessionEventType"
       discriminator:
         propertyName: eventType
         mapping:
