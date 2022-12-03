@@ -371,7 +371,7 @@ components:
                 - DURATION_EXPIRED
                 - NETWORK_TERMINATED
 
-    SessionEvent:
+    SessionEventType:
       type: string
       enum:
         - QOS_STATUS_CHANGED
