@@ -352,7 +352,7 @@ components:
         eventType:
           $ref: "#/components/schemas/SessionEvent"
       discriminator:
-        propertyName: event
+        propertyName: eventType
         mapping:
           QOS_STATUS_CHANGED: QosStatusChangedEventReport
         
