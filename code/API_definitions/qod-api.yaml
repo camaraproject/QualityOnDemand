@@ -349,7 +349,7 @@ components:
       required:
         - eventType
       properties:
-        event:
+        eventType:
           $ref: "#/components/schemas/SessionEvent"
       discriminator:
         propertyName: event
