@@ -363,7 +363,7 @@ components:
           required:
             - qosStatus
           properties:
-            qoStatus:
+            qosStatus:
               $ref: "#/components/schemas/QosStatus"
             eventInfo:
               type: string
