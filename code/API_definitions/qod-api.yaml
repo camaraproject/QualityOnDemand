@@ -365,7 +365,7 @@ components:
           properties:
             qosStatus:
               $ref: "#/components/schemas/QosStatus"
-            eventInfo:
+            statusInfo:
               type: string
               enum:
                 - DURATION_EXPIRED
