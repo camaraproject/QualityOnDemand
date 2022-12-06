@@ -354,11 +354,11 @@ components:
       discriminator:
         propertyName: eventType
         mapping:
-          QOS_STATUS_CHANGED: QosStatusChangedEventReport
+          QOS_STATUS_CHANGED: "#/components/schemas/QosStatusChangedEventReport"
         
     QosStatusChangedEventReport:
       allOf:
-        - $ref: '#/components/schemas/EventReport'
+        - $ref: "#/components/schemas/EventReport"
         - type: object
           required:
             - qosStatus
