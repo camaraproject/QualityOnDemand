@@ -174,7 +174,7 @@ paths:
       description: |
         Important: this endpoint is to be implemented by the API consumer.
         The QoD server will call this endpoint whenever any network related event occurs.
-        Currently only QOS_STATUS_CHANGED event is implemented.
+        Currently only QOS_STATUS_CHANGED event is defined.
       operationId: postNotification
       requestBody:
         required: true
