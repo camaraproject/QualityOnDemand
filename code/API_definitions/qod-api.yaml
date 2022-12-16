@@ -370,6 +370,7 @@ components:
           enum:
             - DURATION_EXPIRED
             - NETWORK_TERMINATED
+          description: Currently statusInfo is only applicable when qosStatus is 'UNAVAILABLE'.
 
     SessionEventType:
       type: string
