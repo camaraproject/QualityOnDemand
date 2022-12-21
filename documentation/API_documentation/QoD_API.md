@@ -21,22 +21,22 @@ Before starting to use the API, the developer needs to know about the below spec
 The URL pointing to the RESTful resource of the QoS API.
 
 **Authentication**
-Security access keys such as OAuth 2.0 client credentials used by Client applications to invoke the QoD API.
+Security access keys such as OAuth 2.0 client credentials used by client applications to invoke the QoD API.
 
 **QoS Profiles and QoS profile labels**
 Latency or throughput requirements of the application mapped to relevant QoS profile class.
 
 **Identifier for the the user equipment (UE)**
-At least one identifier for the user equipment out of four options: IPv4 address, IPv6 address, MSISDN, or external ID [[5]](#5) assigned by the Mobile Operator for the user equipment
+At least one identifier for the user equipment out of four options: IPv4 address, IPv6 address, MSISDN, or external ID [[5]](#5) assigned by the mobile network operator for the user equipment
 
 **Identifier for the application server (AS)**
 IPv4 and/or IPv6 address of the application server (application backend)
 
 **App-Flow (between the application client and application server)**
-The precise application data flow the developer wants to prioritize and have stable latency or throughput for. This flow is in the current API version determined by the identifiers used for the user equipment and the application server. And can be further elaborated with details such as ports or port-ranges. Future version of the API might allow more detailed flow identification features.
+The precise application data flow the developer wants to prioritize and have stable latency or throughput for. This flow is in the current API version determined by the identifiers used for the user equipment and the application server. And it can be further elaborated with details such as ports or port-ranges. Future version of the API might allow more detailed flow identification features.
 
 **Duration** 
-Duration (in seconds) for which the QoD session (between application client and application server) should be created. This parameter is optional. When not specified, a default session duration (e.g. 24 hours) is applied. The user may request a termination before its expiration.
+Duration (in seconds) for which the QoS session (between application client and application server) should be created. This parameter is optional. When not specified, a default session duration (e.g. 24 hours) is applied. The user may request a termination before its expiration.
 
 **Notification URL and token**
 Developers may provide a callback URL on which notifications (eg. session termination) regarding the session can be received from the service provider. This is an optional parameter.
@@ -81,26 +81,59 @@ Following table defines API endpoints of exposed REST based for QoD management o
 
 | **Endpoint** | **Operation** | **Description** |
 | -------- | --------- | ----------- |
-| POST<br>  \<base-url>/qod/v0/sessions | **Create QoD Session** | Create QoS Session to manage latency/throughput priorities |
-| GET<br> \<base-url>/qod/v0/sessions/{sessionId} | **Query for QoD Session** | Querying for QoD session information details |
-| DELETE<br> \<base-url>/qod/v0/sessions/{sessionId} | **Delete QoD Session** | Deleting a QoD session |
+| POST<br>  \<base-url>/qod/v0/sessions | **Create QoS Session Resource** | Create QoS Session to manage latency/throughput priorities |
+| GET<br> \<base-url>/qod/v0/sessions/{sessionId} | **Query for QoS Session Resource** | Querying for QoS session resource information details |
+| DELETE<br> \<base-url>/qod/v0/sessions/{sessionId} | **Delete QoS Session Resource** | Deleting a QoS session |
 <br>
 
-#### QoD Create QoS Session Resource Operations
+#### QoD - Create QoS Session Resource Operations
 
-| **Create QoD Session Resource** |
+| **Create QoS Session Resource** |
 | -------------------------- |
-| **HTTP Request**<br> POST \<base-url>/qod/v0/sessions<br>**Query Parameters**<br> No query parameters are defined.<br>**Path Parameters**<br> No path parameters are defined.<br>**Request Body Parameters**<br> **duration (optional)**: Session duration in seconds. Maximal value of 24 hours is used if not set. e.g. 86400<br> **ueId:** The identifier for the user equipment(device). The developer can choose to provide the below specified user equipment identifiers:<br>  - IPv4 address (supports mask) e.g. 192.168.0.1/24<br> - ipv6 address (supports mask) e.g. 2001:db8:85a3:8d3:1319:8a2e:370:7344<br> - msisdn (including country code and optionally could be prefixed by "+" sign) e.g. 004912345678923 <br> - externalId [[5]](#5)  assigned by the Mobile network Operator for the user equipment. e.g. 123456789@domain.com <br>NOTE: the communication service provider (CSP) might support only a subset of these options. The API invoker can provide multiple identifiers to be compatible across different CSPs. In this case the identifiers MUST belong to the same UE<br> **asId:** The identifier used for application server. The developer can choose from the below application server identifiers: <br> - ipv4 address (supports mask) e.g. 192.168.0.1/24 <br> - ipv6 address (supports mask) e.g. 2001:db8:85a3:8d3:1319:8a2e:370:7344 <br> **uePorts (optional):** A list of single ports or port ranges on the user equipment.<br> e.g. "uePorts": {"ranges": [{"from": 5010,"to": 5020}],"ports": [5060,5070]} <br>  **asPorts (optional):** A list of single ports or port ranges on the application server. e.g. "asPorts": {"ranges": [{"from": 5010,"to": 5020}],"ports": [5060,5070]}<br>  **qos:** Qualifier for the requested latency/throughput profile. e.g. QOS_E <br> **notificationUri (optional):** URI of the callback receiver. Allows asynchronous delivery of session related events. e.g. '[https://application-server.com/notifications](https://application-server.com/notifications)'</span><br> **notificationAuthToken (optional):** Authentication token for callback API. e.g. c8974e592c2fa383d4a3960714 <br><br>**Response**<br> **200: Session created**<br>  Response body:<br> **duration:** Session duration in seconds.<br> **ueId:** The identifier of the user equipment <br>   **asId:** The identifer of the application server.<br>   **uePorts (optional):** The requested port(s) on the user equipment.<br>   **asPorts (optional):** The requested port(s) on the application server.<br>  **qos:** Qualifier of the requested throughput profile.<br>   **notificationUri (optional):** URI of the callback receiver.<br>   **notificationAuthToken (optional):** Authentication token for callback API.<br>   **id:** Session ID in UUID format.<br> e.g. 123e4567-e89b-12d3-a456-426614174000<br>   **startedAt:** Timestamp of session start, in seconds since Unix epoch.<br> e.g. 1639479600<br>   **expiresAt**: Timestamp of session expiration if the session was not deleted, in seconds since Unix epoch. e.g. 1639566000 <br><br> **400:** **Invalid input.**<br> **401:** **Un-authorized. <br> **403:** Forbidden.**<br> **409:** **Conflict.**<br> **500:** **Server Error.**<br> **503:** **Service temporarily unavailable.** |
+| **HTTP Request**<br> POST \<base-url>/qod/v0/sessions<br>**Query Parameters**<br>No query parameters are defined.<br>**Path Parameters**<br> No path parameters are defined.<br>**Request Body Parameters**<br> **duration (optional)**: Session duration in seconds. Maximal value of 24 hours is used if not set. e.g. 86400<br> **ueId:** The identifier for the user equipment(device). The developer can choose to provide the below specified user equipment identifiers:<br>  - IPv4 address (supports mask) e.g. 192.168.0.1/24<br> - ipv6 address (supports mask) e.g. 2001:db8:85a3:8d3:1319:8a2e:370:7344<br> - msisdn (including country code and optionally could be prefixed by "+" sign) e.g. 004912345678923 <br> - externalId [[5]](#5)  assigned by the mobile network operator (MNO) for the user equipment. e.g. 123456789@domain.com <br>NOTE: the MNO might support only a subset of these options. The API invoker can provide multiple identifiers to be compatible across different MNOs. In this case the identifiers MUST belong to the same UE<br> **asId:** The identifier used for application server. The developer can choose from the below application server identifiers: <br> - ipv4 address (supports mask) e.g. 192.168.0.1/24 <br> - ipv6 address (supports mask) e.g. 2001:db8:85a3:8d3:1319:8a2e:370:7344 <br> **uePorts (optional):** A list of single ports or port ranges on the user equipment.<br> e.g. "uePorts": {"ranges": [{"from": 5010,"to": 5020}],"ports": [5060,5070]} <br>  **asPorts (optional):** A list of single ports or port ranges on the application server. e.g. "asPorts": {"ranges": [{"from": 5010,"to": 5020}],"ports": [5060,5070]}<br>  **qos:** Qualifier for the requested latency/throughput profile. e.g. QOS_E <br> **notificationUri (optional):** URI of the callback receiver. Allows asynchronous delivery of session related events. e.g. '[https://application-server.com/notifications](https://application-server.com/notifications)'</span><br> **notificationAuthToken (optional):** Authentication token for callback API. e.g. c8974e592c2fa383d4a3960714 <br><br>**Response**<br> **200: Session created**<br>  Response body:<br> **duration:** Session duration in seconds.<br> **ueId:** The identifier of the user equipment <br>   **asId:** The identifer of the application server.<br>   **uePorts (optional):** The requested port(s) on the user equipment.<br>   **asPorts (optional):** The requested port(s) on the application server.<br>  **qos:** Qualifier of the requested throughput profile.<br>   **notificationUri (optional):** URI of the callback receiver.<br>   **notificationAuthToken (optional):** Authentication token for callback API.<br>   **id:** Session ID in UUID format.<br> e.g. 123e4567-e89b-12d3-a456-426614174000<br>   **startedAt:** Timestamp of session start, in seconds since Unix epoch.<br> e.g. 1639479600<br>   **expiresAt**: Timestamp of session expiration if the session was not deleted, in seconds since Unix epoch. e.g. 1639566000 <br><br> **400:** **Invalid input.**<br> **401:** **Un-authorized. <br> **403:** Forbidden.**<br> **409:** **Conflict.**<br> **500:** **Server Error.**<br> **503:** **Service temporarily unavailable.** |
 <br>
 
-#### QoD Query for QoS Session Resource
+<table>
+    <thead>
+        <tr>
+            <th colspan=3><b>Create QoS Session Resource</b></th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td><b>HTTP Request</td>
+            <td colspan=2>POST \&lt;base-url&gt;/qod/v0/sessions</td>
+        </tr>
+        <tr>
+            <td rowspan=8><b>Request Body Parameters</td>
+            <td><b>duration (optional)</td>
+            <td>Session duration in seconds. Maximal value of 24 hours is used if not set. e.g. 86400</td>
+        </tr> 
+        <tr>
+            <td><b>ueId</td>
+            <td>
+                <p>The identifier for the user equipment(device). The developer can choose to provide the below specified user equipment identifiers:</p>
+                <ul>
+                    <li>IPv4 address (supports mask) e.g. 192.168.0.1/24</li>
+                    <li>ipv6 address (supports mask) e.g. 2001:db8:85a3:8d3:1319:8a2e:370:7344</li>
+                    <li>msisdn (including country code and optionally could be prefixed by "+" sign) e.g. 004912345678923</li>
+                    <li>externalId [[5]](#5)  assigned by the mobile network operator (MNO) for the user equipment. e.g. 123456789@domain.com</li>
+                </ul>
+                <p>NOTE: the MNO might support only a subset of these options. The API invoker can provide multiple identifiers to be compatible across different MNOs. In this case the identifiers MUST belong to the same UE</p>
+            </td>
+        </tr>     
+    </tbody>
+</table>
+
+
+#### QoD - Query for QoS Session Resource
 
 | **Quering QoS Session Resource information** |
 | --------------------------------------- |
-| **HTTP Request**<br> GET\<base-url>/qod-latency-api/v0/sessions/{sessionId}<br>**Query Parameters**<br> No query parameters are defined.<br>**Path Parameters**<br> sessionId: Session id that was obtained from the Create QoS Session operation.<br>**Request Body Parameters**<br> No request body parameters are defined.<br>**Response**<br><br> **200: Session information returned.**<br>  Response body:<br> **ueId:** The identifier of the user equipment.<br>   **asId:** The identifier of the application server.<br>   **uePorts (optional):** The requested port(s) on the user equipment.<br>   **asPort (optional):** The requested port(s) on the application server.<br>   **qos:** Qualifier of the requested QoS profile.<br>   **notificationUri (optional):** URI of the callback receiver.<br>   **notificationAuthToken (optional):** Authentication token for callback API.<br>   **id:** Session ID in UUID format.<br>   **startedAt:** Timestamp of session start in seconds since Unix epoch.<br>   **expiresAt:** Timestamp of session expiration if the session was not deleted in seconds since Unix epoch.<br><br> **401:** Un-authorized. <br> **403:** Forbidden. <br> **404:** Session not found.<br> **503:** Service temporarily unavailable. |
+| **HTTP Request**<br> GET\<base-url>/qod/v0/sessions/{sessionId}<br>**Query Parameters**<br> No query parameters are defined.<br>**Path Parameters**<br> sessionId: Session id that was obtained from the Create QoS Session operation.<br>**Request Body Parameters**<br> No request body parameters are defined.<br>**Response**<br><br> **200: Session information returned.**<br>  Response body:<br> **ueId:** The identifier of the user equipment.<br>   **asId:** The identifier of the application server.<br>   **uePorts (optional):** The requested port(s) on the user equipment.<br>   **asPort (optional):** The requested port(s) on the application server.<br>   **qos:** Qualifier of the requested QoS profile.<br>   **notificationUri (optional):** URI of the callback receiver.<br>   **notificationAuthToken (optional):** Authentication token for callback API.<br>   **id:** Session ID in UUID format.<br>   **startedAt:** Timestamp of session start in seconds since Unix epoch.<br>   **expiresAt:** Timestamp of session expiration if the session was not deleted in seconds since Unix epoch.<br><br> **401:** Un-authorized. <br> **403:** Forbidden. <br> **404:** Session not found.<br> **503:** Service temporarily unavailable. |
 <br>
 
-#### QoD Delete QoS Session Resource
+#### QoD - Delete QoS Session Resource
 
 | **Deleting QoS session resource** |
 | ---------------------------- |
