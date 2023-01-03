@@ -117,8 +117,8 @@ Following table defines API endpoints of exposed REST based for QoD management o
             <td>
                 <p>The identifier for the user equipment (device). The developer can choose to provide the below specified user equipment identifiers:</p>
                 <ul>
-                    <li>IPv4 address (supports mask) e.g. 192.168.0.1/24</li>
-                    <li>ipv6 address (supports mask) e.g. 2001:db8:85a3:8d3:1319:8a2e:370:7344</li>
+                    <li>ipv4addr: IPv4 address (supports mask) e.g. 192.168.0.1/24</li>
+                    <li>ipv6addr: IPv6 address (supports mask) e.g. 2001:db8:85a3:8d3:1319:8a2e:370:7344</li>
                     <li>msisdn (including country code and optionally could be prefixed by "+" sign) e.g. 004912345678923</li>
                     <li>externalId <a href="#5">[5]</a>  assigned by the mobile network operator (MNO) for the user equipment. e.g. 123456789@domain.com</li>
                 </ul>
@@ -130,8 +130,8 @@ Following table defines API endpoints of exposed REST based for QoD management o
             <td>
                 <p>The identifier used for application server. The developer can choose from the below application server identifiers:</p>
                 <ul>
-                    <li>ipv4 address (supports mask) e.g. 192.168.0.1/24</li>
-                    <li>ipv6 address (supports mask) e.g. 2001:db8:85a3:8d3:1319:8a2e:370:7344
+                    <li>ipv4addr: IPv4 address (supports mask) e.g. 192.168.0.1/24</li>
+                    <li>ipv6addr: IPv6 address (supports mask) e.g. 2001:db8:85a3:8d3:1319:8a2e:370:7344</li>
                 </ul>
             </td>
         </tr>
@@ -157,7 +157,7 @@ Following table defines API endpoints of exposed REST based for QoD management o
         </tr> 
         <tr>
             <td rowspan=7><b>Response</b></td>
-            <td><b>200: Session created</b></td>
+            <td><b>201: Session created</b></td>
             <td>
                 Response body:<br>
                 <b>duration</b>: Session duration in seconds<br>
