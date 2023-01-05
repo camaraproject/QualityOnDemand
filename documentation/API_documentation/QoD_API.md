@@ -6,7 +6,7 @@
 
 Industrial (IoT), VR/Gaming, live video streaming, autonomous driving and many other scenarios demand network communication quality and are sensitive to any change in transmission conditions. Being able to request a stable latency (reduced jitter) or prioritized throughput from the network can improve user experience substantially.
 
-The QoD API offers the application developers the capability to request for stable latency (reduced jitter) or throughput for some specified application data flows between application clients (within a User Equipment) and Application Servers (backend services). The developer has a pre-defined set of Quality of Service (QoS) Profiles which they could choose from depending on their latency or throughput requirements.
+The QoD API offers the application developers the capability to request for stable latency (reduced jitter) or throughput for some specified application data flows between application clients (within a User Equipment) and Application Servers (backend services). The developer has a pre-defined set of Quality of Service (QoS) profiles which they could choose from depending on their latency or throughput requirements.
 
 <img src="./resources/QoD_overview.PNG" alt="QoD_LM" title="QoD API Overview">
 
@@ -18,12 +18,12 @@ The deletion of a requested session can be triggered by the  API consumer or can
 Before starting to use the API, the developer needs to know about the below specified details:
 
 **QOD service endpoint**
-The URL pointing to the RESTful resource of the QoS API.
+The URL pointing to the RESTful resource of the QoD API.
 
 **Authentication**
 Security access keys such as OAuth 2.0 client credentials used by client applications to invoke the QoD API.
 
-**QoS Profiles and QoS profile labels**
+**QoS profiles and QoS profile labels**
 Latency or throughput requirements of the application mapped to relevant QoS profile class.
 
 **Identifier for the the user equipment (UE)**
@@ -45,7 +45,7 @@ Sample API invocations are presented in Section 4.6.
 
 ## 3\. Authentication and Authorization
 
-The QoD Service API makes use of the OAUTH 2.0 client credentials grant which is applicable for server to server use cases involving trusted partners
+The QoD API makes use of the OAUTH 2.0 client credentials grant which is applicable for server to server use cases involving trusted partners
 or clients without any protected user data involved.
 In this method the API invoker client is registered as a confidential client with an authorization grant type of client_credentials [[3]](#3).
 
