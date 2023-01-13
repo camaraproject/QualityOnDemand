@@ -190,7 +190,7 @@ Following table defines API endpoints of exposed REST based for QoD management o
         </tr>
         <tr>
             <td><b>503: Service temporarily unavailable</b></td>
-        </tr>    
+        </tr>
     </tbody>
 </table>
 
@@ -222,7 +222,7 @@ Following table defines API endpoints of exposed REST based for QoD management o
             <td colspan=2>No request body parameters are defined</td>
         </tr>
         <tr>
-            <td rowspan=5><b>Response</b></td>
+            <td rowspan=6><b>Response</b></td>
             <td><b>200: Session information returned</b></td>
             <td>
                 Response body:<br> 
@@ -246,6 +246,9 @@ Following table defines API endpoints of exposed REST based for QoD management o
         </tr>
         <tr>
             <td><b>404: Session not found</b></td>
+        </tr>
+        <tr>
+            <td><b>500: Server Error</b></td>
         </tr>
         <tr>
             <td><b>503: Service temporarily unavailable</b></td>
@@ -281,7 +284,7 @@ Following table defines API endpoints of exposed REST based for QoD management o
             <td colspan=2>No request body parameters are defined</td>
         </tr>
         <tr>
-            <td rowspan=5><b>Response</b></td>
+            <td rowspan=6><b>Response</b></td>
             <td><b>204: Session deleted</b></td>
         </tr>
         <tr>
@@ -294,8 +297,11 @@ Following table defines API endpoints of exposed REST based for QoD management o
             <td><b>404: Session not found</b></td>
         </tr>
         <tr>
+            <td><b>500: Server Error</b></td>
+        </tr>
+        <tr>
             <td><b>503: Service temporarily unavailable</b></td>
-        </tr>    
+        </tr>
     </tbody>
 </table>
 
