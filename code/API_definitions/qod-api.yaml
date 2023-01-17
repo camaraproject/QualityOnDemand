@@ -113,6 +113,15 @@ paths:
               example:
                 code: INTERNAL
                 message: "Session could not be created"
+        "501":
+          description: Not Implemented
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorInfo"
+              example:
+                code: NOT_IMPLEMENTED
+                message: "Not Implemented for this version as server not support for this UE"        
         "503":
           $ref: "#/components/responses/Generic503"
   /sessions/{sessionId}:
