@@ -265,10 +265,10 @@ components:
           $ref: "#/components/schemas/PortsSpec"
         qos:
           $ref: "#/components/schemas/QosProfile"
-        notificationUri:
+        notificationUrl:
           type: string
           format: uri
-          example: "https://application-server.com/notifications"
+          example: "https://application-server.com"
           description: Allows asynchronous delivery of session related events
         notificationAuthToken:
           type: string

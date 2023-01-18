@@ -148,7 +148,7 @@ Following table defines API endpoints of exposed REST based for QoD management o
             <td>Qualifier for the requested latency/throughput profile, e.g. QOS_E</td>
         </tr>
         <tr>
-            <td><b>notificationUri (optional)</b></td>
+            <td><b>notificationUrl (optional)</b></td>
             <td>URI of the callback receiver. Allows asynchronous delivery of session related events, e.g. 'https://application-server.com/notifications'</td>
         </tr>
         <tr>
@@ -166,7 +166,7 @@ Following table defines API endpoints of exposed REST based for QoD management o
                 <b>uePorts (optional):</b> The requested port(s) on the user equipment<br>
                 <b>asPorts (optional):</b> The requested port(s) on the application server<br>
                 <b>qos:</b> Qualifier of the requested throughput profile<br>
-                <b>notificationUri (optional):</b> URI of the callback receiver<br>
+                <b>notificationUrl (optional):</b> URL of the callback receiver<br>
                 <b>notificationAuthToken (optional):</b> Authentication token for callback API<br>
                 <b>id:</b> Session ID in UUID format, e.g. 123e4567-e89b-12d3-a456-426614174000<br>
                 <b>startedAt:</b> Timestamp of session start, in seconds since Unix epoch, e.g. 1639479600<br>
@@ -231,7 +231,7 @@ Following table defines API endpoints of exposed REST based for QoD management o
                 <b>uePorts (optional):</b> The requested port(s) on the user equipment<br>
                 <b>asPort (optional):</b> The requested port(s) on the application server<br>
                 <b>qos:</b> Qualifier of the requested QoS profile<br>
-                <b>notificationUri (optional):</b> URI of the callback receiver<br>
+                <b>notificationUrl (optional):</b> URL of the callback receiver<br>
                 <b>notificationAuthToken (optional):</b> Authentication token for callback API<br>
                 <b>id:</b> Session ID in UUID format<br>
                 <b>startedAt:</b> Timestamp of session start in seconds since Unix epoch<br>
@@ -334,9 +334,9 @@ N/A
 
 Please note, the credentials for API authentication purposes need to be adjusted based on target security system configuration.
 
-| Snippet 1. Create QoS session resource  |
-| ----------------------------------------------- |
-| curl -X 'POST' `https://sample-base-url/qod/v0/sessions`   <br>    -H 'accept: application/json' <br>    -H 'Content-Type: application/json'<br>    -H "Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbG...."<br>    -d '{<br>     "ueId": {"ipv6Addr": "2001:db8:85a3:8d3:1319:8a2e:370:7344"},<br>     "asId": {"ipv4Addr": "54.204.25.0/28"},<br>     "asPorts": "33001",<br>     "qos": "QOS_E",<br>     "notificationUri": `https://your-callback-server.com/notifications`,<br>     "notificationAuthToken": "c8974e592c2fa383d4a3960714"<br>   }' |
+| Snippet 1. Create QoS session resource                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 |
+|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| curl -X 'POST' `https://sample-base-url/qod/v0/sessions`   <br>    -H 'accept: application/json' <br>    -H 'Content-Type: application/json'<br>    -H "Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbG...."<br>    -d '{<br>     "ueId": {"ipv6Addr": "2001:db8:85a3:8d3:1319:8a2e:370:7344"},<br>     "asId": {"ipv4Addr": "54.204.25.0/28"},<br>     "asPorts": "33001",<br>     "qos": "QOS_E",<br>     "notificationUrl": `https://your-callback-server.com`,<br>     "notificationAuthToken": "c8974e592c2fa383d4a3960714"<br>   }' |
 <br>
 Snippet 2, elaborates sample QoS notification "SESSION_TERMINATION" message distributed from QoD backend to client callback function.
 
