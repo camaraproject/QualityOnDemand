@@ -26,8 +26,8 @@ Repository to describe, develop, document and test the QualityOnDemand API famil
 ## Results and Status
 * The current version of the Quality-On-Demand (QoD) API is 0.8.0. This is the first alpha version of the API. There are bug fixes to be expected and incompatible changes in upcoming versions. It is suitable for implementors, but it is not recommended to use the API with customers in productive environments.
 * Version 0.8.0 of the API :
-  * API [definition](https://github.com/camaraproject/QualityOnDemand/tree/main/code/API_definitions)
-  * API [documentation](https://github.com/camaraproject/QualityOnDemand/tree/main/documentation/API_documentation)
+  * API [definition](https://github.com/camaraproject/QualityOnDemand/blob/release-v0.8.0/code/API_definitions)
+  * API [documentation](https://github.com/camaraproject/QualityOnDemand/tree/release-v0.8.0/documentation/API_documentation)
 * Provider implementations (PI) will be provided within separate repositories:
   * [QualityOnDemand_PI1](https://github.com/camaraproject/QualityOnDemand_PI1) by Deutsche Telekom
   * [QualityOnDemand_PI2](https://github.com/camaraproject/QualityOnDemand_PI2) by Orange
