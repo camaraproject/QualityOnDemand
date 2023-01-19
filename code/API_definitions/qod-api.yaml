@@ -273,7 +273,7 @@ components:
         notificationAuthToken:
           type: string
           example: "c8974e592c2fa383d4a3960714"
-          description: Authentification token for callback API
+          description: Authentication token for callback API
       required:
         - ueId
         - asId
@@ -463,5 +463,5 @@ components:
           schema:
             $ref: "#/components/schemas/ErrorInfo"
           example:
-            code: SERVICE_UNAVALIBLE
+            code: SERVICE_UNAVAILABLE
             message: "Service unavailable"
