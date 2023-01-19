@@ -5,13 +5,16 @@
 - [v0.8.0](#v080)
 - [v0.1.0 - Initial contribution](#v010---initial-contribution)
 
-Note: version number 0.2.x to 0.7.x intentionally not used to avoid conflicts with local implementations.
+Version number 0.2.x to 0.7.x were intentionally not used to avoid conflicts with local implementations.
+
+**Please be aware that the project will have frequent updates to the main branch. There are no compatibility guarantees associated with code in any branch, including main, until it has been released. For example, changes may be reverted before a release is published. For the best results, use the latest published release.**
+
 
 # v0.8.0
 
 **This is the first alpha version of the Quality-On-Demand (QoD) API.** 
-- API [definition](https://github.com/camaraproject/QualityOnDemand/tree/main/code/API_definitions)
-- API [documentation](https://github.com/camaraproject/QualityOnDemand/tree/main/documentation/API_documentation)
+- API [definition](https://github.com/camaraproject/QualityOnDemand/tree/release-0.8.0/code/API_definitions)
+- API [documentation](https://github.com/camaraproject/QualityOnDemand/tree/release-0.8.0/documentation/API_documentation)
 
 ## Please note:
 
