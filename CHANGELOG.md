@@ -21,7 +21,7 @@ Version number 0.2.x to 0.7.x were intentionally not used to avoid conflicts wit
 - This is an alpha version, it should be considered as a draft.
 - There are bug fixes to be expected and incompatible changes in upcoming versions. 
 - The release is suitable for implementors, but it is not recommended to use the API with customers in productive environments.
-- Version numbers 0.2.x to 0.7.x where used in privat versions during the development of the API and are here not used to avoid conflicts with local implementations.
+- Version numbers 0.2.x to 0.7.x were used in privat versions during the development of the API and are here not used to avoid conflicts with local implementations.
 - Provider implementations (PI) will be provided within separate repositories:
   - [QualityOnDemand_PI1](https://github.com/camaraproject/QualityOnDemand_PI1) by Deutsche Telekom
   - [QualityOnDemand_PI2](https://github.com/camaraproject/QualityOnDemand_PI2) by Orange
@@ -46,7 +46,7 @@ Version number 0.2.x to 0.7.x were intentionally not used to avoid conflicts wit
 ## Please note 
 - this "release" is only tagged to document the history of the API, it is not intended to be used by implementors or API customers
 - it was implemented by Deutsche Telekom within lab environment and tested against two NEF implementations
-- going forward the implementation [code](https://github.com/camaraproject/QualityOnDemand/tree/50e81e0c4a6a7431c0a7f50c26415caf935be6df/code/API_code) will not be part of releases of QoD API. Instead it will be provided within seperate repositories (QualityOnDemand_PIx).
+- going forward the implementation [code](https://github.com/camaraproject/QualityOnDemand/tree/50e81e0c4a6a7431c0a7f50c26415caf935be6df/code/API_code) will not be part of releases of QoD API. Instead it will be provided within separate repositories (QualityOnDemand_PIx).
 
 ## What's Changed
 * Qod latency api spec 0.1.0 contribution by @shilpa-padgaonkar in https://github.com/camaraproject/QualityOnDemand/pull/24
