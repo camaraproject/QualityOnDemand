@@ -1,6 +1,6 @@
 # Changelog QualityOnDemand
 
-## Content
+## Table of Contents
 
 - [v0.8.0](#v080)
 - [v0.1.0 - Initial contribution](#v010---initial-contribution)
@@ -21,7 +21,7 @@ Version number 0.2.x to 0.7.x were intentionally not used to avoid conflicts wit
 - This is an alpha version, it should be considered as a draft.
 - There are bug fixes to be expected and incompatible changes in upcoming versions. 
 - The release is suitable for implementors, but it is not recommended to use the API with customers in productive environments.
-- Version numbers 0.2.x to 0.7.x were used in privat versions during the development of the API and are here not used to avoid conflicts with local implementations.
+- Version numbers 0.2.x to 0.7.x were used in private versions during the development of the API and are here not used to avoid conflicts with local implementations.
 - Provider implementations (PI) will be provided within separate repositories:
   - [QualityOnDemand_PI1](https://github.com/camaraproject/QualityOnDemand_PI1) by Deutsche Telekom
   - [QualityOnDemand_PI2](https://github.com/camaraproject/QualityOnDemand_PI2) by Orange
