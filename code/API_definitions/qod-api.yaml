@@ -244,20 +244,6 @@ components:
       type: string
       format: uuid
       description: Session ID in UUID format
-    SessionInfos:
-      description: Paged response of created sessions
-      type: object
-      properties:
-        pageSize:
-          description: count of sessions in response
-          type: integer
-        pageNumber:
-          description: currently selected page number
-          type: integer
-        sessions:
-          description: Array of sessions to be returned.
-          type: array
-          $ref: "#/components/schemas/SessionInfo"
     SessionInfo:
       description: Session related information.
       allOf:
@@ -285,6 +271,22 @@ components:
               type: array
               items:
                 $ref: "#/components/schemas/Message"
+    SessionInfos:
+      description: Paged response of created sessions
+      type: object
+      properties:
+        pageSize:
+          description: count of sessions in response
+          type: integer
+        pageNumber:
+          description: currently selected page number
+          type: integer
+        sessions:
+          description: Array of sessions to be returned.
+          type: array
+          items:
+            type: object
+            $ref: "#/components/schemas/SessionInfo"
     CreateSession:
       description: Data type with attributes required for creating a session
       type: object
