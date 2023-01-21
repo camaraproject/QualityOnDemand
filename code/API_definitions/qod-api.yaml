@@ -143,24 +143,6 @@ paths:
           $ref: "#/components/responses/Generic401"
         "403":
           $ref: "#/components/responses/Generic403"
-        "409":
-          description: Conflict
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/ErrorInfo"
-              example:
-                code: CONFLICT
-                message: "Another session is created for the same UE"
-        "500":
-          description: Server error
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/ErrorInfo"
-              example:
-                code: INTERNAL
-                message: "Session could not be created"
         "503":
           $ref: "#/components/responses/Generic503"
   /sessions/{sessionId}:
