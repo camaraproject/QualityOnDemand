@@ -117,21 +117,21 @@ paths:
           $ref: "#/components/responses/Generic503"
     get:
       tags:
-        - QoS Sessions
-      summary: Fetch all paginated sessions created
+        - QoS sessions
+      summary: Get all session information
       description: Fetch QoS sessions created
       operationId: listSessions
       parameters:
         - in: query
           name: page
           schema:
-            type: interger
+            type: integer
           required: true
         - in: query
           name: pageSize
           schema:
             type: integer
-            default: 10
+            default: 100
       responses:
         "200":
           description: Sessions page listed
