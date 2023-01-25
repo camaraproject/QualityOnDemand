@@ -481,7 +481,7 @@ components:
           example:
             status: "500"
             code: INTERNAL
-            message: "Session could not be deleted"
+            message: "Internal server error: ..."
     Generic503:
       description: Service unavailable
       content:
