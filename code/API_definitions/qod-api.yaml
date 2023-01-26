@@ -437,7 +437,16 @@ components:
       content:
         application/json:
           schema:
-            $ref: "#/components/schemas/ErrorInfo"
+            allOf: 
+              - $ref: "#/components/schemas/ErrorInfo"
+              - type: object
+                properties: 
+                  status:
+                    type: string
+                    enum: ["400"]
+                  code:
+                    type: string
+                    enum: ["INVALID_INPUT"]
           example:
             status: "400"
             code: INVALID_INPUT
@@ -447,7 +456,16 @@ components:
       content:
         application/json:
           schema:
-            $ref: "#/components/schemas/ErrorInfo"
+            allOf: 
+              - $ref: "#/components/schemas/ErrorInfo"
+              - type: object
+                properties: 
+                  status:
+                    type: string
+                    enum: ["401"]
+                  code:
+                    type: string
+                    enum: ["UNAUTHORIZED"]
           example:
             status: "401"
             code: UNAUTHORIZED
@@ -457,7 +475,16 @@ components:
       content:
         application/json:
           schema:
-            $ref: "#/components/schemas/ErrorInfo"
+            allOf: 
+              - $ref: "#/components/schemas/ErrorInfo"
+              - type: object
+                properties: 
+                  status:
+                    type: string
+                    enum: ["403"]
+                  code:
+                    type: string
+                    enum: ["FORBIDDEN"]
           example:
             status: "403"
             code: FORBIDDEN
@@ -467,7 +494,16 @@ components:
       content:
         application/json:
           schema:
-            $ref: "#/components/schemas/ErrorInfo"
+            allOf: 
+              - $ref: "#/components/schemas/ErrorInfo"
+              - type: object
+                properties: 
+                  status:
+                    type: string
+                    enum: ["404"]
+                  code:
+                    type: string
+                    enum: ["NOT_FOUND"]
           example:
             status: "404"
             code: NOT_FOUND
@@ -477,7 +513,16 @@ components:
       content:
         application/json:
           schema:
-            $ref: "#/components/schemas/ErrorInfo"
+            allOf: 
+              - $ref: "#/components/schemas/ErrorInfo"
+              - type: object
+                properties: 
+                  status:
+                    type: string
+                    enum: ["500"]
+                  code:
+                    type: string
+                    enum: ["INTERNAL"]
           example:
             status: "500"
             code: INTERNAL
@@ -487,7 +532,16 @@ components:
       content:
         application/json:
           schema:
-            $ref: "#/components/schemas/ErrorInfo"
+            allOf: 
+              - $ref: "#/components/schemas/ErrorInfo"
+              - type: object
+                properties: 
+                  status:
+                    type: string
+                    enum: ["503"]
+                  code:
+                    type: string
+                    enum: ["SERVICE_UNAVAILABLE"]
           example:
             status: "503"
             code: SERVICE_UNAVAILABLE
