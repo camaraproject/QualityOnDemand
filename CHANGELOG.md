@@ -32,6 +32,7 @@ Version number 0.2.x to 0.7.x were intentionally not used to avoid conflicts wit
 ### Changed
 
 * Update from notificationsUri to notificationsUrl by @maxl2287 in https://github.com/camaraproject/QualityOnDemand/pull/89
+* Update and rename QoD_Latency_Bandwidth_User_Story.md  by @hdamker in https://github.com/camaraproject/QualityOnDemand/pull/103
 
 ### Fixed
 
