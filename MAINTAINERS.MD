@@ -2,7 +2,6 @@
 | -----------------------| ----------------------------------------------------|
 | Deutsche Telekom AG | Herbert Damker |
 | Ericsson | Emil Zhang |
-| Intel | Petar Torre |
 | Orange | Sylvain Morel |
 | Telefonica | Jose Luis Urien |
 | Telefonica | Jesus Peña| 

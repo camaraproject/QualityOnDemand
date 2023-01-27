@@ -8,7 +8,7 @@ info:
   license:
     name: Apache 2.0
     url: https://www.apache.org/licenses/LICENSE-2.0.html
-  version: 0.8.0
+  version: 0.9.0-wip
 externalDocs:
   description: Product documentation at Camara
   url: https://github.com/camaraproject/
@@ -141,6 +141,15 @@ paths:
           $ref: "#/components/responses/Generic403"
         "404":
           $ref: "#/components/responses/SessionNotFound404"
+        "500":
+          description: Server error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorInfo"
+              example:
+                code: INTERNAL
+                message: "Could not get session information"
         "503":
           $ref: "#/components/responses/Generic503"
     delete:
@@ -164,6 +173,15 @@ paths:
           $ref: "#/components/responses/Generic403"
         "404":
           $ref: "#/components/responses/SessionNotFound404"
+        "500":
+          description: Server error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorInfo"
+              example:
+                code: INTERNAL
+                message: "Session could not be deleted"
         "503":
           $ref: "#/components/responses/Generic503"
   /notifications:
@@ -191,6 +209,15 @@ paths:
           $ref: "#/components/responses/Generic401"
         "403":
           $ref: "#/components/responses/Generic403"
+        "500":
+          description: Server error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorInfo"
+              example:
+                code: INTERNAL
+                message: "Failed to handle notification"
         "503":
           $ref: "#/components/responses/Generic503"
       security:
@@ -265,15 +292,15 @@ components:
           $ref: "#/components/schemas/PortsSpec"
         qos:
           $ref: "#/components/schemas/QosProfile"
-        notificationUri:
+        notificationUrl:
           type: string
           format: uri
-          example: "https://application-server.com/notifications"
+          example: "https://application-server.com"
           description: Allows asynchronous delivery of session related events
         notificationAuthToken:
           type: string
           example: "c8974e592c2fa383d4a3960714"
-          description: Authentification token for callback API
+          description: Authentication token for callback API
       required:
         - ueId
         - asId
@@ -463,5 +490,5 @@ components:
           schema:
             $ref: "#/components/schemas/ErrorInfo"
           example:
-            code: SERVICE_UNAVALIBLE
+            code: SERVICE_UNAVAILABLE
             message: "Service unavailable"
