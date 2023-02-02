@@ -2,6 +2,8 @@
 
 ## Table of Contents
 
+
+- [v0.8.1](#v081)
 - [v0.8.0](#v080)
 - [v0.1.0 - Initial contribution](#v010---initial-contribution)
 
@@ -9,6 +11,40 @@ Version number 0.2.x to 0.7.x were intentionally not used to avoid conflicts wit
 
 **Please be aware that the project will have frequent updates to the main branch. There are no compatibility guarantees associated with code in any branch, including main, until it has been released. For example, changes may be reverted before a release is published. For the best results, use the latest published release.**
 
+
+# v0.8.1
+
+**This is the second alpha release of the Quality-On-Demand (QoD) API**
+- API [definition](https://github.com/camaraproject/QualityOnDemand/tree/release-0.8.1/code/API_definitions)
+- API [documentation](https://github.com/camaraproject/QualityOnDemand/tree/release-0.8.1/documentation/API_documentation)
+
+## Please note:
+
+- **This minor release contains minor fixes of v0.8.0, but is not backward compatible to v0.8.0**
+- This is an alpha version, it should be considered as a draft.
+- There are bug fixes to be expected and incompatible changes in upcoming versions. 
+- The release is suitable for implementors, but it is not recommended to use the API with customers in productive environments.
+
+### Added
+
+* Added Generic error 500 to remaining procedures by @SfnUser in https://github.com/camaraproject/QualityOnDemand/pull/86
+
+### Changed
+
+* Update from notificationsUri to notificationsUrl by @maxl2287 in https://github.com/camaraproject/QualityOnDemand/pull/89
+* Update and rename QoD_Latency_Bandwidth_User_Story.md  by @hdamker in https://github.com/camaraproject/QualityOnDemand/pull/103
+
+### Fixed
+
+* Fixed two typos in qod-api.yaml by @SfnUser in https://github.com/camaraproject/QualityOnDemand/pull/77
+
+### Removed
+
+## New Contributors
+* @maxl2287 made their first contribution in https://github.com/camaraproject/QualityOnDemand/pull/89
+* @SfnUser made their first contribution in https://github.com/camaraproject/QualityOnDemand/pull/77
+
+**Full Changelog**: https://github.com/camaraproject/QualityOnDemand/compare/v0.8.0...v0.8.1
 
 # v0.8.0
 
