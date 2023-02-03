@@ -222,6 +222,39 @@ paths:
           $ref: "#/components/responses/Generic503"
       security:
         - apiKey: []
+  /qos-profiles:
+    get:
+      tags:
+        - QoS Profiles
+      summary: "Get All QoS Profiles"
+      operationId: getQosProfiles
+      responses:
+        "200":
+          description: Contains information about QoS Profiles
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  allOf:
+                    - $ref: "#/components/schemas/QosProfile"
+        "401":
+          $ref: "#/components/responses/Generic401"
+        "403":
+          $ref: "#/components/responses/Generic403"
+        "404":
+          $ref: "#/components/responses/SessionNotFound404"
+        "500":
+          description: Server error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorInfo"
+              example:
+                code: INTERNAL
+                message: "Could not get QoS Profiles"
+        "503":
+          $ref: "#/components/responses/Generic503"
 components:
   securitySchemes:
     oAuth2ClientCredentials:
@@ -341,17 +374,116 @@ components:
       description: |
         Ports may be specified as a list of ranges or single ports.
     QosProfile:
+      description: Data type with attributes of a QosProfile
+      type: object
+      properties:
+        id:
+          type: string
+          example: foo-bar
+          description: Unique gererated ID for a QoD Profile
+          minLength: 3
+          maxLength: 64
+          format: string
+        name:
+          type: string
+          example: foo-bar
+          description: Descriptive name for QoD Profile
+          minLength: 3
+          maxLength: 64
+          format: string
+        status:
+          $ref: "#/components/schemas/QosProfileStatusEnum"
+        minBandwidth:
+          $ref: "#/components/schemas/Bandwidth"
+          description: The minmum guaronteed bandidth.  Set to zero when no guarontted bandwidth.
+        maxBandwidth:
+          $ref: "#/components/schemas/Bandwidth"
+          description: |
+            The maximim best effort bandwidth
+            Equal to minBandwidth when profile is guaronteed. 
+        minDuration:
+          $ref: "#/components/schemas/Duration"
+        maxDuration:
+          $ref: "#/components/schemas/Duration"
+        priority:
+          type: float
+          example: 5.0
+          description: |
+            Priority for this session
+          format: float
+          minimum: 0
+          maximum: 10
+          default: 5
+        packetDelayBudget:
+          $ref: "#/components/schemas/Duration"
+        packetErrorLossRate:
+          type: int
+          description: |
+            The exponential power of the allowable error loss rate.
+            For instance 10 would be an error loss rate of 2 to the power of -10 (0.0009765625)
+          format: int32
+          minimum: 1
+          maximum: 10
+          example: 5
+          default: 1
+    Bandwidth:
+      description: Bandwidth amount and unit
+      value:
+        type: int
+        example: 100
+        format: int32
+        minimum: 0
+        maximum: 1024
+      unit:
+        $ref: "#/components/schemas/BandwidthUnitEnum"
+    Duration:
+      description: Legth and time
+      value:
+        type: int
+        example: 12
+        format: int32
+        minimum: 1
+      unit:
+        $ref: "#/components/schemas/TimeUnitEnum"
+        example: Minutes
+    QosProfileStatusEnum:
+      description: The current status of the QoS Profile
       type: string
       enum:
-        - QOS_E
-        - QOS_S
-        - QOS_M
-        - QOS_L
+        - Active
+        - Inactive
+        - Deprecated
+    BandwidthUnitEnum:
       description: |
-        * `QOS_E` - Qualifier for enhanced communication profile
-        * `QOS_S` - Qualifier for the requested QoS profile _S_
-        * `QOS_M` - Qualifier for the requested QoS profile _M_
-        * `QOS_L` - Qualifier for the requested QoS profile _L_
+        The unit of measurement for bandwidth.
+        Kbps - Kilobits per second
+        Mbps - Megabits per second
+        Gbps - Gigabits per second
+        Tbps - Terrabits per second
+      type: string
+      enum:
+        - Kbps
+        - Mbps
+        - Gbps
+        - Tbps
+    TimeUnitEnum:
+      description: |
+        Days
+        Hours
+        Minutes
+        Seconds
+        Miliseconds
+        Microseconds
+        Nanoseconds
+      type: string
+      enum:
+        - Days
+        - Hours
+        - Minutes
+        - Seconds
+        - Miliseconds
+        - Microseconds
+        - Nanoseconds
     Notification:
       type: object
       required:
