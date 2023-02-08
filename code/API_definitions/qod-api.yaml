@@ -50,53 +50,53 @@ paths:
               schema:
                 $ref: "#/components/schemas/SessionInfo"
         "400":
-          description: Invalid input
+          description: Invalid input for createSession operation
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/ErrorInfo"
+                $ref: "#/components/schemas/Error400"
               examples:
                 Generic400:
                   summary: Schema validation failed
                   value:
-                    status: "400"
-                    code: INVALID_INPUT
+                    status: 400
+                    code: INVALID_ARGUMENT
                     message: "Schema validation failed at  ..."
                 MsisdnRequired:
                   summary: msisdn is required as part of ueId
                   value:
-                    status: "400"
-                    code: INVALID_INPUT
+                    status: 400
+                    code: INVALID_ARGUMENT
                     message: "Expected property is missing: ueId.msisdn"
                 IPv4Required:
                   summary: ipv4addr is required as part of ueId
                   value:
-                    status: "400"
-                    code: INVALID_INPUT
+                    status: 400
+                    code: INVALID_ARGUMENT
                     message: "Expected property is missing: ueId.ipv4addr"
                 IPRequired:
                   summary: Some IP address is required as part of ueId
                   value:
-                    status: "400"
-                    code: INVALID_INPUT
+                    status: 400
+                    code: INVALID_ARGUMENT
                     message: "Expected property is missing: ueId.ipv4addr or ueId.ipv6addr"
                 UePortsRequired:
                   summary: uePorts is required
                   value:
-                    status: "400"
-                    code: INVALID_INPUT
+                    status: 400
+                    code: INVALID_ARGUMENT
                     message: "Expected property is missing: uePorts"
                 QoSRequired:
                   summary: qos is required
                   value:
-                    status: "400"
-                    code: INVALID_INPUT
+                    status: 400
+                    code: INVALID_ARGUMENT
                     message: "Expected property is missing: qos"
                 UePortsRangesNotAllowed:
                   summary: Ranges at uePorts are not allowed
                   value:
-                    status: "400"
-                    code: INVALID_INPUT
+                    status: 400
+                    code: INVALID_ARGUMENT
                     message: "Ranges not allowed: uePorts"
         "401":
           $ref: "#/components/responses/Generic401"
@@ -107,9 +107,9 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/ErrorInfo"
+                $ref: "#/components/schemas/Error409"
               example:
-                status: "409"
+                status: 409
                 code: CONFLICT
                 message: "Another session is created for the same UE"
         "500":
@@ -346,23 +346,6 @@ components:
       type: string
       enum:
         - SESSION_TERMINATED
-    ErrorInfo:
-      type: object
-      required:
-        - status
-        - code
-        - message
-      properties:
-        status:
-          type: string
-          pattern: "^[4-5][0-9]{2}$"
-          description: HTTP status code returned along with this error response
-        code:
-          type: string
-          description: Code given to this error
-        message:
-          type: string
-          description: Detailed error description
     UeId:
       type: object
       minProperties: 1
@@ -431,100 +414,190 @@ components:
       required:
         - severity
         - description
+    ErrorInfo:
+      type: object
+      required:
+        - status
+        - code
+        - message
+      properties:
+        status:
+          type: integer
+          description: HTTP status code returned along with this error response
+        code:
+          type: string
+          description: Code given to this error
+        message:
+          type: string
+          description: Detailed error description
+    Error400:
+      type: object
+      required: 
+        - status
+        - code
+        - message
+      properties: 
+        status:
+          type: integer
+          enum:
+            - 400
+        code:
+          type: string
+          enum:
+            - INVALID_ARGUMENT
+        message:
+          type: string  
+    Error401:
+      type: object
+      required: 
+        - status
+        - code
+        - message
+      properties: 
+        status:
+          type: integer
+          enum:
+            - 401
+        code:
+          type: string
+          enum:
+            - UNAUTHENTICATED
+        message:
+          type: string 
+    Error403:
+      type: object
+      required: 
+        - status
+        - code
+        - message
+      properties: 
+        status:
+          type: integer
+          enum:
+            - 403
+        code:
+          type: string
+          enum:
+            - PERMISSION_DENIED
+        message:
+          type: string 
+    Error404:
+      type: object
+      required: 
+        - status
+        - code
+        - message
+      properties: 
+        status:
+          type: integer
+          enum:
+            - 404
+        code:
+          type: string
+          enum:
+            - NOT_FOUND
+        message:
+          type: string
+    Error409:
+      type: object
+      required: 
+        - status
+        - code
+        - message
+      properties: 
+        status:
+          type: integer
+          enum:
+            - 409
+        code:
+          type: string
+          enum:
+            - CONFLICT
+        message:
+          type: string
+    Error500:
+      type: object
+      required: 
+        - status
+        - code
+        - message
+      properties: 
+        status:
+          type: integer
+          enum:
+            - 500
+        code:
+          type: string
+          enum:
+            - INTERNAL
+        message:
+          type: string
+    Error503:
+      type: object
+      required: 
+        - status
+        - code
+        - message
+      properties: 
+        status:
+          type: integer
+          enum:
+            - 503
+        code:
+          type: string
+          enum:
+            - UNAVAILABLE
+        message:
+          type: string
   responses:
     Generic400:
       description: Invalid input
       content:
         application/json:
           schema:
-            allOf: 
-              - $ref: "#/components/schemas/ErrorInfo"
-              - type: object
-                properties: 
-                  status:
-                    type: string
-                    enum: ["400"]
-                  code:
-                    type: string
-                    enum: ["INVALID_INPUT"]
+            $ref: "#/components/schemas/Error400"
           example:
-            status: "400"
-            code: INVALID_INPUT
+            status: 400
+            code: INVALID_ARGUMENT
             message: "Schema validation failed at  ..."
     Generic401:
       description: Unauthorized
       content:
         application/json:
           schema:
-            allOf: 
-              - $ref: "#/components/schemas/ErrorInfo"
-              - type: object
-                properties: 
-                  status:
-                    type: string
-                    enum: ["401"]
-                  code:
-                    type: string
-                    enum: ["UNAUTHORIZED"]
+            $ref: "#/components/schemas/Error401"
           example:
-            status: "401"
-            code: UNAUTHORIZED
+            status: 401
+            code: UNAUTHENTICATED
             message: "Authorization failed: ..."
     Generic403:
       description: Forbidden
       content:
         application/json:
           schema:
-            allOf: 
-              - $ref: "#/components/schemas/ErrorInfo"
-              - type: object
-                properties: 
-                  status:
-                    type: string
-                    enum: ["403"]
-                  code:
-                    type: string
-                    enum: ["FORBIDDEN"]
+            $ref: "#/components/schemas/Error403"
           example:
-            status: "403"
-            code: FORBIDDEN
+            status: 403
+            code: PERMISSION_DENIED
             message: "Operation not allowed: ..."
     SessionNotFound404:
       description: Session not found
       content:
         application/json:
           schema:
-            allOf: 
-              - $ref: "#/components/schemas/ErrorInfo"
-              - type: object
-                properties: 
-                  status:
-                    type: string
-                    enum: ["404"]
-                  code:
-                    type: string
-                    enum: ["NOT_FOUND"]
+            $ref: "#/components/schemas/Error404"
           example:
-            status: "404"
+            status: 404
             code: NOT_FOUND
             message: "Session Id does not exist"
     Generic500:
-      description: Server error
+      description: Internal server error
       content:
         application/json:
           schema:
-            allOf: 
-              - $ref: "#/components/schemas/ErrorInfo"
-              - type: object
-                properties: 
-                  status:
-                    type: string
-                    enum: ["500"]
-                  code:
-                    type: string
-                    enum: ["INTERNAL"]
+            $ref: "#/components/schemas/Error500"
           example:
-            status: "500"
+            status: 500
             code: INTERNAL
             message: "Internal server error: ..."
     Generic503:
@@ -532,17 +605,8 @@ components:
       content:
         application/json:
           schema:
-            allOf: 
-              - $ref: "#/components/schemas/ErrorInfo"
-              - type: object
-                properties: 
-                  status:
-                    type: string
-                    enum: ["503"]
-                  code:
-                    type: string
-                    enum: ["SERVICE_UNAVAILABLE"]
+            $ref: "#/components/schemas/Error503"
           example:
-            status: "503"
-            code: SERVICE_UNAVAILABLE
+            status: 503
+            code: UNAVAILABLE
             message: "Service unavailable"
