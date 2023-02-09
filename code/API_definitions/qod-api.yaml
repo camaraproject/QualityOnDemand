@@ -270,7 +270,7 @@ paths:
                     code: INVALID_INPUT
                     message: "Expected property is missing: status"
                 minBandwidthRequired:
-                  summary: minBadnWidth
+                  summary: minBandwidth
                   value: 
                     code: INVALID_INPUT
                     message: "Expected property is minBandwidth"
