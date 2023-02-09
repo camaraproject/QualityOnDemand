@@ -1,6 +1,6 @@
 # Overview
 
-<span class="colour" style="color:rgb(0, 0, 0)">The Quality-On-Demand (QoD) API provides programmable interface for developers and other users (capabilities consumers) to request stable latency or throughput managed by Telco networks without the necessity to have an in-depth knowledge of the 4G/5G system or the overall complexity of the Telecom Systems [[1]](#1).</span> 
+<span class="colour" style="color:rgb(0, 0, 0)">The Quality-On-Demand (QoD) API provides programmable interface for developers and other users (capabilities consumers) to request stable latency or throughput managed by Telco networks without the necessity to have an in-depth knowledge of the 4G/5G system or the overall complexity of the Telecom Systems [[1]](#1).</span>
 
 ## 1\. Introduction
 
@@ -35,7 +35,7 @@ IPv4 and/or IPv6 address of the application server (application backend)
 **App-Flow (between the application client and application server)**
 The precise application data flow the developer wants to prioritize and have stable latency or throughput for. This flow is in the current API version determined by the identifiers used for the user equipment and the application server. And it can be further elaborated with details such as ports or port-ranges. Future version of the API might allow more detailed flow identification features.
 
-**Duration** 
+**Duration**
 Duration (in seconds) for which the QoS session (between application client and application server) should be created. This parameter is optional. When not specified, a default session duration (e.g. 24 hours) is applied. The user may request a termination before its expiration.
 
 **Notification URL and token**
@@ -74,7 +74,6 @@ Following diagram shows the interaction between different components
 
 How QoS profiles are mapped to connectivity characteristics are subject to agreements between the communication service provider and the API invoker. Within the CAMARA project, you can find a sample for such a mapping of QoS profiles. [[2]](#2)
 
-
 ### 4.3 Endpoint Definitions
 
 Following table defines API endpoints of exposed REST based for QoD management operations.
@@ -84,6 +83,12 @@ Following table defines API endpoints of exposed REST based for QoD management o
 | POST<br>  \<base-url>/qod/v0/sessions | **Create QoS Session Resource** | Create QoS Session to manage latency/throughput priorities |
 | GET<br> \<base-url>/qod/v0/sessions/{sessionId} | **Query for QoS Session Resource** | Querying for QoS session resource information details |
 | DELETE<br> \<base-url>/qod/v0/sessions/{sessionId} | **Delete QoS Session Resource** | Deleting a QoS session |
+| POST<br>  \<base-url>/qod/v0/qos-profiles | **Create QoS Profile** | Create QoS Profile to manage latency/throughput priorities |
+| GET<br>  \<base-url>/qod/v0/qos-profiles | **return array of QosProfiles** | return array of QosProfiles |
+| GET<br>  \<base-url>/qod/v0/qos-profiles/{profile-id} | **return a QosProfile** | return the QosProfile based on the profile-id |
+| PUT<br>  \<base-url>/qod/v0/qos-profiles/{profile-id} | **replace a QosProfile** | replace the QosProfile based on the profile-id |
+| PATCH<br>  \<base-url>/qod/v0/qos-profiles/{profile-id} | **update a QosProfile** | update the QosProfile based on the profile-id |
+| DELETE<br>  \<base-url>/qod/v0/qos-profiles/{profile-id} | **remove a QosProfile** | remove the QosProfile based on the profile-id |
 <br>
 
 #### QoD - Create QoS Session Resource Operations
@@ -111,7 +116,7 @@ Following table defines API endpoints of exposed REST based for QoD management o
             <td rowspan=8><b>Request Body Parameters</b></td>
             <td><b>duration (optional)</b></td>
             <td>Session duration in seconds. Maximal value of 24 hours is used if not set. e.g. 86400</td>
-        </tr> 
+        </tr>
         <tr>
             <td><b>ueId</b></td>
             <td>
@@ -154,7 +159,7 @@ Following table defines API endpoints of exposed REST based for QoD management o
         <tr>
             <td><b>notificationAuthToken (optional)</b></td>
             <td>Authentication token for callback API, e.g. c8974e592c2fa383d4a3960714</td>
-        </tr> 
+        </tr>
         <tr>
             <td rowspan=7><b>Response</b></td>
             <td><b>201: Session created</b></td>
@@ -194,7 +199,6 @@ Following table defines API endpoints of exposed REST based for QoD management o
     </tbody>
 </table>
 
-
 #### QoD - Query for QoS Session Resource
 
 <table>
@@ -225,7 +229,7 @@ Following table defines API endpoints of exposed REST based for QoD management o
             <td rowspan=6><b>Response</b></td>
             <td><b>200: Session information returned</b></td>
             <td>
-                Response body:<br> 
+                Response body:<br>
                 <b>ueId:</b> The identifier of the user equipment<br>
                 <b>asId:</b> The identifier of the application server.<br>
                 <b>uePorts (optional):</b> The requested port(s) on the user equipment<br>
@@ -252,10 +256,9 @@ Following table defines API endpoints of exposed REST based for QoD management o
         </tr>
         <tr>
             <td><b>503: Service temporarily unavailable</b></td>
-        </tr>    
+        </tr>
     </tbody>
 </table>
-
 
 #### QoD - Delete QoS Session Resource
 
@@ -314,24 +317,25 @@ Following table provides an overview of common error names, codes, and messages 
 
 | No | Error Name | Error Code | Error Message |
 | --- | ---------- | ---------- | ------------- |
-|1	|400 |	INVALID_INPUT |	"Expected property is missing: ueId.msisdn" |
-|2	|400 |	INVALID_INPUT |	"Expected property is missing: ueId.ipv4addr" |
-|3	|400 |	INVALID_INPUT |	"Expected property is missing: ueId.ipv4addr or ueId.ipv6addr" |
-|4	|400 |	INVALID_INPUT |	"Expected property is missing: uePorts" |
-|5	|400 |	INVALID_INPUT |	"Expected property is missing: qos" |
-|6	|400 |	INVALID_INPUT |	"Ranges not allowed: uePorts" |
-|7	|401 |	UNAUTHORIZED |	"No authorization to invoke operation" |
-|8	|403 |	FORBIDDEN |	"Operation not allowed" |
-|9	|404 |	NOT_FOUND |	"Session Id does not exist" |
-|10	|409 |	CONFLICT |	"Another session is created for the same UE" |
-|11	|500 |	INTERNAL |	"Session could not be created" |
-|12	|503 |	SERVICE_UNAVAILABLE |	"Service unavailable" |
+|1|400 |INVALID_INPUT |"Expected property is missing: ueId.msisdn" |
+|2|400 |INVALID_INPUT |"Expected property is missing: ueId.ipv4addr" |
+|3|400 |INVALID_INPUT |"Expected property is missing: ueId.ipv4addr or ueId.ipv6addr" |
+|4|400 |INVALID_INPUT |"Expected property is missing: uePorts" |
+|5|400 |INVALID_INPUT |"Expected property is missing: qos" |
+|6|400 |INVALID_INPUT |"Ranges not allowed: uePorts" |
+|7|401 |UNAUTHORIZED |"No authorization to invoke operation" |
+|8|403 |FORBIDDEN |"Operation not allowed" |
+|9|404 |NOT_FOUND |"Session Id does not exist" |
+|10|409 |CONFLICT |"Another session is created for the same UE" |
+|11|500 |INTERNAL |"Session could not be created" |
+|12|503 |SERVICE_UNAVAILABLE |"Service unavailable" |
 
 ### 4.5 Policies
 
 N/A
 
 ### 4.6 Code Snippets
+
 <br>
 <span class="colour" style="color:rgb(36, 41, 47)">Snippet 1, elaborates REST based API call with "*curl"* to create a QoS session for sample streaming service with following parameters: </span>
 
