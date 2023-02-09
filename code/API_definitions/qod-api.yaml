@@ -225,16 +225,16 @@ paths:
   /qos-profiles:
     post:
       tags:
-        - QoS sessions
-      summary: Creates a new session
-      description: Creates a new QoS session on demand
-      operationId: createSession
+        - QoS Profiles
+      summary: Creates a new profile
+      description: Creates a new QoS profile
+      operationId: createProfile
       requestBody:
-        description: Creates a new session
+        description: Creates a new QoS profile
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/CreateSession"
+              $ref: "#/components/schemas/CreateQosProfile"
         required: true
       callbacks:
         notifications:
@@ -242,11 +242,11 @@ paths:
             $ref: "#/paths/~1notifications"
       responses:
         "201":
-          description: Session created
+          description: QoS Profile created
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/SessionInfo"
+                $ref: "#/components/schemas/QosProfile"
         "400":
           description: Invalid input
           content:
@@ -259,36 +259,26 @@ paths:
                   value: 
                     code: INVALID_INPUT
                     message: "Schema validation failed at  ..."
-                MsisdnRequired:
-                  summary: msisdn is required as part of ueId
+                NameRequired:
+                  summary: name is required
                   value: 
                     code: INVALID_INPUT
-                    message: "Expected property is missing: ueId.msisdn"
-                IPv4Required:
-                  summary: ipv4addr is required as part of ueId
+                    message: "Expected property is missing: name"
+                StatusRequired:
+                  summary: status is required
                   value: 
                     code: INVALID_INPUT
-                    message: "Expected property is missing: ueId.ipv4addr"
-                IPRequired:
-                  summary: Some IP address is required as part of ueId
+                    message: "Expected property is missing: status"
+                minBandwidthRequired:
+                  summary: minBadnWidth
                   value: 
                     code: INVALID_INPUT
-                    message: "Expected property is missing: ueId.ipv4addr or ueId.ipv6addr"
-                UePortsRequired:
-                  summary: uePorts is required
+                    message: "Expected property is minBandwidth"
+                maxBandwidthRequired:
+                  summary: maxBadnWidth
                   value: 
                     code: INVALID_INPUT
-                    message: "Expected property is missing: uePorts"
-                QoSRequired:
-                  summary: qos is required
-                  value: 
-                    code: INVALID_INPUT
-                    message: "Expected property is missing: qos"
-                UePortsRangesNotAllowed:
-                  summary: Ranges at uePorts are not allowed
-                  value: 
-                    code: INVALID_INPUT
-                    message: "Ranges not allowed: uePorts"
+                    message: "Expected property is maxBandwidth"
         "401":
           $ref: "#/components/responses/Generic401"
         "403":
@@ -301,7 +291,7 @@ paths:
                 $ref: "#/components/schemas/ErrorInfo"
               example:
                 code: CONFLICT
-                message: "Another session is created for the same UE"
+                message: "Another QoS Profile is created with the same name"
         "500":
           description: Server error
           content:
@@ -310,10 +300,10 @@ paths:
                 $ref: "#/components/schemas/ErrorInfo"
               example:
                 code: INTERNAL
-                message: "Session could not be created"
+                message: "QoS Profile could not be created"
         "503":
           $ref: "#/components/responses/Generic503"
-   get:
+    get:
       tags:
         - QoS Profiles
       summary: "Get All QoS Profiles"
@@ -351,6 +341,18 @@ paths:
         - QoS Profiles
       summary: "Get All QoS Profiles"
       operationId: getQosProfiles
+      parameters:
+        - name: profile-id
+          in: path
+          description: Profile ID that was obtained from the createProfile operation
+          required: true
+          schema:
+            type: string
+            example: foo-bar
+            description: Unique gererated ID for a QoD Profile
+            minLength: 3
+            maxLength: 128
+            format: string
       responses:
         "200":
           description: Contains information about QoS Profiles
@@ -373,6 +375,207 @@ paths:
               example:
                 code: INTERNAL
                 message: "Could not get QoS Profile"
+        "503":
+          $ref: "#/components/responses/Generic503"
+    patch:
+      tags:
+        - QoS Profiles
+      summary: Update a QoS profile
+      description: Update a QoS profile
+      operationId: updateProfile
+      parameters:
+        - name: profile-id
+          in: path
+          description: Profile ID that was obtained from the createProfile operation
+          required: true
+          schema:
+            type: string
+            example: foo-bar
+            description: Unique gererated ID for a QoD Profile
+            minLength: 3
+            maxLength: 128
+            format: string
+      requestBody:
+        description: Update a QoS profile
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UpdateQosProfile"
+        required: true
+      callbacks:
+        notifications:
+          "{$request.body#/notificationUrl}/notifications":
+            $ref: "#/paths/~1notifications"
+      responses:
+        "201":
+          description: QoS Profile Updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/QosProfile"
+        "400":
+          description: Invalid input
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorInfo"
+              examples:
+                Generic400:
+                  summary: Schema validation failed
+                  value: 
+                    code: INVALID_INPUT
+                    message: "Schema validation failed at  ..."
+        "401":
+          $ref: "#/components/responses/Generic401"
+        "403":
+          $ref: "#/components/responses/Generic403"
+        "409":
+          description: Conflict
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorInfo"
+              example:
+                code: CONFLICT
+                message: "Another QoS Profile is created with the same name"
+        "500":
+          description: Server error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorInfo"
+              example:
+                code: INTERNAL
+                message: "QoS Profile could not be created"
+        "503":
+          $ref: "#/components/responses/Generic503"
+    put:
+      tags:
+        - QoS Profiles
+      summary: Replace a QoS profile
+      description: Replace a QoS profile
+      operationId: replaceProfile
+      parameters:
+        - name: profile-id
+          in: path
+          description: Profile ID that was obtained from the createProfile operation
+          required: true
+          schema:
+            type: string
+            example: foo-bar
+            description: Unique gererated ID for a QoD Profile
+            minLength: 3
+            maxLength: 128
+            format: string
+      requestBody:
+        description: Update a QoS profile
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateQosProfile"
+        required: true
+      callbacks:
+        notifications:
+          "{$request.body#/notificationUrl}/notifications":
+            $ref: "#/paths/~1notifications"
+      responses:
+        "201":
+          description: QoS Profile Updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/QosProfile"
+        "400":
+          description: Invalid input
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorInfo"
+              examples:
+                Generic400:
+                  summary: Schema validation failed
+                  value: 
+                    code: INVALID_INPUT
+                    message: "Schema validation failed at  ..."
+                NameRequired:
+                  summary: name is required
+                  value: 
+                    code: INVALID_INPUT
+                    message: "Expected property is missing: name"
+                StatusRequired:
+                  summary: status is required
+                  value: 
+                    code: INVALID_INPUT
+                    message: "Expected property is missing: status"
+                minBandwidthRequired:
+                  summary: minBadnWidth
+                  value: 
+                    code: INVALID_INPUT
+                    message: "Expected property is minBandwidth"
+                maxBandwidthRequired:
+                  summary: maxBadnWidth
+                  value: 
+                    code: INVALID_INPUT
+                    message: "Expected property is maxBandwidth"
+        "401":
+          $ref: "#/components/responses/Generic401"
+        "403":
+          $ref: "#/components/responses/Generic403"
+        "409":
+          description: Conflict
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorInfo"
+              example:
+                code: CONFLICT
+                message: "Another QoS Profile is created with the same name"
+        "500":
+          description: Server error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorInfo"
+              example:
+                code: INTERNAL
+                message: "QoS Profile could not be created"
+        "503":
+          $ref: "#/components/responses/Generic503"
+    delete:
+      tags:
+        - QoS Profiles
+      summary: "Remove QoS Profile"
+      operationId: deleteProfile
+      parameters:
+        - name: profile-id
+          in: path
+          description: Profile ID that was obtained from the createProfile operation
+          required: true
+          schema:
+            type: string
+            example: foo-bar
+            description: Unique gererated ID for a QoD Profile
+            minLength: 3
+            maxLength: 128
+            format: string
+      responses:
+        "204":
+          description: Session deleted
+        "401":
+          $ref: "#/components/responses/Generic401"
+        "403":
+          $ref: "#/components/responses/Generic403"
+        "404":
+          $ref: "#/components/responses/SessionNotFound404"
+        "500":
+          description: Server error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorInfo"
+              example:
+                code: INTERNAL
+                message: "Session could not be deleted"
         "503":
           $ref: "#/components/responses/Generic503"
 
