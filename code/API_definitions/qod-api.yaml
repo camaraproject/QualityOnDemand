@@ -879,8 +879,30 @@ components:
       unit:
         $ref: "#/components/schemas/TimeUnitEnum"
         example: Minutes
+    TimeUnitEnum:
+      description: |
+        Days
+        Hours
+        Minutes
+        Seconds
+        Milliseconds
+        Microseconds
+        Nanoseconds
+      type: string
+      enum:
+        - Days
+        - Hours
+        - Minutes
+        - Seconds
+        - Miliseconds
+        - Microseconds
+        - Nanoseconds
     QosProfileStatusEnum:
-      description: The current status of the QoS Profile
+      description: |
+        The current status of the QoS Profile
+        - Active - QoS Profile is available to be used
+        - Inactive - QoS Profile is not currently available to be deployed
+        - Deprecated - QoS profile is actively being used in a QoD session, but can not be deployed in new QoD sessions
       type: string
       enum:
         - Active
@@ -899,24 +921,6 @@ components:
         - Mbps
         - Gbps
         - Tbps
-    TimeUnitEnum:
-      description: |
-        Days
-        Hours
-        Minutes
-        Seconds
-        Miliseconds
-        Microseconds
-        Nanoseconds
-      type: string
-      enum:
-        - Days
-        - Hours
-        - Minutes
-        - Seconds
-        - Miliseconds
-        - Microseconds
-        - Nanoseconds
     Notification:
       type: object
       required:

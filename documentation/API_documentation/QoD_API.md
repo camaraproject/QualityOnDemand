@@ -308,6 +308,189 @@ Following table defines API endpoints of exposed REST based for QoD management o
     </tbody>
 </table>
 
+#### QoD - Create QoS Profile Resource Operations
+
+<table>
+    <thead>
+        <tr>
+            <th colspan=3><b>Create QoS Profile Resource</b></th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td><b>HTTP Request</b></td>
+            <td colspan=2>POST &lt;base-url&gt;/qod/v0/qosProfile</td>
+        </tr>
+        <tr>
+            <td><b>Query Parameters</b></td>
+            <td colspan=2>No query parameters are defined</td>
+        </tr>
+        <tr>
+            <td><b>Path Parameters</b></td>
+            <td colspan=2>No path parameters are defined</td>
+        </tr>
+        <tr>
+            <td rowspan=9><b>Request Body Parameters</b></td>
+            <td><b>name</b></td>
+            <td>Descriptive name for QoS Profile</td>
+        </tr>
+        <tr>
+            <td><b>status</b></td>
+            <td>The status of the profile.  See QosProfileStatusEnum for description.</td>
+                <ul>
+                    <li>Active - QoS Profile is available to be used</li>
+                    <li>Inactive - QoS Profile is not currently available to be deployed</li>
+                    <li>Deprecated - QoS profile is actively being used in a QoD session, but can not be deployed in new QoD sessions</li>
+                </ul>
+        </tr>
+        <tr>
+            <td><b>minBandwidth</b></td>
+            <td>
+                <p>The minimum guaranteed bandwidth.  Set to zero when no guaranteed bandwidth.</p>
+                <ul>
+                    <li>value: Positive integer expressing the minimum bandwidth</li>
+                    <li>unit: The unit of measurement for bandwidth.</li>
+                    <ul>
+                        <li>Kbps - Kilobits per second</li>
+                        <li>Mbps - Megabits per second</li>
+                        <li>Gbps - Gigabits per second</li>
+                        <li>Tbps - Terrabits per second</li>
+                    </ul>
+                </ul>
+            </td>
+        </tr>
+        <tr>
+            <td><b>maxBandwidth</b></td>
+            <td>
+                <p>The maximum best effort bandwidth.</p>
+                <ul>
+                    <li>value: Positive integer expressing the maximum bandwidth</li>
+                    <li>unit: The unit of measurement for bandwidth.</li>
+                    <ul>
+                        <li>Kbps - Kilobits per second</li>
+                        <li>Mbps - Megabits per second</li>
+                        <li>Gbps - Gigabits per second</li>
+                        <li>Tbps - Terrabits per second</li>
+                    </ul>
+                </ul>
+            </td>
+        </tr>
+        <tr>
+            <td><b>minDuration (optional)</b></td>
+            <td>
+                <p>The minimum duration that a profile can be deployed.</p>
+                <ul>
+                    <li>value: Positive integer expressing the minimum duration</li>
+                    <li>unit: The unit of measurement for duration.</li>
+                    <ul>
+                        <li>Days</li>
+                        <li>Hours</li>
+                        <li>Minutes</li>
+                        <li>Seconds</li>
+                        <li>Milliseconds</li>
+                        <li>Microseconds</li>
+                        <li>Nanoseconds</li>
+                    </ul>
+                </ul>
+            </td>
+        </tr>
+        <tr>
+            <td><b>maxDuration (optional)</b></td>
+            <td>
+                <p>The maximum duration that a profile can be deployed.</p>
+                <ul>
+                    <li>value: Positive integer expressing the maximum duration</li>
+                    <li>unit: The unit of measurement for duration.</li>
+                    <ul>
+                        <li>Days</li>
+                        <li>Hours</li>
+                        <li>Minutes</li>
+                        <li>Seconds</li>
+                        <li>Milliseconds</li>
+                        <li>Microseconds</li>
+                        <li>Nanoseconds</li>
+                    </ul>
+                </ul>
+            </td>
+        </tr>
+        <tr>
+            <td><b>priority (optional)</b></td>
+            <td>
+                <p>The priority of the profile. This is a float between 0 and 10. e.g. 1.5</p>
+            </td>
+        </tr>
+        <tr>
+            <td><b>packetDelayBudget (optional)</b></td>
+            <td>
+                <p>The maximum duration for the packet latency.</p>
+                <ul>
+                    <li>value: Positive integer expressing the maximum duration</li>
+                    <li>unit: The unit of measurement for duration.</li>
+                    <ul>
+                        <li>Days</li>
+                        <li>Hours</li>
+                        <li>Minutes</li>
+                        <li>Seconds</li>
+                        <li>Milliseconds</li>
+                        <li>Microseconds</li>
+                        <li>Nanoseconds</li>
+                    </ul>
+                </ul>
+            </td>
+        </tr>
+        <tr>
+            <td><b>packetErrorLossRate (optional)</b></td>
+            <td>
+                <p>The exponential power of the allowable error loss rate.
+                    For instance 10 would be an error loss rate of 2 to the power of -10 (0.0009765625)</p>
+            </td>
+        </tr>
+        <tr>
+            <td><b>notificationUrl (optional)</b></td>
+            <td>URI of the callback receiver. Allows asynchronous delivery of session related events, e.g. 'https://application-server.com/notifications'</td>
+        </tr>
+        <tr>
+            <td><b>notificationAuthToken (optional)</b></td>
+            <td>Authentication token for callback API, e.g. c8974e592c2fa383d4a3960714</td>
+        </tr>
+        <tr>
+            <td rowspan=7><b>Response</b></td>
+            <td><b>201: QoS Profile created</b></td>
+            <td>
+                Response body:<br>
+                <b>id</b>: The identifier of the QoS Profile<br>
+                <b>name</b>: The name of the QoS Profile<br>
+                <b>status</b>: The status of the QoS Profile<br>
+                <b>minBandwidth</b>: Minimum / guaranteed Bandwidth<br>
+                <b>maxBandwidth</b>: Maximum / best effort Bandwidth<br>
+                <b>minDuration (optional)</b>: Minimum duration for a session with this QoS Profile<br>
+                <b>maxDuration (optional)</b>: Maximum duration for a session with this QoS Profile<br>
+                <b>priority (optional)</b>: The priority of this QoS Profile<br>
+                <b>packetDelayBudget (optional)</b>: Maximum latency<br>
+                <b>packetErrorLossRate (optional)</b>: The magnitude of the error loss rate<br>
+            </td>
+        </tr>
+        <tr>
+            <td><b>400: Invalid input</b></td>
+        </tr>
+        <tr>
+            <td><b>401: Un-authorized</b></td>
+        </tr>
+        <tr>
+            <td><b>403: Forbidden</b></td>
+        </tr>
+        <tr>
+            <td><b>409: Conflict</b></td>
+        </tr>
+        <tr>
+            <td><b>500: Server Error</b></td>
+        </tr>
+        <tr>
+            <td><b>503: Service temporarily unavailable</b></td>
+        </tr>
+    </tbody>
+</table>
+
 ### 4.4 Errors
 
 Since CAMARA QoD API is based on REST design principles and blueprints, well defined HTTP status codes and families specified by community are followed [[4]](#4).
