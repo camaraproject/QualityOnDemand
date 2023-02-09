@@ -390,18 +390,6 @@ components:
       enum:
         - QOS_STATUS_CHANGED
     
-    ErrorInfo:
-      type: object
-      required:
-        - code
-        - message
-      properties:
-        code:
-          type: string
-          description: Code given to this error
-        message:
-          type: string
-          description: Detailed error description
     UeId:
       type: object
       minProperties: 1
