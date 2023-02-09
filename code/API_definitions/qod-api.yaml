@@ -335,21 +335,21 @@ paths:
                 message: "Could not get QoS Profiles"
         "503":
           $ref: "#/components/responses/Generic503"
-  /qos-profiles/{profile-id}:
+  /qos-profiles/{qos-profile-id}:
     get:
       tags:
         - QoS Profiles
       summary: "Get All QoS Profiles"
       operationId: getQosProfiles
       parameters:
-        - name: profile-id
+        - name: qos-profile-id
           in: path
-          description: Profile ID that was obtained from the createProfile operation
+          description: QoS Profile ID that was obtained from the createProfile operation
           required: true
           schema:
             type: string
             example: foo-bar
-            description: Unique gererated ID for a QoD Profile
+            description: Unique gererated ID for a QoS Profile
             minLength: 3
             maxLength: 128
             format: string
@@ -384,14 +384,14 @@ paths:
       description: Update a QoS profile
       operationId: updateProfile
       parameters:
-        - name: profile-id
+        - name: qos-profile-id
           in: path
-          description: Profile ID that was obtained from the createProfile operation
+          description: QoS Profile ID that was obtained from the createProfile operation
           required: true
           schema:
             type: string
             example: foo-bar
-            description: Unique gererated ID for a QoD Profile
+            description: Unique gererated ID for a QoS Profile
             minLength: 3
             maxLength: 128
             format: string
@@ -456,14 +456,14 @@ paths:
       description: Replace a QoS profile
       operationId: replaceProfile
       parameters:
-        - name: profile-id
+        - name: qos-profile-id
           in: path
-          description: Profile ID that was obtained from the createProfile operation
+          description: QoS Profile ID that was obtained from the createProfile operation
           required: true
           schema:
             type: string
             example: foo-bar
-            description: Unique gererated ID for a QoD Profile
+            description: Unique gererated ID for a QoS Profile
             minLength: 3
             maxLength: 128
             format: string
@@ -547,14 +547,14 @@ paths:
       summary: "Remove QoS Profile"
       operationId: deleteProfile
       parameters:
-        - name: profile-id
+        - name: qos-profile-id
           in: path
-          description: Profile ID that was obtained from the createProfile operation
+          description: QoS Profile ID that was obtained from the createProfile operation
           required: true
           schema:
             type: string
             example: foo-bar
-            description: Unique gererated ID for a QoD Profile
+            description: Unique gererated ID for a QoS Profile
             minLength: 3
             maxLength: 128
             format: string
@@ -704,22 +704,23 @@ components:
         id:
           type: string
           example: foo-bar
-          description: Unique gererated ID for a QoD Profile
+          description: Unique gererated ID for a QoS Profile
           minLength: 3
           maxLength: 128
           format: string
         name:
           type: string
           example: foo-bar
-          description: Descriptive name for QoD Profile
+          description: Descriptive name for QoS Profile
           minLength: 3
           maxLength: 128
           format: string
         status:
           $ref: "#/components/schemas/QosProfileStatusEnum"
+          description: The status of the profile.  See QosProfileStatusEnum for description.
         minBandwidth:
           $ref: "#/components/schemas/Bandwidth"
-          description: The minmum guaranteed bandwidth.  Set to zero when no guarontted bandwidth.
+          description: The minimum guaranteed bandwidth.  Set to zero when no guaranteed bandwidth.
         maxBandwidth:
           $ref: "#/components/schemas/Bandwidth"
           description: |
@@ -727,8 +728,10 @@ components:
             Equal to minBandwidth when profile is guaranteed. 
         minDuration:
           $ref: "#/components/schemas/Duration"
+          description: The shortest time period that is supported this profile can be deployed.
         maxDuration:
           $ref: "#/components/schemas/Duration"
+          description: The maximum lenght of time that this profile can be deployed.
         priority:
           type: float
           example: 5.0
@@ -740,6 +743,7 @@ components:
           default: 5
         packetDelayBudget:
           $ref: "#/components/schemas/Duration"
+          description: The maxium latency for a packet.
         packetErrorLossRate:
           type: int
           description: |
@@ -757,28 +761,31 @@ components:
         name:
           type: string
           example: foo-bar
-          description: Descriptive name for QoD Profile
+          description: Descriptive name for QoS Profile
           minLength: 3
           maxLength: 128
           format: string
           required: true
         status:
           $ref: "#/components/schemas/QosProfileStatusEnum"
+          description: The status of the profile.  See QosProfileStatusEnum for description.
           required: true
         minBandwidth:
           $ref: "#/components/schemas/Bandwidth"
-          description: The minmum guaranteed bandwidth.  Set to zero when no guarontted bandwidth.
+          description: The minimum guaranteed bandwidth.  Set to zero when no guaranteed bandwidth.
           required: true
         maxBandwidth:
           $ref: "#/components/schemas/Bandwidth"
           description: |
-            The maximim best effort bandwidth
+            The maximum best effort bandwidth
             Equal to minBandwidth when profile is guaranteed. 
           required: true
         minDuration:
           $ref: "#/components/schemas/Duration"
+          description: The shortest time period that is supported this profile can be deployed.
         maxDuration:
           $ref: "#/components/schemas/Duration"
+          description: The maximum lenght of time that this profile can be deployed.
         priority:
           type: float
           example: 5.0
@@ -790,6 +797,7 @@ components:
           default: 5
         packetDelayBudget:
           $ref: "#/components/schemas/Duration"
+          description: The maxium latency for a packet.
         packetErrorLossRate:
           type: int
           description: |
@@ -809,10 +817,11 @@ components:
           example: foo-bar
           description: Descriptive name for QoD Profile
           minLength: 3
-          maxLength: 64
+          maxLength: 128
           format: string
         status:
           $ref: "#/components/schemas/QosProfileStatusEnum"
+          description: The status of the profile.  See QosProfileStatusEnum for description.
         minBandwidth:
           $ref: "#/components/schemas/Bandwidth"
           description: The minmum guaranteed bandwidth.  Set to zero when no guarontted bandwidth.
@@ -823,8 +832,10 @@ components:
             Equal to minBandwidth when profile is guaranteed. 
         minDuration:
           $ref: "#/components/schemas/Duration"
+          description: The shortest time period that is supported this profile can be deployed.
         maxDuration:
           $ref: "#/components/schemas/Duration"
+          description: The maximum lenght of time that this profile can be deployed.
         priority:
           type: float
           example: 5.0
@@ -836,6 +847,7 @@ components:
           default: 5
         packetDelayBudget:
           $ref: "#/components/schemas/Duration"
+          description: The maxium latency for a packet.
         packetErrorLossRate:
           type: int
           description: |
