@@ -397,7 +397,10 @@ components:
           enum:
             - DURATION_EXPIRED
             - NETWORK_TERMINATED
-          description: Currently statusInfo is only applicable when qosStatus is 'UNAVAILABLE'.
+          description: |
+            Reason for the new `qosStatus`. Currently `statusInfo` is only applicable when `osStatus` is 'UNAVAILABLE'.
+            * `DURATION_EXPIRED` - Session terminated due to requested duration expired
+            * `NETWORK_TERMINATED` - Network terminated the session before the requested duration expired
 
     SessionEventType:
       type: string
