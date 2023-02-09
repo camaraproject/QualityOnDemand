@@ -719,12 +719,12 @@ components:
           $ref: "#/components/schemas/QosProfileStatusEnum"
         minBandwidth:
           $ref: "#/components/schemas/Bandwidth"
-          description: The minmum guaronteed bandidth.  Set to zero when no guarontted bandwidth.
+          description: The minmum guaranteed bandwidth.  Set to zero when no guarontted bandwidth.
         maxBandwidth:
           $ref: "#/components/schemas/Bandwidth"
           description: |
             The maximim best effort bandwidth
-            Equal to minBandwidth when profile is guaronteed. 
+            Equal to minBandwidth when profile is guaranteed. 
         minDuration:
           $ref: "#/components/schemas/Duration"
         maxDuration:
@@ -767,13 +767,13 @@ components:
           required: true
         minBandwidth:
           $ref: "#/components/schemas/Bandwidth"
-          description: The minmum guaronteed bandidth.  Set to zero when no guarontted bandwidth.
+          description: The minmum guaranteed bandwidth.  Set to zero when no guarontted bandwidth.
           required: true
         maxBandwidth:
           $ref: "#/components/schemas/Bandwidth"
           description: |
             The maximim best effort bandwidth
-            Equal to minBandwidth when profile is guaronteed. 
+            Equal to minBandwidth when profile is guaranteed. 
           required: true
         minDuration:
           $ref: "#/components/schemas/Duration"
@@ -815,12 +815,12 @@ components:
           $ref: "#/components/schemas/QosProfileStatusEnum"
         minBandwidth:
           $ref: "#/components/schemas/Bandwidth"
-          description: The minmum guaronteed bandidth.  Set to zero when no guarontted bandwidth.
+          description: The minmum guaranteed bandwidth.  Set to zero when no guarontted bandwidth.
         maxBandwidth:
           $ref: "#/components/schemas/Bandwidth"
           description: |
             The maximim best effort bandwidth
-            Equal to minBandwidth when profile is guaronteed. 
+            Equal to minBandwidth when profile is guaranteed. 
         minDuration:
           $ref: "#/components/schemas/Duration"
         maxDuration:
