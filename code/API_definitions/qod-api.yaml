@@ -50,46 +50,53 @@ paths:
               schema:
                 $ref: "#/components/schemas/SessionInfo"
         "400":
-          description: Invalid input
+          description: Invalid input for createSession operation
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/ErrorInfo"
+                $ref: "#/components/schemas/Error400"
               examples:
                 Generic400:
                   summary: Schema validation failed
-                  value: 
-                    code: INVALID_INPUT
+                  value:
+                    status: 400
+                    code: INVALID_ARGUMENT
                     message: "Schema validation failed at  ..."
                 MsisdnRequired:
                   summary: msisdn is required as part of ueId
-                  value: 
-                    code: INVALID_INPUT
+                  value:
+                    status: 400
+                    code: INVALID_ARGUMENT
                     message: "Expected property is missing: ueId.msisdn"
                 IPv4Required:
                   summary: ipv4addr is required as part of ueId
-                  value: 
-                    code: INVALID_INPUT
+                  value:
+                    status: 400
+                    code: INVALID_ARGUMENT
                     message: "Expected property is missing: ueId.ipv4addr"
                 IPRequired:
                   summary: Some IP address is required as part of ueId
-                  value: 
-                    code: INVALID_INPUT
+                  value:
+                    status: 400
+                    code: INVALID_ARGUMENT
                     message: "Expected property is missing: ueId.ipv4addr or ueId.ipv6addr"
                 UePortsRequired:
                   summary: uePorts is required
-                  value: 
-                    code: INVALID_INPUT
+                  value:
+                    status: 400
+                    code: INVALID_ARGUMENT
                     message: "Expected property is missing: uePorts"
                 QoSRequired:
                   summary: qos is required
-                  value: 
-                    code: INVALID_INPUT
+                  value:
+                    status: 400
+                    code: INVALID_ARGUMENT
                     message: "Expected property is missing: qos"
                 UePortsRangesNotAllowed:
                   summary: Ranges at uePorts are not allowed
-                  value: 
-                    code: INVALID_INPUT
+                  value:
+                    status: 400
+                    code: INVALID_ARGUMENT
                     message: "Ranges not allowed: uePorts"
         "401":
           $ref: "#/components/responses/Generic401"
@@ -100,19 +107,13 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/ErrorInfo"
+                $ref: "#/components/schemas/Error409"
               example:
+                status: 409
                 code: CONFLICT
                 message: "Another session is created for the same UE"
         "500":
-          description: Server error
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/ErrorInfo"
-              example:
-                code: INTERNAL
-                message: "Session could not be created"
+          $ref: "#/components/responses/Generic500"
         "503":
           $ref: "#/components/responses/Generic503"
   /sessions/{sessionId}:
@@ -142,14 +143,7 @@ paths:
         "404":
           $ref: "#/components/responses/SessionNotFound404"
         "500":
-          description: Server error
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/ErrorInfo"
-              example:
-                code: INTERNAL
-                message: "Could not get session information"
+          $ref: "#/components/responses/Generic500"
         "503":
           $ref: "#/components/responses/Generic503"
     delete:
@@ -174,14 +168,7 @@ paths:
         "404":
           $ref: "#/components/responses/SessionNotFound404"
         "500":
-          description: Server error
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/ErrorInfo"
-              example:
-                code: INTERNAL
-                message: "Session could not be deleted"
+          $ref: "#/components/responses/Generic500"
         "503":
           $ref: "#/components/responses/Generic503"
   /notifications:
@@ -192,7 +179,7 @@ paths:
       description: |
         Important: this endpoint is to be implemented by the API consumer.
         The QoD server will call this endpoint whenever any network related event occurs.
-        Currently only SESSION_TERMINATED event is implemented. Any other network events are ignored.
+        Currently only QOS_STATUS_CHANGED event is defined.
       operationId: postNotification
       requestBody:
         required: true
@@ -210,14 +197,7 @@ paths:
         "403":
           $ref: "#/components/responses/Generic403"
         "500":
-          description: Server error
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/ErrorInfo"
-              example:
-                code: INTERNAL
-                message: "Failed to handle notification"
+          $ref: "#/components/responses/Generic500"
         "503":
           $ref: "#/components/responses/Generic503"
       security:
@@ -608,6 +588,7 @@ components:
             - duration
             - startedAt
             - expiresAt
+            - qosStatus
           properties:
             id:
               $ref: "#/components/schemas/SessionId"
@@ -621,6 +602,8 @@ components:
               example: 1639566000
               description: Timestamp of session expiration if the session was not deleted, in seconds since unix epoch
               format: int64
+            qosStatus:
+              $ref: "#/components/schemas/QosStatus"
             messages:
               type: array
               items:
@@ -634,7 +617,10 @@ components:
           example: 86400
           description: |
             Session duration in seconds. Maximal value of 24 hours is used if not set.
-            After session has expired the client will receive SESSION_TERMINATED event. See notification callback.
+            After session has expired the client will receive QOS_STATUS_CHANGED event with 
+             - qosStatus is 'UNAVAILABLE', and, 
+             - statusInfo is 'DURATION_EXPIRED'. 
+            See notification callback.
           format: int32
           minimum: 1
           maximum: 86400
@@ -697,6 +683,9 @@ components:
           - 5070
       description: |
         Ports may be specified as a list of ranges or single ports.
+    QosStatus:
+      description: TODO Placeholder for broken upstream
+      type: string
     QosProfile:
       description: Data type with attributes of a QosProfile
       type: object
@@ -925,28 +914,53 @@ components:
       type: object
       required:
         - sessionId
-        - event
+        - eventReports
       properties:
         sessionId:
           $ref: "#/components/schemas/SessionId"
-        event:
-          $ref: "#/components/schemas/SessionEvent"
-    SessionEvent:
-      type: string
-      enum:
-        - SESSION_TERMINATED
-    ErrorInfo:
+        eventReports:
+          type: array
+          items:
+            $ref: "#/components/schemas/EventReport"
+          minItems: 1
+          description: Contains the reported event and applicable information
+    
+    EventReport:
+      oneOf:
+        - $ref: '#/components/schemas/QosStatusChangedEventReport'
+      discriminator:
+        propertyName: eventType
+        mapping:
+          QOS_STATUS_CHANGED: "#/components/schemas/QosStatusChangedEventReport"
+        
+    QosStatusChangedEventReport:
       type: object
       required:
-        - code
-        - message
+        - eventType
+        - qosStatus
       properties:
-        code:
+        eventType:
+          $ref: "#/components/schemas/SessionEventType"
+        qosStatus:
+          $ref: "#/components/schemas/QosStatus"
+        statusInfo:
+          $ref: "#/components/schemas/StatusInfo"
+          
+    StatusInfo:
           type: string
-          description: Code given to this error
-        message:
-          type: string
-          description: Detailed error description
+          enum:
+            - DURATION_EXPIRED
+            - NETWORK_TERMINATED
+          description: |
+            Reason for the new `qosStatus`. Currently `statusInfo` is only applicable when `qosStatus` is 'UNAVAILABLE'.
+            * `DURATION_EXPIRED` - Session terminated due to requested duration expired
+            * `NETWORK_TERMINATED` - Network terminated the session before the requested duration expired
+
+    SessionEventType:
+      type: string
+      enum:
+        - QOS_STATUS_CHANGED
+    
     UeId:
       type: object
       minProperties: 1
@@ -1015,41 +1029,180 @@ components:
       required:
         - severity
         - description
+    ErrorInfo:
+      type: object
+      required:
+        - status
+        - code
+        - message
+      properties:
+        status:
+          type: integer
+          description: HTTP status code returned along with this error response
+        code:
+          type: string
+          description: Code given to this error
+        message:
+          type: string
+          description: Detailed error description
+    Error400:
+      type: object
+      required: 
+        - status
+        - code
+        - message
+      properties: 
+        status:
+          type: integer
+          enum:
+            - 400
+        code:
+          type: string
+          enum:
+            - INVALID_ARGUMENT
+        message:
+          type: string  
+    Error401:
+      type: object
+      required: 
+        - status
+        - code
+        - message
+      properties: 
+        status:
+          type: integer
+          enum:
+            - 401
+        code:
+          type: string
+          enum:
+            - UNAUTHENTICATED
+        message:
+          type: string 
+    Error403:
+      type: object
+      required: 
+        - status
+        - code
+        - message
+      properties: 
+        status:
+          type: integer
+          enum:
+            - 403
+        code:
+          type: string
+          enum:
+            - PERMISSION_DENIED
+        message:
+          type: string 
+    Error404:
+      type: object
+      required: 
+        - status
+        - code
+        - message
+      properties: 
+        status:
+          type: integer
+          enum:
+            - 404
+        code:
+          type: string
+          enum:
+            - NOT_FOUND
+        message:
+          type: string
+    Error409:
+      type: object
+      required: 
+        - status
+        - code
+        - message
+      properties: 
+        status:
+          type: integer
+          enum:
+            - 409
+        code:
+          type: string
+          enum:
+            - CONFLICT
+        message:
+          type: string
+    Error500:
+      type: object
+      required: 
+        - status
+        - code
+        - message
+      properties: 
+        status:
+          type: integer
+          enum:
+            - 500
+        code:
+          type: string
+          enum:
+            - INTERNAL
+        message:
+          type: string
+    Error503:
+      type: object
+      required: 
+        - status
+        - code
+        - message
+      properties: 
+        status:
+          type: integer
+          enum:
+            - 503
+        code:
+          type: string
+          enum:
+            - UNAVAILABLE
+        message:
+          type: string
   responses:
     Generic400:
       description: Invalid input
       content:
         application/json:
           schema:
-            $ref: "#/components/schemas/ErrorInfo"
+            $ref: "#/components/schemas/Error400"
           example:
-            code: INVALID_INPUT
+            status: 400
+            code: INVALID_ARGUMENT
             message: "Schema validation failed at  ..."
     Generic401:
       description: Unauthorized
       content:
         application/json:
           schema:
-            $ref: "#/components/schemas/ErrorInfo"
+            $ref: "#/components/schemas/Error401"
           example:
-            code: UNAUTHORIZED
+            status: 401
+            code: UNAUTHENTICATED
             message: "Authorization failed: ..."
     Generic403:
       description: Forbidden
       content:
         application/json:
           schema:
-            $ref: "#/components/schemas/ErrorInfo"
+            $ref: "#/components/schemas/Error403"
           example:
-            code: FORBIDDEN
+            status: 403
+            code: PERMISSION_DENIED
             message: "Operation not allowed: ..."
     SessionNotFound404:
       description: Session not found
       content:
         application/json:
           schema:
-            $ref: "#/components/schemas/ErrorInfo"
+            $ref: "#/components/schemas/Error404"
           example:
+            status: 404
             code: NOT_FOUND
             message: "Session Id does not exist"
     QosProfilesNotFound404:
@@ -1070,12 +1223,23 @@ components:
           example:
             code: NOT_FOUND
             message: "QosProfile Id does not exist"
+    Generic500:
+      description: Internal server error
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/Error500"
+          example:
+            status: 500
+            code: INTERNAL
+            message: "Internal server error: ..."
     Generic503:
       description: Service unavailable
       content:
         application/json:
           schema:
-            $ref: "#/components/schemas/ErrorInfo"
+            $ref: "#/components/schemas/Error503"
           example:
-            code: SERVICE_UNAVAILABLE
+            status: 503
+            code: UNAVAILABLE
             message: "Service unavailable"
