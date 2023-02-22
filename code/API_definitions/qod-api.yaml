@@ -683,9 +683,6 @@ components:
           - 5070
       description: |
         Ports may be specified as a list of ranges or single ports.
-    QosStatus:
-      description: TODO Placeholder for broken upstream
-      type: string
     QosProfile:
       description: Data type with attributes of a QosProfile
       type: object
