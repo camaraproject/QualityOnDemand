@@ -1029,6 +1029,16 @@ components:
       required:
         - severity
         - description
+    QosStatus:
+      type: string
+      enum:
+        - REQUESTED
+        - AVAILABLE
+        - UNAVAILABLE
+      description: |
+        * `REQUESTED` - QoS has been requested by creating a session
+        * `AVAILABLE` - The requested QoS has been provided by the network
+        * `UNAVAILABLE` - The requested QoS cannot be provided by the network due to some reason
     ErrorInfo:
       type: object
       required:
