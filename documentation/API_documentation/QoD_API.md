@@ -83,12 +83,8 @@ Following table defines API endpoints of exposed REST based for QoD management o
 | POST<br>  \<base-url>/qod/v0/sessions | **Create QoS Session Resource** | Create QoS Session to manage latency/throughput priorities |
 | GET<br> \<base-url>/qod/v0/sessions/{sessionId} | **Query for QoS Session Resource** | Querying for QoS session resource information details |
 | DELETE<br> \<base-url>/qod/v0/sessions/{sessionId} | **Delete QoS Session Resource** | Deleting a QoS session |
-| POST<br>  \<base-url>/qod/v0/qos-profiles | **Create QoS Profile** | Create QoS Profile to manage latency/throughput priorities |
 | GET<br>  \<base-url>/qod/v0/qos-profiles | **return array of QosProfiles** | return array of QosProfiles |
 | GET<br>  \<base-url>/qod/v0/qos-profiles/{profile-id} | **return a QosProfile** | return the QosProfile based on the profile-id |
-| PUT<br>  \<base-url>/qod/v0/qos-profiles/{profile-id} | **replace a QosProfile** | replace the QosProfile based on the profile-id |
-| PATCH<br>  \<base-url>/qod/v0/qos-profiles/{profile-id} | **update a QosProfile** | update the QosProfile based on the profile-id |
-| DELETE<br>  \<base-url>/qod/v0/qos-profiles/{profile-id} | **remove a QosProfile** | remove the QosProfile based on the profile-id |
 <br>
 
 #### QoD - Create QoS Session Resource Operations
@@ -308,18 +304,18 @@ Following table defines API endpoints of exposed REST based for QoD management o
     </tbody>
 </table>
 
-#### QoD - Create QoS Profile Resource Operations
+#### QoD - Get QoS Profiles Resource Operations
 
 <table>
     <thead>
         <tr>
-            <th colspan=3><b>Create QoS Profile Resource</b></th>
+            <th colspan=3><b>Get QoS Profile Resource</b></th>
         </tr>
     </thead>
     <tbody>
         <tr>
             <td><b>HTTP Request</b></td>
-            <td colspan=2>POST &lt;base-url&gt;/qod/v0/qosProfile</td>
+            <td colspan=2>GET &lt;base-url&gt;/qod/v0/qosProfile</td>
         </tr>
         <tr>
             <td><b>Query Parameters</b></td>
@@ -330,128 +326,8 @@ Following table defines API endpoints of exposed REST based for QoD management o
             <td colspan=2>No path parameters are defined</td>
         </tr>
         <tr>
-            <td rowspan=9><b>Request Body Parameters</b></td>
-            <td><b>name</b></td>
-            <td>Descriptive name for QoS Profile</td>
-        </tr>
-        <tr>
-            <td><b>status</b></td>
-            <td>The status of the profile.  See QosProfileStatusEnum for description.</td>
-                <ul>
-                    <li>Active - QoS Profile is available to be used</li>
-                    <li>Inactive - QoS Profile is not currently available to be deployed</li>
-                    <li>Deprecated - QoS profile is actively being used in a QoD session, but can not be deployed in new QoD sessions</li>
-                </ul>
-        </tr>
-        <tr>
-            <td><b>minBandwidth</b></td>
-            <td>
-                <p>The minimum guaranteed bandwidth.  Set to zero when no guaranteed bandwidth.</p>
-                <ul>
-                    <li>value: Positive integer expressing the minimum bandwidth</li>
-                    <li>unit: The unit of measurement for bandwidth.</li>
-                    <ul>
-                        <li>Kbps - Kilobits per second</li>
-                        <li>Mbps - Megabits per second</li>
-                        <li>Gbps - Gigabits per second</li>
-                        <li>Tbps - Terrabits per second</li>
-                    </ul>
-                </ul>
-            </td>
-        </tr>
-        <tr>
-            <td><b>maxBandwidth</b></td>
-            <td>
-                <p>The maximum best effort bandwidth.</p>
-                <ul>
-                    <li>value: Positive integer expressing the maximum bandwidth</li>
-                    <li>unit: The unit of measurement for bandwidth.</li>
-                    <ul>
-                        <li>Kbps - Kilobits per second</li>
-                        <li>Mbps - Megabits per second</li>
-                        <li>Gbps - Gigabits per second</li>
-                        <li>Tbps - Terrabits per second</li>
-                    </ul>
-                </ul>
-            </td>
-        </tr>
-        <tr>
-            <td><b>minDuration (optional)</b></td>
-            <td>
-                <p>The minimum duration that a profile can be deployed.</p>
-                <ul>
-                    <li>value: Positive integer expressing the minimum duration</li>
-                    <li>unit: The unit of measurement for duration.</li>
-                    <ul>
-                        <li>Days</li>
-                        <li>Hours</li>
-                        <li>Minutes</li>
-                        <li>Seconds</li>
-                        <li>Milliseconds</li>
-                        <li>Microseconds</li>
-                        <li>Nanoseconds</li>
-                    </ul>
-                </ul>
-            </td>
-        </tr>
-        <tr>
-            <td><b>maxDuration (optional)</b></td>
-            <td>
-                <p>The maximum duration that a profile can be deployed.</p>
-                <ul>
-                    <li>value: Positive integer expressing the maximum duration</li>
-                    <li>unit: The unit of measurement for duration.</li>
-                    <ul>
-                        <li>Days</li>
-                        <li>Hours</li>
-                        <li>Minutes</li>
-                        <li>Seconds</li>
-                        <li>Milliseconds</li>
-                        <li>Microseconds</li>
-                        <li>Nanoseconds</li>
-                    </ul>
-                </ul>
-            </td>
-        </tr>
-        <tr>
-            <td><b>priority (optional)</b></td>
-            <td>
-                <p>The priority of the profile. This is a float between 0 and 10. e.g. 1.5</p>
-            </td>
-        </tr>
-        <tr>
-            <td><b>packetDelayBudget (optional)</b></td>
-            <td>
-                <p>The maximum duration for the packet latency.</p>
-                <ul>
-                    <li>value: Positive integer expressing the maximum duration</li>
-                    <li>unit: The unit of measurement for duration.</li>
-                    <ul>
-                        <li>Days</li>
-                        <li>Hours</li>
-                        <li>Minutes</li>
-                        <li>Seconds</li>
-                        <li>Milliseconds</li>
-                        <li>Microseconds</li>
-                        <li>Nanoseconds</li>
-                    </ul>
-                </ul>
-            </td>
-        </tr>
-        <tr>
-            <td><b>packetErrorLossRate (optional)</b></td>
-            <td>
-                <p>The exponential power of the allowable error loss rate.
-                    For instance 10 would be an error loss rate of 2 to the power of -10 (0.0009765625)</p>
-            </td>
-        </tr>
-        <tr>
-            <td><b>notificationUrl (optional)</b></td>
-            <td>URI of the callback receiver. Allows asynchronous delivery of session related events, e.g. 'https://application-server.com/notifications'</td>
-        </tr>
-        <tr>
-            <td><b>notificationAuthToken (optional)</b></td>
-            <td>Authentication token for callback API, e.g. c8974e592c2fa383d4a3960714</td>
+            <td><b>Request Body Parameters</b></td>
+            <td colspan=2><b>No Request Body Parameters defined</b></td>
         </tr>
         <tr>
             <td rowspan=7><b>Response</b></td>
