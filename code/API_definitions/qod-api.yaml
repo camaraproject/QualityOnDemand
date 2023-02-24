@@ -97,7 +97,7 @@ paths:
                   value:
                     status: 400
                     code: OUT_OF_RANGE
-                    message: "Specified parameter out of range: ueId.public_ipv4_addr.port"
+                    message: "Specified parameter out of range: ueId.public_ipv4_addr.public_port"
                 MissingRequiredParameter:
                   summary: Parameter is required but not specified
                   value:
@@ -446,20 +446,20 @@ components:
             In this case, all IP numbers from 1.2.3.0 to 1.2.3.255 will match. The bit width MUST be valid for the IP version.
     PublicIpv4Addr:
       description: |
-        Public (routable) source IP address and port seen by and identifying the device to the application server
+        Public (routable) source IP address and public port seen by, and identifying the device to, the application server
       type: object
       properties:
         public_address:
           $ref: "#/components/schemas/SingleIpv4Addr"
-        port:
+        public_port:
           $ref: "#/components/schemas/Port"
       required:
         - public_address
-        - port
+        - public_port
       example:
         {
-          "public_ip_address": "85.255.235.230",
-          "port": 60276
+          "public_address": "85.255.235.230",
+          "public_port": 60276
         }
     PrivateIpv4Addr:
       description: |
@@ -475,8 +475,8 @@ components:
         - public_address
       example:
         {
-          "private_ip_address": "10.67.188.91",
-          "public_ip_address": "85.255.235.230"
+          "private_address": "10.67.188.91",
+          "public_address": "85.255.235.230"
         }
     SingleIpv4Addr:
       type: string
