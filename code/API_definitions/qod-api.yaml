@@ -62,41 +62,53 @@ paths:
                     status: 400
                     code: INVALID_ARGUMENT
                     message: "Schema validation failed at  ..."
-                MsisdnRequired:
-                  summary: msisdn is required as part of ueId
+                InsufficientProperties:
+                  summary: ueId parameter must have at least one property specified
                   value:
                     status: 400
                     code: INVALID_ARGUMENT
-                    message: "Expected property is missing: ueId.msisdn"
-                IPv4Required:
-                  summary: ipv4addr is required as part of ueId
+                    message: "Insufficient parameters specified: ueId"
+                InconsistentProperties:
+                  summary: ueId parameters must identify the same UE
                   value:
                     status: 400
                     code: INVALID_ARGUMENT
-                    message: "Expected property is missing: ueId.ipv4addr"
-                IPRequired:
-                  summary: Some IP address is required as part of ueId
+                    message: "Multiple inconsistent parameters specified: ueId"
+                UnidentifiedUE:
+                  summary: Specified ueId parameters do not identify a UE
                   value:
                     status: 400
                     code: INVALID_ARGUMENT
-                    message: "Expected property is missing: ueId.ipv4addr or ueId.ipv6addr"
-                UePortsRequired:
-                  summary: uePorts is required
+                    message: "UE cannot be identifed from specified parameters: ueId"
+                InvalidFormat:
+                  summary: Parameter is incorrectly formatted
                   value:
                     status: 400
                     code: INVALID_ARGUMENT
-                    message: "Expected property is missing: uePorts"
-                QoSRequired:
-                  summary: qos is required
+                    message: "Invalid parameter format: ueId.msisdn"
+                MissingParameter:
+                  summary: A specified parameter is missing a required property
                   value:
                     status: 400
                     code: INVALID_ARGUMENT
-                    message: "Expected property is missing: qos"
+                    message: "Missing parameter: ueId.private_ip4_addr.public_ip_address"
+                ParameterOutOfRange:
+                  summary: Parameter specified is outside of valid range
+                  value:
+                    status: 400
+                    code: OUT_OF_RANGE
+                    message: "Specified parameter out of range: ueId.public_ipv4_addr.port"
+                MissingRequiredParameter:
+                  summary: Parameter is required but not specified
+                  value:
+                    status: 400
+                    code: INVALID_ARGUMENT
+                    message: "Required parameter is missing: qos"
                 UePortsRangesNotAllowed:
                   summary: Ranges at uePorts are not allowed
                   value:
                     status: 400
-                    code: INVALID_ARGUMENT
+                    code: OUT_OF_RANGE
                     message: "Ranges not allowed: uePorts"
         "401":
           $ref: "#/components/responses/Generic401"
@@ -398,8 +410,10 @@ components:
           $ref: "#/components/schemas/ExternalId"
         msisdn:
           $ref: "#/components/schemas/MSISDN"
-        ipv4addr:
-          $ref: "#/components/schemas/Ipv4Addr"
+        public_ipv4_addr:
+          $ref: "#/components/schemas/PublicIpv4Addr"
+        private_ipv4_addr:
+          $ref: "#/components/schemas/PrivateIpv4Addr"
         ipv6addr:
           $ref: "#/components/schemas/Ipv6Addr"
       description: User equipment identifier
@@ -430,6 +444,44 @@ components:
           - address - an IPv4 number in dotted-quad form 1.2.3.4. Only this exact IP number will match the flow control rule.
           - address/mask - an IP number as above with a mask width of the form 1.2.3.4/24.
             In this case, all IP numbers from 1.2.3.0 to 1.2.3.255 will match. The bit width MUST be valid for the IP version.
+    PublicIpv4Addr:
+      description: |
+        Public (routable) source IP address and port seen by and identifying the device to the application server
+      type: object
+      properties:
+        public_address:
+          $ref: "#/components/schemas/SingleIpv4Addr"
+        port:
+          $ref: "#/components/schemas/Port"
+      required:
+        - public_address
+        - port
+      example:
+        {
+          "public_ip_address": "85.255.235.230",
+          "port": 60276
+        }
+    PrivateIpv4Addr:
+      description: |
+        Private (non-routable) source IP address directly allocated to the device, and the public (routable) source IP seen by and identifying the device to the application server. If the device does not have a public IP address, then the public_address value should be specified as the private address as well to indicate this.
+      type: object
+      properties:
+        private_address:
+          $ref: "#/components/schemas/SingleIpv4Addr"
+        public_address:
+          $ref: "#/components/schemas/SingleIpv4Addr"
+      required:
+        - private_address
+        - public_address
+      example:
+        {
+          "private_ip_address": "10.67.188.91",
+          "public_ip_address": "85.255.235.230"
+        }
+    SingleIpv4Addr:
+      type: string
+      format: ipv4
+      pattern: '^(([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])$'
     Ipv6Addr:
       type: string
       format: ipv6
