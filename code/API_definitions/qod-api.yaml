@@ -114,6 +114,8 @@ paths:
                 message: "Another session is created for the same UE"
         "500":
           $ref: "#/components/responses/Generic500"
+        "501":
+          $ref: "#/components/responses/Generic501"
         "503":
           $ref: "#/components/responses/Generic503"
   /sessions/{sessionId}:
@@ -586,6 +588,23 @@ components:
             - INTERNAL
         message:
           type: string
+    Error501:
+      type: object
+      required:
+        - status
+        - code
+        - message
+      properties:
+        status:
+          type: integer
+          enum:
+            - 501
+        code:
+          type: string
+          enum:
+            - NOT_IMPLEMENTED
+        message:
+          type: string
     Error503:
       type: object
       required: 
@@ -654,6 +673,16 @@ components:
             status: 500
             code: INTERNAL
             message: "Internal server error: ..."
+    Generic501:
+      description: Not Implemented
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/Error501"
+          example:
+            status: 501
+            code: NOT_IMPLEMENTED
+            message: "Service not implemented for the specified user device"
     Generic503:
       description: Service unavailable
       content:

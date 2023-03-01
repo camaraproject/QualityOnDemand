@@ -156,7 +156,7 @@ Following table defines API endpoints of exposed REST based for QoD management o
             <td>Authentication token for callback API, e.g. c8974e592c2fa383d4a3960714</td>
         </tr> 
         <tr>
-            <td rowspan=7><b>Response</b></td>
+            <td rowspan=8><b>Response</b></td>
             <td><b>201: Session created</b></td>
             <td>
                 Response body:<br>
@@ -187,6 +187,9 @@ Following table defines API endpoints of exposed REST based for QoD management o
         </tr>
         <tr>
             <td><b>500: Server Error</b></td>
+        </tr>
+        <tr>
+            <td><b>501: Not Implemented</b></td>
         </tr>
         <tr>
             <td><b>503: Service temporarily unavailable</b></td>
@@ -325,7 +328,8 @@ Following table provides an overview of common error names, codes, and messages 
 |9	|404 |	NOT_FOUND |	"Session Id does not exist" |
 |10	|409 |	CONFLICT |	"Another session is created for the same UE" |
 |11	|500 |	INTERNAL |	"Session could not be created" |
-|12	|503 |	SERVICE_UNAVAILABLE |	"Service unavailable" |
+|12 |501 |  NOT_IMPLEMENTED |  "Service not implemented for the specified user device" |
+|13	|503 |	SERVICE_UNAVAILABLE |	"Service unavailable" |
 
 ### 4.5 Policies
 
