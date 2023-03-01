@@ -682,7 +682,7 @@ components:
           example:
             status: 501
             code: NOT_IMPLEMENTED
-            message: "Not Implemented for this version as server not support for this UE"
+            message: "Service not implemented for the specified user device"
     Generic503:
       description: Service unavailable
       content:

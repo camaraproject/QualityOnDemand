@@ -328,7 +328,7 @@ Following table provides an overview of common error names, codes, and messages 
 |9	|404 |	NOT_FOUND |	"Session Id does not exist" |
 |10	|409 |	CONFLICT |	"Another session is created for the same UE" |
 |11	|500 |	INTERNAL |	"Session could not be created" |
-|12 |501 |  NOT_IMPLEMENTED |  "Not Implemented for this version as server not support for this UE" |
+|12 |501 |  NOT_IMPLEMENTED |  "Service not implemented for the specified user device" |
 |13	|503 |	SERVICE_UNAVAILABLE |	"Service unavailable" |
 
 ### 4.5 Policies
