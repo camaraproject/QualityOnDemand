@@ -54,7 +54,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Error400"
+                $ref: "#/components/schemas/ErrorInfo"
               examples:
                 Generic400:
                   summary: Schema validation failed
@@ -107,7 +107,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Error409"
+                $ref: "#/components/schemas/ErrorInfo"
               example:
                 status: 409
                 code: CONFLICT
