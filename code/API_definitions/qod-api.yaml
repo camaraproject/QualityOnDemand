@@ -54,7 +54,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Error400"
+                $ref: "#/components/schemas/ErrorInfo"
               examples:
                 Generic400:
                   summary: Schema validation failed
@@ -107,7 +107,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Error409"
+                $ref: "#/components/schemas/ErrorInfo"
               example:
                 status: 409
                 code: CONFLICT
@@ -486,149 +486,13 @@ components:
         message:
           type: string
           description: Detailed error description
-    Error400:
-      type: object
-      required: 
-        - status
-        - code
-        - message
-      properties: 
-        status:
-          type: integer
-          enum:
-            - 400
-        code:
-          type: string
-          enum:
-            - INVALID_ARGUMENT
-        message:
-          type: string  
-    Error401:
-      type: object
-      required: 
-        - status
-        - code
-        - message
-      properties: 
-        status:
-          type: integer
-          enum:
-            - 401
-        code:
-          type: string
-          enum:
-            - UNAUTHENTICATED
-        message:
-          type: string 
-    Error403:
-      type: object
-      required: 
-        - status
-        - code
-        - message
-      properties: 
-        status:
-          type: integer
-          enum:
-            - 403
-        code:
-          type: string
-          enum:
-            - PERMISSION_DENIED
-        message:
-          type: string 
-    Error404:
-      type: object
-      required: 
-        - status
-        - code
-        - message
-      properties: 
-        status:
-          type: integer
-          enum:
-            - 404
-        code:
-          type: string
-          enum:
-            - NOT_FOUND
-        message:
-          type: string
-    Error409:
-      type: object
-      required: 
-        - status
-        - code
-        - message
-      properties: 
-        status:
-          type: integer
-          enum:
-            - 409
-        code:
-          type: string
-          enum:
-            - CONFLICT
-        message:
-          type: string
-    Error500:
-      type: object
-      required: 
-        - status
-        - code
-        - message
-      properties: 
-        status:
-          type: integer
-          enum:
-            - 500
-        code:
-          type: string
-          enum:
-            - INTERNAL
-        message:
-          type: string
-    Error501:
-      type: object
-      required:
-        - status
-        - code
-        - message
-      properties:
-        status:
-          type: integer
-          enum:
-            - 501
-        code:
-          type: string
-          enum:
-            - NOT_IMPLEMENTED
-        message:
-          type: string
-    Error503:
-      type: object
-      required: 
-        - status
-        - code
-        - message
-      properties: 
-        status:
-          type: integer
-          enum:
-            - 503
-        code:
-          type: string
-          enum:
-            - UNAVAILABLE
-        message:
-          type: string
   responses:
     Generic400:
       description: Invalid input
       content:
         application/json:
           schema:
-            $ref: "#/components/schemas/Error400"
+            $ref: "#/components/schemas/ErrorInfo"
           example:
             status: 400
             code: INVALID_ARGUMENT
@@ -638,7 +502,7 @@ components:
       content:
         application/json:
           schema:
-            $ref: "#/components/schemas/Error401"
+            $ref: "#/components/schemas/ErrorInfo"
           example:
             status: 401
             code: UNAUTHENTICATED
@@ -648,7 +512,7 @@ components:
       content:
         application/json:
           schema:
-            $ref: "#/components/schemas/Error403"
+            $ref: "#/components/schemas/ErrorInfo"
           example:
             status: 403
             code: PERMISSION_DENIED
@@ -658,7 +522,7 @@ components:
       content:
         application/json:
           schema:
-            $ref: "#/components/schemas/Error404"
+            $ref: "#/components/schemas/ErrorInfo"
           example:
             status: 404
             code: NOT_FOUND
@@ -668,7 +532,7 @@ components:
       content:
         application/json:
           schema:
-            $ref: "#/components/schemas/Error500"
+            $ref: "#/components/schemas/ErrorInfo"
           example:
             status: 500
             code: INTERNAL
@@ -678,7 +542,7 @@ components:
       content:
         application/json:
           schema:
-            $ref: "#/components/schemas/Error501"
+            $ref: "#/components/schemas/ErrorInfo"
           example:
             status: 501
             code: NOT_IMPLEMENTED
@@ -688,7 +552,7 @@ components:
       content:
         application/json:
           schema:
-            $ref: "#/components/schemas/Error503"
+            $ref: "#/components/schemas/ErrorInfo"
           example:
             status: 503
             code: UNAVAILABLE
