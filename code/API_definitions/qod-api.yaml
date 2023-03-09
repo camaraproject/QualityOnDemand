@@ -63,41 +63,41 @@ paths:
                     code: INVALID_ARGUMENT
                     message: "Schema validation failed at  ..."
                 MsisdnRequired:
-                  summary: msisdn is required as part of ueId
+                  summary: Phone number is required as part of device
                   value:
                     status: 400
                     code: INVALID_ARGUMENT
-                    message: "Expected property is missing: ueId.msisdn"
+                    message: "Expected property is missing: device.phoneNumber"
                 IPv4Required:
-                  summary: ipv4addr is required as part of ueId
+                  summary: ipv4Address is required as part of device
                   value:
                     status: 400
                     code: INVALID_ARGUMENT
-                    message: "Expected property is missing: ueId.ipv4addr"
+                    message: "Expected property is missing: device.ipv4Address"
                 IPRequired:
-                  summary: Some IP address is required as part of ueId
+                  summary: Some IP address is required as part of device
                   value:
                     status: 400
                     code: INVALID_ARGUMENT
-                    message: "Expected property is missing: ueId.ipv4addr or ueId.ipv6addr"
+                    message: "Expected property is missing: device.ipv4Address or device.ipv6Address"
                 UePortsRequired:
-                  summary: uePorts is required
+                  summary: devicePorts is required
                   value:
                     status: 400
                     code: INVALID_ARGUMENT
-                    message: "Expected property is missing: uePorts"
+                    message: "Expected property is missing: devicePorts"
                 QoSRequired:
-                  summary: qos is required
+                  summary: qosProfile is required
                   value:
                     status: 400
                     code: INVALID_ARGUMENT
-                    message: "Expected property is missing: qos"
+                    message: "Expected property is missing: qosProfile"
                 UePortsRangesNotAllowed:
-                  summary: Ranges at uePorts are not allowed
+                  summary: Ranges at devicePorts are not allowed
                   value:
                     status: 400
                     code: INVALID_ARGUMENT
-                    message: "Ranges not allowed: uePorts"
+                    message: "Ranges not allowed: devicePorts"
         "401":
           $ref: "#/components/responses/Generic401"
         "403":
@@ -111,7 +111,7 @@ paths:
               example:
                 status: 409
                 code: CONFLICT
-                message: "Another session is created for the same UE"
+                message: "Another session is created for the same device"
         "500":
           $ref: "#/components/responses/Generic500"
         "501":
@@ -229,13 +229,13 @@ components:
         - $ref: "#/components/schemas/CreateSession"
         - type: object
           required:
-            - id
+            - sessionId
             - duration
             - startedAt
             - expiresAt
             - qosStatus
           properties:
-            id:
+            sessionId:
               $ref: "#/components/schemas/SessionId"
             startedAt:
               type: integer
@@ -270,15 +270,15 @@ components:
           minimum: 1
           maximum: 86400
           default: 86400
-        ueId:
-          $ref: "#/components/schemas/UeId"
-        asId:
-          $ref: "#/components/schemas/AsId"
-        uePorts:
+        device:
+          $ref: "#/components/schemas/Device"
+        applicationServer:
+          $ref: "#/components/schemas/ApplicationServer"
+        devicePorts:
           $ref: "#/components/schemas/PortsSpec"
-        asPorts:
+        applicationServerPorts:
           $ref: "#/components/schemas/PortsSpec"
-        qos:
+        qosProfile:
           $ref: "#/components/schemas/QosProfile"
         notificationUrl:
           type: string
@@ -290,9 +290,9 @@ components:
           example: "c8974e592c2fa383d4a3960714"
           description: Authentication token for callback API
       required:
-        - ueId
-        - asId
-        - qos
+        - device
+        - applicationServer
+        - qosProfile
     Port:
       type: integer
       minimum: 0
@@ -392,37 +392,37 @@ components:
       enum:
         - QOS_STATUS_CHANGED
     
-    UeId:
+    Device:
       type: object
       minProperties: 1
       properties:
-        externalId:
-          $ref: "#/components/schemas/ExternalId"
-        msisdn:
-          $ref: "#/components/schemas/MSISDN"
-        ipv4addr:
-          $ref: "#/components/schemas/Ipv4Addr"
-        ipv6addr:
-          $ref: "#/components/schemas/Ipv6Addr"
-      description: User equipment identifier
-    AsId:
+        phoneNumber:
+          $ref: "#/components/schemas/PhoneNumber"
+        networkAccessIdentifier:
+          $ref: "#/components/schemas/NetworkAccessIdentifier"
+        ipv4Address:
+          $ref: "#/components/schemas/Ipv4Address"
+        ipv6Address:
+          $ref: "#/components/schemas/Ipv6Address"
+      description: Device identifier
+    ApplicationServer:
       type: object
       minProperties: 1
       properties:
-        ipv4addr:
-          $ref: "#/components/schemas/Ipv4Addr"
-        ipv6addr:
-          $ref: "#/components/schemas/Ipv6Addr"
+        ipv4Address:
+          $ref: "#/components/schemas/Ipv4Address"
+        ipv6Address:
+          $ref: "#/components/schemas/Ipv6Address"
       description: Application server identifier
-    ExternalId:
+    NetworkAccessIdentifier:
       type: string
       example: "123456789@domain.com"
-    MSISDN:
+    PhoneNumber:
       type: string
       pattern: '^\+?[0-9]{5,15}$'
       example: "123456789"
       description: Subscriber number in E.164 format (starting with country code). Optionally prefixed with '+'.
-    Ipv4Addr:
+    Ipv4Address:
       type: string
       format: ipv4
       pattern: '^([01]?\d\d?|2[0-4]\d|25[0-5])(?:\.(?:[01]?\d\d?|2[0-4]\d|25[0-5])){3}(\/([0-9]|[1-2][0-9]|3[0-2]))?$'
@@ -432,7 +432,7 @@ components:
           - address - an IPv4 number in dotted-quad form 1.2.3.4. Only this exact IP number will match the flow control rule.
           - address/mask - an IP number as above with a mask width of the form 1.2.3.4/24.
             In this case, all IP numbers from 1.2.3.0 to 1.2.3.255 will match. The bit width MUST be valid for the IP version.
-    Ipv6Addr:
+    Ipv6Address:
       type: string
       format: ipv6
       allOf:
