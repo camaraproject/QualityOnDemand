@@ -29,6 +29,7 @@ Repository to describe, develop, document and test the QualityOnDemand API famil
   * API [definition](https://github.com/camaraproject/QualityOnDemand/tree/release-0.8.1/code/API_definitions)
   * API [documentation](https://github.com/camaraproject/QualityOnDemand/tree/release-0.8.1/documentation/API_documentation)
   * For changes see [CHANGELOG.md](https://github.com/camaraproject/QualityOnDemand/blob/main/CHANGELOG.md)
+* The previous version v0.8.0 of the QoD API is available within the [release-0.8.0 branch](https://github.com/camaraproject/QualityOnDemand/tree/release-0.8.0)
 * Provider implementations (PI) will be provided within separate repositories:
   * [QualityOnDemand_PI1](https://github.com/camaraproject/QualityOnDemand_PI1) by Deutsche Telekom
   * [QualityOnDemand_PI2](https://github.com/camaraproject/QualityOnDemand_PI2) by Orange
