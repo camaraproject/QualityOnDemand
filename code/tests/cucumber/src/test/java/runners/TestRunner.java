@@ -43,7 +43,7 @@ import static io.cucumber.core.options.Constants.PLUGIN_PUBLISH_QUIET_PROPERTY_N
 @SelectClasspathResource("feature")
 @ConfigurationParameters({
     @ConfigurationParameter(key = GLUE_PROPERTY_NAME, value = "stepDefinitions"),
-    @ConfigurationParameter(key = FILTER_TAGS_PROPERTY_NAME, value = "@QoDCrispSanity"),
+    @ConfigurationParameter(key = FILTER_TAGS_PROPERTY_NAME, value = "@QoDSanity"),
     @ConfigurationParameter(key = PLUGIN_PUBLISH_QUIET_PROPERTY_NAME, value = "true"),
     @ConfigurationParameter(
         key = PLUGIN_PROPERTY_NAME,
