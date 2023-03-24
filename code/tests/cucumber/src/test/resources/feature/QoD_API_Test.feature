@@ -20,7 +20,7 @@
 #*/
 
 @QoD @QoDSanity
-Feature: Automated QoD Crisp System Integration Test
+Feature: Automated QoD System Integration Test
 
   @QoDSessionCreateGetDelete
   Scenario: Create QoD session, get QoD session and delete QoD Session
