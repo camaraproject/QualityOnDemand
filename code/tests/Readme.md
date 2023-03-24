@@ -9,5 +9,5 @@ Readme file for QoD API's basic cucumber tests.
 1) Update BASE_URL with FQDN(Parameter used in AppConfig.java file).
 2) Update msisdn with real devices values (In cucumber /src/test/java/stepDefinitions/AppConfig.java File).
 
-- Reports will get generated after every run in location /cucumber/target/cucumber-reports/ .Sample files are attached for reference.
+- Reports will get generated after every run in location /cucumber/target/cucumber-reports/ .
 - Plan to integrate mockserver with our test cases so that they can run independently.
