@@ -8,4 +8,4 @@ Sample code for basic cucumber tests for QoD API's
 
 Below are Steps :-
 1) Update BASE_URL with FQDN(Parameter used in AppConfig file).
-2) Update msisdn with real devices values.
+2) Update msisdn with real devices values (In AppConfig File).
