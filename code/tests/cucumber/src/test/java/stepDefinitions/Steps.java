@@ -46,7 +46,6 @@ public class Steps {
   private de.telekom.gac_client.mg_manager.cmd.allocation.Response allocationResponse;
   private RequestSpecification request;
   private final static String PATH = "/qod/v0/sessions";
-  public static final String ENVIRONMENT = "environment";
 
 
   @Given("Use the BaseURL")
