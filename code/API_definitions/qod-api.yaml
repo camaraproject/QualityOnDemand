@@ -62,7 +62,7 @@ paths:
                     status: 400
                     code: INVALID_ARGUMENT
                     message: "Schema validation failed at  ..."
-                MsisdnRequired:
+                PhoneNumberRequired:
                   summary: Phone number is required as part of device
                   value:
                     status: 400
