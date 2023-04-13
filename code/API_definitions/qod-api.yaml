@@ -68,31 +68,31 @@ paths:
                     status: 400
                     code: INVALID_ARGUMENT
                     message: "Expected property is missing: device.phoneNumber"
-                IPv4Required:
+                Ipv4AddressRequired:
                   summary: ipv4Address is required as part of device
                   value:
                     status: 400
                     code: INVALID_ARGUMENT
                     message: "Expected property is missing: device.ipv4Address"
-                IPRequired:
+                IpAddressRequired:
                   summary: Some IP address is required as part of device
                   value:
                     status: 400
                     code: INVALID_ARGUMENT
                     message: "Expected property is missing: device.ipv4Address or device.ipv6Address"
-                UePortsRequired:
+                DevicePortsRequired:
                   summary: devicePorts is required
                   value:
                     status: 400
                     code: INVALID_ARGUMENT
                     message: "Expected property is missing: devicePorts"
-                QoSRequired:
+                QoSProfileRequired:
                   summary: qosProfile is required
                   value:
                     status: 400
                     code: INVALID_ARGUMENT
                     message: "Expected property is missing: qosProfile"
-                UePortsRangesNotAllowed:
+                DevicePortsRangesNotAllowed:
                   summary: Ranges at devicePorts are not allowed
                   value:
                     status: 400
