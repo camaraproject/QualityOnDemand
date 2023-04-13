@@ -26,10 +26,10 @@ Security access keys such as OAuth 2.0 client credentials used by client applica
 **QoS profiles and QoS profile labels**
 Latency or throughput requirements of the application mapped to relevant QoS profile class.
 
-**Identifier for the the device**
+**Identifier for the device**
 At least one identifier for the device (user equipment) out of four options: IPv4 address, IPv6 address, Phone number, or Network Access Identifier [[5]](#5) assigned by the mobile network operator for the device.
 
-**Identifier for the application server (AS)**
+**Identifier for the application server**
 IPv4 and/or IPv6 address of the application server (application backend)
 
 **App-Flow (between the application client and application server)**
@@ -61,7 +61,7 @@ The usage of the QoD API is based on QoS profile classes and parameters which de
 Based on the API, QoS session resources can be created, queried, and deleted. Once an offered QoS profile class is requested, application users get a prioritized service with stable latency or throughput even in the case of congestion. The QoD API has the following characteristics:
 
 * A specified App-Flow is prioritized to ensure stable latency or throughput for that flow.
-* The prioritized App-Flow is described by providing information such as device IP address (or other device identifier) & application server (AS) IP addresses and port/port-ranges.
+* The prioritized App-Flow is described by providing information such as device IP address (or other device identifier) & application server IP addresses and port/port-ranges.
 * The developer can optionally specify the duration for which they need the prioritized App-flow.
 * Stable latency or throughput is requested by selecting from the list of QoS profiles made available by the service provider (e.g. QOS_E) to map latency and throughput requirements.
 * The developer can optionally also specify callback URL on which notifications for the session can be sent. <br>
@@ -122,7 +122,7 @@ Following table defines API endpoints of exposed REST based for QoD management o
                     <li>phoneNumber (including country code and optionally could be prefixed by "+" sign) e.g. 004912345678923</li>
                     <li>networkAccessIdentifier <a href="#5">[5]</a>  assigned by the mobile network operator (MNO) for the device. e.g. 123456789@domain.com</li>
                 </ul>
-                <p>NOTE: the MNO might support only a subset of these options. The API invoker can provide multiple identifiers to be compatible across different MNOs. In this case the identifiers MUST belong to the same UE</p>
+                <p>NOTE: the MNO might support only a subset of these options. The API invoker can provide multiple identifiers to be compatible across different MNOs. In this case the identifiers MUST belong to the same device</p>
             </td>
         </tr>
         <tr>
@@ -326,7 +326,7 @@ Following table provides an overview of common error names, codes, and messages 
 |7	|401 |	UNAUTHORIZED |	"No authorization to invoke operation" |
 |8	|403 |	FORBIDDEN |	"Operation not allowed" |
 |9	|404 |	NOT_FOUND |	"Session Id does not exist" |
-|10	|409 |	CONFLICT |	"Another session is created for the same UE" |
+|10	|409 |	CONFLICT |	"Another session is created for the same device" |
 |11	|500 |	INTERNAL |	"Session could not be created" |
 |12 |501 |  NOT_IMPLEMENTED |  "Service not implemented for the specified user device" |
 |13	|503 |	SERVICE_UNAVAILABLE |	"Service unavailable" |
