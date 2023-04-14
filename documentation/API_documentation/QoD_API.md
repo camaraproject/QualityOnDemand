@@ -6,7 +6,7 @@
 
 Industrial (IoT), VR/Gaming, live video streaming, autonomous driving and many other scenarios demand network communication quality and are sensitive to any change in transmission conditions. Being able to request a stable latency (reduced jitter) or prioritized throughput from the network can improve user experience substantially.
 
-The QoD API offers the application developers the capability to request for stable latency (reduced jitter) or throughput for some specified application data flows between application clients (within a User Equipment) and Application Servers (backend services). The developer has a pre-defined set of Quality of Service (QoS) profiles which they could choose from depending on their latency or throughput requirements.
+The QoD API offers the application developers the capability to request for stable latency (reduced jitter) or throughput for some specified application data flows between application clients (within a user device) and Application Servers (backend services). The developer has a pre-defined set of Quality of Service (QoS) profiles which they could choose from depending on their latency or throughput requirements.
 
 <img src="./resources/QoD_overview.PNG" alt="QoD_LM" title="QoD API Overview">
 
@@ -26,14 +26,14 @@ Security access keys such as OAuth 2.0 client credentials used by client applica
 **QoS profiles and QoS profile labels**
 Latency or throughput requirements of the application mapped to relevant QoS profile class.
 
-**Identifier for the the user equipment (UE)**
-At least one identifier for the user equipment out of four options: IPv4 address, IPv6 address, MSISDN, or external ID [[5]](#5) assigned by the mobile network operator for the user equipment
+**Identifier for the device**
+At least one identifier for the device (user equipment) out of four options: IPv4 address, IPv6 address, Phone number, or Network Access Identifier [[5]](#5) assigned by the mobile network operator for the device.
 
-**Identifier for the application server (AS)**
+**Identifier for the application server**
 IPv4 and/or IPv6 address of the application server (application backend)
 
 **App-Flow (between the application client and application server)**
-The precise application data flow the developer wants to prioritize and have stable latency or throughput for. This flow is in the current API version determined by the identifiers used for the user equipment and the application server. And it can be further elaborated with details such as ports or port-ranges. Future version of the API might allow more detailed flow identification features.
+The precise application data flow the developer wants to prioritize and have stable latency or throughput for. This flow is in the current API version determined by the identifiers used for the device and the application server. And it can be further elaborated with details such as ports or port-ranges. Future version of the API might allow more detailed flow identification features.
 
 **Duration** 
 Duration (in seconds) for which the QoS session (between application client and application server) should be created. This parameter is optional. When not specified, a default session duration (e.g. 24 hours) is applied. The user may request a termination before its expiration.
@@ -61,7 +61,7 @@ The usage of the QoD API is based on QoS profile classes and parameters which de
 Based on the API, QoS session resources can be created, queried, and deleted. Once an offered QoS profile class is requested, application users get a prioritized service with stable latency or throughput even in the case of congestion. The QoD API has the following characteristics:
 
 * A specified App-Flow is prioritized to ensure stable latency or throughput for that flow.
-* The prioritized App-Flow is described by providing information such as user equipment (UE) IP address (or other UE identifier) & application server (AS) IP addresses and port/port-ranges.
+* The prioritized App-Flow is described by providing information such as device IP address (or other device identifier) & application server IP addresses and port/port-ranges.
 * The developer can optionally specify the duration for which they need the prioritized App-flow.
 * Stable latency or throughput is requested by selecting from the list of QoS profiles made available by the service provider (e.g. QOS_E) to map latency and throughput requirements.
 * The developer can optionally also specify callback URL on which notifications for the session can be sent. <br>
@@ -113,38 +113,38 @@ Following table defines API endpoints of exposed REST based for QoD management o
             <td>Session duration in seconds. Maximal value of 24 hours is used if not set. e.g. 86400</td>
         </tr> 
         <tr>
-            <td><b>ueId</b></td>
+            <td><b>device</b></td>
             <td>
-                <p>The identifier for the user equipment (device). The developer can choose to provide the below specified user equipment identifiers:</p>
+                <p>The identifier for the device (user equipment). The developer can choose to provide the below specified device identifiers:</p>
                 <ul>
-                    <li>ipv4addr: IPv4 address (supports mask) e.g. 192.168.0.1/24</li>
-                    <li>ipv6addr: IPv6 address (supports mask) e.g. 2001:db8:85a3:8d3:1319:8a2e:370:7344</li>
-                    <li>msisdn (including country code and optionally could be prefixed by "+" sign) e.g. 004912345678923</li>
-                    <li>externalId <a href="#5">[5]</a>  assigned by the mobile network operator (MNO) for the user equipment. e.g. 123456789@domain.com</li>
+                    <li>ipv4Address: IPv4 address (supports mask) e.g. 192.168.0.1/24</li>
+                    <li>ipv6Address: IPv6 address (supports mask) e.g. 2001:db8:85a3:8d3:1319:8a2e:370:7344</li>
+                    <li>phoneNumber (including country code and optionally could be prefixed by "+" sign) e.g. 004912345678923</li>
+                    <li>networkAccessIdentifier <a href="#5">[5]</a>  assigned by the mobile network operator (MNO) for the device. e.g. 123456789@domain.com</li>
                 </ul>
-                <p>NOTE: the MNO might support only a subset of these options. The API invoker can provide multiple identifiers to be compatible across different MNOs. In this case the identifiers MUST belong to the same UE</p>
+                <p>NOTE: the MNO might support only a subset of these options. The API invoker can provide multiple identifiers to be compatible across different MNOs. In this case the identifiers MUST belong to the same device</p>
             </td>
         </tr>
         <tr>
-            <td><b>asId</b></td>
+            <td><b>applicationServer</b></td>
             <td>
                 <p>The identifier used for application server. The developer can choose from the below application server identifiers:</p>
                 <ul>
-                    <li>ipv4addr: IPv4 address (supports mask) e.g. 192.168.0.1/24</li>
-                    <li>ipv6addr: IPv6 address (supports mask) e.g. 2001:db8:85a3:8d3:1319:8a2e:370:7344</li>
+                    <li>ipv4Address: IPv4 address (supports mask) e.g. 192.168.0.1/24</li>
+                    <li>ipv6Address: IPv6 address (supports mask) e.g. 2001:db8:85a3:8d3:1319:8a2e:370:7344</li>
                 </ul>
             </td>
         </tr>
         <tr>
-            <td><b>uePorts (optional)</b></td>
-            <td>A list of single ports or port ranges on the user equipment,<br> e.g. "uePorts": {"ranges": [{"from": 5010,"to": 5020}],"ports": [5060,5070]}</td>
+            <td><b>devicePorts (optional)</b></td>
+            <td>A list of single ports or port ranges on the device,<br> e.g. "devicePorts": {"ranges": [{"from": 5010,"to": 5020}],"ports": [5060,5070]}</td>
         </tr>
         <tr>
-            <td><b>asPorts (optional)</b></td>
-            <td>A list of single ports or port ranges on the application server,<br> e.g. "asPorts": {"ranges": [{"from": 5010,"to": 5020}],"ports": [5060,5070]}</td>
+            <td><b>applicationServerPorts (optional)</b></td>
+            <td>A list of single ports or port ranges on the application server,<br> e.g. "applicationServerPorts": {"ranges": [{"from": 5010,"to": 5020}],"ports": [5060,5070]}</td>
         </tr>
         <tr>
-            <td><b>qos</b></td>
+            <td><b>qosProfile</b></td>
             <td>Qualifier for the requested latency/throughput profile, e.g. QOS_E</td>
         </tr>
         <tr>
@@ -161,14 +161,14 @@ Following table defines API endpoints of exposed REST based for QoD management o
             <td>
                 Response body:<br>
                 <b>duration</b>: Session duration in seconds<br>
-                <b>ueId:</b> The identifier of the user equipment<br>
-                <b>asId:</b> The identifer of the application server<br>
-                <b>uePorts (optional):</b> The requested port(s) on the user equipment<br>
-                <b>asPorts (optional):</b> The requested port(s) on the application server<br>
-                <b>qos:</b> Qualifier of the requested throughput profile<br>
+                <b>device:</b> The identifier of the device<br>
+                <b>applicationServer:</b> The identifer of the application server<br>
+                <b>devicePorts (optional):</b> The requested port(s) on the device<br>
+                <b>applicationServerPorts (optional):</b> The requested port(s) on the application server<br>
+                <b>qosProfile:</b> Qualifier of the requested throughput profile<br>
                 <b>notificationUrl (optional):</b> URL of the callback receiver<br>
                 <b>notificationAuthToken (optional):</b> Authentication token for callback API<br>
-                <b>id:</b> Session ID in UUID format, e.g. 123e4567-e89b-12d3-a456-426614174000<br>
+                <b>sessionId:</b> Session ID in UUID format, e.g. 123e4567-e89b-12d3-a456-426614174000<br>
                 <b>startedAt:</b> Timestamp of session start, in seconds since Unix epoch, e.g. 1639479600<br>
                 <b>expiresAt:</b> Timestamp of session expiration if the session was not deleted, in seconds since Unix epoch, e.g. 1639566000
             </td>
@@ -229,14 +229,14 @@ Following table defines API endpoints of exposed REST based for QoD management o
             <td><b>200: Session information returned</b></td>
             <td>
                 Response body:<br> 
-                <b>ueId:</b> The identifier of the user equipment<br>
-                <b>asId:</b> The identifier of the application server.<br>
-                <b>uePorts (optional):</b> The requested port(s) on the user equipment<br>
-                <b>asPort (optional):</b> The requested port(s) on the application server<br>
-                <b>qos:</b> Qualifier of the requested QoS profile<br>
+                <b>device:</b> The identifier of the device<br>
+                <b>applicationServer:</b> The identifier of the application server.<br>
+                <b>devicePorts (optional):</b> The requested port(s) on the device<br>
+                <b>applicationServerPorts (optional):</b> The requested port(s) on the application server<br>
+                <b>qosProfile:</b> Qualifier of the requested QoS profile<br>
                 <b>notificationUrl (optional):</b> URL of the callback receiver<br>
                 <b>notificationAuthToken (optional):</b> Authentication token for callback API<br>
-                <b>id:</b> Session ID in UUID format<br>
+                <b>sessionId:</b> Session ID in UUID format<br>
                 <b>startedAt:</b> Timestamp of session start in seconds since Unix epoch<br>
                 <b>expiresAt:</b> Timestamp of session expiration if the session was not deleted in seconds since Unix epoch
             </td>
@@ -317,16 +317,16 @@ Following table provides an overview of common error names, codes, and messages 
 
 | No | Error Name | Error Code | Error Message |
 | --- | ---------- | ---------- | ------------- |
-|1	|400 |	INVALID_INPUT |	"Expected property is missing: ueId.msisdn" |
-|2	|400 |	INVALID_INPUT |	"Expected property is missing: ueId.ipv4addr" |
-|3	|400 |	INVALID_INPUT |	"Expected property is missing: ueId.ipv4addr or ueId.ipv6addr" |
-|4	|400 |	INVALID_INPUT |	"Expected property is missing: uePorts" |
-|5	|400 |	INVALID_INPUT |	"Expected property is missing: qos" |
-|6	|400 |	INVALID_INPUT |	"Ranges not allowed: uePorts" |
+|1	|400 |	INVALID_INPUT |	"Expected property is missing: device.msisdn" |
+|2	|400 |	INVALID_INPUT |	"Expected property is missing: device.ipv4Address" |
+|3	|400 |	INVALID_INPUT |	"Expected property is missing: device.ipv4Address or device.ipv6Address" |
+|4	|400 |	INVALID_INPUT |	"Expected property is missing: devicePorts" |
+|5	|400 |	INVALID_INPUT |	"Expected property is missing: qosProfile" |
+|6	|400 |	INVALID_INPUT |	"Ranges not allowed: devicePorts" |
 |7	|401 |	UNAUTHORIZED |	"No authorization to invoke operation" |
 |8	|403 |	FORBIDDEN |	"Operation not allowed" |
 |9	|404 |	NOT_FOUND |	"Session Id does not exist" |
-|10	|409 |	CONFLICT |	"Another session is created for the same UE" |
+|10	|409 |	CONFLICT |	"Another session is created for the same device" |
 |11	|500 |	INTERNAL |	"Session could not be created" |
 |12 |501 |  NOT_IMPLEMENTED |  "Service not implemented for the specified user device" |
 |13	|503 |	SERVICE_UNAVAILABLE |	"Service unavailable" |
@@ -340,13 +340,13 @@ N/A
 <span class="colour" style="color:rgb(36, 41, 47)">Snippet 1, elaborates REST based API call with "*curl"* to create a QoS session for sample streaming service with following parameters: </span>
 
 * QoS session with QoS-profile "QOS_E" mapping,
-* App-Flow is specified for UE-Terminal identifier (ueId=2001:db8:85a3:8d3:1319:8a2e:370:7344), Application server identifier (asId=54.204.25.0/28) and Port number (asPorts=33001).
+* App-Flow is specified for device identifier (device=2001:db8:85a3:8d3:1319:8a2e:370:7344), Application server identifier (applicationServer=54.204.25.0/28) and Port number (applicationServerPorts=33001).
 
 Please note, the credentials for API authentication purposes need to be adjusted based on target security system configuration.
 
 | Snippet 1. Create QoS session resource                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 |
 |----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| curl -X 'POST' `https://sample-base-url/qod/v0/sessions`   <br>    -H 'accept: application/json' <br>    -H 'Content-Type: application/json'<br>    -H "Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbG...."<br>    -d '{<br>     "ueId": {"ipv6Addr": "2001:db8:85a3:8d3:1319:8a2e:370:7344"},<br>     "asId": {"ipv4Addr": "54.204.25.0/28"},<br>     "asPorts": "33001",<br>     "qos": "QOS_E",<br>     "notificationUrl": `https://your-callback-server.com`,<br>     "notificationAuthToken": "c8974e592c2fa383d4a3960714"<br>   }' |
+| curl -X 'POST' `https://sample-base-url/qod/v0/sessions`   <br>    -H 'accept: application/json' <br>    -H 'Content-Type: application/json'<br>    -H "Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbG...."<br>    -d '{<br>     "device": {"ipv6Addr": "2001:db8:85a3:8d3:1319:8a2e:370:7344"},<br>     "applicationServer": {"ipv4Addr": "54.204.25.0/28"},<br>     "applicationServerPorts": "33001",<br>     "qosProfile": "QOS_E",<br>     "notificationUrl": `https://your-callback-server.com`,<br>     "notificationAuthToken": "c8974e592c2fa383d4a3960714"<br>   }' |
 <br>
 Snippet 2, elaborates sample QoS notification "SESSION_TERMINATION" message distributed from QoD backend to client callback function.
 
