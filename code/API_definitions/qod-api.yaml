@@ -81,7 +81,7 @@ paths:
                     code: INVALID_ARGUMENT
                     message: "Expected property is missing: device.ipv4Address or device.ipv6Address"
                 DevicePortsRequired:
-                  summary: devicePublicPorts is required
+                  summary: deviceAllocatedPorts is required
                   value:
                     status: 400
                     code: INVALID_ARGUMENT
