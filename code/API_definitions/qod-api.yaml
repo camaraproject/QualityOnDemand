@@ -85,7 +85,7 @@ paths:
                   value:
                     status: 400
                     code: INVALID_ARGUMENT
-                    message: "Expected property is missing: devicePublicPorts"
+                    message: "Expected property is missing: deviceAllocatedPorts"
                 QoSProfileRequired:
                   summary: qosProfile is required
                   value:
@@ -97,7 +97,7 @@ paths:
                   value:
                     status: 400
                     code: INVALID_ARGUMENT
-                    message: "Ranges not allowed: devicePublicPorts"
+                    message: "Ranges not allowed: deviceAllocatedPorts"
         "401":
           $ref: "#/components/responses/Generic401"
         "403":
