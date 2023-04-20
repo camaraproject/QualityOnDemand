@@ -329,13 +329,13 @@ Following table provides an overview of common error names, codes, and messages 
 |7	|400 |	INVALID_ARGUMENT |	"Expected property is missing: qosProfile" |
 |8	|400 |	OUT_OF_RANGE |	"Invalid port value specified: device.ipv4Address.publicPort" |
 |9	|400 |	OUT_OF_RANGE |	"Invalid port ranges specified: deviceAllocatedPorts" |
-|7	|401 |	UNAUTHORIZED |	"No authorization to invoke operation" |
-|8	|403 |	FORBIDDEN |	"Operation not allowed" |
-|9	|404 |	NOT_FOUND |	"Session Id does not exist" |
-|10	|409 |	CONFLICT |	"Another session is created for the same device" |
-|11	|500 |	INTERNAL |	"Session could not be created" |
-|12 |501 |  NOT_IMPLEMENTED |  "Service not implemented for the specified user device" |
-|13	|503 |	SERVICE_UNAVAILABLE |	"Service unavailable" |
+|10	|401 |	UNAUTHORIZED |	"No authorization to invoke operation" |
+|11	|403 |	FORBIDDEN |	"Operation not allowed" |
+|12	|404 |	NOT_FOUND |	"Session Id does not exist" |
+|13	|409 |	CONFLICT |	"Another session is created for the same device" |
+|14	|500 |	INTERNAL |	"Session could not be created" |
+|15 |501 |  NOT_IMPLEMENTED |  "Service not implemented for the specified user device" |
+|16	|503 |	SERVICE_UNAVAILABLE |	"Service unavailable" |
 
 ### 4.5 Policies
 
