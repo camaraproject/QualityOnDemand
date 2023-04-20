@@ -27,7 +27,7 @@ Security access keys such as OAuth 2.0 client credentials used by client applica
 Latency or throughput requirements of the application mapped to relevant QoS profile class.
 
 **Identifier for the device**
-At least one identifier for the device (user equipment) out of four options: IPv4 address, IPv6 address, Phone number, or Network Access Identifier [[5]](#5) assigned by the mobile network operator for the device.
+At least one identifier for the device (user equipment) out of four options: IPv4 address (either public IP address and port, or public and private IP address), IPv6 address, Phone number, or Network Access Identifier [[5]](#5) assigned by the mobile network operator for the device.
 
 **Identifier for the application server**
 IPv4 and/or IPv6 address of the application server (application backend)
@@ -117,12 +117,12 @@ Following table defines API endpoints of exposed REST based for QoD management o
             <td>
                 <p>The identifier for the device (user equipment). The developer can choose to provide the below specified device identifiers:</p>
                 <ul>
-                    <li>ipv4Address: IPv4 address (supports mask) e.g. 192.168.0.1/24</li>
-                    <li>ipv6Address: IPv6 address (supports mask) e.g. 2001:db8:85a3:8d3:1319:8a2e:370:7344</li>
-                    <li>phoneNumber (including country code and optionally could be prefixed by "+" sign) e.g. 004912345678923</li>
-                    <li>networkAccessIdentifier <a href="#5">[5]</a>  assigned by the mobile network operator (MNO) for the device. e.g. 123456789@domain.com</li>
+                    <li><b>ipv4Address</b>: Either public IPv4 address and port e.g. 84.125.93.10:59765, or public and private IPv4 addresses e.g. 192.168.0.1 & 84.125.93.10. The public IPv4 address alone is generally insufficient to identify the device. Subnet masks are not necessary or supported.</li>
+                    <li><b>ipv6Address</b>: IPv6 address (supports mask) e.g. 2001:db8:85a3:8d3:1319:8a2e:370:7344</li>
+                    <li><b>phoneNumber</b>: The device phone number, including country code and optionally prefixed by a "+" sign, e.g. 004912345678923</li>
+                    <li><b>networkAccessIdentifier</b> <a href="#5">[5]</a>  assigned by the mobile network operator (MNO) for the device. e.g. 123456789@domain.com</li>
                 </ul>
-                <p>NOTE: the MNO might support only a subset of these options. The API invoker can provide multiple identifiers to be compatible across different MNOs. In this case the identifiers MUST belong to the same device</p>
+                <p>NOTE: The MNO might support only a subset of these options. The API invoker can provide multiple identifiers to be compatible across different MNOs. In this case the identifiers MUST identify the same device</p>
             </td>
         </tr>
         <tr>
@@ -136,8 +136,8 @@ Following table defines API endpoints of exposed REST based for QoD management o
             </td>
         </tr>
         <tr>
-            <td><b>devicePorts (optional)</b></td>
-            <td>A list of single ports or port ranges on the device,<br> e.g. "devicePorts": {"ranges": [{"from": 5010,"to": 5020}],"ports": [5060,5070]}</td>
+            <td><b>deviceAllocatedPorts (optional)</b></td>
+            <td>A list of single source ports or source port ranges used directly by the device (i.e. not the public or NATed port(s)),<br> e.g. "deviceAllocatedPorts": {"ranges": [{"from": 5010,"to": 5020}],"ports": [5060,5070]}</td>
         </tr>
         <tr>
             <td><b>applicationServerPorts (optional)</b></td>
@@ -175,6 +175,9 @@ Following table defines API endpoints of exposed REST based for QoD management o
         </tr>
         <tr>
             <td><b>400: Invalid input</b></td>
+        </tr>
+        <tr>
+            <td><b>400: Out of range</b></td>
         </tr>
         <tr>
             <td><b>401: Un-authorized</b></td>
@@ -317,12 +320,15 @@ Following table provides an overview of common error names, codes, and messages 
 
 | No | Error Name | Error Code | Error Message |
 | --- | ---------- | ---------- | ------------- |
-|1	|400 |	INVALID_INPUT |	"Expected property is missing: device.msisdn" |
-|2	|400 |	INVALID_INPUT |	"Expected property is missing: device.ipv4Address" |
-|3	|400 |	INVALID_INPUT |	"Expected property is missing: device.ipv4Address or device.ipv6Address" |
-|4	|400 |	INVALID_INPUT |	"Expected property is missing: devicePorts" |
-|5	|400 |	INVALID_INPUT |	"Expected property is missing: qosProfile" |
-|6	|400 |	INVALID_INPUT |	"Ranges not allowed: devicePorts" |
+|1	|400 |	INVALID_ARGUMENT |	"Schema validation failed at  ..." |
+|2	|400 |	INVALID_ARGUMENT |	"Expected property is missing: device" |
+|3	|400 |	INVALID_ARGUMENT |	"Insufficient properties specified: device" |
+|4	|400 |	INVALID_ARGUMENT |	"Multiple inconsistent parameters specified: device" |
+|5	|400 |	INVALID_ARGUMENT |	"Unable to identify device from specified parameters: device" |
+|6	|400 |	INVALID_ARGUMENT |	"Expected property is missing: applicationServer" |
+|7	|400 |	INVALID_ARGUMENT |	"Expected property is missing: qosProfile" |
+|8	|400 |	OUT_OF_RANGE |	"Invalid port value specified: device.ipv4Address.publicPort" |
+|9	|400 |	OUT_OF_RANGE |	"Invalid port ranges specified: deviceAllocatedPorts" |
 |7	|401 |	UNAUTHORIZED |	"No authorization to invoke operation" |
 |8	|403 |	FORBIDDEN |	"Operation not allowed" |
 |9	|404 |	NOT_FOUND |	"Session Id does not exist" |
