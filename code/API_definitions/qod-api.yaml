@@ -57,47 +57,59 @@ paths:
                 $ref: "#/components/schemas/ErrorInfo"
               examples:
                 Generic400:
-                  summary: Schema validation failed
+                  summary: Some parameter combinations or parameter values provided are not schema compliant
                   value:
                     status: 400
                     code: INVALID_ARGUMENT
                     message: "Schema validation failed at  ..."
-                PhoneNumberRequired:
-                  summary: Phone number is required as part of device
+                DeviceMissing:
+                  summary: Device must be specified
                   value:
                     status: 400
                     code: INVALID_ARGUMENT
-                    message: "Expected property is missing: device.phoneNumber"
-                Ipv4AddressRequired:
-                  summary: ipv4Address is required as part of device
+                    message: "Expected property is missing: device"
+                InsufficientProperties:
+                  summary: Device must be identified by at least one parameter
                   value:
                     status: 400
                     code: INVALID_ARGUMENT
-                    message: "Expected property is missing: device.ipv4Address"
-                IpAddressRequired:
-                  summary: Some IP address is required as part of device
+                    message: "Insufficient properties specified: device"
+                InconsistentProperties:
+                  summary: Device parameters provided identify different devices
                   value:
                     status: 400
                     code: INVALID_ARGUMENT
-                    message: "Expected property is missing: device.ipv4Address or device.ipv6Address"
-                DevicePortsRequired:
-                  summary: deviceAllocatedPorts is required
+                    message: "Multiple inconsistent parameters specified: device"
+                CabnnotIdentifiedDevice:
+                  summary: No device can be identified from provided parameters
                   value:
                     status: 400
                     code: INVALID_ARGUMENT
-                    message: "Expected property is missing: deviceAllocatedPorts"
-                QoSProfileRequired:
-                  summary: qosProfile is required
+                    message: "Unable to identify device from specified parameters: device"
+                InvalidDeviceOublicPortsRanges:
+                  summary: Invalid port specified for device public port
+                  value:
+                    status: 400
+                    code: OUT_OF_RANGE
+                    message: "Invalid port range specified: device.ipv4Address.publicPort"
+                ApplicationServerMissing:
+                  summary: Application server must be specified
+                  value:
+                    status: 400
+                    code: INVALID_ARGUMENT
+                    message: "Expected property is missing: applicationServer"
+                QoSProfileMissing:
+                  summary: Required QoS profile must be specified
                   value:
                     status: 400
                     code: INVALID_ARGUMENT
                     message: "Expected property is missing: qosProfile"
-                DevicePortsRangesNotAllowed:
-                  summary: Ranges at devicePorts are not allowed
+                InvalidDeviceAllocatedPortsRanges:
+                  summary: Invalid port ranges specified for deviceAllocatedPorts 
                   value:
                     status: 400
-                    code: INVALID_ARGUMENT
-                    message: "Ranges not allowed: deviceAllocatedPorts"
+                    code: OUT_OF_RANGE
+                    message: "Invalid port ranges specified: deviceAllocatedPorts"
         "401":
           $ref: "#/components/responses/Generic401"
         "403":
