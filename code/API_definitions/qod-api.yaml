@@ -86,12 +86,12 @@ paths:
                     status: 400
                     code: INVALID_ARGUMENT
                     message: "Unable to identify device from specified parameters: device"
-                InvalidDeviceOublicPortsRanges:
+                InvalidDevicePublicPortValue:
                   summary: Invalid port specified for device public port
                   value:
                     status: 400
                     code: OUT_OF_RANGE
-                    message: "Invalid port range specified: device.ipv4Address.publicPort"
+                    message: "Invalid port value specified: device.ipv4Address.publicPort"
                 ApplicationServerMissing:
                   summary: Application server must be specified
                   value:
