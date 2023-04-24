@@ -452,7 +452,7 @@ components:
           $ref: "#/components/schemas/SingleIpv4Addr"
         publicPort:
           $ref: "#/components/schemas/Port"
-      oneOf:
+      anyOf:
         - required: [publicAddress, privateAddress]
         - required: [publicAddress, publicPort]
       example:
@@ -465,7 +465,7 @@ components:
         
         If the allocated and observed IP addresses are the same (i.e. NAT is not in use) then  the same address should be specified for both publicAddress and privateAddress.
         
-        If NAT64 is in use, the device should be idetified by its publicAddress and publicPort, or separately by its allocated IPv6 address (field ipv6Address of the Device object)
+        If NAT64 is in use, the device should be identified by its publicAddress and publicPort, or separately by its allocated IPv6 address (field ipv6Address of the Device object)
       
         In all cases, publicAddress must be specified, along with at least one of either privateAddress or publicPort, dependent upon which is known. In general, mobile devices cannot be identified by their public IPv4 address alone.
 
