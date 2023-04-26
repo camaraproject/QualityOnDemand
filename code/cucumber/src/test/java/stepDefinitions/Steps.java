@@ -154,7 +154,7 @@ public class Steps {
   @When("Create a new QoD session with parameters")
   public void createANewQoDSessionWithParameters() {
 
-    postRequestByResource(AppConfig.JSON_STRING_MANDATORY_FAIL);
+    postRequestByResource(AppConfig.JSON_STRING_MANDATORY_PARAMS);
   }
 
   @When("Create a new QoD session along with all parameters")
