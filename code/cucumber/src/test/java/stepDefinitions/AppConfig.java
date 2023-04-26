@@ -86,7 +86,7 @@ public class AppConfig {
       }
             
       """;
-  public static final String JSON_STRING_MANDATORY_FAIL = """
+  public static final String JSON_STRING_MANDATORY_PARAMS = """
       {
                "duration": 10,
                "ueId": {
