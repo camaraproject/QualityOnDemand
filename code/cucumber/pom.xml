@@ -6,7 +6,7 @@
   <repositories>
     <repository>
       <id>gitlab-maven</id>
-      <url>https://gitlab.devops.telekom.de/api/v4/projects/114205/packages/maven</url>
+      <url> https://mvnrepository.com/artifact/org.apache.maven/maven-core</url>
     </repository>
   </repositories>
   <groupId>QoD-Api-Tests</groupId>
