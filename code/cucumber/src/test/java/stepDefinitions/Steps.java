@@ -96,7 +96,7 @@ public class Steps {
   }
 
   @When("Delete existing QoD session")
-  public void deleteexistingQoDSession() {
+  public void deleteExistingQoDSession() {
     String sessionId = JsonPath.read(response.asString(), "id");
     log.info(sessionId);
     String path = PATH + "/" + sessionId;
