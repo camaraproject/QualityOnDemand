@@ -7,4 +7,5 @@
 | Telefonica | Jesus Peña| 
 | Vodafone | Eric Murray |
 | Verizon/ 5GFF| Syed Rehman |
+| Verizon/ 5GFF| Mahesh Chapalamadugu |
 | KDDI | Toshi (Toshiyasu) Wakayama |
