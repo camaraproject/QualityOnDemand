@@ -437,7 +437,9 @@ components:
             specific services, ensuring a minimum performance level. As per 3GPP TS 23.203,
             GBR is a QoS parameter used to manage traffic classes in mobile networks. It
             provides a stable data rate for latency-sensitive applications, such as voice calls or
-            video streaming, helping maintain a consistent user experience.
+            video streaming, helping maintain a consistent user experience. When this attribute is set
+            this could imply that a GBR QCI is used, though mechanisms on the network can be used to
+            ensure a minimum performance level without using a GBR QCI.
 
             The committed data rate allocated to specific services, ensuring a consistent level of
             performance. DOCSIS networks, the "Minimum Reserved Traffic Rate" is defined in the 
@@ -461,7 +463,9 @@ components:
             specific services, ensuring a minimum performance level. As per 3GPP TS 23.203,
             GBR is a QoS parameter used to manage traffic classes in mobile networks. It
             provides a stable data rate for latency-sensitive applications, such as voice calls or
-            video streaming, helping maintain a consistent user experience.
+            video streaming, helping maintain a consistent user experience.  When this attribute is set
+            this could imply that a GBR QCI is used, though mechanisms on the network can be used to
+            ensure a minimum performance level without using a GBR QCI.
 
             The committed data rate allocated to specific services, ensuring a consistent level of
             performance. DOCSIS networks, the "Minimum Reserved Traffic Rate" is defined in the 
@@ -499,15 +503,19 @@ components:
         packetDelayBudget:
           $ref: "#/components/schemas/Duration"
           description: |
-            3GPP specification TS 23.203 defines the packet delay budget QCI attribute as well.
-            It outlines the Quality of Service (QoS) Class Identifier (QCI) parameters for
-            differentiating traffic classes in mobile networks, ensuring suitable resource
-            allocation and performance for diverse services.
+            The packet delay budget is the maximum allowable end-to-end delay for a specific
+            packet flow. By limiting the delay, the network can provide an acceptable level of
+            performance for various services, such as voice calls, video streaming, and data.
 
-            The packet delay budget is a QCI attribute that sets the maximum allowable end-to-
-            end delay for a specific traffic class. By limiting the delay, the mobile network can
-            guarantee an acceptable level of performance for various services, such as voice
-            calls, video streaming, and data transfers, while managing its resources efficiently.
+            This is limited to the "access network" only and does not include the "core network",
+            LAN, or other networks outside of the access network managed by the service provider.
+            
+            For 5G connected devices the 3GPP specification TS 23.203 defines the packet delay
+            budget QCI attribute.  Setting the QCI attribute is not the only mechanizm that can
+            be used to achieve the packet delay budget on mobile netowrk.
+
+            PON and DOCSIS networks do not have a packet delay budget attribute.  The same result
+            can be achieved by setting through a combination of upstream and downstream attributes.
         jitter:
           $ref: "#/components/schemas/Duration"
           description: |
