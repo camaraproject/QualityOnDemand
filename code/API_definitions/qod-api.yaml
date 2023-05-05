@@ -209,10 +209,14 @@ paths:
       tags:
         - QoS Profiles
       summary: "Get All QoS Profiles"
+      description: |
+        Returns all QoS Profiles that match the given criteria.
+        If no criteria is given, all QoS Profiles are returned.
       operationId: getQosProfiles
       parameters:
-        - name: id
+        - name: name
           in: query
+          description: QoS Profile name
           schema:
             type: string
           required: false
@@ -220,67 +224,6 @@ paths:
           in: query
           schema:
             $ref: '#/components/schemas/QosProfileStatusEnum'
-          required: false
-        - name: targetMinimumUpstreamRate
-          in: query
-          schema:
-            $ref: '#/components/schemas/Rate'
-          required: false
-        - name: maxUpstreamRate
-          in: query
-          schema:
-            $ref: '#/components/schemas/Rate'
-          required: false
-        - name: maxUpstreamBurstRate
-          in: query
-          schema:
-            $ref: '#/components/schemas/Rate'
-          required: false
-        - name: targetMinimumDownstreamRate
-          in: query
-          schema:
-            $ref: '#/components/schemas/Rate'
-          required: false
-        - name: maxDownstreamRate
-          in: query
-          schema:
-            $ref: '#/components/schemas/Rate'
-          required: false
-        - name: maxDownstreamBurstRate
-          in: query
-          schema:
-            $ref: '#/components/schemas/Rate'
-          required: false
-        - name: minDuration
-          in: query
-          schema:
-            $ref: '#/components/schemas/Duration'
-          required: false
-        - name: maxDuration
-          in: query
-          schema:
-            $ref: '#/components/schemas/Duration'
-          required: false
-        - name: priority
-          in: query
-          schema:
-            type: number
-            format: float
-          required: false
-        - name: packetDelayBudget
-          in: query
-          schema:
-            $ref: '#/components/schemas/Duration'
-          required: false
-        - name: jitter
-          in: query
-          schema:
-            $ref: '#/components/schemas/Duration'
-          required: false
-        - name: packetErrorLossRate
-          in: query
-          schema:
-            type: integer
           required: false
       responses:
         "200":
@@ -290,8 +233,7 @@ paths:
               schema:
                 type: array
                 items:
-                  allOf:
-                    - $ref: "#/components/schemas/ExtendedQosProfile"
+                  - $ref: "#/components/schemas/QosProfile"
         "401":
           $ref: "#/components/responses/Generic401"
         "403":
@@ -309,31 +251,27 @@ paths:
                 message: "Could not get QoS Profiles"
         "503":
           $ref: "#/components/responses/Generic503"
-  /qos-profiles/{qos-profile-id}:
+  /qos-profiles/{qos-profile-name}:
     get:
       tags:
         - QoS Profiles
-      summary: "Get QoS Profile for a given ID"
-      operationId: getQosProfiles
+      summary: "Get QoS Profile for a given name"
+      operationId: getQosProfile
+      description: |
+        Returns a QoS Profile that matches the given name.
       parameters:
-        - name: qos-profile-id
+        - name: qos-profile-name
           in: path
-          description: QoS Profile ID that was obtained from the createProfile operation
           required: true
           schema:
-            type: string
-            example: foo-bar
-            description: Unique generated ID for a QoS Profile
-            minLength: 3
-            maxLength: 128
-            format: string
+            $ref: "#/components/schemas/QosProfileName"
       responses:
         "200":
           description: Contains information about QoS Profiles
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/ExtendedQosProfile"
+                $ref: "#/components/schemas/QosProfile"
         "401":
           $ref: "#/components/responses/Generic401"
         "403":
@@ -426,9 +364,7 @@ components:
         applicationServerPorts:
           $ref: "#/components/schemas/PortsSpec"
         qosProfile:
-          oneOf:
-            - $ref: "#/components/schemas/QosProfile"
-            - $ref: "#/components/schemas/QoSProfileId"
+          $ref: "#/components/schemas/QosProfileName"
         notificationUrl:
           type: string
           format: uri
@@ -477,33 +413,36 @@ components:
           - 5070
       description: |
         Ports may be specified as a list of ranges or single ports.
-    QoSProfileId:
-      type: string
-      example: 123e4567-e89b-12d3-a456-426614174000
+    QosProfile:
       description: |
-        Unique ID of the QoS Profile to be used for this session.
-      minLength: 36
-      maxLength: 36
-      format: string
-    ExtendedQosProfile:
-      description: Data type with attributes of a QosProfile
+        Data type with attributes of a QosProfile
       type: object
       properties:
-        id:
-          $ref: "#/components/schemas/QoSProfileId"
         name:
-          type: string
-          example: QCI_1_voice
-          description: Descriptive name for QoS Profile
-          minLength: 3
-          maxLength: 128
-          format: string
+          $ref: "#/components/schemas/QosProfileName"
+          description: |
+            The name of the QoS profile.  This name is used to identify the profile when creating a session.
+            The name must be unique.
         status:
           $ref: "#/components/schemas/QosProfileStatusEnum"
-          description: The status of the profile.  See QosProfileStatusEnum for description.
+          description: |
+            The status of the QoS profile.  The status is set to ACTIVE when the profile is created.
+            The status is set to INACTIVE when the profile is deleted.
         targetMinUpstreamRate:
           $ref: "#/components/schemas/Rate"
-          description: The target minimum data rate.  Set to zero when no target minimum is defined in this profile.
+          description: |
+            This is the target minimum upstream rate for the QoS profile.
+
+            For 5G networks 3GPP Guaranteed Bit Rate (GBR) refers to a dedicated, fixed data rate assigned to
+            specific services, ensuring a minimum performance level. As per 3GPP TS 23.203,
+            GBR is a QoS parameter used to manage traffic classes in mobile networks. It
+            provides a stable data rate for latency-sensitive applications, such as voice calls or
+            video streaming, helping maintain a consistent user experience.
+
+            The committed data rate allocated to specific services, ensuring a consistent level of
+            performance. DOCSIS networks, the "Minimum Reserved Traffic Rate" is defined in the 
+            DOCSIS 3.1 - MAC and Upper Layer Protocols Interface Specification" 
+            and it ensures a consistent level of performance for specific services within the network.
         maxUpstreamRate:
           $ref: "#/components/schemas/Rate"
           description: |
@@ -515,7 +454,19 @@ components:
             The burst rate for best effort data
         targetMinDownstreamRate:
           $ref: "#/components/schemas/Rate"
-          description: The target minimum data rate.  Set to zero when no target minimum is defined in this profile.
+          description: |
+            This is the target minimum downstream rate for the QoS profile.
+
+            For 5G networks 3GPP Guaranteed Bit Rate (GBR) refers to a dedicated, fixed data rate assigned to
+            specific services, ensuring a minimum performance level. As per 3GPP TS 23.203,
+            GBR is a QoS parameter used to manage traffic classes in mobile networks. It
+            provides a stable data rate for latency-sensitive applications, such as voice calls or
+            video streaming, helping maintain a consistent user experience.
+
+            The committed data rate allocated to specific services, ensuring a consistent level of
+            performance. DOCSIS networks, the "Minimum Reserved Traffic Rate" is defined in the 
+            DOCSIS 3.1 - MAC and Upper Layer Protocols Interface Specification" 
+            and it ensures a consistent level of performance for specific services within the network.
         maxDownstreamRate:
           $ref: "#/components/schemas/Rate"
           description: |
@@ -531,57 +482,89 @@ components:
           description: The shortest time period that is supported this profile can be deployed.
         maxDuration:
           $ref: "#/components/schemas/Duration"
-          description: The maximum length of time that this profile can be deployed.
+          description: The maximum time period that this profile can be deployed.
         priority:
           type: number
-          example: 5.0
+          example: 2.0
           description: |
-            Priority for this session
+            Priority levels allow efficient resource allocation and ensure optimal performance
+            for various services in each technology, with the highest priority traffic receiving
+            preferential treatment.
+            The lower value the higher priority.
+            Since not all access networks use the same priority range, so this priority will be
+            scaled to the access network's priority range.
           format: float
-          minimum: 0
+          minimum: 1
           maximum: 10
-          default: 5
         packetDelayBudget:
           $ref: "#/components/schemas/Duration"
-          description: The maximum latency for a packet.
+          description: |
+            3GPP specification TS 23.203 defines the packet delay budget QCI attribute as well.
+            It outlines the Quality of Service (QoS) Class Identifier (QCI) parameters for
+            differentiating traffic classes in mobile networks, ensuring suitable resource
+            allocation and performance for diverse services.
+
+            The packet delay budget is a QCI attribute that sets the maximum allowable end-to-
+            end delay for a specific traffic class. By limiting the delay, the mobile network can
+            guarantee an acceptable level of performance for various services, such as voice
+            calls, video streaming, and data transfers, while managing its resources efficiently.
         jitter:
           $ref: "#/components/schemas/Duration"
           description: |
-            Jitter refers to the variation in the time it takes for none queue building
-            packets to travel across a network measured in milliseconds (ms). In terms of
-            maximum deviation for round trip latency on a network, jitter can be defined
-            as the difference between the highest and lowest latency values experienced
-            by the 99th percentile of traffic.
-          
-            To be more specific, if we consider the round trip latency values of the 99th
-            percentile of traffic, jitter is the measure of how much these values deviate
-            from the average round trip latency for this percentile. A low jitter value
-            indicates that the latency values are relatively consistent, whereas a high
-            jitter value implies that there is a significant variation in latency times,
-            which can negatively impact the performance of real-time applications such as
-            VoIP, video conferencing, and online gaming.
+            The jitter requirement aims to limit the maximum variation in round-trip
+            packet delay for the 99th percentile of traffic, following ITU Y.1540
+            standards. It considers only acknowledged packets in a session, which are
+            packets that receive a confirmation of receipt from the recipient (e.g.,
+            using TCP). This requirement helps maintain consistent latency, essential
+            for real-time applications such as VoIP, video calls, and gaming.
         packetErrorLossRate:
           type: integer
           description: |
-            The exponential power of the allowable error loss rate.
-            For instance 10 would be an error loss rate of 2 to the power of -10 (0.0009765625)
+            The exponential power of the allowable error loss rate 10^(-N).
+            For instance 3 would be an error loss rate of 10 to the power of -3 (0.001)
+
+            For 5G network the 3GPP specification TS 23.203 defines the packet error loss rate QCI attribute. It
+            describes the Quality of Service (QoS) Class Identifier (QCI) parameters used to
+            differentiate traffic classes in mobile networks, ensuring appropriate resource
+            allocation and performance for various services.
+
+            The packet error loss rate is one of the QCI attributes, providing information on the
+            acceptable packet loss rate for a specific traffic class. This attribute helps maintain
+            the desired performance level for services like voice calls, video streaming, or data
+            transfers within the 3GPP mobile network.
           format: int32
           minimum: 1
           maximum: 10
-          example: 5
-          default: 1
+          example: 3
+    QosProfileName:
+      description: |
+        A unique name for identifying a specific QoS profile.
+        This may follow different formats depending on the service providers implementation.
+        Some options addresses:
+          - A UUID style string
+          - Support for predefined profiles QOS_S, QOS_M, QOS_L, and QOS_E
+          - A searchable descriptive name
+      type: string
+      example: QCI_1_voice
+      minLength: 3
+      maxLength: 256
+      format: string
+      pattern: "^[a-zA-Z0-9_.-]+$"
     Rate:
       type: object
       description: Data rate value and unit
       properties:
         value:
           type: integer
-          example: 100
+          example: 10
           format: int32
           minimum: 0
           maximum: 1024
         unit:
           $ref: "#/components/schemas/RateUnitEnum"
+    TargetMinUpstreamRate:
+      $ref: "#/components/schemas/Rate"
+      description: The target minimum data rate.  Set to zero when no target minimum is defined in this profile.
     Duration:
       type: object
       description: Value and unit of time
@@ -633,23 +616,11 @@ components:
         Tbps - Terabits per second
       type: string
       enum:
+        - bps
         - Kbps
         - Mbps
         - Gbps
         - Tbps
-    QosProfile:
-      type: string
-      enum:
-        - QOS_E
-        - QOS_S
-        - QOS_M
-        - QOS_L
-      description: |
-        * `QOS_E` - Qualifier for enhanced communication profile
-        * `QOS_S` - Qualifier for the requested QoS profile _S_
-        * `QOS_M` - Qualifier for the requested QoS profile _M_
-        * `QOS_L` - Qualifier for the requested QoS profile _L_
-
     Notification:
       type: object
       required:
