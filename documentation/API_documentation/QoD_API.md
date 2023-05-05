@@ -136,8 +136,8 @@ Following table defines API endpoints of exposed REST based for QoD management o
             </td>
         </tr>
         <tr>
-            <td><b>deviceAllocatedPorts (optional)</b></td>
-            <td>A list of single source ports or source port ranges used directly by the device (i.e. not the public or NATed port(s)),<br> e.g. "deviceAllocatedPorts": {"ranges": [{"from": 5010,"to": 5020}],"ports": [5060,5070]}</td>
+            <td><b>devicePorts (optional)</b></td>
+            <td>The ports used locally by the device for flows to which the requested QoS profile should apply. If omitted, then the qosProfile will apply to all flows between the device and the specified application server address and ports.<br> e.g. "devicePorts": {"ranges": [{"from": 5010,"to": 5020}],"ports": [5060,5070]}</td>
         </tr>
         <tr>
             <td><b>applicationServerPorts (optional)</b></td>
