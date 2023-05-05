@@ -104,12 +104,12 @@ paths:
                     status: 400
                     code: INVALID_ARGUMENT
                     message: "Expected property is missing: qosProfile"
-                InvalidDeviceAllocatedPortsRanges:
-                  summary: Invalid port ranges specified for deviceAllocatedPorts 
+                InvalidDevicePortsRanges:
+                  summary: Invalid port ranges specified for devicePorts 
                   value:
                     status: 400
                     code: OUT_OF_RANGE
-                    message: "Invalid port ranges specified: deviceAllocatedPorts"
+                    message: "Invalid port ranges specified: devicePorts"
         "401":
           $ref: "#/components/responses/Generic401"
         "403":
