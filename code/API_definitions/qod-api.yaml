@@ -80,7 +80,7 @@ paths:
                     status: 400
                     code: INVALID_ARGUMENT
                     message: "Multiple inconsistent parameters specified: device"
-                CabnnotIdentifiedDevice:
+                CannotIdentifyDevice:
                   summary: No device can be identified from provided parameters
                   value:
                     status: 400
