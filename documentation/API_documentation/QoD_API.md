@@ -328,7 +328,7 @@ Following table provides an overview of common error names, codes, and messages 
 |6	|400 |	INVALID_ARGUMENT |	"Expected property is missing: applicationServer" |
 |7	|400 |	INVALID_ARGUMENT |	"Expected property is missing: qosProfile" |
 |8	|400 |	OUT_OF_RANGE |	"Invalid port value specified: device.ipv4Address.publicPort" |
-|9	|400 |	OUT_OF_RANGE |	"Invalid port ranges specified: deviceAllocatedPorts" |
+|9	|400 |	OUT_OF_RANGE |	"Invalid port ranges specified: devicePorts" |
 |10	|401 |	UNAUTHORIZED |	"No authorization to invoke operation" |
 |11	|403 |	FORBIDDEN |	"Operation not allowed" |
 |12	|404 |	NOT_FOUND |	"Session Id does not exist" |
