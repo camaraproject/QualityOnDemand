@@ -68,13 +68,13 @@ paths:
                     status: 400
                     code: INVALID_ARGUMENT
                     message: "Expected property is missing: device"
-                InsufficientProperties:
+                InsufficientDeviceProperties:
                   summary: Device must be identified by at least one parameter
                   value:
                     status: 400
                     code: INVALID_ARGUMENT
                     message: "Insufficient properties specified: device"
-                InconsistentProperties:
+                InconsistentDeviceProperties:
                   summary: Device parameters provided identify different devices
                   value:
                     status: 400
@@ -442,7 +442,7 @@ components:
       type: string
       pattern: '^\+?[0-9]{5,15}$'
       example: "123456789"
-      description: Subscriber number (MSISDN) in E.164 format, starting with country code and ptionally prefixed with '+'.
+      description: Subscriber number (MSISDN) in E.164 format, starting with country code and optionally prefixed with '+'.
 
     DeviceIpv4Addr:
       type: object
