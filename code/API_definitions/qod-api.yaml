@@ -24,7 +24,7 @@ servers:
         default: qod/v0
         description: Base path for the QoD API
 paths:
-  /sessions:
+  /createSessions:
     post:
       tags:
         - QoS sessions
@@ -336,10 +336,11 @@ components:
         - QOS_M
         - QOS_L
       description: |
-        * `QOS_E` - Qualifier for enhanced communication profile
-        * `QOS_S` - Qualifier for the requested QoS profile _S_
-        * `QOS_M` - Qualifier for the requested QoS profile _M_
-        * `QOS_L` - Qualifier for the requested QoS profile _L_
+        *  For more details, please check API documentation QoSProfile_Mapping_Table.md.
+        * `QOS_E` - Qualifier for enhanced communication profile. Latency stays stable under congestion (throughput up to a certain limit, e.g. 500kbps). 
+        * `QOS_S` - Qualifier for the requested QoS profile _S_ . The 5G System throughput is prioritized up to certain higher limit (e.g. 20Mbps), or without an explicit limit. 
+        * `QOS_M` - Qualifier for the requested QoS profile _M_ . The 5G System throughput is prioritized up to certain medium limit (e.g. 8Mbps). 
+        * `QOS_L` - Qualifier for the requested QoS profile _L_ . The 5G System throughput is prioritized up to certain lower limit (e.g. 4Mbps). 
     
     Notification:
       type: object
@@ -535,7 +536,7 @@ components:
             $ref: "#/components/schemas/ErrorInfo"
           example:
             status: 500
-            code: INTERNAL
+            code: INTERNAL_ERROR
             message: "Internal server error: ..."
     Generic501:
       description: Not Implemented
