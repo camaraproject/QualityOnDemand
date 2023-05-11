@@ -117,7 +117,7 @@ Following table defines API endpoints of exposed REST based for QoD management o
             <td>
                 <p>The identifier for the device (user equipment). The developer can choose to provide the below specified device identifiers:</p>
                 <ul>
-                    <li><b>ipv4Address</b>: Either public IPv4 address and port e.g. 84.125.93.10:59765, or public and private IPv4 addresses e.g. 192.168.0.1 & 84.125.93.10. The public IPv4 address alone is generally insufficient to identify the device. Subnet masks are not necessary or supported.</li>
+                    <li><b>ipv4Address</b>: Either public IPv4 address and port e.g. 84.125.93.10:59765, or public and private IPv4 addresses e.g. 84.125.93.10 & 192.168.0.1. The public IPv4 address alone is generally insufficient to identify the device. Subnet masks are not necessary or supported.</li>
                     <li><b>ipv6Address</b>: IPv6 address (supports mask) e.g. 2001:db8:85a3:8d3:1319:8a2e:370:7344</li>
                     <li><b>phoneNumber</b>: The device phone number, including country code and optionally prefixed by a "+" sign, e.g. 004912345678923</li>
                     <li><b>networkAccessIdentifier</b> <a href="#5">[5]</a>  assigned by the mobile network operator (MNO) for the device. e.g. 123456789@domain.com</li>
