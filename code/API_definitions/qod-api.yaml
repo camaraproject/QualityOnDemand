@@ -1,7 +1,63 @@
 openapi: 3.0.3
 info:
   title: QoD for enhanced communication
-  description: Service Enabling Network Function API for QoS control
+  description: |
+    The Quality-On-Demand (QoD) API provides programmable interface for developers and other users (capabilities consumers) to request stable latency or throughput managed by Telco networks without the necessity to have an in-depth knowledge of the 4G/5G system or the overall complexity of the Telecom Systems.
+
+    # Introduction
+
+    Industrial (IoT), VR/Gaming, live video streaming, autonomous driving and many other scenarios demand network communication quality and are sensitive to any change in transmission conditions. Being able to request a stable latency (reduced jitter) or prioritized throughput from the network can improve user experience substantially.
+
+    The QoD API offers the application developers the capability to request for stable latency (reduced jitter) or throughput for some specified application data flows between application clients (within a user device) and Application Servers (backend services). The developer has a pre-defined set of Quality of Service (QoS) profiles which they could choose from depending on their latency or throughput requirements.
+
+    ![QoD API Overview](https://raw.githubusercontent.com/camaraproject/QualityOnDemand/main/documentation/API_documentation/resources/QoD_latency_overview.PNG)
+
+    # Relevant terms and defintions
+
+    * **QOD service endpoint**:
+    The URL pointing to the RESTful resource of the QoD API.
+
+    * **Authentication**:
+    Security access keys such as OAuth 2.0 client credentials used by client applications to invoke the QoD API.
+
+    * **QoS profiles and QoS profile labels**:
+    Latency or throughput requirements of the application mapped to relevant QoS profile class.
+
+    * **Identifier for the device**:
+    At least one identifier for the device (user equipment) out of four options: IPv4 address, IPv6 address, Phone number, or Network Access Identifier [[5]](#5) assigned by the mobile network operator for the device.
+
+    * **Identifier for the application server**:
+    IPv4 and/or IPv6 address of the application server (application backend)
+
+    * **App-Flow (between the application client and application server)**: 
+    The precise application data flow the developer wants to prioritize and have stable latency or throughput for. This flow is in the current API version determined by the identifiers used for the device and the application server. And it can be further elaborated with details such as ports or port-ranges. Future version of the API might allow more detailed flow identification features.
+
+    * **Duration**: 
+    Duration (in seconds) for which the QoS session (between application client and application server) should be created. This parameter is optional. When not specified, a default session duration (e.g. 24 hours) is applied. The user may request a termination before its expiration.
+
+    * **Notification URL and token**:
+    Developers may provide a callback URL on which notifications (eg. session termination) regarding the session can be received from the service provider. This is an optional parameter.
+
+    # API functionality
+
+    The usage of the QoD API is based on QoS profile classes and parameters which define App-Flows.
+    Based on the API, QoS session resources can be created, queried, and deleted. Once an offered QoS profile class is requested, application users get a prioritized service with stable latency or throughput even in the case of congestion. The QoD API has the following characteristics:
+
+    * A specified App-Flow is prioritized to ensure stable latency or throughput for that flow.
+    * The prioritized App-Flow is described by providing information such as device IP address (or other device identifier) & application server IP addresses and port/port-ranges.
+    * The developer can optionally specify the duration for which they need the prioritized App-flow.
+    * Stable latency or throughput is requested by selecting from the list of QoS profiles made available by the service provider (e.g. QOS_E) to map latency and throughput requirements.
+    * The developer can optionally also specify callback URL on which notifications for the session can be sent. <br>
+
+    Following diagram shows the interaction between different components
+
+    ![QoD Management API](https://raw.githubusercontent.com/camaraproject/QualityOnDemand/main/documentation/API_documentation/resources/QoD_details.PNG)
+
+    How QoS profiles are mapped to connectivity characteristics are subject to agreements between the communication service provider and the API invoker. Within the CAMARA project, you can find a sample for such a mapping of QoS profiles. [CAMARA QoS Profiles Mapping Table (REFERENCE DRAFT)](https://github.com/camaraproject/QualityOnDemand/blob/main/documentation/API_documentation/QoSProfile_Mapping_Table.md) 
+
+    # Further info and support
+
+    (FAQs will be added in a later version of the documentation)
   termsOfService: http://swagger.io/terms/
   contact:
     email: project-email@sample.com
@@ -29,10 +85,10 @@ paths:
       tags:
         - QoS sessions
       summary: Creates a new session
-      description: Creates a new QoS session on demand
+      description: Create QoS Session to manage latency/throughput priorities
       operationId: createSession
       requestBody:
-        description: Creates a new session
+        description: Parameters to create a new session
         content:
           application/json:
             schema:
@@ -122,7 +178,8 @@ paths:
     get:
       tags:
         - QoS sessions
-      summary: "Get session information"
+      summary: Get QoS session information
+      description: Querying for QoS session resource information details
       operationId: getSession
       parameters:
         - name: sessionId
@@ -151,7 +208,8 @@ paths:
     delete:
       tags:
         - QoS sessions
-      summary: "Free resources related to QoS session"
+      summary: Delete a QoS session
+      description: Free resources related to QoS session
       operationId: deleteSession
       parameters:
         - name: sessionId
@@ -181,7 +239,7 @@ paths:
       description: |
         Important: this endpoint is to be implemented by the API consumer.
         The QoD server will call this endpoint whenever any network related event occurs.
-        Currently only QOS_STATUS_CHANGED event is defined.
+        Currently only `QOS_STATUS_CHANGED` event is defined.
       operationId: postNotification
       requestBody:
         required: true
@@ -213,39 +271,36 @@ components:
         clientCredentials:
           tokenUrl: "{tokenUrl}"
           scopes: {}
+
     apiKey:
       type: apiKey
       description: API key to authorize requests
       name: apikey
       in: query
+
   schemas:
     SessionId:
+      description: Session ID in UUID format
       type: string
       format: uuid
-      description: Session ID in UUID format
+
     SessionInfo:
       description: Session related information.
       allOf:
         - $ref: "#/components/schemas/CreateSession"
         - type: object
-          required:
-            - sessionId
-            - duration
-            - startedAt
-            - expiresAt
-            - qosStatus
           properties:
             sessionId:
               $ref: "#/components/schemas/SessionId"
             startedAt:
               type: integer
               example: 1639479600
-              description: Timestamp of session start in seconds since unix epoch
+              description: Timestamp of session start in seconds since Unix epoch
               format: int64
             expiresAt:
               type: integer
               example: 1639566000
-              description: Timestamp of session expiration if the session was not deleted, in seconds since unix epoch
+              description: Timestamp of session expiration if the session was not deleted, in seconds since Unix epoch
               format: int64
             qosStatus:
               $ref: "#/components/schemas/QosStatus"
@@ -253,23 +308,30 @@ components:
               type: array
               items:
                 $ref: "#/components/schemas/Message"
+          required:
+            - sessionId
+            - duration
+            - startedAt
+            - expiresAt
+            - qosStatus
+
     CreateSession:
-      description: Data type with attributes required for creating a session
+      description: Attributes required to create a session
       type: object
       properties:
         duration:
-          type: integer
-          example: 86400
           description: |
             Session duration in seconds. Maximal value of 24 hours is used if not set.
-            After session has expired the client will receive QOS_STATUS_CHANGED event with 
-             - qosStatus is 'UNAVAILABLE', and, 
-             - statusInfo is 'DURATION_EXPIRED'. 
+            After session is expired the, client will receive a `QOS_STATUS_CHANGED` event with 
+             - `qosStatus` as `UNAVAILABLE`, and, 
+             - `statusInfo` as `DURATION_EXPIRED`. 
             See notification callback.
+          type: integer
           format: int32
           minimum: 1
           maximum: 86400
           default: 86400
+          example: 86400
         device:
           $ref: "#/components/schemas/Device"
         applicationServer:
@@ -281,23 +343,28 @@ components:
         qosProfile:
           $ref: "#/components/schemas/QosProfile"
         notificationUrl:
+          description: Allows asynchronous delivery of session related events
           type: string
           format: uri
           example: "https://application-server.com"
-          description: Allows asynchronous delivery of session related events
         notificationAuthToken:
+          description: Authentication token for callback API
           type: string
           example: "c8974e592c2fa383d4a3960714"
-          description: Authentication token for callback API
       required:
         - device
         - applicationServer
         - qosProfile
+
     Port:
+      description:  TCP or UDP port number
       type: integer
       minimum: 0
       maximum: 65535
+
     PortsSpec:
+      description: |
+        Ports may be specified as a list of ranges or single ports.
       type: object
       minProperties: 1
       properties:
@@ -326,35 +393,34 @@ components:
         ports:
           - 5060
           - 5070
-      description: |
-        Ports may be specified as a list of ranges or single ports.
+
     QosProfile:
+      description: |
+        * `QOS_E` - Qualifier for enhanced communication profile
+        * `QOS_S` - Qualifier for the requested QoS profile _S_
+        * `QOS_M` - Qualifier for the requested QoS profile _M_
+        * `QOS_L` - Qualifier for the requested QoS profile _L_
       type: string
       enum:
         - QOS_E
         - QOS_S
         - QOS_M
         - QOS_L
-      description: |
-        * `QOS_E` - Qualifier for enhanced communication profile
-        * `QOS_S` - Qualifier for the requested QoS profile _S_
-        * `QOS_M` - Qualifier for the requested QoS profile _M_
-        * `QOS_L` - Qualifier for the requested QoS profile _L_
-    
+
     Notification:
       type: object
-      required:
-        - sessionId
-        - eventReports
       properties:
         sessionId:
           $ref: "#/components/schemas/SessionId"
         eventReports:
+          description: Contains the reported event and applicable information
           type: array
           items:
             $ref: "#/components/schemas/EventReport"
           minItems: 1
-          description: Contains the reported event and applicable information
+      required:
+        - sessionId
+        - eventReports
     
     EventReport:
       oneOf:
@@ -366,9 +432,6 @@ components:
         
     QosStatusChangedEventReport:
       type: object
-      required:
-        - eventType
-        - qosStatus
       properties:
         eventType:
           $ref: "#/components/schemas/SessionEventType"
@@ -376,16 +439,19 @@ components:
           $ref: "#/components/schemas/QosStatus"
         statusInfo:
           $ref: "#/components/schemas/StatusInfo"
+      required:
+        - eventType
+        - qosStatus
           
     StatusInfo:
-          type: string
-          enum:
-            - DURATION_EXPIRED
-            - NETWORK_TERMINATED
           description: |
             Reason for the new `qosStatus`. Currently `statusInfo` is only applicable when `qosStatus` is 'UNAVAILABLE'.
             * `DURATION_EXPIRED` - Session terminated due to requested duration expired
             * `NETWORK_TERMINATED` - Network terminated the session before the requested duration expired
+          type: string
+          enum:
+            - DURATION_EXPIRED
+            - NETWORK_TERMINATED¡
 
     SessionEventType:
       type: string
@@ -393,8 +459,18 @@ components:
         - QOS_STATUS_CHANGED
     
     Device:
+      description: |
+        End-user equipment able to connect to a mobile network. Examples of devices include smartphones or IoT sensors/actuators. 
+
+        The developer can choose to provide the below specified device identifiers:
+
+        * `ipv4Address`
+        * `ipv6Address`
+        * `phoneNumber`
+        * `networkAccessIdentifier`  
+
+        NOTE: the MNO might support only a subset of these options. The API invoker can provide multiple identifiers to be compatible across different MNOs. In this case the identifiers MUST belong to the same device     
       type: object
-      minProperties: 1
       properties:
         phoneNumber:
           $ref: "#/components/schemas/PhoneNumber"
@@ -404,24 +480,35 @@ components:
           $ref: "#/components/schemas/Ipv4Address"
         ipv6Address:
           $ref: "#/components/schemas/Ipv6Address"
-      description: Device identifier
-    ApplicationServer:
-      type: object
       minProperties: 1
+
+    ApplicationServer:
+      description: |
+        A server hosting backend applications to deliver some business logic to clients.
+        
+        The developer can choose to provide the below specified device identifiers:
+
+        * `ipv4Address`
+        * `ipv6Address` 
+      type: object
       properties:
         ipv4Address:
           $ref: "#/components/schemas/Ipv4Address"
         ipv6Address:
           $ref: "#/components/schemas/Ipv6Address"
-      description: Application server identifier
+      minProperties: 1
+
     NetworkAccessIdentifier:
+      description: A public identifier addressing a subscription in a mobile network. In 3GPP terminology, it corresponds to the GPSI formatted with the External Identifier ({Local Identifier}@{Domain Identifier}). Unlike the telephone number, the network access identifier is not subjected to portability ruling in force, and is individually managed by each operator.
       type: string
       example: "123456789@domain.com"
+
     PhoneNumber:
+      description: A public identifier addressing a telephone subscription. In mobile networks it corresponds to the MSISDN (Mobile Station International Subscriber Directory Number). In order to be globally unique it has to be formatted in international format, according to E.164 standard, optionally prefixed with '+'.
       type: string
       pattern: '^\+?[0-9]{5,15}$'
       example: "123456789"
-      description: Subscriber number in E.164 format (starting with country code). Optionally prefixed with '+'.
+
     Ipv4Address:
       type: string
       format: ipv4
@@ -432,6 +519,7 @@ components:
           - address - an IPv4 number in dotted-quad form 1.2.3.4. Only this exact IP number will match the flow control rule.
           - address/mask - an IP number as above with a mask width of the form 1.2.3.4/24.
             In this case, all IP numbers from 1.2.3.0 to 1.2.3.255 will match. The bit width MUST be valid for the IP version.
+
     Ipv6Address:
       type: string
       format: ipv6
@@ -447,6 +535,7 @@ components:
           - address/mask - an IP v6 number with a mask:
             - 2001:db8:85a3:8d3::0/64
             - 2001:db8:85a3:8d3::/64
+
     Message:
       type: object
       properties:
@@ -460,6 +549,7 @@ components:
       required:
         - severity
         - description
+
     QosStatus:
       type: string
       enum:
@@ -470,6 +560,7 @@ components:
         * `REQUESTED` - QoS has been requested by creating a session
         * `AVAILABLE` - The requested QoS has been provided by the network
         * `UNAVAILABLE` - The requested QoS cannot be provided by the network due to some reason
+
     ErrorInfo:
       type: object
       required:
@@ -486,6 +577,7 @@ components:
         message:
           type: string
           description: Detailed error description
+
   responses:
     Generic400:
       description: Invalid input
@@ -497,6 +589,7 @@ components:
             status: 400
             code: INVALID_ARGUMENT
             message: "Schema validation failed at  ..."
+
     Generic401:
       description: Unauthorized
       content:
@@ -507,6 +600,7 @@ components:
             status: 401
             code: UNAUTHENTICATED
             message: "Authorization failed: ..."
+
     Generic403:
       description: Forbidden
       content:
@@ -517,6 +611,7 @@ components:
             status: 403
             code: PERMISSION_DENIED
             message: "Operation not allowed: ..."
+
     SessionNotFound404:
       description: Session not found
       content:
@@ -527,6 +622,7 @@ components:
             status: 404
             code: NOT_FOUND
             message: "Session Id does not exist"
+
     Generic500:
       description: Internal server error
       content:
@@ -537,6 +633,7 @@ components:
             status: 500
             code: INTERNAL
             message: "Internal server error: ..."
+
     Generic501:
       description: Not Implemented
       content:
@@ -547,6 +644,7 @@ components:
             status: 501
             code: NOT_IMPLEMENTED
             message: "Service not implemented for the specified user device"
+
     Generic503:
       description: Service unavailable
       content:
