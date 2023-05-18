@@ -351,11 +351,11 @@ components:
         applicationServer:
           $ref: "#/components/schemas/ApplicationServer"
         devicePorts:
+          $ref: "#/components/schemas/PortsSpec"
           description: The ports used locally by the device for flows to which the requested QoS profile should apply. If omitted, then the qosProfile will apply to all flows between the device and the specified application server address and ports
-          $ref: "#/components/schemas/PortsSpec"
         applicationServerPorts:
-          description: A list of single ports or port ranges on the application server
           $ref: "#/components/schemas/PortsSpec"
+          description: A list of single ports or port ranges on the application server
         qosProfile:
           $ref: "#/components/schemas/QosProfile"
         notificationUrl:
