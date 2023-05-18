@@ -379,8 +379,6 @@ components:
       maximum: 65535
 
     PortsSpec:
-      description: |
-        Ports may be specified as a list of ranges or single ports.
       type: object
       minProperties: 1
       properties:
