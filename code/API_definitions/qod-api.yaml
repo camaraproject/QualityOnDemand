@@ -279,16 +279,17 @@ paths:
 components:
   securitySchemes:
     oAuth2ClientCredentials:
+      description: |
+        The QoD API makes use of the OAUTH 2.0 client credentials grant which is applicable for server to server use cases involving trusted partners or clients without any protected user data involved. In this method the API invoker client is registered as a confidential client with an authorization grant type of client_credentials
       type: oauth2
-      description: This API uses OAuth 2 with the client credentials grant flow.
       flows:
         clientCredentials:
           tokenUrl: "{tokenUrl}"
           scopes: {}
 
     apiKey:
-      type: apiKey
       description: API key to authorize requests
+      type: apiKey
       name: apikey
       in: query
 
