@@ -113,47 +113,59 @@ paths:
                 $ref: "#/components/schemas/ErrorInfo"
               examples:
                 Generic400:
-                  summary: Schema validation failed
+                  summary: Some parameter combinations or parameter values provided are not schema compliant
                   value:
                     status: 400
                     code: INVALID_ARGUMENT
                     message: "Schema validation failed at  ..."
-                PhoneNumberRequired:
-                  summary: Phone number is required as part of device
+                DeviceMissing:
+                  summary: Device must be specified
                   value:
                     status: 400
                     code: INVALID_ARGUMENT
-                    message: "Expected property is missing: device.phoneNumber"
-                Ipv4AddressRequired:
-                  summary: ipv4Address is required as part of device
+                    message: "Expected property is missing: device"
+                InsufficientDeviceProperties:
+                  summary: Device must be identified by at least one parameter
                   value:
                     status: 400
                     code: INVALID_ARGUMENT
-                    message: "Expected property is missing: device.ipv4Address"
-                IpAddressRequired:
-                  summary: Some IP address is required as part of device
+                    message: "Insufficient properties specified: device"
+                InconsistentDeviceProperties:
+                  summary: Device parameters provided identify different devices
                   value:
                     status: 400
                     code: INVALID_ARGUMENT
-                    message: "Expected property is missing: device.ipv4Address or device.ipv6Address"
-                DevicePortsRequired:
-                  summary: devicePorts is required
+                    message: "Multiple inconsistent parameters specified: device"
+                CannotIdentifyDevice:
+                  summary: No device can be identified from provided parameters
                   value:
                     status: 400
                     code: INVALID_ARGUMENT
-                    message: "Expected property is missing: devicePorts"
-                QoSProfileRequired:
-                  summary: qosProfile is required
+                    message: "Unable to identify device from specified parameters: device"
+                InvalidDevicePublicPortValue:
+                  summary: Invalid port specified for device public port
+                  value:
+                    status: 400
+                    code: OUT_OF_RANGE
+                    message: "Invalid port value specified: device.ipv4Address.publicPort"
+                ApplicationServerMissing:
+                  summary: Application server must be specified
+                  value:
+                    status: 400
+                    code: INVALID_ARGUMENT
+                    message: "Expected property is missing: applicationServer"
+                QoSProfileMissing:
+                  summary: Required QoS profile must be specified
                   value:
                     status: 400
                     code: INVALID_ARGUMENT
                     message: "Expected property is missing: qosProfile"
-                DevicePortsRangesNotAllowed:
-                  summary: Ranges at devicePorts are not allowed
+                InvalidDevicePortsRanges:
+                  summary: Invalid port ranges specified for devicePorts 
                   value:
                     status: 400
-                    code: INVALID_ARGUMENT
-                    message: "Ranges not allowed: devicePorts"
+                    code: OUT_OF_RANGE
+                    message: "Invalid port ranges specified: devicePorts"
         "401":
           $ref: "#/components/responses/Generic401"
         "403":
@@ -338,6 +350,7 @@ components:
           $ref: "#/components/schemas/ApplicationServer"
         devicePorts:
           $ref: "#/components/schemas/PortsSpec"
+          description: The ports used locally by the device for flows to which the requested QoS profile should apply. If omitted, then the qosProfile will apply to all flows between the device and the specified application server address and ports.
         applicationServerPorts:
           $ref: "#/components/schemas/PortsSpec"
         qosProfile:
@@ -477,7 +490,7 @@ components:
         networkAccessIdentifier:
           $ref: "#/components/schemas/NetworkAccessIdentifier"
         ipv4Address:
-          $ref: "#/components/schemas/Ipv4Address"
+          $ref: "#/components/schemas/DeviceIpv4Addr"
         ipv6Address:
           $ref: "#/components/schemas/Ipv6Address"
       minProperties: 1
