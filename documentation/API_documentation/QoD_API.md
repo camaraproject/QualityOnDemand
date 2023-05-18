@@ -1,3 +1,6 @@
+# *To Be Deprecated: The core API documentation is now included as part of the OpenAPI spec*
+
+
 # Overview
 
 <span class="colour" style="color:rgb(0, 0, 0)">The Quality-On-Demand (QoD) API provides programmable interface for developers and other users (capabilities consumers) to request stable latency or throughput managed by Telco networks without the necessity to have an in-depth knowledge of the 4G/5G system or the overall complexity of the Telecom Systems [[1]](#1).</span> 

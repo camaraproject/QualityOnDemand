@@ -12,6 +12,8 @@ info:
 
     ![QoD API Overview](https://raw.githubusercontent.com/camaraproject/QualityOnDemand/main/documentation/API_documentation/resources/QoD_latency_overview.PNG)
 
+    The usage of the API is based on QoS session resources, which can be created (based on available QoS profiles), queried and deleted. The deletion of a requested session can be triggered by the API consumer or can be triggered automatically. The automatic process is triggered either when the requested specified duration of a QoS session has reached its limit or the default session expiration time has been reached (within an example provider implementation it is set to 24hrs).
+
     # Relevant terms and defintions
 
     * **QOD service endpoint**:
@@ -349,14 +351,15 @@ components:
         applicationServer:
           $ref: "#/components/schemas/ApplicationServer"
         devicePorts:
+          description: The ports used locally by the device for flows to which the requested QoS profile should apply. If omitted, then the qosProfile will apply to all flows between the device and the specified application server address and ports
           $ref: "#/components/schemas/PortsSpec"
-          description: The ports used locally by the device for flows to which the requested QoS profile should apply. If omitted, then the qosProfile will apply to all flows between the device and the specified application server address and ports.
         applicationServerPorts:
+          description: A list of single ports or port ranges on the application server
           $ref: "#/components/schemas/PortsSpec"
         qosProfile:
           $ref: "#/components/schemas/QosProfile"
         notificationUrl:
-          description: Allows asynchronous delivery of session related events
+          description: URI of the callback receiver. Allows asynchronous delivery of session related events
           type: string
           format: uri
           example: "https://application-server.com"
@@ -409,10 +412,13 @@ components:
 
     QosProfile:
       description: |
+        Qualifier for the requested latency/throughput profile. Currently the following profiles are supported:
         * `QOS_E` - Qualifier for enhanced communication profile
         * `QOS_S` - Qualifier for the requested QoS profile _S_
         * `QOS_M` - Qualifier for the requested QoS profile _M_
         * `QOS_L` - Qualifier for the requested QoS profile _L_
+
+        Within the CAMARA project, you can find a sample for such a mapping of QoS profiles at [CAMARA QoS Profiles Mapping Table (REFERENCE DRAFT)](https://github.com/camaraproject/QualityOnDemand/blob/main/documentation/API_documentation/QoSProfile_Mapping_Table.md) 
       type: string
       enum:
         - QOS_E
@@ -522,24 +528,50 @@ components:
       pattern: '^\+?[0-9]{5,15}$'
       example: "123456789"
 
-    Ipv4Address:
+    DeviceIpv4Addr:
+      type: object
+      description: |
+        The device should be identified by either the public (observed) IP address and port as seen by the application server, or the private (local) and any public (observed) IP addresses in use by the device (this information can be obtained by various means, for example from some DNS servers).
+        
+        If the allocated and observed IP addresses are the same (i.e. NAT is not in use) then  the same address should be specified for both publicAddress and privateAddress.
+        
+        If NAT64 is in use, the device should be identified by its publicAddress and publicPort, or separately by its allocated IPv6 address (field ipv6Address of the Device object)
+      
+        In all cases, publicAddress must be specified, along with at least one of either privateAddress or publicPort, dependent upon which is known. In general, mobile devices cannot be identified by their public IPv4 address alone.
+      properties:
+        publicAddress:
+          $ref: "#/components/schemas/SingleIpv4Addr"
+        privateAddress:
+          $ref: "#/components/schemas/SingleIpv4Addr"
+        publicPort:
+          $ref: "#/components/schemas/Port"
+      anyOf:
+        - required: [publicAddress, privateAddress]
+        - required: [publicAddress, publicPort]
+      example:
+            {
+              "publicAddress": "84.125.93.10",
+              "publicPort" : 59765
+            }
+
+    SingleIpv4Addr:
+      description: A single IPv4 address with no subnet mask
       type: string
-      format: ipv4
-      pattern: '^([01]?\d\d?|2[0-4]\d|25[0-5])(?:\.(?:[01]?\d\d?|2[0-4]\d|25[0-5])){3}(\/([0-9]|[1-2][0-9]|3[0-2]))?$'
-      example: "192.168.0.1/24"
+      pattern: '^(([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])$'
+      example: "84.125.93.10"
+
+    Ipv4Address:
       description: |
         IPv4 address may be specified in form <address/mask> as:
           - address - an IPv4 number in dotted-quad form 1.2.3.4. Only this exact IP number will match the flow control rule.
           - address/mask - an IP number as above with a mask width of the form 1.2.3.4/24.
             In this case, all IP numbers from 1.2.3.0 to 1.2.3.255 will match. The bit width MUST be valid for the IP version.
+      type: string
+      format: ipv4
+      pattern: '^([01]?\d\d?|2[0-4]\d|25[0-5])(?:\.(?:[01]?\d\d?|2[0-4]\d|25[0-5])){3}(\/([0-9]|[1-2][0-9]|3[0-2]))?$'
+      example: "192.168.0.1/24"
 
     Ipv6Address:
-      type: string
-      format: ipv6
-      allOf:
-        - pattern: '^((:|(0?|([1-9a-f][0-9a-f]{0,3}))):)((0?|([1-9a-f][0-9a-f]{0,3})):){0,6}(:|(0?|([1-9a-f][0-9a-f]{0,3})))(\/(([0-9])|([0-9]{2})|(1[0-1][0-9])|(12[0-8])))?$'
-        - pattern: '^((([^:]+:){7}([^:]+))|((([^:]+:)*[^:]+)?::(([^:]+:)*[^:]+)?))(\/.+)?$'
-      example: "2001:db8:85a3:8d3:1319:8a2e:370:7344"
       description: |
         IPv6 address, following IETF 5952 format, may be specified in form <address/mask> as:
           - address - The /128 subnet is optional for single addresses:
@@ -548,38 +580,41 @@ components:
           - address/mask - an IP v6 number with a mask:
             - 2001:db8:85a3:8d3::0/64
             - 2001:db8:85a3:8d3::/64
+      type: string
+      format: ipv6
+      allOf:
+        - pattern: '^((:|(0?|([1-9a-f][0-9a-f]{0,3}))):)((0?|([1-9a-f][0-9a-f]{0,3})):){0,6}(:|(0?|([1-9a-f][0-9a-f]{0,3})))(\/(([0-9])|([0-9]{2})|(1[0-1][0-9])|(12[0-8])))?$'
+        - pattern: '^((([^:]+:){7}([^:]+))|((([^:]+:)*[^:]+)?::(([^:]+:)*[^:]+)?))(\/.+)?$'
+      example: "2001:db8:85a3:8d3:1319:8a2e:370:7344"
 
     Message:
       type: object
       properties:
         severity:
+          description: Message severity
           type: string
           enum: ["INFO", "WARNING"]
-          description: Message severity
         description:
-          type: string
           description: Detailed message text
+          type: string
       required:
         - severity
         - description
 
     QosStatus:
+      description: |
+        The current status of the requested QoS session. The status can be one of the following:
+        * `REQUESTED` - QoS has been requested by creating a session
+        * `AVAILABLE` - The requested QoS has been provided by the network
+        * `UNAVAILABLE` - The requested QoS cannot be provided by the network due to some reason
       type: string
       enum:
         - REQUESTED
         - AVAILABLE
         - UNAVAILABLE
-      description: |
-        * `REQUESTED` - QoS has been requested by creating a session
-        * `AVAILABLE` - The requested QoS has been provided by the network
-        * `UNAVAILABLE` - The requested QoS cannot be provided by the network due to some reason
 
     ErrorInfo:
       type: object
-      required:
-        - status
-        - code
-        - message
       properties:
         status:
           type: integer
@@ -590,6 +625,10 @@ components:
         message:
           type: string
           description: Detailed error description
+      required:
+        - status
+        - code
+        - message
 
   responses:
     Generic400:
