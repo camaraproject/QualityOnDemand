@@ -241,14 +241,7 @@ paths:
         "404":
           $ref: "#/components/responses/QosProfilesNotFound404"
         "500":
-          description: Server error
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/ErrorInfo"
-              example:
-                code: INTERNAL
-                message: "Could not get QoS Profiles"
+          $ref: "#/components/responses/QoSProfile500"
         "503":
           $ref: "#/components/responses/Generic503"
   /qos-profiles/{qos-profile-name}:
@@ -279,14 +272,7 @@ paths:
         "404":
           $ref: "#/components/responses/QosProfileNotFound404"
         "500":
-          description: Server error
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/ErrorInfo"
-              example:
-                code: INTERNAL
-                message: "Could not get QoS Profile"
+          $ref: "#/components/responses/QoSProfile500"
         "503":
           $ref: "#/components/responses/Generic503"
 components:
@@ -423,11 +409,13 @@ components:
           description: |
             The name of the QoS profile.  This name is used to identify the profile when creating a session.
             The name must be unique.
+          required: true
         status:
           $ref: "#/components/schemas/QosProfileStatusEnum"
           description: |
             The status of the QoS profile.  The status is set to ACTIVE when the profile is created.
             The status is set to INACTIVE when the profile is deleted.
+          required: true
         targetMinUpstreamRate:
           $ref: "#/components/schemas/Rate"
           description: |
@@ -503,9 +491,10 @@ components:
         packetDelayBudget:
           $ref: "#/components/schemas/Duration"
           description: |
-            The packet delay budget is the maximum allowable end-to-end delay for a specific
-            packet flow. By limiting the delay, the network can provide an acceptable level of
-            performance for various services, such as voice calls, video streaming, and data.
+            The packet delay budget is the maximum allowable delay between the device or gateway
+            and the networkwork core for a specific packet flow. By limiting the delay, the network
+            can provide an acceptable level of performance for various services, such as voice calls,
+            video streaming, and data.
 
             This is limited to the "access network" only and does not include the "core network",
             LAN, or other networks outside of the access network managed by the service provider.
@@ -840,6 +829,16 @@ components:
             status: 500
             code: INTERNAL
             message: "Internal server error: ..."
+    QoSProfile500:
+      description: Internal server error
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ErrorInfo"
+          example:
+            status: 500
+            code: INTERNAL
+            message: "Internal server error: Could not get QoS Profile"
     Generic501:
       description: Not Implemented
       content:
