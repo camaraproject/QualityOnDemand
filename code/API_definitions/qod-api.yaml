@@ -233,7 +233,7 @@ paths:
               schema:
                 type: array
                 items:
-                  - $ref: "#/components/schemas/QosProfile"
+                  $ref: "#/components/schemas/QosProfile"
         "401":
           $ref: "#/components/responses/Generic401"
         "403":
