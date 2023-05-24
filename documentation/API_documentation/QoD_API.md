@@ -1,6 +1,6 @@
 # Overview
 
-<span class="colour" style="color:rgb(0, 0, 0)">The Quality-On-Demand (QoD) API provides programmable interface for developers and other users (capabilities consumers) to request stable latency or throughput managed by Telco networks without the necessity to have an in-depth knowledge of the 4G/5G system or the overall complexity of the Telecom Systems [[1]](#1).</span>
+<span class="colour" style="color:rgb(0, 0, 0)">The Quality-On-Demand (QoD) API provides programmable interface for developers and other users (capabilities consumers) to request stable latency or throughput managed by Telco networks without the necessity to have an in-depth knowledge of the 4G/5G system or the overall complexity of the Telecom Systems [[1]](#1).</span> 
 
 ## 1\. Introduction
 
@@ -35,7 +35,7 @@ IPv4 and/or IPv6 address of the application server (application backend)
 **App-Flow (between the application client and application server)**
 The precise application data flow the developer wants to prioritize and have stable latency or throughput for. This flow is in the current API version determined by the identifiers used for the device and the application server. And it can be further elaborated with details such as ports or port-ranges. Future version of the API might allow more detailed flow identification features.
 
-**Duration**
+**Duration** 
 Duration (in seconds) for which the QoS session (between application client and application server) should be created. This parameter is optional. When not specified, a default session duration (e.g. 24 hours) is applied. The user may request a termination before its expiration.
 
 **Notification URL and token**
@@ -53,7 +53,7 @@ In this method the API invoker client is registered as a confidential client wit
 
 ### 4.1 API Version
 
-0.9.0
+0.8.0
 
 ### 4.2 Details
 
@@ -74,6 +74,7 @@ Following diagram shows the interaction between different components
 
 How QoS profiles are mapped to connectivity characteristics are subject to agreements between the communication service provider and the API invoker. Within the CAMARA project, you can find a sample for such a mapping of QoS profiles. [[2]](#2)
 
+
 ### 4.3 Endpoint Definitions
 
 Following table defines API endpoints of exposed REST based for QoD management operations.
@@ -83,8 +84,6 @@ Following table defines API endpoints of exposed REST based for QoD management o
 | POST<br>  \<base-url>/qod/v0/sessions | **Create QoS Session Resource** | Create QoS Session to manage latency/throughput priorities |
 | GET<br> \<base-url>/qod/v0/sessions/{sessionId} | **Query for QoS Session Resource** | Querying for QoS session resource information details |
 | DELETE<br> \<base-url>/qod/v0/sessions/{sessionId} | **Delete QoS Session Resource** | Deleting a QoS session |
-| GET<br>  \<base-url>/qod/v0/qos-profiles | **return array of QosProfiles** | return array of QosProfiles |
-| GET<br>  \<base-url>/qod/v0/qos-profiles/{profile-id} | **return a QosProfile** | return the QosProfile based on the profile-id |
 <br>
 
 #### QoD - Create QoS Session Resource Operations
@@ -109,10 +108,10 @@ Following table defines API endpoints of exposed REST based for QoD management o
             <td colspan=2>No path parameters are defined</td>
         </tr>
         <tr>
-            <td rowspan=8∏><b>Request Body Parameters</b></td>
+            <td rowspan=8><b>Request Body Parameters</b></td>
             <td><b>duration (optional)</b></td>
             <td>Session duration in seconds. Maximal value of 24 hours is used if not set. e.g. 86400</td>
-        </tr>
+        </tr> 
         <tr>
             <td><b>device</b></td>
             <td>
@@ -146,7 +145,7 @@ Following table defines API endpoints of exposed REST based for QoD management o
         </tr>
         <tr>
             <td><b>qosProfile</b></td>
-            <td>Qualifier for the requested latency/throughput profile.  This can either be a predefined QosProfile or the ID of a provider defined QoS Profile.</td>
+            <td>Qualifier for the requested latency/throughput profile, e.g. QOS_E</td>
         </tr>
         <tr>
             <td><b>notificationUrl (optional)</b></td>
@@ -155,7 +154,7 @@ Following table defines API endpoints of exposed REST based for QoD management o
         <tr>
             <td><b>notificationAuthToken (optional)</b></td>
             <td>Authentication token for callback API, e.g. c8974e592c2fa383d4a3960714</td>
-        </tr>
+        </tr> 
         <tr>
             <td rowspan=8><b>Response</b></td>
             <td><b>201: Session created</b></td>
@@ -163,7 +162,7 @@ Following table defines API endpoints of exposed REST based for QoD management o
                 Response body:<br>
                 <b>duration</b>: Session duration in seconds<br>
                 <b>device:</b> The identifier of the device<br>
-                <b>applicationServer:</b> The identifier of the application server<br>
+                <b>applicationServer:</b> The identifer of the application server<br>
                 <b>devicePorts (optional):</b> The requested port(s) on the device<br>
                 <b>applicationServerPorts (optional):</b> The requested port(s) on the application server<br>
                 <b>qosProfile:</b> Qualifier of the requested throughput profile<br>
@@ -198,12 +197,13 @@ Following table defines API endpoints of exposed REST based for QoD management o
     </tbody>
 </table>
 
+
 #### QoD - Query for QoS Session Resource
 
 <table>
     <thead>
         <tr>
-            <th colspan=3><b>Querying QoS Session Resource information</b></th>
+            <th colspan=3><b>Quering QoS Session Resource information</b></th>
         </tr>
     </thead>
     <tbody>
@@ -255,9 +255,10 @@ Following table defines API endpoints of exposed REST based for QoD management o
         </tr>
         <tr>
             <td><b>503: Service temporarily unavailable</b></td>
-        </tr>
+        </tr>    
     </tbody>
 </table>
+
 
 #### QoD - Delete QoS Session Resource
 
@@ -307,177 +308,6 @@ Following table defines API endpoints of exposed REST based for QoD management o
     </tbody>
 </table>
 
-#### QoD - Get QoS Profiles Resource Operations
-
-<img src="./resources/QoS_Profile_Design.svg" title="QoS Profile Design">
-<table>
-    <thead>
-        <tr>
-            <th colspan=3><b>Get QoS Profile Resource</b></th>
-        </tr>
-    </thead>
-    <tbody>
-        <tr>
-            <td><b>HTTP Request</b></td>
-            <td colspan=2>GET &lt;base-url&gt;/qod/v0/qosProfile</td>
-        </tr>
-        <tr>
-            <td><b>Query Parameters</b></td>
-            <td colspan=2>
-                <b>id</b>: The identifier of the QoS Profile<br>
-                <b>name</b>: The name of the QoS Profile<br>
-                <b>status</b>: The status of the QoS Profile<br>
-                <b>targetMinimumUpstreamRate</b>: This is the targeted minimum upstream rate for this profile.<br>
-                <b>maxUpstreamRate</b>: This is the maximum sustained upstream rate for this profile. If this is undefined, then the maxUpstream rate will not change.
-                If this rate is lower than the current provisioned maximum sustained rate, then the current rate is used.<br>
-                <b>maxUpstreamBurstRate</b>: This is the maximum burst upstream rate for this profile. If this is undefined, then the maxUpstream rate will not change.
-                If this rate is lower than the current provisioned maximum rate, then the current maximum burst rate is used.<br>
-                <b>targetMinimumDownstreamRate</b>: This is the targeted minimum Downstream rate for this profile.<br>
-                <b>maxDownstreamRate</b>: This is the maximum sustained Downstream rate for this profile. If this is undefined, then the maxDownstream rate will not change.
-                If this rate is lower than the current provisioned maximum sustained rate, then the current rate is used.<br>
-                <b>maxDownstreamBurstRate</b>: This is the maximum burst Downstream rate for this profile. If this is undefined, then the maxDownstream rate will not change.
-                If this rate is lower than the current provisioned maximum rate, then the current maximum burst rate is used.<br>
-                <b>minDuration (optional)</b>: Minimum duration for a session with this QoS Profile<br>
-                <b>maxDuration (optional)</b>: Maximum duration for a session with this QoS Profile<br>
-                <b>priority (optional)</b>: The priority of this QoS Profile<br>
-                <b>packetDelayBudget (optional)</b>: Maximum latency<br>
-                <b>Jitter (optional)</b>: Jitter refers to the variation in the time it takes for none queue building packets to travel across a network measured in milliseconds (ms). In terms of maximum deviation for round trip latency on a network, jitter can be defined as the difference between the highest and lowest latency values experienced by the 99th percentile of traffic.
-                To be more specific, if we consider the round trip latency values of the 99th percentile of traffic, jitter is the measure of how much these values deviate from the average round trip latency for this percentile. A low jitter value indicates that the latency values are relatively consistent, whereas a high jitter value implies that there is a significant variation in latency times, which can negatively impact the performance of real-time applications such as VoIP, video conferencing, and online gaming.
-                <br>
-                <b>packetErrorLossRate (optional)</b>: The magnitude of the error loss rate<br></td>
-        </tr>
-        <tr>
-            <td><b>Path Parameters</b></td>
-            <td colspan=2>No path parameters are defined</td>
-        </tr>
-        <tr>
-            <td><b>Request Body Parameters</b></td>
-            <td colspan=2><b>No Request Body Parameters defined</b></td>
-        </tr>
-        <tr>
-            <td rowspan=7><b>Response</b></td>
-            <td><b>201: QoS Profile created</b></td>
-            <td>
-                Response body:<br>
-                <b>id</b>: The identifier of the QoS Profile<br>
-                <b>name</b>: The name of the QoS Profile<br>
-                <b>status</b>: The status of the QoS Profile<br>
-                <b>targetMinimumUpstreamRate</b>: This is the targeted minimum upstream rate for this profile.<br>
-                <b>maxUpstreamRate</b>: This is the maximum sustained upstream rate for this profile. If this is undefined, then the maxUpstream rate will not change.
-                If this rate is lower than the current provisioned maximum sustained rate, then the current rate is used.<br>
-                <b>maxUpstreamBurstRate</b>: This is the maximum burst upstream rate for this profile. If this is undefined, then the maxUpstream rate will not change.
-                If this rate is lower than the current provisioned maximum rate, then the current maximum burst rate is used.<br>
-                <b>targetMinimumDownstreamRate</b>: This is the targeted minimum Downstream rate for this profile.<br>
-                <b>maxDownstreamRate</b>: This is the maximum sustained Downstream rate for this profile. If this is undefined, then the maxDownstream rate will not change.
-                If this rate is lower than the current provisioned maximum sustained rate, then the current rate is used.<br>
-                <b>maxDownstreamBurstRate</b>: This is the maximum burst Downstream rate for this profile. If this is undefined, then the maxDownstream rate will not change.
-                If this rate is lower than the current provisioned maximum rate, then the current maximum burst rate is used.<br>
-                <b>minDuration (optional)</b>: Minimum duration for a session with this QoS Profile<br>
-                <b>maxDuration (optional)</b>: Maximum duration for a session with this QoS Profile<br>
-                <b>priority (optional)</b>: The priority of this QoS Profile<br>
-                <b>packetDelayBudget (optional)</b>: Maximum latency<br>
-                <b>Jitter (optional)</b>: Jitter refers to the variation in the time it takes for none queue building packets to travel across a network measured in milliseconds (ms). In terms of maximum deviation for round trip latency on a network, jitter can be defined as the difference between the highest and lowest latency values experienced by the 99th percentile of traffic.
-                To be more specific, if we consider the round trip latency values of the 99th percentile of traffic, jitter is the measure of how much these values deviate from the average round trip latency for this percentile. A low jitter value indicates that the latency values are relatively consistent, whereas a high jitter value implies that there is a significant variation in latency times, which can negatively impact the performance of real-time applications such as VoIP, video conferencing, and online gaming.
-                <br>
-                <b>packetErrorLossRate (optional)</b>: The magnitude of the error loss rate<br>
-            </td>
-        </tr>
-        <tr>
-            <td><b>400: Invalid input</b></td>
-        </tr>
-        <tr>
-            <td><b>401: Un-authorized</b></td>
-        </tr>
-        <tr>
-            <td><b>403: Forbidden</b></td>
-        </tr>
-        <tr>
-            <td><b>409: Conflict</b></td>
-        </tr>
-        <tr>
-            <td><b>500: Server Error</b></td>
-        </tr>
-        <tr>
-            <td><b>503: Service temporarily unavailable</b></td>
-        </tr>
-    </tbody>
-</table>
-
-#### QoD - Get QoS Profiles Resource by id
-
-<table>
-    <thead>
-        <tr>
-            <th colspan=3><b>Get QoS Profile Resource by id</b></th>
-        </tr>
-    </thead>
-    <tbody>
-        <tr>
-            <td><b>HTTP Request</b></td>
-            <td colspan=2>GET &lt;base-url&gt;/qod/v0/qosProfile</td>
-        </tr>
-        <tr>
-            <td><b>Query Parameters</b></td>
-            <td colspan=2> No Query Parameters</td>
-        </tr>
-        <tr>
-            <td><b>Path Parameters</b></td>
-            <td><b>profile-id</b></td>
-            <td>Extended QoS profile id</td>
-        </tr>
-        <tr>
-            <td><b>Request Body Parameters</b></td>
-            <td colspan=2><b>No Request Body Parameters defined</b></td>
-        </tr>
-        <tr>
-            <td rowspan=7><b>Response</b></td>
-            <td><b>201: QoS Profile created</b></td>
-            <td>
-                Response body:<br>
-                <b>id</b>: The identifier of the QoS Profile<br>
-                <b>name</b>: The name of the QoS Profile<br>
-                <b>status</b>: The status of the QoS Profile<br>
-                <b>targetMinimumUpstreamRate</b>: This is the targeted minimum upstream rate for this profile.<br>
-                <b>maxUpstreamRate</b>: This is the maximum sustained upstream rate for this profile. If this is undefined, then the maxUpstream rate will not change.
-                If this rate is lower than the current provisioned maximum sustained rate, then the current rate is used.<br>
-                <b>maxUpstreamBurstRate</b>: This is the maximum burst upstream rate for this profile. If this is undefined, then the maxUpstream rate will not change.
-                If this rate is lower than the current provisioned maximum rate, then the current maximum burst rate is used.<br>
-                <b>targetMinimumDownstreamRate</b>: This is the targeted minimum Downstream rate for this profile.<br>
-                <b>maxDownstreamRate</b>: This is the maximum sustained Downstream rate for this profile. If this is undefined, then the maxDownstream rate will not change.
-                If this rate is lower than the current provisioned maximum sustained rate, then the current rate is used.<br>
-                <b>maxDownstreamBurstRate</b>: This is the maximum burst Downstream rate for this profile. If this is undefined, then the maxDownstream rate will not change.
-                If this rate is lower than the current provisioned maximum rate, then the current maximum burst rate is used.<br>
-                <b>minDuration (optional)</b>: Minimum duration for a session with this QoS Profile<br>
-                <b>maxDuration (optional)</b>: Maximum duration for a session with this QoS Profile<br>
-                <b>priority (optional)</b>: The priority of this QoS Profile<br>
-                <b>packetDelayBudget (optional)</b>: Maximum latency<br>
-                <b>Jitter (optional)</b>: Jitter refers to the variation in the time it takes for none queue building packets to travel across a network measured in milliseconds (ms). In terms of maximum deviation for round trip latency on a network, jitter can be defined as the difference between the highest and lowest latency values experienced by the 99th percentile of traffic.
-                To be more specific, if we consider the round trip latency values of the 99th percentile of traffic, jitter is the measure of how much these values deviate from the average round trip latency for this percentile. A low jitter value indicates that the latency values are relatively consistent, whereas a high jitter value implies that there is a significant variation in latency times, which can negatively impact the performance of real-time applications such as VoIP, video conferencing, and online gaming.
-                <br>
-                <b>packetErrorLossRate (optional)</b>: The magnitude of the error loss rate<br>
-            </td>
-        </tr>
-        <tr>
-            <td><b>400: Invalid input</b></td>
-        </tr>
-        <tr>
-            <td><b>401: Un-authorized</b></td>
-        </tr>
-        <tr>
-            <td><b>403: Forbidden</b></td>
-        </tr>
-        <tr>
-            <td><b>409: Conflict</b></td>
-        </tr>
-        <tr>
-            <td><b>500: Server Error</b></td>
-        </tr>
-        <tr>
-            <td><b>503: Service temporarily unavailable</b></td>
-        </tr>
-    </tbody>
-</table>
-
 ### 4.4 Errors
 
 Since CAMARA QoD API is based on REST design principles and blueprints, well defined HTTP status codes and families specified by community are followed [[4]](#4).
@@ -506,7 +336,6 @@ Following table provides an overview of common error names, codes, and messages 
 N/A
 
 ### 4.6 Code Snippets
-
 <br>
 <span class="colour" style="color:rgb(36, 41, 47)">Snippet 1, elaborates REST based API call with "*curl"* to create a QoS session for sample streaming service with following parameters: </span>
 
