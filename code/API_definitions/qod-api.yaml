@@ -265,6 +265,8 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/QosProfile"
+        "400":
+          $ref: "#/components/responses/Generic400"
         "401":
           $ref: "#/components/responses/Generic401"
         "403":
@@ -405,79 +407,86 @@ components:
       type: object
       properties:
         name:
-          $ref: "#/components/schemas/QosProfileName"
-          description: |
-            The name of the QoS profile.  This name is used to identify the profile when creating a session.
-            The name must be unique.
-          required: true
+          allOf:
+            - $ref: "#/components/schemas/QosProfileName"
+            - description: |
+                The name of the QoS profile.  This name is used to identify the profile when creating a session.
+                The name must be unique.
         status:
-          $ref: "#/components/schemas/QosProfileStatusEnum"
-          description: |
-            The status of the QoS profile.  The status is set to ACTIVE when the profile is created.
-            The status is set to INACTIVE when the profile is deleted.
-          required: true
+          allOf:
+            - $ref: "#/components/schemas/QosProfileStatusEnum"
+            - description: |
+              The status of the QoS profile.  The status is set to ACTIVE when the profile is created.
+              The status is set to INACTIVE when the profile is deleted.
         targetMinUpstreamRate:
-          $ref: "#/components/schemas/Rate"
-          description: |
-            This is the target minimum upstream rate for the QoS profile.
+          allOf:
+            - $ref: "#/components/schemas/Rate"
+            - description: |
+              This is the target minimum upstream rate for the QoS profile.
 
-            For 5G networks 3GPP Guaranteed Bit Rate (GBR) refers to a dedicated, fixed data rate assigned to
-            specific services, ensuring a minimum performance level. As per 3GPP TS 23.203,
-            GBR is a QoS parameter used to manage traffic classes in mobile networks. It
-            provides a stable data rate for latency-sensitive applications, such as voice calls or
-            video streaming, helping maintain a consistent user experience. When this attribute is set
-            this could imply that a GBR QCI is used, though mechanisms on the network can be used to
-            ensure a minimum performance level without using a GBR QCI.
+              For 5G networks 3GPP Guaranteed Bit Rate (GBR) refers to a dedicated, fixed data rate assigned to
+              specific services, ensuring a minimum performance level. As per 3GPP TS 23.203,
+              GBR is a QoS parameter used to manage traffic classes in mobile networks. It
+              provides a stable data rate for latency-sensitive applications, such as voice calls or
+              video streaming, helping maintain a consistent user experience. When this attribute is set
+              this could imply that a GBR QCI is used, though mechanisms on the network can be used to
+              ensure a minimum performance level without using a GBR QCI.
 
-            The committed data rate allocated to specific services, ensuring a consistent level of
-            performance. DOCSIS networks, the "Minimum Reserved Traffic Rate" is defined in the 
-            DOCSIS 3.1 - MAC and Upper Layer Protocols Interface Specification" 
-            and it ensures a consistent level of performance for specific services within the network.
+              The committed data rate allocated to specific services, ensuring a consistent level of
+              performance. For DOCSIS networks, the "Minimum Reserved Traffic Rate" is defined in the 
+              DOCSIS 3.1 - MAC and Upper Layer Protocols Interface Specification" 
+              and it ensures a consistent level of performance for specific services within the network.
         maxUpstreamRate:
-          $ref: "#/components/schemas/Rate"
-          description: |
-            The maximum best effort data
-            Equal to targetMinimumUpstreamRate when max is the as the target. 
+          allOf:
+            - $ref: "#/components/schemas/Rate"
+            - description: |
+              The maximum best effort data
         maxUpstreamBurstRate:
-          $ref: "#/components/schemas/Rate"
-          description: |
-            The burst rate for best effort data
+          allOf:
+            - $ref: "#/components/schemas/Rate"
+            - description: |
+              The burst rate for best effort data
         targetMinDownstreamRate:
-          $ref: "#/components/schemas/Rate"
-          description: |
-            This is the target minimum downstream rate for the QoS profile.
+          allOf:
+            - $ref: "#/components/schemas/Rate"
+            - description: |
+              This is the target minimum downstream rate for the QoS profile.
 
-            For 5G networks 3GPP Guaranteed Bit Rate (GBR) refers to a dedicated, fixed data rate assigned to
-            specific services, ensuring a minimum performance level. As per 3GPP TS 23.203,
-            GBR is a QoS parameter used to manage traffic classes in mobile networks. It
-            provides a stable data rate for latency-sensitive applications, such as voice calls or
-            video streaming, helping maintain a consistent user experience.  When this attribute is set
-            this could imply that a GBR QCI is used, though mechanisms on the network can be used to
-            ensure a minimum performance level without using a GBR QCI.
+              For 5G networks 3GPP Guaranteed Bit Rate (GBR) refers to a dedicated, fixed data rate assigned to
+              specific services, ensuring a minimum performance level. As per 3GPP TS 23.203,
+              GBR is a QoS parameter used to manage traffic classes in mobile networks. It
+              provides a stable data rate for latency-sensitive applications, such as voice calls or
+              video streaming, helping maintain a consistent user experience.  When this attribute is set
+              this could imply that a GBR QCI is used, though mechanisms on the network can be used to
+              ensure a minimum performance level without using a GBR QCI.
 
-            The committed data rate allocated to specific services, ensuring a consistent level of
-            performance. DOCSIS networks, the "Minimum Reserved Traffic Rate" is defined in the 
-            DOCSIS 3.1 - MAC and Upper Layer Protocols Interface Specification" 
-            and it ensures a consistent level of performance for specific services within the network.
+              The committed data rate allocated to specific services, ensuring a consistent level of
+              performance. DOCSIS networks, the "Minimum Reserved Traffic Rate" is defined in the 
+              DOCSIS 3.1 - MAC and Upper Layer Protocols Interface Specification" 
+              and it ensures a consistent level of performance for specific services within the network.
         maxDownstreamRate:
-          $ref: "#/components/schemas/Rate"
-          description: |
-            The maximum best effort rate
-            Equal to targetMinimumUpstreamRate when max is the as the target. 
+          allOf:
+            - $ref: "#/components/schemas/Rate"
+            - description: |
+              The maximum best effort rate
         maxDownstreamBurstRate:
-          $ref: "#/components/schemas/Rate"
-          description: |
-            The maximum best effort burst rate
-            Equal to targetMinimumUpstreamRate when max is the as the target. 
+          allOf:
+            - $ref: "#/components/schemas/Rate"
+            - description: |
+              The maximum best effort burst rate
         minDuration:
-          $ref: "#/components/schemas/Duration"
-          description: The shortest time period that is supported this profile can be deployed.
+          allOf:
+            - $ref: "#/components/schemas/Duration"
+            - description: |
+              The shortest time period that this profile can be deployed.
         maxDuration:
-          $ref: "#/components/schemas/Duration"
-          description: The maximum time period that this profile can be deployed.
+          allOf:
+            - $ref: "#/components/schemas/Duration"
+            - description: |
+              The maximum time period that this profile can be deployed.
         priority:
           type: number
-          example: 2.0
+          example: 2.2
           description: |
             Priority levels allow efficient resource allocation and ensure optimal performance
             for various services in each technology, with the highest priority traffic receiving
@@ -489,31 +498,33 @@ components:
           minimum: 1
           maximum: 10
         packetDelayBudget:
-          $ref: "#/components/schemas/Duration"
-          description: |
-            The packet delay budget is the maximum allowable delay between the device or gateway
-            and the networkwork core for a specific packet flow. By limiting the delay, the network
-            can provide an acceptable level of performance for various services, such as voice calls,
-            video streaming, and data.
+          allOf:
+            - $ref: "#/components/schemas/Duration"
+            - description: |
+                The packet delay budget is the maximum allowable one-way delay between the device or gateway
+                and the networkwork core for a specific packet flow. By limiting the delay, the network
+                can provide an acceptable level of performance for various services, such as voice calls,
+                video streaming, and data.
 
-            This is limited to the "access network" only and does not include the "core network",
-            LAN, or other networks outside of the access network managed by the service provider.
-            
-            For 5G connected devices the 3GPP specification TS 23.203 defines the packet delay
-            budget QCI attribute.  Setting the QCI attribute is not the only mechanizm that can
-            be used to achieve the packet delay budget on mobile netowrk.
+                This is limited to the "access network" only and does not include the "core network",
+                LAN, or other networks outside of the access network managed by the service provider.
+                
+                For 5G connected devices the 3GPP specification TS 23.203 defines the packet delay
+                budget QCI attribute.  Setting the QCI attribute is not the only mechanizm that can
+                be used to achieve the packet delay budget on mobile netowrk.
 
-            PON and DOCSIS networks do not have a packet delay budget attribute.  The same result
-            can be achieved by setting through a combination of upstream and downstream attributes.
+                PON and DOCSIS networks do not have a packet delay budget attribute.  The same result
+                can be achieved by setting through a combination of upstream and downstream attributes.
         jitter:
-          $ref: "#/components/schemas/Duration"
-          description: |
-            The jitter requirement aims to limit the maximum variation in round-trip
-            packet delay for the 99th percentile of traffic, following ITU Y.1540
-            standards. It considers only acknowledged packets in a session, which are
-            packets that receive a confirmation of receipt from the recipient (e.g.,
-            using TCP). This requirement helps maintain consistent latency, essential
-            for real-time applications such as VoIP, video calls, and gaming.
+          allOf:
+            - $ref: "#/components/schemas/Duration"
+            - description: |
+                The jitter requirement aims to limit the maximum variation in round-trip
+                packet delay for the 99th percentile of traffic, following ITU Y.1540
+                standards. It considers only acknowledged packets in a session, which are
+                packets that receive a confirmation of receipt from the recipient (e.g.,
+                using TCP). This requirement helps maintain consistent latency, essential
+                for real-time applications such as VoIP, video calls, and gaming.
         packetErrorLossRate:
           type: integer
           description: |
@@ -533,6 +544,9 @@ components:
           minimum: 1
           maximum: 10
           example: 3
+        required:
+          - name
+          - status
     QosProfileName:
       description: |
         A unique name for identifying a specific QoS profile.
@@ -600,9 +614,9 @@ components:
         - Deprecated - QoS profile is actively being used in a QoD session, but can not be deployed in new QoD sessions
       type: string
       enum:
-        - Active
-        - Inactive
-        - Deprecated
+        - ACTIVE
+        - INACTIVE
+        - DEPRECATED
     RateUnitEnum:
       description: |
         The unit of measurement for rate.
