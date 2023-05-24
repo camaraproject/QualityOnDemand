@@ -14,7 +14,7 @@ info:
 
     The usage of the API is based on QoS session resources, which can be created (based on available QoS profiles), queried and deleted. The deletion of a requested session can be triggered by the API consumer or can be triggered automatically. The automatic process is triggered either when the requested specified duration of a QoS session has reached its limit or the default session expiration time has been reached (within an example provider implementation it is set to 24hrs).
 
-    # Relevant terms and defintions
+    # Relevant terms and definitions
 
     * **QOD service endpoint**:
     The URL pointing to the RESTful resource of the QoD API.
