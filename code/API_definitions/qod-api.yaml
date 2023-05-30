@@ -200,7 +200,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/Notification"
+              $ref: "#/components/schemas/EventNotification"
       responses:
         "204":
           description: Successful notification
@@ -295,15 +295,22 @@ components:
           $ref: "#/components/schemas/PortsSpec"
         qosProfile:
           $ref: "#/components/schemas/QosProfile"
-        notificationUrl:
-          type: string
-          format: uri
-          example: "https://application-server.com"
-          description: Allows asynchronous delivery of session related events
-        notificationAuthToken:
-          type: string
-          example: "c8974e592c2fa383d4a3960714"
-          description: Authentication token for callback API
+        webhook:
+          type: object
+          required:
+            - notificationUrl
+          properties:
+            notificationUrl:
+              type: string
+              format: uri
+              example: "https://application-server.com"
+              description: Allows asynchronous delivery of session related events
+            notificationAuthToken:
+              type: string
+              minLength: 20
+              maxLength: 256
+              example: "c8974e592c2fa383d4a3960714"
+              description: Authentication token for callback API
       required:
         - device
         - applicationServer
@@ -358,43 +365,75 @@ components:
         * `QOS_S` - Qualifier for the requested QoS profile _S_
         * `QOS_M` - Qualifier for the requested QoS profile _M_
         * `QOS_L` - Qualifier for the requested QoS profile _L_
-    
-    Notification:
+
+    EventNotification:
       type: object
       required:
-        - sessionId
-        - eventReports
+        - event
       properties:
-        sessionId:
-          $ref: "#/components/schemas/SessionId"
-        eventReports:
-          type: array
-          items:
-            $ref: "#/components/schemas/EventReport"
-          minItems: 1
-          description: Contains the reported event and applicable information
-    
-    EventReport:
-      oneOf:
-        - $ref: '#/components/schemas/QosStatusChangedEventReport'
-      discriminator:
-        propertyName: eventType
-        mapping:
-          QOS_STATUS_CHANGED: "#/components/schemas/QosStatusChangedEventReport"
-        
-    QosStatusChangedEventReport:
+        event:
+          $ref: "#/components/schemas/Event"
+
+    Event:
       type: object
       required:
         - eventType
+        - eventTime
+        - eventDetail
+      properties:
+        eventid:
+          $ref: "#/components/schemas/EventId"
+        eventType:
+          $ref: "#/components/schemas/EventType"
+        eventTime:
+          $ref: "#/components/schemas/EventTime"
+        eventDetail:
+          $ref: "#/components/schemas/EventDetail"
+      description: Notification event
+
+    EventId:
+      type: string
+      format: uuid
+      example: 5698d710-9b1b-4695-a958-7b228f08128c
+      description: Unique identifier of the event
+
+    EventType:
+      type: string
+      enum:
+        - QOS_STATUS_CHANGED
+      description: Type of the event
+
+    EventTime:
+      type: string
+      format: date-time
+      example: 2023-05-30T10:18:28Z
+      description: Date time when the event occurred
+
+    EventDetail:
+      oneOf:
+        - $ref: '#/components/schemas/QosStatusChangedEventDetails'
+      discriminator:
+        propertyName: eventType
+        mapping:
+          QOS_STATUS_CHANGED: "#/components/schemas/QosStatusChangedEventDetails"
+      description: Event details depending on the event type
+
+    QosStatusChangedEventDetails:
+      type: object
+      required:
+        - eventType
+        - sessionId
         - qosStatus
       properties:
         eventType:
-          $ref: "#/components/schemas/SessionEventType"
+          $ref: "#/components/schemas/EventType"
+        sessionId:
+          $ref: "#/components/schemas/SessionId"
         qosStatus:
           $ref: "#/components/schemas/QosStatus"
         statusInfo:
           $ref: "#/components/schemas/StatusInfo"
-          
+
     StatusInfo:
           type: string
           enum:
@@ -405,11 +444,6 @@ components:
             * `DURATION_EXPIRED` - Session terminated due to requested duration expired
             * `NETWORK_TERMINATED` - Network terminated the session before the requested duration expired
 
-    SessionEventType:
-      type: string
-      enum:
-        - QOS_STATUS_CHANGED
-    
     Device:
       type: object
       minProperties: 1
