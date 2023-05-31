@@ -485,36 +485,29 @@ components:
             - description: |
               The maximum time period that this profile can be deployed.
         priority:
-          type: number
-          example: 2.2
+          type: integer
+          example: 20
           description: |
             Priority levels allow efficient resource allocation and ensure optimal performance
             for various services in each technology, with the highest priority traffic receiving
             preferential treatment.
             The lower value the higher priority.
-            Since not all access networks use the same priority range, so this priority will be
+            Not all access networks use the same priority range, so this priority will be
             scaled to the access network's priority range.
-          format: float
+          format: integer
           minimum: 1
-          maximum: 10
+          maximum: 100
         packetDelayBudget:
           allOf:
             - $ref: "#/components/schemas/Duration"
             - description: |
-                The packet delay budget is the maximum allowable one-way delay between the device or gateway
-                and the networkwork core for a specific packet flow. By limiting the delay, the network
+                The packet delay budget is the maximum allowable one-way latency between the customer's device
+                and the gateway from the operator's network to other networks. By limiting the delay, the network
                 can provide an acceptable level of performance for various services, such as voice calls,
                 video streaming, and data.
 
-                This is limited to the "access network" only and does not include the "core network",
-                LAN, or other networks outside of the access network managed by the service provider.
-                
-                For 5G connected devices the 3GPP specification TS 23.203 defines the packet delay
-                budget QCI attribute.  Setting the QCI attribute is not the only mechanizm that can
-                be used to achieve the packet delay budget on mobile netowrk.
-
-                PON and DOCSIS networks do not have a packet delay budget attribute.  The same result
-                can be achieved by setting through a combination of upstream and downstream attributes.
+                The end-to-end or round trip latency will be about two times this value plus the latency not controlled
+                by the operator
         jitter:
           allOf:
             - $ref: "#/components/schemas/Duration"
