@@ -816,7 +816,7 @@ components:
             $ref: "#/components/schemas/ErrorInfo"
           example:
             code: NOT_FOUND
-            message: "No QoS Profiles found exist"
+            message: "No QoS Profiles found"
     QosProfileNotFound404:
       description: Qos Profile not found
       content:
