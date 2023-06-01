@@ -416,74 +416,74 @@ components:
           allOf:
             - $ref: "#/components/schemas/QosProfileStatusEnum"
             - description: |
-              The status of the QoS profile.  The status is set to ACTIVE when the profile is created.
-              The status is set to INACTIVE when the profile is deleted.
+                The status of the QoS profile.  The status is set to ACTIVE when the profile is created.
+                The status is set to INACTIVE when the profile is deleted.
         targetMinUpstreamRate:
           allOf:
             - $ref: "#/components/schemas/Rate"
             - description: |
-              This is the target minimum upstream rate for the QoS profile.
+                This is the target minimum upstream rate for the QoS profile.
 
-              For 5G networks 3GPP Guaranteed Bit Rate (GBR) refers to a dedicated, fixed data rate assigned to
-              specific services, ensuring a minimum performance level. As per 3GPP TS 23.203,
-              GBR is a QoS parameter used to manage traffic classes in mobile networks. It
-              provides a stable data rate for latency-sensitive applications, such as voice calls or
-              video streaming, helping maintain a consistent user experience. When this attribute is set
-              this could imply that a GBR QCI is used, though mechanisms on the network can be used to
-              ensure a minimum performance level without using a GBR QCI.
+                For 5G networks 3GPP Guaranteed Bit Rate (GBR) refers to a dedicated, fixed data rate assigned to
+                specific services, ensuring a minimum performance level. As per 3GPP TS 23.203,
+                GBR is a QoS parameter used to manage traffic classes in mobile networks. It
+                provides a stable data rate for latency-sensitive applications, such as voice calls or
+                video streaming, helping maintain a consistent user experience. When this attribute is set
+                this could imply that a GBR QCI is used, though mechanisms on the network can be used to
+                ensure a minimum performance level without using a GBR QCI.
 
-              The committed data rate allocated to specific services, ensuring a consistent level of
-              performance. For DOCSIS networks, the "Minimum Reserved Traffic Rate" is defined in the 
-              DOCSIS 3.1 - MAC and Upper Layer Protocols Interface Specification" 
-              and it ensures a consistent level of performance for specific services within the network.
+                The committed data rate allocated to specific services, ensuring a consistent level of
+                performance. For DOCSIS networks, the "Minimum Reserved Traffic Rate" is defined in the 
+                DOCSIS 3.1 - MAC and Upper Layer Protocols Interface Specification" 
+                and it ensures a consistent level of performance for specific services within the network.
         maxUpstreamRate:
           allOf:
             - $ref: "#/components/schemas/Rate"
             - description: |
-              The maximum best effort data
+                The maximum best effort data
         maxUpstreamBurstRate:
           allOf:
             - $ref: "#/components/schemas/Rate"
             - description: |
-              The burst rate for best effort data
+                The burst rate for best effort data
         targetMinDownstreamRate:
           allOf:
             - $ref: "#/components/schemas/Rate"
             - description: |
-              This is the target minimum downstream rate for the QoS profile.
+                This is the target minimum downstream rate for the QoS profile.
 
-              For 5G networks 3GPP Guaranteed Bit Rate (GBR) refers to a dedicated, fixed data rate assigned to
-              specific services, ensuring a minimum performance level. As per 3GPP TS 23.203,
-              GBR is a QoS parameter used to manage traffic classes in mobile networks. It
-              provides a stable data rate for latency-sensitive applications, such as voice calls or
-              video streaming, helping maintain a consistent user experience.  When this attribute is set
-              this could imply that a GBR QCI is used, though mechanisms on the network can be used to
-              ensure a minimum performance level without using a GBR QCI.
+                For 5G networks 3GPP Guaranteed Bit Rate (GBR) refers to a dedicated, fixed data rate assigned to
+                specific services, ensuring a minimum performance level. As per 3GPP TS 23.203,
+                GBR is a QoS parameter used to manage traffic classes in mobile networks. It
+                provides a stable data rate for latency-sensitive applications, such as voice calls or
+                video streaming, helping maintain a consistent user experience.  When this attribute is set
+                this could imply that a GBR QCI is used, though mechanisms on the network can be used to
+                ensure a minimum performance level without using a GBR QCI.
 
-              The committed data rate allocated to specific services, ensuring a consistent level of
-              performance. DOCSIS networks, the "Minimum Reserved Traffic Rate" is defined in the 
-              DOCSIS 3.1 - MAC and Upper Layer Protocols Interface Specification" 
-              and it ensures a consistent level of performance for specific services within the network.
+                The committed data rate allocated to specific services, ensuring a consistent level of
+                performance. DOCSIS networks, the "Minimum Reserved Traffic Rate" is defined in the 
+                DOCSIS 3.1 - MAC and Upper Layer Protocols Interface Specification" 
+                and it ensures a consistent level of performance for specific services within the network.
         maxDownstreamRate:
           allOf:
             - $ref: "#/components/schemas/Rate"
             - description: |
-              The maximum best effort rate
+                The maximum best effort rate
         maxDownstreamBurstRate:
           allOf:
             - $ref: "#/components/schemas/Rate"
             - description: |
-              The maximum best effort burst rate
+                The maximum best effort burst rate
         minDuration:
           allOf:
             - $ref: "#/components/schemas/Duration"
             - description: |
-              The shortest time period that this profile can be deployed.
+                The shortest time period that this profile can be deployed.
         maxDuration:
           allOf:
             - $ref: "#/components/schemas/Duration"
             - description: |
-              The maximum time period that this profile can be deployed.
+                The maximum time period that this profile can be deployed.
         priority:
           type: integer
           example: 20
@@ -537,9 +537,9 @@ components:
           minimum: 1
           maximum: 10
           example: 3
-        required:
-          - name
-          - status
+      required:
+        - name
+        - status
     QosProfileName:
       description: |
         A unique name for identifying a specific QoS profile.
