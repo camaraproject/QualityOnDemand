@@ -25,7 +25,7 @@ Repository to describe, develop, document and test the QualityOnDemand API famil
 
 ## Status and released versions
 * Note: Please be aware that the project will have frequent updates to the **main** branch. **There are no compatibility guarantees associated with code in any branch, including main, until it has been released.** For example, changes may be reverted before a release is published. **For best results, use the latest published release**.
-* **The latest published release and version of Quality-On-Demand (QoD) API is 0.8.1. This is the seconed alpha version of the API.** There are bug fixes to be expected and incompatible changes in upcoming versions. It is suitable for implementors, but it is not recommended to use the API with customers in productive environments.
+* **The latest available release and version of Quality-On-Demand (QoD) API is 0.8.1. This is the second alpha version of the API.** There are bug fixes to be expected and incompatible changes in upcoming releases. It is suitable for implementors, but it is not recommended to use the API with customers in productive environments.
 * Version 0.8.1 of the API is available within the [release-0.8.1 branch](https://github.com/camaraproject/QualityOnDemand/tree/release-0.8.1):
   * API [definition](https://github.com/camaraproject/QualityOnDemand/tree/release-0.8.1/code/API_definitions)
   * API [documentation](https://github.com/camaraproject/QualityOnDemand/tree/release-0.8.1/documentation/API_documentation)
