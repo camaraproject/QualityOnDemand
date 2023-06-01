@@ -24,7 +24,7 @@ Repository to describe, develop, document and test the QualityOnDemand API famil
 * Meeting link: <a href="https://teams.microsoft.com/l/meetup-join/19%3ameeting_MGM3YTBjYWYtNGVmNy00Mjk1LWJhMTktZjI1M2NjNzg2ZDFh%40thread.v2/0?context=%7b%22Tid%22%3a%22bde4dffc-4b60-4cf6-8b04-a5eeb25f5c4f%22%2c%22Oid%22%3a%2237ff36be-0e4d-42c3-ac06-7b904f0f6b24%22%7d">Microsoft Teams Meeting</a> 
 
 ## Status and released versions
-* Note: Please be aware that the project will have frequent updates to the **main** branch. **There are no compatibility guarantees associated with code in any branch, including main, until it has been released.** For example, changes may be reverted before a release is published. **For best results, use the latest published release**.
+* Note: Please be aware that the project will have frequent updates to the **main** branch. **There are no compatibility guarantees associated with code in any branch, including main, until a new release is created.** For example, changes may be reverted before a release is created. **For best results, use the latest available release**.
 * **The latest available release and version of Quality-On-Demand (QoD) API is 0.8.1. This is the second alpha version of the API.** There are bug fixes to be expected and incompatible changes in upcoming releases. It is suitable for implementors, but it is not recommended to use the API with customers in productive environments.
 * Version 0.8.1 of the API is available within the [release-0.8.1 branch](https://github.com/camaraproject/QualityOnDemand/tree/release-0.8.1):
   * API [definition](https://github.com/camaraproject/QualityOnDemand/tree/release-0.8.1/code/API_definitions)
