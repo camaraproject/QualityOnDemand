@@ -579,7 +579,6 @@ components:
           $ref: "#/components/schemas/RateUnitEnum"
     Duration:
       type: object
-      description: Value and unit of time
       properties:
         value:
           type: integer
