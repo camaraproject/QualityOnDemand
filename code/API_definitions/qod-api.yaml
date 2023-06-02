@@ -577,9 +577,6 @@ components:
           maximum: 1024
         unit:
           $ref: "#/components/schemas/RateUnitEnum"
-    TargetMinUpstreamRate:
-      $ref: "#/components/schemas/Rate"
-      description: The target minimum data rate.  Set to zero when no target minimum is defined in this profile.
     Duration:
       type: object
       description: Value and unit of time
@@ -590,8 +587,9 @@ components:
           format: int32
           minimum: 1
         unit:
-          $ref: "#/components/schemas/TimeUnitEnum"
-          example: Minutes
+          allOf:
+            - $ref: "#/components/schemas/TimeUnitEnum"
+            - example: Minutes
     TimeUnitEnum:
       description: |
         Days
