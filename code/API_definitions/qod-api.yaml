@@ -567,7 +567,6 @@ components:
       pattern: "^[a-zA-Z0-9_.-]+$"
     Rate:
       type: object
-      description: Data rate value and unit
       properties:
         value:
           type: integer
