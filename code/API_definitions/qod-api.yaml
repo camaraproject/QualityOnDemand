@@ -407,22 +407,14 @@ components:
       type: object
       properties:
         name:
-          allOf:
-            - $ref: "#/components/schemas/QosProfileName"
-            - description: |
-                The name of the QoS profile.  This name is used to identify the profile when creating a session.
-                The name must be unique.
+          $ref: "#/components/schemas/QosProfileName"
         description:
           description: |
             A description of the QoS profile.
           type: string
           example: "QoS profile for video streaming"
         status:
-          allOf:
-            - $ref: "#/components/schemas/QosProfileStatusEnum"
-            - description: |
-                The status of the QoS profile.  The status is set to ACTIVE when the profile is created.
-                The status is set to INACTIVE when the profile is deleted.
+          $ref: "#/components/schemas/QosProfileStatusEnum"
         targetMinUpstreamRate:
           allOf:
             - $ref: "#/components/schemas/Rate"
@@ -589,14 +581,6 @@ components:
             - $ref: "#/components/schemas/TimeUnitEnum"
             - example: Minutes
     TimeUnitEnum:
-      description: |
-        Days
-        Hours
-        Minutes
-        Seconds
-        Milliseconds
-        Microseconds
-        Nanoseconds
       type: string
       enum:
         - Days
@@ -618,13 +602,6 @@ components:
         - INACTIVE
         - DEPRECATED
     RateUnitEnum:
-      description: |
-        The unit of measurement for rate.
-        bps - Bits per second
-        Kbps - Kilobits per second
-        Mbps - Megabits per second
-        Gbps - Gigabits per second
-        Tbps - Terabits per second
       type: string
       enum:
         - bps
