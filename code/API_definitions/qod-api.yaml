@@ -450,7 +450,7 @@ components:
           allOf:
             - $ref: "#/components/schemas/Rate"
             - description: |
-                When defined, this is the maximum upstream burst rate for the QoS profile will enable
+                When defined, this is the maximum upstream burst rate for the QoS profile, that will enable
                 the network to burst data at a higher rate than the maxUpstreamRate for a period of time.
         targetMinDownstreamRate:
           allOf:
