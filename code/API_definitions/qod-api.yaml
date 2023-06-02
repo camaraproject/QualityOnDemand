@@ -40,8 +40,37 @@ paths:
         required: true
       callbacks:
         notifications:
-          "{$request.body#/notificationUrl}/notifications":
-            $ref: "#/paths/~1notifications"
+          "{$request.body#/webhook/notificationUrl}/notifications":
+            post:
+              tags:
+                - Session notifications callback
+              summary: "Session notifications callback"
+              description: |
+                Important: this endpoint is to be implemented by the API consumer.
+                The QoD server will call this endpoint whenever any network related event occurs.
+                Currently only QOS_STATUS_CHANGED event is defined.
+              operationId: postNotification
+              requestBody:
+                required: true
+                content:
+                  application/json:
+                    schema:
+                      $ref: "#/components/schemas/EventNotification"
+              responses:
+                "204":
+                  description: Successful notification
+                "400":
+                  $ref: "#/components/responses/Generic400"
+                "401":
+                  $ref: "#/components/responses/Generic401"
+                "403":
+                  $ref: "#/components/responses/Generic403"
+                "500":
+                  $ref: "#/components/responses/Generic500"
+                "503":
+                  $ref: "#/components/responses/Generic503"
+              security:
+                - apiKey: []
       responses:
         "201":
           description: Session created
@@ -184,38 +213,7 @@ paths:
         "500":
           $ref: "#/components/responses/Generic500"
         "503":
-          $ref: "#/components/responses/Generic503"
-  /notifications:
-    post:
-      tags:
-        - Session notifications callback
-      summary: "Session notifications callback"
-      description: |
-        Important: this endpoint is to be implemented by the API consumer.
-        The QoD server will call this endpoint whenever any network related event occurs.
-        Currently only QOS_STATUS_CHANGED event is defined.
-      operationId: postNotification
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: "#/components/schemas/EventNotification"
-      responses:
-        "204":
-          description: Successful notification
-        "400":
-          $ref: "#/components/responses/Generic400"
-        "401":
-          $ref: "#/components/responses/Generic401"
-        "403":
-          $ref: "#/components/responses/Generic403"
-        "500":
-          $ref: "#/components/responses/Generic500"
-        "503":
-          $ref: "#/components/responses/Generic503"
-      security:
-        - apiKey: []
+          $ref: "#/components/responses/Generic503" 
 components:
   securitySchemes:
     oAuth2ClientCredentials:
