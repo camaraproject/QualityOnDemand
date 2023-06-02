@@ -412,6 +412,11 @@ components:
             - description: |
                 The name of the QoS profile.  This name is used to identify the profile when creating a session.
                 The name must be unique.
+        description:
+          description: |
+            A description of the QoS profile.
+          type: string
+          example: "QoS profile for video streaming"
         status:
           allOf:
             - $ref: "#/components/schemas/QosProfileStatusEnum"
@@ -445,7 +450,8 @@ components:
           allOf:
             - $ref: "#/components/schemas/Rate"
             - description: |
-                The burst rate for best effort data
+                When defined, this is the maximum upstream burst rate for the QoS profile will enable
+                the network to burst data at a higher rate than the maxUpstreamRate for a period of time.
         targetMinDownstreamRate:
           allOf:
             - $ref: "#/components/schemas/Rate"
@@ -473,7 +479,12 @@ components:
           allOf:
             - $ref: "#/components/schemas/Rate"
             - description: |
-                The maximum best effort burst rate
+                When defined, this is the maximum downstream burst rate for the QoS profile will enable
+                the network to burst data at a higher rate than the maxDownstreamRate for a period of time.
+
+                This can result in improved user experience when there is additional network capacity.
+                For instance, when a user is streaming a video, the network can burst data at a higher rate
+                to fill the buffer, and then return to the maxUpstreamRate once the buffer is full.
         minDuration:
           allOf:
             - $ref: "#/components/schemas/Duration"
