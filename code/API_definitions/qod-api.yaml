@@ -366,20 +366,12 @@ components:
           $ref: "#/components/schemas/Event"
 
     Event:
-      type: object
-      required:
-        - eventType
-        - eventTime
-        - eventDetail
-      properties:
-        eventid:
-          $ref: "#/components/schemas/EventId"
-        eventType:
-          $ref: "#/components/schemas/EventType"
-        eventTime:
-          $ref: "#/components/schemas/EventTime"
-        eventDetail:
-          $ref: "#/components/schemas/EventDetail"
+      anyOf:
+        - $ref: "#/components/schemas/QosStatusChangedEvent"
+      discriminator:
+        propertyName: eventType
+        mapping:
+          QOS_STATUS_CHANGED: "#/components/schemas/QosStatusChangedEvent"
       description: Notification event
 
     EventId:
@@ -400,31 +392,40 @@ components:
       example: 2023-05-30T10:18:28Z
       description: Date time when the event occurred
 
-    EventDetail:
-      oneOf:
-        - $ref: '#/components/schemas/QosStatusChangedEventDetails'
-      discriminator:
-        propertyName: eventType
-        mapping:
-          QOS_STATUS_CHANGED: "#/components/schemas/QosStatusChangedEventDetails"
-      description: Event details depending on the event type
-
-    QosStatusChangedEventDetails:
+    EventBase:
       type: object
       required:
         - eventType
-        - sessionId
-        - qosStatus
+        - eventTime
       properties:
+        eventid:
+          $ref: "#/components/schemas/EventId"
         eventType:
           $ref: "#/components/schemas/EventType"
-        sessionId:
-          $ref: "#/components/schemas/SessionId"
-        qosStatus:
-          $ref: "#/components/schemas/QosStatus"
-        statusInfo:
-          $ref: "#/components/schemas/StatusInfo"
+        eventTime:
+          $ref: "#/components/schemas/EventTime"
 
+    QosStatusChangedEvent:
+      allOf:
+        - $ref: "#/components/schemas/EventBase"
+        - type: object
+          properties:
+            eventDetail:
+              type: object
+              description: Event details depending on the event type
+              required:
+                - sessionId
+                - qosStatus
+              properties:
+                sessionId:
+                  $ref: "#/components/schemas/SessionId"
+                qosStatus:
+                  $ref: "#/components/schemas/QosStatus"
+                statusInfo:
+                  $ref: "#/components/schemas/StatusInfo"
+          required:
+          - eventDetail
+          
     StatusInfo:
           type: string
           enum:
