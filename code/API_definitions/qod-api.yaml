@@ -220,12 +220,7 @@ components:
       flows:
         clientCredentials:
           tokenUrl: "{tokenUrl}"
-          scopes: {}
-    apiKey:
-      type: apiKey
-      description: API key to authorize requests
-      name: apikey
-      in: query
+          scopes: {}    
   schemas:
     SessionId:
       type: string
