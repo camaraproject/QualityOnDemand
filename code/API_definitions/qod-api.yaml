@@ -68,9 +68,7 @@ paths:
                 "500":
                   $ref: "#/components/responses/Generic500"
                 "503":
-                  $ref: "#/components/responses/Generic503"
-              security:
-                - apiKey: []
+                  $ref: "#/components/responses/Generic503"              
       responses:
         "201":
           description: Session created
