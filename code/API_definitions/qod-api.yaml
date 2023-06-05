@@ -57,47 +57,59 @@ paths:
                 $ref: "#/components/schemas/ErrorInfo"
               examples:
                 Generic400:
-                  summary: Schema validation failed
+                  summary: Some parameter combinations or parameter values provided are not schema compliant
                   value:
                     status: 400
                     code: INVALID_ARGUMENT
                     message: "Schema validation failed at  ..."
-                PhoneNumberRequired:
-                  summary: Phone number is required as part of device
+                DeviceMissing:
+                  summary: Device must be specified
                   value:
                     status: 400
                     code: INVALID_ARGUMENT
-                    message: "Expected property is missing: device.phoneNumber"
-                Ipv4AddressRequired:
-                  summary: ipv4Address is required as part of device
+                    message: "Expected property is missing: device"
+                InsufficientDeviceProperties:
+                  summary: Device must be identified by at least one parameter
                   value:
                     status: 400
                     code: INVALID_ARGUMENT
-                    message: "Expected property is missing: device.ipv4Address"
-                IpAddressRequired:
-                  summary: Some IP address is required as part of device
+                    message: "Insufficient properties specified: device"
+                InconsistentDeviceProperties:
+                  summary: Device parameters provided identify different devices
                   value:
                     status: 400
                     code: INVALID_ARGUMENT
-                    message: "Expected property is missing: device.ipv4Address or device.ipv6Address"
-                DevicePortsRequired:
-                  summary: devicePorts is required
+                    message: "Multiple inconsistent parameters specified: device"
+                CannotIdentifyDevice:
+                  summary: No device can be identified from provided parameters
                   value:
                     status: 400
                     code: INVALID_ARGUMENT
-                    message: "Expected property is missing: devicePorts"
-                QoSProfileRequired:
-                  summary: qosProfile is required
+                    message: "Unable to identify device from specified parameters: device"
+                InvalidDevicePublicPortValue:
+                  summary: Invalid port specified for device public port
+                  value:
+                    status: 400
+                    code: OUT_OF_RANGE
+                    message: "Invalid port value specified: device.ipv4Address.publicPort"
+                ApplicationServerMissing:
+                  summary: Application server must be specified
+                  value:
+                    status: 400
+                    code: INVALID_ARGUMENT
+                    message: "Expected property is missing: applicationServer"
+                QoSProfileMissing:
+                  summary: Required QoS profile must be specified
                   value:
                     status: 400
                     code: INVALID_ARGUMENT
                     message: "Expected property is missing: qosProfile"
-                DevicePortsRangesNotAllowed:
-                  summary: Ranges at devicePorts are not allowed
+                InvalidDevicePortsRanges:
+                  summary: Invalid port ranges specified for devicePorts 
                   value:
                     status: 400
-                    code: INVALID_ARGUMENT
-                    message: "Ranges not allowed: devicePorts"
+                    code: OUT_OF_RANGE
+                    message: "Invalid port ranges specified: devicePorts"
         "401":
           $ref: "#/components/responses/Generic401"
         "403":
@@ -296,6 +308,7 @@ components:
       type: string
       format: uuid
       description: Session ID in UUID format
+
     SessionInfo:
       description: Session related information.
       allOf:
@@ -326,6 +339,7 @@ components:
               type: array
               items:
                 $ref: "#/components/schemas/Message"
+
     CreateSession:
       description: Data type with attributes required for creating a session
       type: object
@@ -349,6 +363,7 @@ components:
           $ref: "#/components/schemas/ApplicationServer"
         devicePorts:
           $ref: "#/components/schemas/PortsSpec"
+          description: The ports used locally by the device for flows to which the requested QoS profile should apply. If omitted, then the qosProfile will apply to all flows between the device and the specified application server address and ports.
         applicationServerPorts:
           $ref: "#/components/schemas/PortsSpec"
         qosProfile:
@@ -366,10 +381,12 @@ components:
         - device
         - applicationServer
         - qosProfile
+
     Port:
       type: integer
       minimum: 0
       maximum: 65535
+
     PortsSpec:
       type: object
       minProperties: 1
@@ -401,6 +418,7 @@ components:
           - 5070
       description: |
         Ports may be specified as a list of ranges or single ports.
+
     QosProfile:
       description: |
         Data type with attributes of a QosProfile
@@ -666,10 +684,11 @@ components:
         networkAccessIdentifier:
           $ref: "#/components/schemas/NetworkAccessIdentifier"
         ipv4Address:
-          $ref: "#/components/schemas/Ipv4Address"
+          $ref: "#/components/schemas/DeviceIpv4Addr"
         ipv6Address:
           $ref: "#/components/schemas/Ipv6Address"
-      description: Device identifier
+      description: One or more parameters allocated to the device that allow it to be identified
+
     ApplicationServer:
       type: object
       minProperties: 1
@@ -679,17 +698,51 @@ components:
         ipv6Address:
           $ref: "#/components/schemas/Ipv6Address"
       description: Application server identifier
+
     NetworkAccessIdentifier:
       type: string
       example: "123456789@domain.com"
+
     PhoneNumber:
       type: string
       pattern: '^\+?[0-9]{5,15}$'
       example: "123456789"
-      description: Subscriber number in E.164 format (starting with country code). Optionally prefixed with '+'.
+      description: Subscriber number (MSISDN) in E.164 format, starting with country code and optionally prefixed with '+'.
+
+    DeviceIpv4Addr:
+      type: object
+      properties:
+        publicAddress:
+          $ref: "#/components/schemas/SingleIpv4Addr"
+        privateAddress:
+          $ref: "#/components/schemas/SingleIpv4Addr"
+        publicPort:
+          $ref: "#/components/schemas/Port"
+      anyOf:
+        - required: [publicAddress, privateAddress]
+        - required: [publicAddress, publicPort]
+      example:
+            {
+              "publicAddress": "84.125.93.10",
+              "publicPort" : 59765
+            }
+      description: |
+        The device should be identified by either the public (observed) IP address and port as seen by the application server, or the private (local) and any public (observed) IP addresses in use by the device (this information can be obtained by various means, for example from some DNS servers).
+        
+        If the allocated and observed IP addresses are the same (i.e. NAT is not in use) then  the same address should be specified for both publicAddress and privateAddress.
+        
+        If NAT64 is in use, the device should be identified by its publicAddress and publicPort, or separately by its allocated IPv6 address (field ipv6Address of the Device object)
+      
+        In all cases, publicAddress must be specified, along with at least one of either privateAddress or publicPort, dependent upon which is known. In general, mobile devices cannot be identified by their public IPv4 address alone.
+
+    SingleIpv4Addr:
+      type: string
+      description: A single IPv4 address with no subnet mask
+      example: "84.125.93.10"
+      pattern: '^(([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])$'
+
     Ipv4Address:
       type: string
-      format: ipv4
       pattern: '^([01]?\d\d?|2[0-4]\d|25[0-5])(?:\.(?:[01]?\d\d?|2[0-4]\d|25[0-5])){3}(\/([0-9]|[1-2][0-9]|3[0-2]))?$'
       example: "192.168.0.1/24"
       description: |
@@ -697,9 +750,9 @@ components:
           - address - an IPv4 number in dotted-quad form 1.2.3.4. Only this exact IP number will match the flow control rule.
           - address/mask - an IP number as above with a mask width of the form 1.2.3.4/24.
             In this case, all IP numbers from 1.2.3.0 to 1.2.3.255 will match. The bit width MUST be valid for the IP version.
+
     Ipv6Address:
       type: string
-      format: ipv6
       allOf:
         - pattern: '^((:|(0?|([1-9a-f][0-9a-f]{0,3}))):)((0?|([1-9a-f][0-9a-f]{0,3})):){0,6}(:|(0?|([1-9a-f][0-9a-f]{0,3})))(\/(([0-9])|([0-9]{2})|(1[0-1][0-9])|(12[0-8])))?$'
         - pattern: '^((([^:]+:){7}([^:]+))|((([^:]+:)*[^:]+)?::(([^:]+:)*[^:]+)?))(\/.+)?$'
@@ -712,6 +765,7 @@ components:
           - address/mask - an IP v6 number with a mask:
             - 2001:db8:85a3:8d3::0/64
             - 2001:db8:85a3:8d3::/64
+
     Message:
       type: object
       properties:
@@ -725,6 +779,7 @@ components:
       required:
         - severity
         - description
+
     QosStatus:
       type: string
       enum:
@@ -735,6 +790,7 @@ components:
         * `REQUESTED` - QoS has been requested by creating a session
         * `AVAILABLE` - The requested QoS has been provided by the network
         * `UNAVAILABLE` - The requested QoS cannot be provided by the network due to some reason
+
     ErrorInfo:
       type: object
       required:
