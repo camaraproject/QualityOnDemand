@@ -40,7 +40,7 @@ paths:
         required: true
       callbacks:
         notifications:
-          "{$request.body#/webhook/notificationUrl}/notifications":
+          "{$request.body#/webhook/notificationUrl}":
             post:
               tags:
                 - Session notifications callback
