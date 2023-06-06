@@ -265,7 +265,7 @@ paths:
       description: |
         Returns a QoS Profile that matches the given name.
       parameters:
-        - name: qos-profile-name
+        - name: name
           in: path
           required: true
           schema:
