@@ -613,7 +613,7 @@ components:
         The current status of the QoS Profile
         - `ACTIVE`- QoS Profile is available to be used
         - `INACTIVE`- QoS Profile is not currently available to be deployed
-        - Deprecated - QoS profile is actively being used in a QoD session, but can not be deployed in new QoD sessions
+        - `DEPRECATED`- QoS profile is actively being used in a QoD session, but can not be deployed in new QoD sessions
       type: string
       enum:
         - ACTIVE
