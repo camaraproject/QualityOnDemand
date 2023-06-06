@@ -623,7 +623,7 @@ components:
       type: string
       enum:
         - bps
-        - Kbps
+        - kbps
         - Mbps
         - Gbps
         - Tbps
