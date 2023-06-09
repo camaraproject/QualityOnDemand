@@ -418,7 +418,7 @@ components:
         - applicationServer
         - qosProfile
 
-   PatchSession:
+    PatchSession:
       description: | 
             Data type with attributes required for patching a session. 
             The top level properties in this object will replace the previous values in the session. There is no merge in the children objects.
