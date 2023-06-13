@@ -70,6 +70,7 @@ paths:
                 "503":
                   $ref: "#/components/responses/Generic503"
               security:
+                - {}
                 - notificationsBearerAuth: []
       responses:
         "201":
