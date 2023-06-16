@@ -783,7 +783,7 @@ components:
         - type: object
           description: |
             Event notifying that there was a change of the QoS status of a requested or previously available session.
-            Expected values for `qosStatus`in the event are:
+            Applicable values for `qosStatus` in the event are:
             - `AVAILABLE` - Requested QoS session is already available
             - `UNAVAILABLE` - A requested or previously available QoS session is currently unavailable. `statusInfo` may provide additional information about the reason for the unavailability.
           properties:
