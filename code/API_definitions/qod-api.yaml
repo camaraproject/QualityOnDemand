@@ -98,8 +98,38 @@ paths:
         required: true
       callbacks:
         notifications:
-          "{$request.body#/notificationUrl}/notifications":
-            $ref: "#/paths/~1notifications"
+          "{$request.body#/webhook/notificationUrl}":
+            post:
+              tags:
+                - Session notifications callback
+              summary: "Session notifications callback"
+              description: |
+                Important: this endpoint is to be implemented by the API consumer.
+                The QoD server will call this endpoint whenever any network related event occurs.
+                Currently only QOS_STATUS_CHANGED event is defined.
+              operationId: postNotification
+              requestBody:
+                required: true
+                content:
+                  application/json:
+                    schema:
+                      $ref: "#/components/schemas/EventNotification"
+              responses:
+                "204":
+                  description: Successful notification
+                "400":
+                  $ref: "#/components/responses/Generic400"
+                "401":
+                  $ref: "#/components/responses/Generic401"
+                "403":
+                  $ref: "#/components/responses/Generic403"
+                "500":
+                  $ref: "#/components/responses/Generic500"
+                "503":
+                  $ref: "#/components/responses/Generic503"
+              security:
+                - {}
+                - notificationsBearerAuth: []
       responses:
         "201":
           description: Session created
@@ -188,6 +218,11 @@ paths:
           $ref: "#/components/responses/Generic501"
         "503":
           $ref: "#/components/responses/Generic503"
+      security:
+        - oAuth2ClientCredentials: []
+        - threeLegged:
+          - "qod-sessions-write"
+      
   /sessions/{sessionId}:
     get:
       tags:
@@ -219,6 +254,11 @@ paths:
           $ref: "#/components/responses/Generic500"
         "503":
           $ref: "#/components/responses/Generic503"
+      security:
+        - oAuth2ClientCredentials: []
+        - threeLegged:
+          - "qod-sessions-read"
+
     delete:
       tags:
         - QoS sessions
@@ -245,37 +285,11 @@ paths:
           $ref: "#/components/responses/Generic500"
         "503":
           $ref: "#/components/responses/Generic503"
-  /notifications:
-    post:
-      tags:
-        - Session notifications callback
-      summary: "Session notifications callback"
-      description: |
-        Important: this endpoint is to be implemented by the API consumer.
-        The QoD server will call this endpoint whenever any network related event occurs.
-        Currently only `QOS_STATUS_CHANGED` event is defined.
-      operationId: postNotification
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: "#/components/schemas/Notification"
-      responses:
-        "204":
-          description: Successful notification
-        "400":
-          $ref: "#/components/responses/Generic400"
-        "401":
-          $ref: "#/components/responses/Generic401"
-        "403":
-          $ref: "#/components/responses/Generic403"
-        "500":
-          $ref: "#/components/responses/Generic500"
-        "503":
-          $ref: "#/components/responses/Generic503"
       security:
-        - apiKey: []
+        - oAuth2ClientCredentials: []
+        - threeLegged:
+          - "qod-sessions-delete"
+          
   /qos-profiles:
     get:
       tags:
@@ -316,6 +330,7 @@ paths:
           $ref: "#/components/responses/QoSProfile500"
         "503":
           $ref: "#/components/responses/Generic503"
+
   /qos-profiles/{name}:
     get:
       tags:
@@ -359,14 +374,24 @@ components:
       flows:
         clientCredentials:
           tokenUrl: "{tokenUrl}"
-          scopes: {}
-
-    apiKey:
-      description: API key to authorize requests
-      type: apiKey
-      name: apikey
-      in: query
-
+          scopes: {}  
+    notificationsBearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: "{$request.body#/webhook/notificationAuthToken}"
+    threeLegged:
+      type: oauth2
+      description: This API uses OAuth 2 with the authorization code grant flow.
+      flows:
+        authorizationCode:
+          authorizationUrl: "{authorizationUrl}"
+          tokenUrl: "{tokenUrl}"
+          scopes:
+            qod-sessions-read: Retrieval of QoS sessions
+            qod-sessions-write: Creation and update of QoS sessions
+            qod-sessions-delete: Deletion of QoS sessions
+            qod-profiles-read: Retrieval of QoS profiles
+ 
   schemas:
     SessionId:
       description: Session ID in UUID format
@@ -435,15 +460,22 @@ components:
             - $ref: "#/components/schemas/PortsSpec"
         qosProfile:
           $ref: "#/components/schemas/QosProfileName"
-        notificationUrl:
-          description: URI of the callback receiver. Allows asynchronous delivery of session related events
-          type: string
-          format: uri
-          example: "https://application-server.com"
-        notificationAuthToken:
-          description: Authentication token for callback API
-          type: string
-          example: "c8974e592c2fa383d4a3960714"
+        webhook:
+          type: object
+          required:
+            - notificationUrl
+          properties:
+            notificationUrl:
+              type: string
+              format: uri
+              example: "https://application-server.com"
+              description: Allows asynchronous delivery of session related events
+            notificationAuthToken:
+              type: string
+              minLength: 20
+              maxLength: 256
+              example: "c8974e592c2fa383d4a3960714"
+              description: Authentication token for callback API
       required:
         - device
         - applicationServer
@@ -699,43 +731,73 @@ components:
         - Mbps
         - Gbps
         - Tbps
-
-    Notification:
+    EventNotification:
       type: object
-      properties:
-        sessionId:
-          $ref: "#/components/schemas/SessionId"
-        eventReports:
-          description: Contains the reported event and applicable information
-          type: array
-          items:
-            $ref: "#/components/schemas/EventReport"
-          minItems: 1
       required:
-        - sessionId
-        - eventReports
+        - event
+      properties:
+        event:
+          $ref: "#/components/schemas/Event"
 
-    EventReport:
-      oneOf:
-        - $ref: '#/components/schemas/QosStatusChangedEventReport'
+    Event:
+      anyOf:
+        - $ref: "#/components/schemas/QosStatusChangedEvent"
       discriminator:
         propertyName: eventType
         mapping:
-          QOS_STATUS_CHANGED: "#/components/schemas/QosStatusChangedEventReport"
+          QOS_STATUS_CHANGED: "#/components/schemas/QosStatusChangedEvent"
+      description: Notification event
 
-    QosStatusChangedEventReport:
+    EventId:
+      type: string
+      format: uuid
+      example: 5698d710-9b1b-4695-a958-7b228f08128c
+      description: Unique identifier of the event
+
+    EventType:
+      type: string
+      enum:
+        - QOS_STATUS_CHANGED
+      description: Type of the event
+
+    EventTime:
+      type: string
+      format: date-time
+      example: 2023-05-30T10:18:28Z
+      description: Date time when the event occurred
+
+    EventBase:
       type: object
-      properties:
-        eventType:
-          $ref: "#/components/schemas/SessionEventType"
-        qosStatus:
-          $ref: "#/components/schemas/QosStatus"
-        statusInfo:
-          $ref: "#/components/schemas/StatusInfo"
       required:
         - eventType
-        - qosStatus
-          
+        - eventTime
+      properties:
+        eventid:
+          $ref: "#/components/schemas/EventId"
+        eventType:
+          $ref: "#/components/schemas/EventType"
+        eventTime:
+          $ref: "#/components/schemas/EventTime"
+    QosStatusChangedEvent:
+      allOf:
+        - $ref: "#/components/schemas/EventBase"
+        - type: object
+          properties:
+            eventDetail:
+              type: object
+              description: Event details depending on the event type
+              required:
+                - sessionId
+                - qosStatus
+              properties:
+                sessionId:
+                  $ref: "#/components/schemas/SessionId"
+                qosStatus:
+                  $ref: "#/components/schemas/QosStatus"
+                statusInfo:
+                  $ref: "#/components/schemas/StatusInfo"
+          required:
+          - eventDetail
     StatusInfo:
           description: |
             Reason for the new `qosStatus`. Currently `statusInfo` is only applicable when `qosStatus` is 'UNAVAILABLE'.
@@ -746,11 +808,6 @@ components:
             - DURATION_EXPIRED
             - NETWORK_TERMINATED¡
 
-    SessionEventType:
-      type: string
-      enum:
-        - QOS_STATUS_CHANGED
-    
     Device:
       description: |
         End-user equipment able to connect to a mobile network. Examples of devices include smartphones or IoT sensors/actuators. 
