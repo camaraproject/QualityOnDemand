@@ -10,6 +10,6 @@ jobs:
     name: ApiDOM Validator
 
     steps:   
-      uses: char0n/apidom-validate@v1
-      with:
-      definition-file: code/API_definitions/qod-api.yaml
+      - uses: char0n/apidom-validate@v1
+        with:
+        definition-file: code/API_definitions/qod-api.yaml
