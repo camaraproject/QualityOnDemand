@@ -1,0 +1,15 @@
+name: ApiDOM Validator
+on:  
+  pull_request:
+    branches:
+    - main
+    
+jobs:
+ apidom_validator:
+    runs-on: ubuntu-latest
+    name: ApiDOM Validator
+
+    steps:   
+      uses: char0n/apidom-validate@v1
+      with:
+      definition-file: code/API_definitions/qod-api.yaml
