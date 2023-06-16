@@ -731,6 +731,7 @@ components:
         - Mbps
         - Gbps
         - Tbps
+
     EventNotification:
       type: object
       required:
@@ -740,6 +741,7 @@ components:
           $ref: "#/components/schemas/Event"
 
     Event:
+      description: The event being notified
       anyOf:
         - $ref: "#/components/schemas/QosStatusChangedEvent"
       discriminator:
@@ -777,15 +779,11 @@ components:
           $ref: "#/components/schemas/EventType"
         eventTime:
           $ref: "#/components/schemas/EventTime"
+
     QosStatusChangedEvent:
       allOf:
         - $ref: "#/components/schemas/EventBase"
         - type: object
-          description: |
-            Event notifying that there was a change of the QoS status of a requested or previously available session.
-            Applicable values for `qosStatus` in the event are:
-            - `AVAILABLE` - Requested QoS session is already available
-            - `UNAVAILABLE` - A requested or previously available QoS session is currently unavailable. `statusInfo` may provide additional information about the reason for the unavailability.
           properties:
             eventDetail:
               type: object
@@ -797,11 +795,12 @@ components:
                 sessionId:
                   $ref: "#/components/schemas/SessionId"
                 qosStatus:
-                  $ref: "#/components/schemas/QosStatus"
+                  $ref: "#/components/schemas/EventQosStatus"
                 statusInfo:
                   $ref: "#/components/schemas/StatusInfo"
           required:
           - eventDetail
+
     StatusInfo:
           description: |
             Reason for the new `qosStatus`. Currently `statusInfo` is only applicable when `qosStatus` is 'UNAVAILABLE'.
@@ -943,6 +942,16 @@ components:
       type: string
       enum:
         - REQUESTED
+        - AVAILABLE
+        - UNAVAILABLE
+
+    EventQosStatus:
+      description: |
+        The current status of a requested or previously available session. Applicable values in the event are:
+        *  `AVAILABLE` - The requested QoS has been provided by the network
+        *  `UNAVAILABLE` - A requested or previously available QoS session is currently unavailable. `statusInfo` may provide additional information about the reason for the unavailability.
+      type: string
+      enum:
         - AVAILABLE
         - UNAVAILABLE
 
