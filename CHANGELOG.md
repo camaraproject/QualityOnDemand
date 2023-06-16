@@ -2,7 +2,7 @@
 
 ## Table of Contents
 
-
+- [v0.9.0-rc](#v090-rc)
 - [v0.8.1](#v081)
 - [v0.8.0](#v080)
 - [v0.1.0 - Initial contribution](#v010---initial-contribution)
@@ -11,6 +11,51 @@ Version number 0.2.x to 0.7.x were intentionally not used to avoid conflicts wit
 
 **Please be aware that the project will have frequent updates to the main branch. There are no compatibility guarantees associated with code in any branch, including main, until it has been released. For example, changes may be reverted before a release is published. For the best results, use the latest published release.**
 
+# v0.9.0-rc
+
+- [API definition with inline documentation](https://github.com/camaraproject/QualityOnDemand/tree/release-0.9.0-rc/code/API_definitions)
+
+**This is a pre-release/release candidate of v0.9.0 - the (third alpha/first beta) release of the Quality-On-Demand (QoD) API**
+- links to be added
+
+## Please note:
+
+- **This release contains significant changes compared to v0.8.0, and is not backward compatible **
+- This is only the pre-release, it should be considered as a draft.
+- There are bug fixes to be expected and incompatible changes
+- The pre-release is suitable for implementors, but it is not recommended to use the API with customers in productive environments.
+
+### Added
+
+* Introduced 'qosStatus' and corresponding notification event to fix issue #38 by @emil-cheung in https://github.com/camaraproject/QualityOnDemand/pull/67
+* Added initial QoD Cucumber Tests by @mdomale in https://github.com/camaraproject/QualityOnDemand/pull/134
+* Added new methods to get service provider defined QoS Profile by @RandyLevensalor in https://github.com/camaraproject/QualityOnDemand/pull/138
+* Add oauth authorizationCode security to sensible endpoints by @jlurien in https://github.com/camaraproject/QualityOnDemand/pull/163
+* Documentation ... 
+
+### Changed
+
+* Aligned error format with Commonalities guidelines by @jlurien in https://github.com/camaraproject/QualityOnDemand/pull/104
+* Renamed properties to new terms agreed in CAMARA Commonalitites by @jlurien in https://github.com/camaraproject/QualityOnDemand/pull/129
+* Updated method for identifying devices by IPv4 address by @eric-murray in https://github.com/camaraproject/QualityOnDemand/pull/139
+* Aligned notifications with new design guideline by @akoshunyadi in https://github.com/camaraproject/QualityOnDemand/pull/155
+
+### Fixed
+
+* Added error code 501 "Not Implemented" by @dfischer-tech in https://github.com/camaraproject/QualityOnDemand/pull/124
+
+### Removed
+
+* Removed format lines from Datatypes 'Ipv4Address' and 'Ipv6Address' by @tlohmar in https://github.com/camaraproject/QualityOnDemand/pull/153
+* Removed .md documentation (got added to API definition .yaml file, see above)
+
+## New Contributors
+* @jlurien made their first contribution in https://github.com/camaraproject/QualityOnDemand/pull/104
+* @dfischer-tech made their first contribution in https://github.com/camaraproject/QualityOnDemand/pull/124
+* @maheshc01 made their first contribution in https://github.com/camaraproject/QualityOnDemand/pull/132
+* @eric-murray made their first contribution in https://github.com/camaraproject/QualityOnDemand/pull/139
+* @mdomale made their first contribution in https://github.com/camaraproject/QualityOnDemand/pull/134
+* @RandyLevensalor made their first contribution in https://github.com/camaraproject/QualityOnDemand/pull/138
 
 # v0.8.1
 
