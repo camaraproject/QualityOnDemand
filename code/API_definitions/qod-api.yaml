@@ -160,6 +160,11 @@ paths:
           $ref: "#/components/responses/Generic501"
         "503":
           $ref: "#/components/responses/Generic503"
+      security:
+        - oAuth2ClientCredentials: []
+        - threeLegged:
+          - "qod-sessions-write"
+      
   /sessions/{sessionId}:
     get:
       tags:
@@ -190,6 +195,11 @@ paths:
           $ref: "#/components/responses/Generic500"
         "503":
           $ref: "#/components/responses/Generic503"
+      security:
+        - oAuth2ClientCredentials: []
+        - threeLegged:
+          - "qod-sessions-read"
+
     delete:
       tags:
         - QoS sessions
@@ -214,7 +224,12 @@ paths:
         "500":
           $ref: "#/components/responses/Generic500"
         "503":
-          $ref: "#/components/responses/Generic503" 
+          $ref: "#/components/responses/Generic503"
+      security:
+        - oAuth2ClientCredentials: []
+        - threeLegged:
+          - "qod-sessions-delete"
+          
   /qos-profiles:
     get:
       tags:
@@ -255,6 +270,7 @@ paths:
           $ref: "#/components/responses/QoSProfile500"
         "503":
           $ref: "#/components/responses/Generic503"
+
   /qos-profiles/{name}:
     get:
       tags:
@@ -288,6 +304,7 @@ paths:
           $ref: "#/components/responses/QoSProfile500"
         "503":
           $ref: "#/components/responses/Generic503"
+
 components:
   securitySchemes:
     oAuth2ClientCredentials:
@@ -301,6 +318,19 @@ components:
       type: http
       scheme: bearer
       bearerFormat: "{$request.body#/webhook/notificationAuthToken}"
+    threeLegged:
+      type: oauth2
+      description: This API uses OAuth 2 with the authorization code grant flow.
+      flows:
+        authorizationCode:
+          authorizationUrl: "{authorizationUrl}"
+          tokenUrl: "{tokenUrl}"
+          scopes:
+            qod-sessions-read: Retrieval of QoS sessions
+            qod-sessions-write: Creation and update of QoS sessions
+            qod-sessions-delete: Deletion of QoS sessions
+            qod-profiles-read: Retrieval of QoS profiles
+ 
   schemas:
     SessionId:
       type: string
