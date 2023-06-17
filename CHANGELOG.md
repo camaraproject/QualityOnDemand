@@ -13,32 +13,33 @@ Version number 0.2.x to 0.7.x were intentionally not used to avoid conflicts wit
 
 # v0.9.0-rc
 
-- [API definition with inline documentation](https://github.com/camaraproject/QualityOnDemand/tree/release-0.9.0-rc/code/API_definitions)
+**This is a pre-release/release candidate of v0.9.0 - the (third alpha/first beta (tbd)) release of the Quality-On-Demand (QoD) API**
 
-**This is a pre-release/release candidate of v0.9.0 - the (third alpha/first beta) release of the Quality-On-Demand (QoD) API**
-- links to be added
+- [API definition with inline documentation](https://github.com/camaraproject/QualityOnDemand/releases/tag/release-0.9.0-rc/code/API_definitions)
 
 ## Please note:
 
-- **This release contains significant changes compared to v0.8.0, and is not backward compatible **
-- This is only the pre-release, it should be considered as a draft.
-- There are bug fixes to be expected and incompatible changes
-- The pre-release is suitable for implementors, but it is not recommended to use the API with customers in productive environments.
+- **This pre-release contains significant changes compared to v0.8.1, and it is not backward compatible**
+  - especially a lot of the parameter names changed in line with agreed glossary within CAMARA Commonalities
+- This is only the pre-release, it should be considered as a draft of the upcoming release v0.9.0
+- The pre-release is meant for implementors, but it is not recommended to use the API with customers in productive environments.
 
 ### Added
 
-* Introduced 'qosStatus' and corresponding notification event to fix issue #38 by @emil-cheung in https://github.com/camaraproject/QualityOnDemand/pull/67
-* Added initial QoD Cucumber Tests by @mdomale in https://github.com/camaraproject/QualityOnDemand/pull/134
+* Introduced `qosStatus` and corresponding notification event to fix issue #38 by @emil-cheung in https://github.com/camaraproject/QualityOnDemand/pull/67
+* Added basic tests with Cucumber framework using Java and Maven implementation by @mdomale in https://github.com/camaraproject/QualityOnDemand/pull/134
 * Added new methods to get service provider defined QoS Profile by @RandyLevensalor in https://github.com/camaraproject/QualityOnDemand/pull/138
-* Add oauth authorizationCode security to sensible endpoints by @jlurien in https://github.com/camaraproject/QualityOnDemand/pull/163
-* Documentation ... 
+* Scopes specified and OAuth2 authorizationCode flow added as security mechanism, for operations dealing with QoD sessions by @jlurien in https://github.com/camaraproject/QualityOnDemand/pull/163
+* Added new model `EventQosStatus` @jlurien in https://github.com/camaraproject/QualityOnDemand/pull/167
+
 
 ### Changed
 
-* Aligned error format with Commonalities guidelines by @jlurien in https://github.com/camaraproject/QualityOnDemand/pull/104
+* Aligned error format with CAMARA design guidelines by @jlurien in https://github.com/camaraproject/QualityOnDemand/pull/104
 * Renamed properties to new terms agreed in CAMARA Commonalitites by @jlurien in https://github.com/camaraproject/QualityOnDemand/pull/129
 * Updated method for identifying devices by IPv4 address by @eric-murray in https://github.com/camaraproject/QualityOnDemand/pull/139
-* Aligned notifications with new design guideline by @akoshunyadi in https://github.com/camaraproject/QualityOnDemand/pull/155
+* Updated of the notification event related fields based on the CAMARA design guideline by @akoshunyadi in https://github.com/camaraproject/QualityOnDemand/pull/155
+* CAMARA documentation is now embedded within the OAS definition, and not separate by @jlurien in https://github.com/camaraproject/QualityOnDemand/pull/151
 
 ### Fixed
 
@@ -46,8 +47,8 @@ Version number 0.2.x to 0.7.x were intentionally not used to avoid conflicts wit
 
 ### Removed
 
-* Removed format lines from Datatypes 'Ipv4Address' and 'Ipv6Address' by @tlohmar in https://github.com/camaraproject/QualityOnDemand/pull/153
-* Removed .md documentation (got added to API definition .yaml file, see above)
+* Removed format lines from Datatypes `Ipv4Address` and `Ipv6Address` by @tlohmar in https://github.com/camaraproject/QualityOnDemand/pull/153
+* Removed markdown documentation (now embedded within the OAS definition, see above)
 
 ## New Contributors
 * @jlurien made their first contribution in https://github.com/camaraproject/QualityOnDemand/pull/104
@@ -56,6 +57,8 @@ Version number 0.2.x to 0.7.x were intentionally not used to avoid conflicts wit
 * @eric-murray made their first contribution in https://github.com/camaraproject/QualityOnDemand/pull/139
 * @mdomale made their first contribution in https://github.com/camaraproject/QualityOnDemand/pull/134
 * @RandyLevensalor made their first contribution in https://github.com/camaraproject/QualityOnDemand/pull/138
+
+**Full Changelog**: https://github.com/camaraproject/QualityOnDemand/compare/v0.8.1...v0.9.0-rc
 
 # v0.8.1
 
