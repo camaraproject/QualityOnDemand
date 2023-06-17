@@ -7,21 +7,21 @@
 - [v0.8.0](#v080)
 - [v0.1.0 - Initial contribution](#v010---initial-contribution)
 
-Version number 0.2.x to 0.7.x were intentionally not used to avoid conflicts with local implementations.
+Version numbers 0.2.x to 0.7.x were intentionally not used to avoid conflicts with local implementations.
 
 **Please be aware that the project will have frequent updates to the main branch. There are no compatibility guarantees associated with code in any branch, including main, until it has been released. For example, changes may be reverted before a release is published. For the best results, use the latest published release.**
 
 # v0.9.0-rc
 
-**This is a pre-release/release candidate of v0.9.0 - the (third alpha/first beta (tbd)) release of the Quality-On-Demand (QoD) API**
+**This is the release candidate of v0.9.0 - the (third alpha/first beta (tbd)) release of the Quality-On-Demand (QoD) API**
 
 - [API definition with inline documentation](https://github.com/camaraproject/QualityOnDemand/releases/tag/release-0.9.0-rc/code/API_definitions)
 
 ## Please note:
 
-- **This pre-release contains significant changes compared to v0.8.1, and it is not backward compatible**
-  - especially a lot of the parameter names changed in line with agreed glossary within CAMARA Commonalities
-- This is only the pre-release, it should be considered as a draft of the upcoming release v0.9.0
+- **This release contains significant changes compared to v0.8.1, and it is not backward compatible**
+  - Especially a lot of the parameter names changed in line with the agreed glossary within CAMARA Commonalities
+- **This is only the pre-release, it should be considered as a draft of the upcoming release v0.9.0**
 - The pre-release is meant for implementors, but it is not recommended to use the API with customers in productive environments.
 
 ### Added
@@ -30,7 +30,7 @@ Version number 0.2.x to 0.7.x were intentionally not used to avoid conflicts wit
 * Added basic tests with Cucumber framework using Java and Maven implementation by @mdomale in https://github.com/camaraproject/QualityOnDemand/pull/134
 * Added new methods to get service provider defined QoS Profile by @RandyLevensalor in https://github.com/camaraproject/QualityOnDemand/pull/138
 * Scopes specified and OAuth2 authorizationCode flow added as security mechanism, for operations dealing with QoD sessions by @jlurien in https://github.com/camaraproject/QualityOnDemand/pull/163
-* Added new model `EventQosStatus` @jlurien in https://github.com/camaraproject/QualityOnDemand/pull/167
+* Added new model `EventQosStatus` by @jlurien in https://github.com/camaraproject/QualityOnDemand/pull/167
 
 
 ### Changed
