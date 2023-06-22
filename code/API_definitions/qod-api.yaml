@@ -1,3 +1,4 @@
+---
 openapi: 3.0.3
 info:
   title: QoD for enhanced communication
@@ -31,10 +32,10 @@ info:
     * **Identifier for the application server**:
     IPv4 and/or IPv6 address of the application server (application backend)
 
-    * **App-Flow (between the application client and application server)**: 
+    * **App-Flow (between the application client and application server)**:
     The precise application data flow the developer wants to prioritize and have stable latency or throughput for. This flow is in the current API version determined by the identifiers used for the device and the application server. And it can be further elaborated with details such as ports or port-ranges. Future version of the API might allow more detailed flow identification features.
 
-    * **Duration**: 
+    * **Duration**:
     Duration (in seconds) for which the QoS session (between application client and application server) should be created. This parameter is optional. When not specified, a default session duration (e.g. 24 hours) is applied. The user may request a termination before its expiration.
 
     * **Notification URL and token**:
@@ -55,14 +56,11 @@ info:
 
     ![QoD Management API](https://raw.githubusercontent.com/camaraproject/QualityOnDemand/main/documentation/API_documentation/resources/QoD_details.PNG)
 
-    How QoS profiles are mapped to connectivity characteristics are subject to agreements between the communication service provider and the API invoker. Within the CAMARA project, you can find a sample for such a mapping of QoS profiles. [CAMARA QoS Profiles Mapping Table (REFERENCE DRAFT)](https://github.com/camaraproject/QualityOnDemand/blob/main/documentation/API_documentation/QoSProfile_Mapping_Table.md) 
+    How QoS profiles are mapped to connectivity characteristics are subject to agreements between the communication service provider and the API invoker. Within the CAMARA project, you can find a sample for such a mapping of QoS profiles. [CAMARA QoS Profiles Mapping Table (REFERENCE DRAFT)](https://github.com/camaraproject/QualityOnDemand/blob/main/documentation/API_documentation/QoSProfile_Mapping_Table.md)
 
     # Further info and support
 
     (FAQs will be added in a later version of the documentation)
-  termsOfService: http://swagger.io/terms/
-  contact:
-    email: project-email@sample.com
   license:
     name: Apache 2.0
     url: https://www.apache.org/licenses/LICENSE-2.0.html
@@ -81,6 +79,11 @@ servers:
       basePath:
         default: qod/v0
         description: Base path for the QoD API
+tags:
+  - name: QoS sessions
+  - name: Session notifications callback
+  - name: QoS Profiles
+
 paths:
   /sessions:
     post:
@@ -193,7 +196,7 @@ paths:
                     code: INVALID_ARGUMENT
                     message: "Expected property is missing: qosProfile"
                 InvalidDevicePortsRanges:
-                  summary: Invalid port ranges specified for devicePorts 
+                  summary: Invalid port ranges specified for devicePorts
                   value:
                     status: 400
                     code: OUT_OF_RANGE
@@ -221,8 +224,8 @@ paths:
       security:
         - oAuth2ClientCredentials: []
         - threeLegged:
-          - "qod-sessions-write"
-      
+            - "qod-sessions-write"
+
   /sessions/{sessionId}:
     get:
       tags:
@@ -257,7 +260,7 @@ paths:
       security:
         - oAuth2ClientCredentials: []
         - threeLegged:
-          - "qod-sessions-read"
+            - "qod-sessions-read"
 
     delete:
       tags:
@@ -288,8 +291,8 @@ paths:
       security:
         - oAuth2ClientCredentials: []
         - threeLegged:
-          - "qod-sessions-delete"
-          
+            - "qod-sessions-delete"
+
   /qos-profiles:
     get:
       tags:
@@ -318,6 +321,8 @@ paths:
             application/json:
               schema:
                 type: array
+                minItems: 0
+                maxItems: 100
                 items:
                   $ref: "#/components/schemas/QosProfile"
         "401":
@@ -373,8 +378,8 @@ components:
       type: oauth2
       flows:
         clientCredentials:
-          tokenUrl: "{tokenUrl}"
-          scopes: {}  
+          tokenUrl: https://api.example.com/oauth/token
+          scopes: {}
     notificationsBearerAuth:
       type: http
       scheme: bearer
@@ -384,14 +389,14 @@ components:
       description: This API uses OAuth 2 with the authorization code grant flow.
       flows:
         authorizationCode:
-          authorizationUrl: "{authorizationUrl}"
-          tokenUrl: "{tokenUrl}"
+          authorizationUrl: "https://api.example.com/oauth2/authorize"
+          tokenUrl: https://api.example.com/oauth/token
           scopes:
             qod-sessions-read: Retrieval of QoS sessions
             qod-sessions-write: Creation and update of QoS sessions
             qod-sessions-delete: Deletion of QoS sessions
             qod-profiles-read: Retrieval of QoS profiles
- 
+
   schemas:
     SessionId:
       description: Session ID in UUID format
@@ -420,6 +425,8 @@ components:
               $ref: "#/components/schemas/QosStatus"
             messages:
               type: array
+              minItems: 0
+              maxItems: 100
               items:
                 $ref: "#/components/schemas/Message"
           required:
@@ -436,9 +443,9 @@ components:
         duration:
           description: |
             Session duration in seconds. Maximal value of 24 hours is used if not set.
-            After session is expired the, client will receive a `QOS_STATUS_CHANGED` event with 
-             - `qosStatus` as `UNAVAILABLE`, and, 
-             - `statusInfo` as `DURATION_EXPIRED`. 
+            After session is expired the, client will receive a `QOS_STATUS_CHANGED` event with
+             - `qosStatus` as `UNAVAILABLE`, and,
+             - `statusInfo` as `DURATION_EXPIRED`.
             See notification callback.
           type: integer
           format: int32
@@ -453,7 +460,7 @@ components:
         devicePorts:
           allOf:
             - description: The ports used locally by the device for flows to which the requested QoS profile should apply. If omitted, then the qosProfile will apply to all flows between the device and the specified application server address and ports
-            - $ref: "#/components/schemas/PortsSpec" 
+            - $ref: "#/components/schemas/PortsSpec"
         applicationServerPorts:
           allOf:
             - description: A list of single ports or port ranges on the application server
@@ -482,7 +489,7 @@ components:
         - qosProfile
 
     Port:
-      description:  TCP or UDP port number
+      description: TCP or UDP port number
       type: integer
       minimum: 0
       maximum: 65535
@@ -494,6 +501,7 @@ components:
         ranges:
           type: array
           minItems: 1
+          maxItems: 100
           items:
             type: object
             required:
@@ -507,6 +515,7 @@ components:
         ports:
           type: array
           minItems: 1
+          maxItems: 100
           items:
             $ref: "#/components/schemas/Port"
       example:
@@ -546,8 +555,8 @@ components:
                 ensure a minimum performance level without using a GBR QCI.
 
                 The committed data rate allocated to specific services, ensuring a consistent level of
-                performance. For DOCSIS networks, the "Minimum Reserved Traffic Rate" is defined in the 
-                DOCSIS 3.1 - MAC and Upper Layer Protocols Interface Specification" 
+                performance. For DOCSIS networks, the "Minimum Reserved Traffic Rate" is defined in the
+                DOCSIS 3.1 - MAC and Upper Layer Protocols Interface Specification"
                 and it ensures a consistent level of performance for specific services within the network.
         maxUpstreamRate:
           allOf:
@@ -575,8 +584,8 @@ components:
                 ensure a minimum performance level without using a GBR QCI.
 
                 The committed data rate allocated to specific services, ensuring a consistent level of
-                performance. DOCSIS networks, the "Minimum Reserved Traffic Rate" is defined in the 
-                DOCSIS 3.1 - MAC and Upper Layer Protocols Interface Specification" 
+                performance. DOCSIS networks, the "Minimum Reserved Traffic Rate" is defined in the
+                DOCSIS 3.1 - MAC and Upper Layer Protocols Interface Specification"
                 and it ensures a consistent level of performance for specific services within the network.
         maxDownstreamRate:
           allOf:
@@ -613,7 +622,7 @@ components:
             The lower value the higher priority.
             Not all access networks use the same priority range, so this priority will be
             scaled to the access network's priority range.
-          format: integer
+          format: int32
           minimum: 1
           maximum: 100
         packetDelayBudget:
@@ -686,7 +695,7 @@ components:
           maximum: 1024
         unit:
           $ref: "#/components/schemas/RateUnitEnum"
-          
+
     Duration:
       type: object
       properties:
@@ -699,7 +708,7 @@ components:
           allOf:
             - $ref: "#/components/schemas/TimeUnitEnum"
             - example: Minutes
-            
+
     TimeUnitEnum:
       type: string
       enum:
@@ -799,17 +808,17 @@ components:
                 statusInfo:
                   $ref: "#/components/schemas/StatusInfo"
           required:
-          - eventDetail
+            - eventDetail
 
     StatusInfo:
-          description: |
-            Reason for the new `qosStatus`. Currently `statusInfo` is only applicable when `qosStatus` is 'UNAVAILABLE'.
-            * `DURATION_EXPIRED` - Session terminated due to requested duration expired
-            * `NETWORK_TERMINATED` - Network terminated the session before the requested duration expired
-          type: string
-          enum:
-            - DURATION_EXPIRED
-            - NETWORK_TERMINATED¡
+      description: |
+        Reason for the new `qosStatus`. Currently `statusInfo` is only applicable when `qosStatus` is 'UNAVAILABLE'.
+        * `DURATION_EXPIRED` - Session terminated due to requested duration expired
+        * `NETWORK_TERMINATED` - Network terminated the session before the requested duration expired
+      type: string
+      enum:
+        - DURATION_EXPIRED
+        - NETWORK_TERMINATED¡
 
     Device:
       description: |
@@ -885,7 +894,7 @@ components:
       example:
             {
               "publicAddress": "84.125.93.10",
-              "publicPort" : 59765
+              "publicPort": 59765
             }
 
     SingleIpv4Addr:
