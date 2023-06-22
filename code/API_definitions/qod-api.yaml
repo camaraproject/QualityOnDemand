@@ -822,16 +822,16 @@ components:
 
     Device:
       description: |
-        End-user equipment able to connect to a mobile network. Examples of devices include smartphones or IoT sensors/actuators. 
+        End-user equipment able to connect to a mobile network. Examples of devices include smartphones or IoT sensors/actuators.
 
         The developer can choose to provide the below specified device identifiers:
 
         * `ipv4Address`
         * `ipv6Address`
         * `phoneNumber`
-        * `networkAccessIdentifier`  
+        * `networkAccessIdentifier`
 
-        NOTE: the MNO might support only a subset of these options. The API invoker can provide multiple identifiers to be compatible across different MNOs. In this case the identifiers MUST belong to the same device     
+        NOTE: the MNO might support only a subset of these options. The API invoker can provide multiple identifiers to be compatible across different MNOs. In this case the identifiers MUST belong to the same device.
       type: object
       properties:
         phoneNumber:
@@ -847,11 +847,11 @@ components:
     ApplicationServer:
       description: |
         A server hosting backend applications to deliver some business logic to clients.
-        
+
         The developer can choose to provide the below specified device identifiers:
 
         * `ipv4Address`
-        * `ipv6Address` 
+        * `ipv6Address`
       type: object
       properties:
         ipv4Address:
@@ -875,11 +875,11 @@ components:
       type: object
       description: |
         The device should be identified by either the public (observed) IP address and port as seen by the application server, or the private (local) and any public (observed) IP addresses in use by the device (this information can be obtained by various means, for example from some DNS servers).
-        
+
         If the allocated and observed IP addresses are the same (i.e. NAT is not in use) then  the same address should be specified for both publicAddress and privateAddress.
-        
+
         If NAT64 is in use, the device should be identified by its publicAddress and publicPort, or separately by its allocated IPv6 address (field ipv6Address of the Device object)
-      
+
         In all cases, publicAddress must be specified, along with at least one of either privateAddress or publicPort, dependent upon which is known. In general, mobile devices cannot be identified by their public IPv4 address alone.
       properties:
         publicAddress:
@@ -892,10 +892,10 @@ components:
         - required: [publicAddress, privateAddress]
         - required: [publicAddress, publicPort]
       example:
-            {
-              "publicAddress": "84.125.93.10",
-              "publicPort": 59765
-            }
+        {
+          "publicAddress": "84.125.93.10",
+          "publicPort": 59765
+        }
 
     SingleIpv4Addr:
       description: A single IPv4 address with no subnet mask
