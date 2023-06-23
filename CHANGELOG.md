@@ -13,7 +13,7 @@ Version numbers 0.2.x to 0.7.x were intentionally not used to avoid conflicts wi
 
 # v0.9.0-rc
 
-**This is the release candidate of v0.9.0 - the (third alpha/first beta (tbd)) release of the Quality-On-Demand (QoD) API**
+**This is the release candidate of v0.9.0 - the (third alpha (tbc)) release of the Quality-On-Demand (QoD) API**
 
 - [API definition with inline documentation](https://github.com/camaraproject/QualityOnDemand/releases/tag/release-0.9.0-rc/code/API_definitions)
 
