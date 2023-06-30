@@ -113,7 +113,7 @@ paths:
                 content:
                   application/json:
                     schema:
-                      $ref: "#/components/schemas/EventNotification"
+                      $ref: "#/components/schemas/Event"
               responses:
                 "204":
                   description: Successful notification
@@ -400,34 +400,34 @@ components:
 
     SessionInfo:
       description: Session related information.
+      type: object
       allOf:
         - $ref: "#/components/schemas/CreateSession"
-        - type: object
-          properties:
-            sessionId:
-              $ref: "#/components/schemas/SessionId"
-            startedAt:
-              type: integer
-              example: 1639479600
-              description: Timestamp of session start in seconds since Unix epoch
-              format: int64
-            expiresAt:
-              type: integer
-              example: 1639566000
-              description: Timestamp of session expiration if the session was not deleted, in seconds since Unix epoch
-              format: int64
-            qosStatus:
-              $ref: "#/components/schemas/QosStatus"
-            messages:
-              type: array
-              items:
-                $ref: "#/components/schemas/Message"
-          required:
-            - sessionId
-            - duration
-            - startedAt
-            - expiresAt
-            - qosStatus
+      properties:
+        sessionId:
+          $ref: "#/components/schemas/SessionId"
+        startedAt:
+          type: integer
+          example: 1639479600
+          description: Timestamp of session start in seconds since Unix epoch
+          format: int64
+        expiresAt:
+          type: integer
+          example: 1639566000
+          description: Timestamp of session expiration if the session was not deleted, in seconds since Unix epoch
+          format: int64
+        qosStatus:
+          $ref: "#/components/schemas/QosStatus"
+        messages:
+          type: array
+          items:
+            $ref: "#/components/schemas/Message"
+      required:
+        - sessionId
+        - duration
+        - startedAt
+        - expiresAt
+        - qosStatus
 
     CreateSession:
       description: Attributes required to create a session
@@ -699,7 +699,7 @@ components:
           allOf:
             - $ref: "#/components/schemas/TimeUnitEnum"
             - example: Minutes
-            
+
     TimeUnitEnum:
       type: string
       enum:
@@ -732,18 +732,19 @@ components:
         - Gbps
         - Tbps
 
-    EventNotification:
-      type: object
-      required:
-        - event
-      properties:
-        event:
-          $ref: "#/components/schemas/Event"
-
     Event:
       description: The event being notified
-      anyOf:
-        - $ref: "#/components/schemas/QosStatusChangedEvent"
+      type: object
+      required:
+        - eventType
+        - eventTime
+      properties:
+        eventid:
+          $ref: "#/components/schemas/EventId"
+        eventType:
+          $ref: "#/components/schemas/EventType"
+        eventTime:
+          $ref: "#/components/schemas/EventTime"
       discriminator:
         propertyName: eventType
         mapping:
@@ -767,39 +768,26 @@ components:
       example: 2023-05-30T10:18:28Z
       description: Date time when the event occurred
 
-    EventBase:
-      type: object
-      required:
-        - eventType
-        - eventTime
-      properties:
-        eventid:
-          $ref: "#/components/schemas/EventId"
-        eventType:
-          $ref: "#/components/schemas/EventType"
-        eventTime:
-          $ref: "#/components/schemas/EventTime"
-
     QosStatusChangedEvent:
+      type: object
       allOf:
-        - $ref: "#/components/schemas/EventBase"
-        - type: object
-          properties:
-            eventDetail:
-              type: object
-              description: Event details depending on the event type
-              required:
-                - sessionId
-                - qosStatus
-              properties:
-                sessionId:
-                  $ref: "#/components/schemas/SessionId"
-                qosStatus:
-                  $ref: "#/components/schemas/EventQosStatus"
-                statusInfo:
-                  $ref: "#/components/schemas/StatusInfo"
+        - $ref: "#/components/schemas/Event"
+      properties:
+        eventDetail:
+          type: object
+          description: Event details depending on the event type
           required:
-          - eventDetail
+            - sessionId
+            - qosStatus
+          properties:
+            sessionId:
+              $ref: "#/components/schemas/SessionId"
+            qosStatus:
+              $ref: "#/components/schemas/EventQosStatus"
+            statusInfo:
+              $ref: "#/components/schemas/StatusInfo"
+      required:
+        - eventDetail
 
     StatusInfo:
           description: |
