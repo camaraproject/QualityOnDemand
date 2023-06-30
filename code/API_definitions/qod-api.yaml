@@ -613,7 +613,7 @@ components:
             The lower value the higher priority.
             Not all access networks use the same priority range, so this priority will be
             scaled to the access network's priority range.
-          format: integer
+          format: int32
           minimum: 1
           maximum: 100
         packetDelayBudget:
