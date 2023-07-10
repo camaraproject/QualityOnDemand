@@ -26,7 +26,7 @@ Security access keys such as OAuth 2.0 client credentials used by client applica
 **QoS profiles and QoS profile labels**
 Latency or throughput requirements of the application mapped to relevant QoS profile class.
 
-**Identifier for the the user equipment (UE)**
+**Identifier for the user equipment (UE)**
 At least one identifier for the user equipment out of four options: IPv4 address, IPv6 address, MSISDN, or external ID [[5]](#5) assigned by the mobile network operator for the user equipment
 
 **Identifier for the application server (AS)**
