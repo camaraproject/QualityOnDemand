@@ -113,7 +113,7 @@ paths:
                 content:
                   application/json:
                     schema:
-                      $ref: "#/components/schemas/Event"
+                      $ref: "#/components/schemas/EventNotification"
               responses:
                 "204":
                   description: Successful notification
@@ -732,6 +732,18 @@ components:
         - Gbps
         - Tbps
 
+    EventNotification:
+      type: object
+      required:
+        - event
+      properties:
+        event:
+          $ref: "#/components/schemas/Event"
+        subscriptionId:
+          type: string
+          description: 'The ID of explicit subscription or none in case of implicit subscription'
+          example: '7698d710-98b7-4695-a958-7b228f08128c'
+
     Event:
       description: The event being notified
       type: object
@@ -739,7 +751,7 @@ components:
         - eventType
         - eventTime
       properties:
-        eventid:
+        eventId:
           $ref: "#/components/schemas/EventId"
         eventType:
           $ref: "#/components/schemas/EventType"
