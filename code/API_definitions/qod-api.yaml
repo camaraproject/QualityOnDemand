@@ -739,7 +739,7 @@ components:
       properties:
         event:
           $ref: "#/components/schemas/Event"
-        subscriptionId:
+        eventSubscriptionId:
           type: string
           description: 'The ID of explicit subscription or none in case of implicit subscription'
           example: '7698d710-98b7-4695-a958-7b228f08128c'
