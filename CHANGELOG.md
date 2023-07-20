@@ -45,7 +45,7 @@ Version numbers 0.2.x to 0.7.x were intentionally not used to avoid conflicts wi
 ### Fixed
 
 * Added error code 501 "Not Implemented" by @dfischer-tech in https://github.com/camaraproject/QualityOnDemand/pull/124
-* Add inheritance between Event and QosStatusChangedEvent and simplified notification payload model by @patrice-conil in https://github.com/camaraproject/QualityOnDemand/pull/177
+* Added inheritance between Event and QosStatusChangedEvent and simplified notification payload model by @patrice-conil in https://github.com/camaraproject/QualityOnDemand/pull/177
   
 ### Removed
 
