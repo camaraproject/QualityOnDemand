@@ -742,7 +742,17 @@ components:
         eventSubscriptionId:
           type: string
           description: 'The ID of explicit subscription or none in case of implicit subscription'
-          example: '7698d710-98b7-4695-a958-7b228f08128c'
+      example:
+        {
+          "eventId": "5698d710-9b1b-4695-a958-7b228f08128c",
+          "eventType": "QOS_STATUS_CHANGED",
+          "eventTime": "2023-05-30T10:18:28Z",
+          "eventDetail": {
+            "sessionId": "7698d710-98b7-4695-a958-7b228f08128c",
+            "qosStatus": "UNAVAILABLE",
+            "statusInfo": "DURATION_EXPIRED"
+          }
+        }
 
     Event:
       description: The event being notified
