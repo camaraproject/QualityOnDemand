@@ -699,7 +699,7 @@ components:
           allOf:
             - $ref: "#/components/schemas/TimeUnitEnum"
             - example: Minutes
-            
+
     TimeUnitEnum:
       type: string
       enum:
@@ -739,15 +739,49 @@ components:
       properties:
         event:
           $ref: "#/components/schemas/Event"
+        eventSubscriptionId:
+          type: string
+          description: 'The ID of explicit subscription or none in case of implicit subscription'
+      example:
+        {
+          "eventId": "5698d710-9b1b-4695-a958-7b228f08128c",
+          "eventType": "QOS_STATUS_CHANGED",
+          "eventTime": "2023-05-30T10:18:28Z",
+          "eventDetail": {
+            "sessionId": "7698d710-98b7-4695-a958-7b228f08128c",
+            "qosStatus": "UNAVAILABLE",
+            "statusInfo": "DURATION_EXPIRED"
+          }
+        }
 
     Event:
       description: The event being notified
-      anyOf:
-        - $ref: "#/components/schemas/QosStatusChangedEvent"
+      type: object
+      required:
+        - eventType
+        - eventTime
+      properties:
+        eventId:
+          $ref: "#/components/schemas/EventId"
+        eventType:
+          $ref: "#/components/schemas/EventType"
+        eventTime:
+          $ref: "#/components/schemas/EventTime"
       discriminator:
         propertyName: eventType
         mapping:
           QOS_STATUS_CHANGED: "#/components/schemas/QosStatusChangedEvent"
+      example:
+        {
+          "eventId": "5698d710-9b1b-4695-a958-7b228f08128c",
+          "eventType": "QOS_STATUS_CHANGED",
+          "eventTime": "2023-05-30T10:18:28Z",
+          "eventDetail": {
+            "sessionId": "7698d710-98b7-4695-a958-7b228f08128c",
+            "qosStatus": "UNAVAILABLE",
+            "statusInfo": "DURATION_EXPIRED"
+          }
+        }
 
     EventId:
       type: string
@@ -767,22 +801,9 @@ components:
       example: 2023-05-30T10:18:28Z
       description: Date time when the event occurred
 
-    EventBase:
-      type: object
-      required:
-        - eventType
-        - eventTime
-      properties:
-        eventid:
-          $ref: "#/components/schemas/EventId"
-        eventType:
-          $ref: "#/components/schemas/EventType"
-        eventTime:
-          $ref: "#/components/schemas/EventTime"
-
     QosStatusChangedEvent:
       allOf:
-        - $ref: "#/components/schemas/EventBase"
+        - $ref: "#/components/schemas/Event"
         - type: object
           properties:
             eventDetail:
@@ -799,7 +820,7 @@ components:
                 statusInfo:
                   $ref: "#/components/schemas/StatusInfo"
           required:
-          - eventDetail
+            - eventDetail
 
     StatusInfo:
           description: |
