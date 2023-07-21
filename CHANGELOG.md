@@ -16,7 +16,7 @@ Version numbers 0.2.x to 0.7.x were intentionally not used to avoid conflicts wi
 
 **This is the third alpha version of the Quality-On-Demand (QoD) API.**
 
-- [API definition with inline documentation](https://github.com/camaraproject/QualityOnDemand/releases/tag/release-0.9.0/code/API_definitions)
+- [API definition with inline documentation](https://github.com/camaraproject/QualityOnDemand/tree/release-0.9.0/code/API_definitions)
 
 ## Please note:
 
