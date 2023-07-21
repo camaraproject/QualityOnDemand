@@ -10,3 +10,5 @@
 | Verizon/ 5GFF| Syed Rehman |
 | Verizon/ 5GFF| Mahesh Chapalamadugu |
 | KDDI | Toshi (Toshiyasu) Wakayama |
+| Orange | Frederic Fieau |
+| Orange | Patrice Conil |
