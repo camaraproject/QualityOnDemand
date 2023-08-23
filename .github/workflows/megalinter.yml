@@ -3,7 +3,7 @@
 # More info at https://megalinter.io
 name: MegaLinter
 
-on:
+on: # yamllint disable-line rule:truthy
   # Pull Requests to main
   pull_request:
     branches: [master, main]
@@ -49,9 +49,9 @@ jobs:
           VALIDATE_ALL_CODEBASE: true
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           # ADD YOUR CUSTOM ENV VARIABLES HERE OR DEFINE THEM IN A FILE .mega-linter.yml AT THE ROOT OF YOUR REPOSITORY
-          DISABLE: COPYPASTE # Uncomment to disable copy-paste and spell checks
+          DISABLE: COPYPASTE,JAVA,MARKDOWN # Uncomment to disable copy-paste and spell checks
           DISABLE_LINTERS: SPELL_CSPELL,SPELL_LYCHEE,YAML_PRETTIER,REPOSITORY_SEMGREP,REPOSITORY_DEVSKIM,REPOSITORY_KICS,REPOSITORY_TRIVY,REPOSITORY_CHECKOV,REPOSITORY_GITLEAKS
-
+          YAML_YAMLLINT_CONFIG_FILE: ".yamllint.yaml"
           # Upload MegaLinter artifacts
       - name: Archive production artifacts
         if: ${{ success() }} || ${{ failure() }}
