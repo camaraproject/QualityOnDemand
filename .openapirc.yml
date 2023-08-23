@@ -1,0 +1,23 @@
+extends: ["spectral:oas", "spectral:asyncapi"]
+rules:
+  adidas-paths-kebab-case:
+    description: All YAML/JSON paths MUST follow kebab-case
+    severity: error
+    recommended: true
+    message: "{{property}} is not kebab-case: {{error}}"
+    given: $.paths[*]~
+    then:
+      function: pattern
+      functionOptions:
+        match: "^\/([a-z0-9]+(-[a-z0-9]+)*)?(\/[a-z0-9]+(-[a-z0-9]+)*|\/{.+})*$" # doesn't allow /asasd{asdas}sadas pattern or not closed braces
+
+  camara-version:
+    description: Version must be MAJOR.MINOR.PATCH Adding -rc and -wip as valid suffixes though we should add these to the commonalities if we continue to use them
+    severity: error
+    recommended: true
+    message: "{{property}} is not MAJOR.MINOR.PATCH: {{error}}"
+    given: $.info.version
+    then:
+      function: pattern
+      functionOptions:
+        match: "^[0-9]+.[0-9]+.[0-9]+(-rc|-wip)$"
