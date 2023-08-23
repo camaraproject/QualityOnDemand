@@ -31,10 +31,10 @@ info:
     * **Identifier for the application server**:
     IPv4 and/or IPv6 address of the application server (application backend)
 
-    * **App-Flow (between the application client and application server)**: 
+    * **App-Flow (between the application client and application server)**:
     The precise application data flow the developer wants to prioritize and have stable latency or throughput for. This flow is in the current API version determined by the identifiers used for the device and the application server. And it can be further elaborated with details such as ports or port-ranges. Future version of the API might allow more detailed flow identification features.
 
-    * **Duration**: 
+    * **Duration**:
     Duration (in seconds) for which the QoS session (between application client and application server) should be created. This parameter is optional. When not specified, a default session duration (e.g. 24 hours) is applied. The user may request a termination before its expiration.
 
     * **Notification URL and token**:
@@ -55,7 +55,7 @@ info:
 
     ![QoD Management API](https://raw.githubusercontent.com/camaraproject/QualityOnDemand/main/documentation/API_documentation/resources/QoD_details.PNG)
 
-    How QoS profiles are mapped to connectivity characteristics are subject to agreements between the communication service provider and the API invoker. Within the CAMARA project, you can find a sample for such a mapping of QoS profiles. [CAMARA QoS Profiles Mapping Table (REFERENCE DRAFT)](https://github.com/camaraproject/QualityOnDemand/blob/main/documentation/API_documentation/QoSProfile_Mapping_Table.md) 
+    How QoS profiles are mapped to connectivity characteristics are subject to agreements between the communication service provider and the API invoker. Within the CAMARA project, you can find a sample for such a mapping of QoS profiles. [CAMARA QoS Profiles Mapping Table (REFERENCE DRAFT)](https://github.com/camaraproject/QualityOnDemand/blob/main/documentation/API_documentation/QoSProfile_Mapping_Table.md)
 
     # Further info and support
 
@@ -193,7 +193,7 @@ paths:
                     code: INVALID_ARGUMENT
                     message: "Expected property is missing: qosProfile"
                 InvalidDevicePortsRanges:
-                  summary: Invalid port ranges specified for devicePorts 
+                  summary: Invalid port ranges specified for devicePorts
                   value:
                     status: 400
                     code: OUT_OF_RANGE
@@ -221,8 +221,8 @@ paths:
       security:
         - oAuth2ClientCredentials: []
         - threeLegged:
-          - "qod-sessions-write"
-      
+            - "qod-sessions-write"
+
   /sessions/{sessionId}:
     get:
       tags:
@@ -257,7 +257,7 @@ paths:
       security:
         - oAuth2ClientCredentials: []
         - threeLegged:
-          - "qod-sessions-read"
+            - "qod-sessions-read"
 
     delete:
       tags:
@@ -288,8 +288,8 @@ paths:
       security:
         - oAuth2ClientCredentials: []
         - threeLegged:
-          - "qod-sessions-delete"
-          
+            - "qod-sessions-delete"
+
   /qos-profiles:
     get:
       tags:
@@ -374,7 +374,7 @@ components:
       flows:
         clientCredentials:
           tokenUrl: "{tokenUrl}"
-          scopes: {}  
+          scopes: {}
     notificationsBearerAuth:
       type: http
       scheme: bearer
@@ -391,7 +391,7 @@ components:
             qod-sessions-write: Creation and update of QoS sessions
             qod-sessions-delete: Deletion of QoS sessions
             qod-profiles-read: Retrieval of QoS profiles
- 
+
   schemas:
     SessionId:
       description: Session ID in UUID format
@@ -436,9 +436,9 @@ components:
         duration:
           description: |
             Session duration in seconds. Maximal value of 24 hours is used if not set.
-            After session is expired the, client will receive a `QOS_STATUS_CHANGED` event with 
-             - `qosStatus` as `UNAVAILABLE`, and, 
-             - `statusInfo` as `DURATION_EXPIRED`. 
+            After session is expired the, client will receive a `QOS_STATUS_CHANGED` event with
+             - `qosStatus` as `UNAVAILABLE`, and,
+             - `statusInfo` as `DURATION_EXPIRED`.
             See notification callback.
           type: integer
           format: int32
@@ -453,7 +453,7 @@ components:
         devicePorts:
           allOf:
             - description: The ports used locally by the device for flows to which the requested QoS profile should apply. If omitted, then the qosProfile will apply to all flows between the device and the specified application server address and ports
-            - $ref: "#/components/schemas/PortsSpec" 
+            - $ref: "#/components/schemas/PortsSpec"
         applicationServerPorts:
           allOf:
             - description: A list of single ports or port ranges on the application server
@@ -482,7 +482,7 @@ components:
         - qosProfile
 
     Port:
-      description:  TCP or UDP port number
+      description: TCP or UDP port number
       type: integer
       minimum: 0
       maximum: 65535
@@ -546,8 +546,8 @@ components:
                 ensure a minimum performance level without using a GBR QCI.
 
                 The committed data rate allocated to specific services, ensuring a consistent level of
-                performance. For DOCSIS networks, the "Minimum Reserved Traffic Rate" is defined in the 
-                DOCSIS 3.1 - MAC and Upper Layer Protocols Interface Specification" 
+                performance. For DOCSIS networks, the "Minimum Reserved Traffic Rate" is defined in the
+                DOCSIS 3.1 - MAC and Upper Layer Protocols Interface Specification"
                 and it ensures a consistent level of performance for specific services within the network.
         maxUpstreamRate:
           allOf:
@@ -575,8 +575,8 @@ components:
                 ensure a minimum performance level without using a GBR QCI.
 
                 The committed data rate allocated to specific services, ensuring a consistent level of
-                performance. DOCSIS networks, the "Minimum Reserved Traffic Rate" is defined in the 
-                DOCSIS 3.1 - MAC and Upper Layer Protocols Interface Specification" 
+                performance. DOCSIS networks, the "Minimum Reserved Traffic Rate" is defined in the
+                DOCSIS 3.1 - MAC and Upper Layer Protocols Interface Specification"
                 and it ensures a consistent level of performance for specific services within the network.
         maxDownstreamRate:
           allOf:
@@ -686,7 +686,7 @@ components:
           maximum: 1024
         unit:
           $ref: "#/components/schemas/RateUnitEnum"
-          
+
     Duration:
       type: object
       properties:
@@ -823,27 +823,27 @@ components:
             - eventDetail
 
     StatusInfo:
-          description: |
-            Reason for the new `qosStatus`. Currently `statusInfo` is only applicable when `qosStatus` is 'UNAVAILABLE'.
-            * `DURATION_EXPIRED` - Session terminated due to requested duration expired
-            * `NETWORK_TERMINATED` - Network terminated the session before the requested duration expired
-          type: string
-          enum:
-            - DURATION_EXPIRED
-            - NETWORK_TERMINATED
+      description: |
+        Reason for the new `qosStatus`. Currently `statusInfo` is only applicable when `qosStatus` is 'UNAVAILABLE'.
+        * `DURATION_EXPIRED` - Session terminated due to requested duration expired
+        * `NETWORK_TERMINATED` - Network terminated the session before the requested duration expired
+      type: string
+      enum:
+        - DURATION_EXPIRED
+        - NETWORK_TERMINATED
 
     Device:
       description: |
-        End-user equipment able to connect to a mobile network. Examples of devices include smartphones or IoT sensors/actuators. 
+        End-user equipment able to connect to a mobile network. Examples of devices include smartphones or IoT sensors/actuators.
 
         The developer can choose to provide the below specified device identifiers:
 
         * `ipv4Address`
         * `ipv6Address`
         * `phoneNumber`
-        * `networkAccessIdentifier`  
+        * `networkAccessIdentifier`
 
-        NOTE: the MNO might support only a subset of these options. The API invoker can provide multiple identifiers to be compatible across different MNOs. In this case the identifiers MUST belong to the same device     
+        NOTE: the MNO might support only a subset of these options. The API invoker can provide multiple identifiers to be compatible across different MNOs. In this case the identifiers MUST belong to the same device
       type: object
       properties:
         phoneNumber:
@@ -859,11 +859,11 @@ components:
     ApplicationServer:
       description: |
         A server hosting backend applications to deliver some business logic to clients.
-        
+
         The developer can choose to provide the below specified device identifiers:
 
         * `ipv4Address`
-        * `ipv6Address` 
+        * `ipv6Address`
       type: object
       properties:
         ipv4Address:
@@ -887,11 +887,11 @@ components:
       type: object
       description: |
         The device should be identified by either the public (observed) IP address and port as seen by the application server, or the private (local) and any public (observed) IP addresses in use by the device (this information can be obtained by various means, for example from some DNS servers).
-        
+
         If the allocated and observed IP addresses are the same (i.e. NAT is not in use) then  the same address should be specified for both publicAddress and privateAddress.
-        
+
         If NAT64 is in use, the device should be identified by its publicAddress and publicPort, or separately by its allocated IPv6 address (field ipv6Address of the Device object)
-      
+
         In all cases, publicAddress must be specified, along with at least one of either privateAddress or publicPort, dependent upon which is known. In general, mobile devices cannot be identified by their public IPv4 address alone.
       properties:
         publicAddress:
@@ -904,10 +904,10 @@ components:
         - required: [publicAddress, privateAddress]
         - required: [publicAddress, publicPort]
       example:
-            {
-              "publicAddress": "84.125.93.10",
-              "publicPort" : 59765
-            }
+        {
+          "publicAddress": "84.125.93.10",
+          "publicPort": 59765
+        }
 
     SingleIpv4Addr:
       description: A single IPv4 address with no subnet mask
