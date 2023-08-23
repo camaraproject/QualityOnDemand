@@ -373,7 +373,7 @@ components:
       type: oauth2
       flows:
         clientCredentials:
-          tokenUrl: "{tokenUrl}"
+          tokenUrl: https://api.example.com/oauth/token
           scopes: {}
     notificationsBearerAuth:
       type: http
@@ -384,8 +384,8 @@ components:
       description: This API uses OAuth 2 with the authorization code grant flow.
       flows:
         authorizationCode:
-          authorizationUrl: "{authorizationUrl}"
-          tokenUrl: "{tokenUrl}"
+          authorizationUrl: https://api.example.com/oauth2/authorize
+          tokenUrl: https://api.example.com/oauth/token
           scopes:
             qod-sessions-read: Retrieval of QoS sessions
             qod-sessions-write: Creation and update of QoS sessions
