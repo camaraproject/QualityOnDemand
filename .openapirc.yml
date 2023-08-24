@@ -23,4 +23,4 @@ rules:
     then:
       function: pattern
       functionOptions:
-        match: "^[0-9]+.[0-9]+.[0-9]+(-rc|-wip)$"
+        match: ^[0-9]+\.[0-9]+\.[0-9]+(?:-rc|-wip)?$
