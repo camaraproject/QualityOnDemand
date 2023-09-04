@@ -244,6 +244,8 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/SessionInfo"
+        "400":
+          $ref: "#/components/responses/Generic400"
         "401":
           $ref: "#/components/responses/Generic401"
         "403":
