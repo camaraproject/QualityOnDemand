@@ -277,6 +277,8 @@ paths:
       responses:
         "204":
           description: Session deleted
+        "400":
+          $ref: "#/components/responses/Generic400"
         "401":
           $ref: "#/components/responses/Generic401"
         "403":
