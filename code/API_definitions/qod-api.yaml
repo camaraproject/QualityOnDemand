@@ -322,7 +322,7 @@ paths:
               schema:
                 $ref: "#/components/schemas/SessionInfo"
         "400":
-          description: Invalid input for createSession operation
+          description: Invalid input for extendQosSessionDuration operation
           content:
             application/json:
               schema:
@@ -593,7 +593,7 @@ components:
           maximum: 86399
           example: 60
       required:
-        - duration
+        - extendedDuration
 
 
     QosProfile:
