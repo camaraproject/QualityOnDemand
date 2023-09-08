@@ -433,6 +433,12 @@ components:
       description: Attributes required to create a session
       type: object
       properties:
+        applicationConsumerId:
+          description: |
+            Identifies the application consumer that initiates a qos session. The ID is systematically relayed to downstream systems, including but not limited to, the Network Exposure Function (NEF) and the Policy Control Function (PCF) within the 5G framework.
+            The primary utility of this transmission is to facilitate the application of relevant policies, ensuring that the application consumer is appropriately tagged within usage records.
+          type: string
+          example: XRapp123
         duration:
           description: |
             Session duration in seconds. Maximal value of 24 hours is used if not set.
