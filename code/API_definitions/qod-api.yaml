@@ -534,7 +534,6 @@ components:
         targetMinUpstreamRate:
           description: |
             This is the target minimum upstream rate for the QoS profile.
-            
             For 5G networks 3GPP Guaranteed Bit Rate (GBR) refers to a dedicated, fixed data rate assigned to
             specific services, ensuring a minimum performance level. As per 3GPP TS 23.203,
             GBR is a QoS parameter used to manage traffic classes in mobile networks. It
@@ -542,7 +541,6 @@ components:
             video streaming, helping maintain a consistent user experience. When this attribute is set
             this could imply that a GBR QCI is used, though mechanisms on the network can be used to
             ensure a minimum performance level without using a GBR QCI.
-            
             The committed data rate allocated to specific services, ensuring a consistent level of
             performance. For DOCSIS networks, the "Minimum Reserved Traffic Rate" is defined in the
             DOCSIS 3.1 - MAC and Upper Layer Protocols Interface Specification"
@@ -563,7 +561,6 @@ components:
         targetMinDownstreamRate:
           description: |
             This is the target minimum downstream rate for the QoS profile.
-            
             For 5G networks 3GPP Guaranteed Bit Rate (GBR) refers to a dedicated, fixed data rate assigned to
             specific services, ensuring a minimum performance level. As per 3GPP TS 23.203,
             GBR is a QoS parameter used to manage traffic classes in mobile networks. It
@@ -571,7 +568,6 @@ components:
             video streaming, helping maintain a consistent user experience.  When this attribute is set
             this could imply that a GBR QCI is used, though mechanisms on the network can be used to
             ensure a minimum performance level without using a GBR QCI.
-            
             The committed data rate allocated to specific services, ensuring a consistent level of
             performance. DOCSIS networks, the "Minimum Reserved Traffic Rate" is defined in the
             DOCSIS 3.1 - MAC and Upper Layer Protocols Interface Specification"
@@ -587,7 +583,6 @@ components:
           description: |
             When defined, this is the maximum downstream burst rate for the QoS profile, that will enable
             the network to burst data at a higher rate than the maxDownstreamRate for a period of time.
-            
             This can result in improved user experience when there is additional network capacity.
             For instance, when a user is streaming a video, the network can burst data at a higher rate
             to fill the buffer, and then return to the maxUpstreamRate once the buffer is full.
@@ -622,7 +617,6 @@ components:
             and the gateway from the operator's network to other networks. By limiting the delay, the network
             can provide an acceptable level of performance for various services, such as voice calls,
             video streaming, and data.
-            
             The end-to-end or round trip latency will be about two times this value plus the latency not controlled
             by the operator
           allOf:
