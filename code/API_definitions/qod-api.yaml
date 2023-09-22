@@ -293,12 +293,11 @@ paths:
   /sessions/{sessionId}/extend:
     post:
       tags:
-        - Extend or reduce QoS session duration
-      summary: "Extend or reduce QoS session duration"
+        - Change session duration
+      summary: "Extend the duration of an active session"
       description: |
-        Extend or reduce the duration of an active QoS session.
-        If this operation is executed successfully, the new duration of the target session will be original duration plus extended duration.
-        If the new duration is shorter than or equal to elapsed duration, the session will be terminated.
+        Extend the duration of an active QoS session.
+        If this operation is executed successfully, the new duration of the target session will be the original duration plus extended duration.
       operationId: extendQosSessionDuration
       parameters:
         - name: sessionId
@@ -308,7 +307,7 @@ paths:
           schema:
             $ref: "#/components/schemas/SessionId"
       requestBody:
-        description: Parameters to extend or reduce the duration of an active session
+        description: Parameters to extend the duration of an active session
         content:
           application/json:
             schema:
@@ -579,20 +578,19 @@ components:
           - 5070
 
     ExtendSessionDuration:
-      description: Attributes required to extend or reduce the duration of a session
+      description: Attributes required to extend the duration of an active session
       type: object
       properties:
-        extendedDuration:
+        additionalDuration:
           description: |
-            Session duration in seconds.
-            Positive value means extending the durtion while negative value means reducing.
+            Additional duration in seconds to be extended.
           type: integer
           format: int32
-          minimum: -86399
+          minimum: 1
           maximum: 86399
           example: 60
       required:
-        - extendedDuration
+        - additionalDuration
 
 
     QosProfile:
