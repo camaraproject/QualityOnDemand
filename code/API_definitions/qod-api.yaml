@@ -769,7 +769,7 @@ components:
       discriminator:
         propertyName: 'type'
         mapping:
-            org.camaraproject.qod.v0.qos-status-changed: '#/components/schemas/EventQosStatusChanged'
+          org.camaraproject.qod.v0.qos-status-changed: '#/components/schemas/EventQosStatusChanged'
 
     EventQosStatusChanged:
       allOf:
