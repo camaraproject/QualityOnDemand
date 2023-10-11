@@ -111,9 +111,9 @@ paths:
               requestBody:
                 required: true
                 content:
-                  application/json:
+                  application/cloudevents+json:
                     schema:
-                      $ref: "#/components/schemas/EventNotification"
+                      $ref: "#/components/schemas/CloudEvent"
               responses:
                 "204":
                   description: Successful notification
@@ -730,7 +730,7 @@ components:
         - Gbps
         - Tbps
 
-    EventNotification:
+    CloudEvent:
       description: Event compliant with the CloudEvents specification
       required:
         - id
@@ -773,7 +773,7 @@ components:
 
     EventQosStatusChanged:
       allOf:
-        - $ref: "#/components/schemas/EventNotification"
+        - $ref: "#/components/schemas/CloudEvent"
         - type: object
           properties:
             data:
