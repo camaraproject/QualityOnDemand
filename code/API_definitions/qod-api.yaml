@@ -433,12 +433,7 @@ components:
       description: Attributes required to create a session
       type: object
       properties:
-        applicationConsumerId:
-          description: |
-            Identifies the application consumer that initiates a qos session. The ID is systematically relayed to downstream systems, including but not limited to, the Network Exposure Function (NEF) and the Policy Control Function (PCF) within the 5G framework.
-            The primary utility of this transmission is to facilitate the application of relevant policies, ensuring that the application consumer is appropriately tagged within usage records.
-          type: string
-          example: XRapp123
+
         duration:
           description: |
             Session duration in seconds. Maximal value of 24 hours is used if not set.
@@ -872,6 +867,12 @@ components:
         * `ipv6Address` 
       type: object
       properties:
+        applicationId:
+          description: |
+            A public identifier that uniquely identifies the application initiating a QoS session. The applicationId is more granular than the clientId, which identifies the unique customer. A client or customer could have one or more applications that need to be tracked. The Id is systematically relayed to downstream systems, including but not limited to, the Network Exposure Function (NEF) and the Policy Control Function (PCF) within the 5G framework.
+            The primary utility of this transmission is to facilitate the application of relevant policies, ensuring that the application is appropriately tagged within usage records.
+          type: string
+          example: XRapp123
         ipv4Address:
           $ref: "#/components/schemas/Ipv4Address"
         ipv6Address:
