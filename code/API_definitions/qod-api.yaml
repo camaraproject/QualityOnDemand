@@ -81,6 +81,11 @@ servers:
       basePath:
         default: qod/v0
         description: Base path for the QoD API
+tags:
+  - name: QoS sessions
+    description: Manage QoS sessions
+  - name: QoS Profiles
+    description: Manage QoS Profiles   
 paths:
   /sessions:
     post:
