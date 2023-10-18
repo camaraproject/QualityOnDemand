@@ -85,7 +85,7 @@ tags:
   - name: QoS sessions
     description: Manage QoS sessions
   - name: QoS Profiles
-    description: Manage QoS Profiles   
+    description: Manage QoS Profiles
 paths:
   /sessions:
     post:
