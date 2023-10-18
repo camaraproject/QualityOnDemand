@@ -222,7 +222,46 @@ paths:
         - oAuth2ClientCredentials: []
         - threeLegged:
             - "qod-sessions-write"
-
+    get:
+      tags:
+        - QoS sessions
+      summary: Get all session information
+      description: Get information about all active sessions that were created by the client
+      operationId: getSessions
+      parameters:
+        - name: perPage
+          in: query
+          required: false
+          schema:
+            $ref: "#/components/schemas/PerPage"
+        - name: page
+          in: query
+          required: false
+          schema:
+            $ref: "#/components/schemas/Page"
+      responses:
+        "200":
+          description: Contains information about active sessions
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SessionInfoList"
+        "400":
+          $ref: "#/components/responses/Generic400"
+        "401":
+          $ref: "#/components/responses/Generic401"
+        "403":
+          $ref: "#/components/responses/Generic403"
+        "404":
+          $ref: "#/components/responses/SessionNotFound404"
+        "500":
+          $ref: "#/components/responses/Generic500"
+        "503":
+          $ref: "#/components/responses/Generic503"
+      security:
+        - oAuth2ClientCredentials: []
+        - threeLegged:
+            - "qod-sessions-read"
   /sessions/{sessionId}:
     get:
       tags:
@@ -432,6 +471,21 @@ components:
             - startedAt
             - expiresAt
             - qosStatus
+
+    SessionInfoList:
+      description: Paged response of active sessions created by the user
+      type: object
+      properties:
+        perPage:
+          $ref: "#/components/schemas/PerPage"
+        page:
+          $ref: "#/components/schemas/Page"
+        sessions:
+          description: Array of sessions to be returned.
+          type: array
+          items:
+            type: object
+            $ref: "#/components/schemas/SessionInfo"
 
     CreateSession:
       description: Attributes required to create a session
@@ -992,6 +1046,18 @@ components:
         - status
         - code
         - message
+
+    PerPage:
+      description: Number of resources requested to be provided in the response.
+      type: integer
+      format: int32
+      default: 100
+
+    Page:
+      description: Requested page number to indicate the start of the resources to be provided in the response (considering perPage page size).
+      type: integer
+      format: int32
+      default: 0
 
   responses:
     Generic400:
