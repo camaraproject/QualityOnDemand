@@ -225,7 +225,7 @@ paths:
     get:
       tags:
         - QoS sessions
-      summary: Get all session information
+      summary: Get all active sessions information
       description: Get information about all active sessions that were created by the client
       operationId: getSessions
       parameters:
@@ -241,7 +241,13 @@ paths:
             $ref: "#/components/schemas/Page"
       responses:
         "200":
-          description: Contains information about active sessions
+          description: Contains information about the complete list of active sessions
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SessionInfoList"
+        "206":
+          description: Contains information about the incomplete list of active sessions
           content:
             application/json:
               schema:
@@ -252,8 +258,6 @@ paths:
           $ref: "#/components/responses/Generic401"
         "403":
           $ref: "#/components/responses/Generic403"
-        "404":
-          $ref: "#/components/responses/SessionNotFound404"
         "500":
           $ref: "#/components/responses/Generic500"
         "503":
@@ -475,6 +479,10 @@ components:
     SessionInfoList:
       description: Paged response of active sessions created by the user
       type: object
+      required:
+        - perPage
+        - page
+        - sessions
       properties:
         perPage:
           $ref: "#/components/schemas/PerPage"
@@ -1054,7 +1062,7 @@ components:
       default: 100
 
     Page:
-      description: Requested page number to indicate the start of the resources to be provided in the response (considering perPage page size).
+      description: Requested page number to indicate the start of the resources to be provided in the response (considering perPage page size). The first page has the number "0".
       type: integer
       format: int32
       default: 0
