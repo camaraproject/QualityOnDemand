@@ -480,8 +480,6 @@ components:
       description: Paged response of active sessions created by the user
       type: object
       required:
-        - perPage
-        - page
         - sessions
       properties:
         perPage:
@@ -1059,7 +1057,7 @@ components:
       description: Number of resources requested to be provided in the response.
       type: integer
       format: int32
-      default: 100
+      default: 20
 
     Page:
       description: Requested page number to indicate the start of the resources to be provided in the response (considering perPage page size). The first page has the number "0".
