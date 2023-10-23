@@ -253,13 +253,28 @@ paths:
               schema:
                 $ref: "#/components/schemas/SessionInfoList"
         "400":
-          $ref: "#/components/responses/Generic400"
+          description: Invalid pagination for getSession operation
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorInfo"
+              examples:
+                PageOutOfRange:
+                  summary: The page number is out of the range
+                  value:
+                    status: 400
+                    code: INVALID_PAGINATION
+                    message: "Invalid pagination: page number out of the range"
+                InvalidPerPageValue:
+                  summary: The perPage value is less than 1
+                  value:
+                    status: 400
+                    code: INVALID_PAGINATION
+                    message: "Invalid pagination: perPage value can't be less than 1"
         "401":
           $ref: "#/components/responses/Generic401"
         "403":
           $ref: "#/components/responses/Generic403"
-        "404":
-          $ref: "#/components/responses/Generic404"
         "500":
           $ref: "#/components/responses/Generic500"
         "503":
