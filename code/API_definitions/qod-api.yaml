@@ -433,7 +433,6 @@ components:
       description: Attributes required to create a session
       type: object
       properties:
-
         duration:
           description: |
             Session duration in seconds. Maximal value of 24 hours is used if not set.
