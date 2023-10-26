@@ -858,12 +858,14 @@ components:
 
     ApplicationServer:
       description: |
-        A server hosting backend applications to deliver some business logic to clients.
+        A server hosting backend applications to deliver a service to the identified `device`.
         
-        The developer can choose to provide the below specified device identifiers:
-
+        The developer must provide at least one of the following device identifiers:
         * `ipv4Address`
-        * `ipv6Address` 
+        * `ipv6Address`
+
+        In addition, the developer can specify an `applicationId` for policy control / audit purposes. The `applicationId` is not sufficient in itself to identity the application server.
+        
       type: object
       properties:
         applicationId:
