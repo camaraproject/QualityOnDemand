@@ -14,6 +14,6 @@ The following steps are needed to create and deploy docker image for camara cucu
 
 1. ```mvn clean package```
 
-2. ```docker build -t cucumber . ```
+2. ```docker build -t cucumber .```
 
 3. ```docker run -dp 9091:9091 -p cucumber```
