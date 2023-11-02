@@ -297,7 +297,9 @@ paths:
       summary: "Extend the duration of an active session"
       description: |
         Extend the duration of an active QoS session.
-        If this operation is executed successfully, the new duration of the target session will be the original duration plus extended duration.
+        If this operation is executed successfully, the new duration of the target session will be the original duration plus the additional duration.
+        The remaining duration plus the requested additional duration shall not exceed the maximum limit. 
+        Otherwise, the additional duration will be the maximum limit minus the remaining duration.
       operationId: extendQosSessionDuration
       parameters:
         - name: sessionId
@@ -339,12 +341,6 @@ paths:
                     status: 400
                     code: INVALID_ARGUMENT
                     message: "The target session is inactive"
-                ExceedMaxDuration:
-                  summary: The extended session duration exceeds the limit
-                  value:
-                    status: 400
-                    code: INVALID_ARGUMENT
-                    message: "The extended session duration exceeds the limit of 86,400 seconds"
         "401":
           $ref: "#/components/responses/Generic401"
         "403":
@@ -591,7 +587,7 @@ components:
       description: Attributes required to extend the duration of an active session
       type: object
       properties:
-        additionalDuration:
+        requestedAdditionalDuration:
           description: |
             Additional duration in seconds to be extended.
           type: integer
@@ -600,7 +596,7 @@ components:
           maximum: 86399
           example: 60
       required:
-        - additionalDuration
+        - requestedAdditionalDuration
 
 
     QosProfile:
