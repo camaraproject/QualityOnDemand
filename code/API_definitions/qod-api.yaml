@@ -82,7 +82,7 @@ servers:
         default: qod/v0
         description: Base path for the QoD API
 tags:
-  - name: QoS sessions
+  - name: QoS Sessions
     description: Manage QoS sessions
   - name: QoS Profiles
     description: Manage QoS Profiles
@@ -90,7 +90,7 @@ paths:
   /sessions:
     post:
       tags:
-        - QoS sessions
+        - QoS Sessions
       summary: Creates a new session
       description: Create QoS Session to manage latency/throughput priorities
       operationId: createSession
@@ -231,7 +231,7 @@ paths:
   /sessions/{sessionId}:
     get:
       tags:
-        - QoS sessions
+        - QoS Sessions
       summary: Get QoS session information
       description: Querying for QoS session resource information details
       operationId: getSession
@@ -268,7 +268,7 @@ paths:
 
     delete:
       tags:
-        - QoS sessions
+        - QoS Sessions
       summary: Delete a QoS session
       description: Free resources related to QoS session
       operationId: deleteSession
