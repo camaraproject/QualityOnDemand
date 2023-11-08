@@ -750,7 +750,7 @@ components:
           description: The type of the event.
           type: string
           enum:
-            - 'org.camaraproject.sim-swap.v0.swapped'
+            - 'org.camaraproject.qod.v0.qos-status-changed'
         specversion:
           description: Version of the specification to which this event conforms (must be 1.0 if it conforms to cloudevents 1.0.2 version)
           type: string
