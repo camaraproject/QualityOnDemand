@@ -114,6 +114,19 @@ paths:
                   application/cloudevents+json:
                     schema:
                       $ref: "#/components/schemas/CloudEvent"
+                    examples:
+                      QOS_STATUS_CHANGED:
+                        summary: QoS status changed
+                        value:
+                          id: 83a0d986-0866-4f38-b8c0-fc65bfcda452
+                          source: 'https://api.example.com/qod/v0/sessions/123e4567-e89b-12d3-a456-426614174000'
+                          specversion: '1.0'
+                          type: 'org.camaraproject.qod.v0.qos-status-changed'
+                          time: '2021-12-12T00:00:00Z'
+                          data:
+                            sessionId: '123e4567-e89b-12d3-a456-426614174000'
+                            qosStatus: 'UNAVAILABLE'
+                            statusInfo: 'DURATION_EXPIRED'
               responses:
                 "204":
                   description: Successful notification
@@ -761,6 +774,9 @@ components:
           type: string
           enum:
             - 'application/json'
+        data:
+          description: Event notification details payload, which depends on the event type
+          type: object
         time:
           description: |
             Timestamp of when the occurrence happened. It must follow RFC 3339
@@ -791,16 +807,6 @@ components:
                   $ref: "#/components/schemas/StatusInfo"
           required:
             - data
-      example:
-        id: 83a0d986-0866-4f38-b8c0-fc65bfcda452
-        source: 'https://api.example.com/qod/v0/sessions/123e4567-e89b-12d3-a456-426614174000'
-        specversion: '1.0'
-        type: 'org.camaraproject.qod.v0.qos-status-changed'
-        time: '2021-12-12T00:00:00Z'
-        data:
-          sessionId: '123e4567-e89b-12d3-a456-426614174000'
-          qosStatus: 'UNAVAILABLE'
-          statusInfo: 'DURATION_EXPIRED'
 
     StatusInfo:
       description: |
