@@ -115,18 +115,8 @@ paths:
                     schema:
                       $ref: "#/components/schemas/CloudEvent"
                     examples:
-                      QOS_STATUS_CHANGED:
-                        summary: QoS status changed
-                        value:
-                          id: 83a0d986-0866-4f38-b8c0-fc65bfcda452
-                          source: 'https://api.example.com/qod/v0/sessions/123e4567-e89b-12d3-a456-426614174000'
-                          specversion: '1.0'
-                          type: 'org.camaraproject.qod.v0.qos-status-changed'
-                          time: '2021-12-12T00:00:00Z'
-                          data:
-                            sessionId: '123e4567-e89b-12d3-a456-426614174000'
-                            qosStatus: 'UNAVAILABLE'
-                            statusInfo: 'DURATION_EXPIRED'
+                      QOS_STATUS_CHANGED_EXAMPLE:
+                        $ref: "#/components/examples/QOS_STATUS_CHANGED_EXAMPLE"
               responses:
                 "204":
                   description: Successful notification
@@ -1089,3 +1079,17 @@ components:
             status: 503
             code: UNAVAILABLE
             message: "Service unavailable"
+
+  examples:
+    QOS_STATUS_CHANGED_EXAMPLE:
+      summary: QoS status changed
+      value:
+        id: 83a0d986-0866-4f38-b8c0-fc65bfcda452
+        source: 'https://api.example.com/qod/v0/sessions/123e4567-e89b-12d3-a456-426614174000'
+        specversion: '1.0'
+        type: 'org.camaraproject.qod.v0.qos-status-changed'
+        time: '2021-12-12T00:00:00Z'
+        data:
+          sessionId: '123e4567-e89b-12d3-a456-426614174000'
+          qosStatus: 'UNAVAILABLE'
+          statusInfo: 'DURATION_EXPIRED'
