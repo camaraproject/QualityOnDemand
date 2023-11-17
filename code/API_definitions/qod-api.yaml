@@ -226,19 +226,8 @@ paths:
       tags:
         - QoS sessions
       summary: Get all active sessions information
-      description: Get information about all active sessions that were created by the client
+      description: Get information about all active sessions authorized to be retrieved by the provided access token.
       operationId: getSessions
-      parameters:
-        - name: perPage
-          in: query
-          required: false
-          schema:
-            $ref: "#/components/schemas/PerPage"
-        - name: page
-          in: query
-          required: false
-          schema:
-            $ref: "#/components/schemas/Page"
       responses:
         "200":
           description: Contains information about the complete list of active sessions
@@ -246,31 +235,6 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/SessionInfoList"
-        "206":
-          description: Contains information about the incomplete list of active sessions
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/SessionInfoList"
-        "400":
-          description: Invalid pagination for getSession operation
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/ErrorInfo"
-              examples:
-                PageOutOfRange:
-                  summary: The page number is out of the range
-                  value:
-                    status: 400
-                    code: INVALID_PAGINATION
-                    message: "Invalid pagination: page number out of the range"
-                InvalidPerPageValue:
-                  summary: The perPage value is less than 1
-                  value:
-                    status: 400
-                    code: INVALID_PAGINATION
-                    message: "Invalid pagination: perPage value can't be less than 1"
         "401":
           $ref: "#/components/responses/Generic401"
         "403":
@@ -494,18 +458,15 @@ components:
             - qosStatus
 
     SessionInfoList:
-      description: Paged response of active sessions created by the user
+      description: List response of active sessions authorized to be retrieved by the provided access token.
       type: object
       required:
         - sessions
       properties:
-        perPage:
-          $ref: "#/components/schemas/PerPage"
-        page:
-          $ref: "#/components/schemas/Page"
         sessions:
           description: Array of sessions to be returned.
           type: array
+          minItems: 0
           items:
             type: object
             $ref: "#/components/schemas/SessionInfo"
@@ -1069,18 +1030,6 @@ components:
         - status
         - code
         - message
-
-    PerPage:
-      description: Number of resources requested to be provided in the response.
-      type: integer
-      format: int32
-      default: 20
-
-    Page:
-      description: Requested page number to indicate the start of the resources to be provided in the response (considering perPage page size). The first page has the number "0".
-      type: integer
-      format: int32
-      default: 0
 
   responses:
     Generic400:
