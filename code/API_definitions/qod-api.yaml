@@ -296,7 +296,7 @@ paths:
         - QoS Sessions
       summary: "Extend the duration of an active session"
       description: |
-        Extend the duration of an active QoS session. If this operation is executed successfully, the new duration of the target session will be the original duration plus the additional duration. The remaining duration plus the requested additional duration shall not exceed the maximum limit. Otherwise, the additional duration will be the maximum limit minus the remaining duration.
+        Extend the duration of an active QoS session. If this operation is executed successfully, the new duration of the target session will be the original duration plus the additional duration. The remaining duration plus the requested additional duration shall not exceed the maximum limit. Otherwise, the new remaining duration will be the maximum limit.
       operationId: extendQosSessionDuration
       parameters:
         - name: sessionId
