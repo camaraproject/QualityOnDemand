@@ -228,6 +228,13 @@ paths:
       summary: Get all active sessions information
       description: Get information about all active sessions authorized to be retrieved by the provided access token.
       operationId: getSessions
+      parameters:
+      - name: phoneNumber
+        in: query
+        required: false
+        description: Allows filtering of sessions by device (phone number).
+        schema:
+          $ref: "#/components/schemas/PhoneNumber"
       responses:
         "200":
           description: Contains information about the complete list of active sessions
@@ -468,7 +475,6 @@ components:
           type: array
           minItems: 0
           items:
-            type: object
             $ref: "#/components/schemas/SessionInfo"
 
     CreateSession:
