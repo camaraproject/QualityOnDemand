@@ -234,7 +234,7 @@ paths:
         required: false
         description: Allows filtering of sessions by device (phone number).
         schema:
-          $ref: "#/components/schemas/PhoneNumber"
+            $ref: "#/components/schemas/PhoneNumber"
       responses:
         "200":
           description: Contains information about the complete list of active session IDs
