@@ -299,6 +299,69 @@ paths:
         - threeLegged:
             - "qod-sessions-delete"
 
+  /sessions/{sessionId}/extend:
+    post:
+      tags:
+        - QoS Sessions
+      summary: "Extend the duration of an active session"
+      description: |
+        Extend the duration of an active QoS session. If this operation is executed successfully, the new duration of the target session will be the original duration plus the additional duration. The remaining duration plus the requested additional duration shall not exceed the maximum limit. Otherwise, the new remaining duration will be the maximum limit.
+      operationId: extendQosSessionDuration
+      parameters:
+        - name: sessionId
+          in: path
+          description: Session ID that was obtained from the createSession operation
+          required: true
+          schema:
+            $ref: "#/components/schemas/SessionId"
+      requestBody:
+        description: Parameters to extend the duration of an active session
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ExtendSessionDuration"
+        required: true
+      responses:
+        "200":
+          description: Contains information about active session
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SessionInfo"
+        "400":
+          description: Invalid input for extendQosSessionDuration operation
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorInfo"
+              examples:
+                Generic400:
+                  summary: Some parameter combinations or parameter values provided are not schema compliant
+                  value:
+                    status: 400
+                    code: INVALID_ARGUMENT
+                    message: "Schema validation failed at  ..."
+                InactiveSession:
+                  summary: The target session is inactive
+                  value:
+                    status: 400
+                    code: INVALID_ARGUMENT
+                    message: "The target session is inactive"
+        "401":
+          $ref: "#/components/responses/Generic401"
+        "403":
+          $ref: "#/components/responses/Generic403"
+        "404":
+          $ref: "#/components/responses/SessionNotFound404"
+        "500":
+          $ref: "#/components/responses/Generic500"
+        "503":
+          $ref: "#/components/responses/Generic503"
+      security:
+        - oAuth2ClientCredentials: []
+        - threeLegged:
+            - "qod-sessions-write"
+
   /qos-profiles:
     get:
       tags:
@@ -525,6 +588,22 @@ components:
         ports:
           - 5060
           - 5070
+
+    ExtendSessionDuration:
+      description: Attributes required to extend the duration of an active session
+      type: object
+      properties:
+        requestedAdditionalDuration:
+          description: |
+            Additional duration in seconds to be extended.
+          type: integer
+          format: int32
+          minimum: 1
+          maximum: 86399
+          example: 60
+      required:
+        - requestedAdditionalDuration
+
 
     QosProfile:
       description: |
