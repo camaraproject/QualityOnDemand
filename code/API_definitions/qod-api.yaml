@@ -225,7 +225,7 @@ paths:
     get:
       tags:
         - QoS sessions
-      summary: Get all active session IDs
+      summary: Get all active sessions information
       description: Get information about all active sessions authorized to be retrieved by the provided access token.
       operationId: getSessions
       parameters:
@@ -237,11 +237,11 @@ paths:
             $ref: "#/components/schemas/PhoneNumber"
       responses:
         "200":
-          description: Contains information about the complete list of active session IDs
+          description: Contains information about the complete list of active sessions
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/SessionIdList"
+                $ref: "#/components/schemas/SessionInfoList"
         "401":
           $ref: "#/components/responses/Generic401"
         "403":
@@ -464,18 +464,18 @@ components:
             - expiresAt
             - qosStatus
 
-    SessionIdList:
-      description: List response of active session IDs authorized to be retrieved by the provided access token.
+    SessionInfoList:
+      description: List response of active sessions authorized to be retrieved by the provided access token.
       type: object
       required:
-        - sessionIds
+        - sessions
       properties:
-        sessionIds:
-          description: Array of session IDs to be returned.
+        sessions:
+          description: Array of sessions to be returned.
           type: array
           minItems: 0
           items:
-            $ref: "#/components/schemas/SessionId"
+            $ref: "#/components/schemas/SessionInfo"
 
     CreateSession:
       description: Attributes required to create a session
