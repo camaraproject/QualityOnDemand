@@ -37,18 +37,16 @@ Version numbers 0.2.x to 0.7.x were intentionally not used to avoid conflicts wi
 
 ### Added
 
-* TBD - #216 Added operation to extend session duration
+* Added new endpoint to extend duration of an active session by @emil-cheung in https://github.com/camaraproject/QualityOnDemand/pull/216
 * Introduced of linting with Megalinter and Swagger Editor Validator by @RandyLevensalor, @maxl2287 and @ravindrapalaskar17 in https://github.com/camaraproject/QualityOnDemand/pull/206, https://github.com/camaraproject/QualityOnDemand/pull/207, https://github.com/camaraproject/QualityOnDemand/pull/212, and  https://github.com/camaraproject/QualityOnDemand/pull/215
 * Added global tags element  by @rartych in https://github.com/camaraproject/QualityOnDemand/pull/227
 
-
 ### Changed
 
-* TBD - #224 Aligned event notification with CloudEvent spec
+* Align event notification with CloudEvents spec by @jlurien in https://github.com/camaraproject/QualityOnDemand/pull/224
 * Moved "description" out of "allOf" declaration by @maxl2287 in https://github.com/camaraproject/QualityOnDemand/pull/205
   * Note: this change shouldn't have an impact for API consumers but is relevant for implementations of the API.
-* TDB - #233 Default folder for test definition created and QoD_API_Test.feature copied into it 
-
+* Aligned with changes in https://github.com/camaraproject/Template_Lead_Repository on test definitions by @rartych in https://github.com/camaraproject/QualityOnDemand/pull/233
 
 ### Fixed
 
