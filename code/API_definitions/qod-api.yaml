@@ -116,9 +116,12 @@ paths:
               requestBody:
                 required: true
                 content:
-                  application/json:
+                  application/cloudevents+json:
                     schema:
-                      $ref: "#/components/schemas/EventNotification"
+                      $ref: "#/components/schemas/CloudEvent"
+                    examples:
+                      QOS_STATUS_CHANGED_EXAMPLE:
+                        $ref: "#/components/examples/QOS_STATUS_CHANGED_EXAMPLE"
               responses:
                 "204":
                   description: Successful notification
@@ -814,83 +817,56 @@ components:
         - Gbps
         - Tbps
 
-    EventNotification:
-      type: object
+    CloudEvent:
+      description: Event compliant with the CloudEvents specification
       required:
-        - event
+        - id
+        - source
+        - specversion
+        - type
+        - time
       properties:
-        event:
-          $ref: "#/components/schemas/Event"
-        eventSubscriptionId:
+        id:
+          description: Identifier of this event, that must be unique in the source context.
           type: string
-          description: 'The ID of explicit subscription or none in case of implicit subscription'
-      example:
-        {
-          "event": {
-            "eventId": "5698d710-9b1b-4695-a958-7b228f08128c",
-            "eventType": "QOS_STATUS_CHANGED",
-            "eventTime": "2023-05-30T10:18:28Z",
-            "eventDetail": {
-              "sessionId": "7698d710-98b7-4695-a958-7b228f08128c",
-              "qosStatus": "UNAVAILABLE",
-              "statusInfo": "DURATION_EXPIRED"
-            }
-          }
-        }
-
-    Event:
-      description: The event being notified
-      type: object
-      required:
-        - eventType
-        - eventTime
-      properties:
-        eventId:
-          $ref: "#/components/schemas/EventId"
-        eventType:
-          $ref: "#/components/schemas/EventType"
-        eventTime:
-          $ref: "#/components/schemas/EventTime"
+        source:
+          description: Identifies the context in which an event happened in the specific Provider Implementation.
+          type: string
+          format: uri-reference
+        type:
+          description: The type of the event.
+          type: string
+          enum:
+            - 'org.camaraproject.qod.v0.qos-status-changed'
+        specversion:
+          description: Version of the specification to which this event conforms (must be 1.0 if it conforms to cloudevents 1.0.2 version)
+          type: string
+          enum:
+            - '1.0'
+        datacontenttype:
+          description: 'media-type that describes the event payload encoding, must be "application/json" for CAMARA APIs'
+          type: string
+          enum:
+            - 'application/json'
+        data:
+          description: Event notification details payload, which depends on the event type
+          type: object
+        time:
+          description: |
+            Timestamp of when the occurrence happened. It must follow RFC 3339
+          type: string
+          format: date-time
       discriminator:
-        propertyName: eventType
+        propertyName: 'type'
         mapping:
-          QOS_STATUS_CHANGED: "#/components/schemas/QosStatusChangedEvent"
-      example:
-        {
-          "eventId": "5698d710-9b1b-4695-a958-7b228f08128c",
-          "eventType": "QOS_STATUS_CHANGED",
-          "eventTime": "2023-05-30T10:18:28Z",
-          "eventDetail": {
-            "sessionId": "7698d710-98b7-4695-a958-7b228f08128c",
-            "qosStatus": "UNAVAILABLE",
-            "statusInfo": "DURATION_EXPIRED"
-          }
-        }
+          org.camaraproject.qod.v0.qos-status-changed: '#/components/schemas/EventQosStatusChanged'
 
-    EventId:
-      type: string
-      format: uuid
-      example: 5698d710-9b1b-4695-a958-7b228f08128c
-      description: Unique identifier of the event
-
-    EventType:
-      type: string
-      enum:
-        - QOS_STATUS_CHANGED
-      description: Type of the event
-
-    EventTime:
-      type: string
-      format: date-time
-      example: 2023-05-30T10:18:28Z
-      description: Date time when the event occurred
-
-    QosStatusChangedEvent:
+    EventQosStatusChanged:
       allOf:
-        - $ref: "#/components/schemas/Event"
+        - $ref: "#/components/schemas/CloudEvent"
         - type: object
           properties:
-            eventDetail:
+            data:
               type: object
               description: Event details depending on the event type
               required:
@@ -904,7 +880,7 @@ components:
                 statusInfo:
                   $ref: "#/components/schemas/StatusInfo"
           required:
-            - eventDetail
+            - data
 
     StatusInfo:
       description: |
@@ -1187,3 +1163,17 @@ components:
             status: 503
             code: UNAVAILABLE
             message: "Service unavailable"
+
+  examples:
+    QOS_STATUS_CHANGED_EXAMPLE:
+      summary: QoS status changed
+      value:
+        id: 83a0d986-0866-4f38-b8c0-fc65bfcda452
+        source: 'https://api.example.com/qod/v0/sessions/123e4567-e89b-12d3-a456-426614174000'
+        specversion: '1.0'
+        type: 'org.camaraproject.qod.v0.qos-status-changed'
+        time: '2021-12-12T00:00:00Z'
+        data:
+          sessionId: '123e4567-e89b-12d3-a456-426614174000'
+          qosStatus: 'UNAVAILABLE'
+          statusInfo: 'DURATION_EXPIRED'
