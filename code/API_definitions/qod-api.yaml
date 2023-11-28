@@ -913,7 +913,7 @@ components:
         ipv4Address:
           $ref: "#/components/schemas/DeviceIpv4Addr"
         ipv6Address:
-          $ref: "#/components/schemas/SingleIpv6Address"
+          $ref: "#/components/schemas/DeviceIpv6Address"
       minProperties: 1
 
     ApplicationServer:
@@ -927,9 +927,9 @@ components:
       type: object
       properties:
         ipv4Address:
-          $ref: "#/components/schemas/Ipv4Address"
+          $ref: "#/components/schemas/ApplicationServerIpv4Address"
         ipv6Address:
-          $ref: "#/components/schemas/Ipv6Address"
+          $ref: "#/components/schemas/ApplicationServerIpv6Address"
       minProperties: 1
 
     NetworkAccessIdentifier:
@@ -975,13 +975,16 @@ components:
       format: ipv4
       example: "84.125.93.10"
 
-    SingleIpv6Address:
-      description: A single IPv6 address with no subnet mask
+    DeviceIpv6Address:
+      description: |
+        The device should be identified by the observed IPv6 address, or by any single IPv6 address from within the subnet allocated to the device (e.g. adding ::0 to the /64 prefix). 
+
+        The session shall apply to all IP flows between the device subnet and the specified application server, unless further restricted by the optional parameters devicePorts or applicationServerPorts.
       type: string
       format: ipv6
       example: 2001:db8:85a3:8d3:1319:8a2e:370:7344
 
-    Ipv4Address:
+    ApplicationServerIpv4Address:
       type: string
       pattern: '^([01]?\d\d?|2[0-4]\d|25[0-5])(?:\.(?:[01]?\d\d?|2[0-4]\d|25[0-5])){3}(\/([0-9]|[1-2][0-9]|3[0-2]))?$'
       example: "192.168.0.1/24"
@@ -991,14 +994,11 @@ components:
           - address/mask - an IP number as above with a mask width of the form 1.2.3.4/24.
             In this case, all IP numbers from 1.2.3.0 to 1.2.3.255 will match. The bit width MUST be valid for the IP version.
 
-    Ipv6Address:
+    ApplicationServerIpv6Address:
       type: string
-      allOf:
-        - pattern: '^((:|(0?|([1-9a-f][0-9a-f]{0,3}))):)((0?|([1-9a-f][0-9a-f]{0,3})):){0,6}(:|(0?|([1-9a-f][0-9a-f]{0,3})))(\/(([0-9])|([0-9]{2})|(1[0-1][0-9])|(12[0-8])))?$'
-        - pattern: '^((([^:]+:){7}([^:]+))|((([^:]+:)*[^:]+)?::(([^:]+:)*[^:]+)?))(\/.+)?$'
       example: "2001:db8:85a3:8d3:1319:8a2e:370:7344"
       description: |
-        IPv6 address, following IETF 5952 format, may be specified in form <address/mask> as:
+        IPv6 address may be specified in form <address/mask> as:
           - address - The /128 subnet is optional for single addresses:
             - 2001:db8:85a3:8d3:1319:8a2e:370:7344
             - 2001:db8:85a3:8d3:1319:8a2e:370:7344/128
