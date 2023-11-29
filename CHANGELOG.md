@@ -31,7 +31,7 @@ Version numbers 0.2.x to 0.7.x were intentionally not used to avoid conflicts wi
 
 ### Main Changes
 
-* Aligned event notification with CloudEvent spec which will allow API consumers and implementators to use standard libraries and tools which are available to handle cloud events
+* Aligned event notification with CloudEvent spec which will allow API consumers and implementators to use standard libraries and tools which are available to handle CloudEvents (https://cloudevents.io/)
 * Added a new operation `/sessions/{sessionId}/extend` which allows to extend the duration of an active session 
 
 
@@ -47,6 +47,7 @@ Version numbers 0.2.x to 0.7.x were intentionally not used to avoid conflicts wi
 * Moved "description" out of "allOf" declaration by @maxl2287 in https://github.com/camaraproject/QualityOnDemand/pull/205
   * Note: this change shouldn't have an impact for API consumers but is relevant for implementations of the API.
 * Aligned with changes in https://github.com/camaraproject/Template_Lead_Repository on test definitions by @rartych in https://github.com/camaraproject/QualityOnDemand/pull/233
+* Single IP addresses in Device model specified with standard formats instead of patterns by @jlurien in https://github.com/camaraproject/QualityOnDemand/pull/237
 
 ### Fixed
 
