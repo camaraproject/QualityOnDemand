@@ -25,7 +25,8 @@ Version numbers 0.2.x to 0.7.x were intentionally not used to avoid conflicts wi
 ## Please note:
 
 - **This release will contain significant changes compared to v0.9.0, and it is not backward compatible**
-  - Especially ...
+  - Within notifications the schema `EventNotification`has been replace by `CloudEvent` in accordance with the updated CAMARA Design Guidelines
+  - If within `device` an IPv6 address is used it must be a single IPv6 address (out of the prefix used by the device)
 - **This is only the pre-release, it should be considered as a draft of the upcoming release v0.10.0**
   - The pre-release is meant for implementors, but it is not recommended to use the API with customers in productive environments.
 
