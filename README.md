@@ -19,9 +19,8 @@ Repository to describe, develop, document and test the QualityOnDemand API famil
 * Location: virtually  
 
 ## Meetings
-* Meetings are held virtually
+* Meetings are held virtually: [Meeting registration / Join](https://zoom-lfx.platform.linuxfoundation.org/meeting/94112812156?password=f238d6af-c959-48d7-a862-abdb3c648e40)
 * Schedule: bi-weekly, Friday, 2 PM CET/CEST (13:00 UTC, 12:00 UTC during European DST). For date/time of next meeting see previous [meeting minutes](https://github.com/camaraproject/QualityOnDemand/tree/main/documentation/MeetingMinutes).
-* [**Meeting registration / Join**](https://zoom-lfx.platform.linuxfoundation.org/meeting/94112812156?password=f238d6af-c959-48d7-a862-abdb3c648e40)
 
 ## Status and released versions
 * Note: Please be aware that the project will have frequent updates to the main branch. There are no compatibility guarantees associated with code in any branch, including main, until a new release is created. For example, changes may be reverted before a release is created. **For best results, use the latest available release**.
