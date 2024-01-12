@@ -14,7 +14,7 @@ Repository to describe, develop, document and test the QualityOnDemand API famil
 * It provides the customer with the ability to:  
   * set quality for access network connections (e.g. required latency, jitter, bit rate)  
   * get notification if network cannot fulfill  
-  * NOTE: The scope of this API family should be limited the networks between the customer's device (e.g. UE, CPE or home gateway) and the gateway from the operator's network to other networks.
+  * NOTE: The scope of this API family should be limited the networks between the users's device (e.g. mobile phone or home gateway) and the gateway from the operator's network to other networks.
 * Describe, develop, document and test the APIs (with 1-2 Service Providers)  
 * Started: October 2021
 * Location: virtually  
