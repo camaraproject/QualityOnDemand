@@ -66,7 +66,7 @@ info:
   license:
     name: Apache 2.0
     url: https://www.apache.org/licenses/LICENSE-2.0.html
-  version: 0.10.0-rc
+  version: 0.10.0-wip
 externalDocs:
   description: Product documentation at Camara
   url: https://github.com/camaraproject/
@@ -206,6 +206,12 @@ paths:
                     status: 400
                     code: OUT_OF_RANGE
                     message: "Invalid port ranges specified: devicePorts"
+                DurationOutOfRangeForQoSProfile:
+                  summary: The requested duration is out of the allowed range for the specific QoS profile 
+                  value:
+                    status: 400
+                    code: OUT_OF_RANGE
+                    message: "The requested duration is out of the allowed range for the specific QoS profile"
         "401":
           $ref: "#/components/responses/Generic401"
         "403":
