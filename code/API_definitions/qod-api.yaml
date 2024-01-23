@@ -285,7 +285,7 @@ paths:
 
         If the notification callback is provided the client will receive in addition to the response a `QOS_STATUS_CHANGED` event with
         - `qosStatus` as `UNAVAILABLE` and
-        - `statusInfo` as `USER_DELETED`
+        - `statusInfo` as `DELETE_REQUESTED`
       operationId: deleteSession
       parameters:
         - name: sessionId
