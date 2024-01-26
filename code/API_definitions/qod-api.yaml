@@ -105,10 +105,10 @@ paths:
         A `QOS_STATUS_CHANGED` event notification with `qosStatus` as `UNAVAILABLE` will also be send if the network terminates the session before the requested duration expired
 
         NOTE: in case of a `QOS_STATUS_CHANGED` event with `qosStatus` as `UNAVAILABLE` and `statusInfo` as `NETWORK_TERMINATED` the resources of the QoS session
-        are not directly set free, but will get deleted automatically only 360 seconds after the event.
+        are not directly released, but will get deleted automatically only 360 seconds after the event.
         This behavior should allow clients which are not receiving notification events but are polling the session information the opportunity
         to see the `qosStatus` `UNAVAILABLE` and `statusInfo` `NETWORK_TERMINATED`. Before a client can attempt to create a new QoD session
-        for the same device and flow within this time period they must free the session resources with an explicit `delete` operation.
+        for the same device and flow within this time period they must release the session resources with an explicit `delete` operation.
 
       operationId: createSession
       requestBody:
@@ -291,7 +291,7 @@ paths:
         - QoS Sessions
       summary: Delete a QoS session
       description: |
-        Free resources related to QoS session
+        Release resources related to QoS session
 
         If the notification callback is provided and the `qosStatus` of the session was `AVAILABLE` the client will receive in addition to the response a `QOS_STATUS_CHANGED` event with
         - `qosStatus` as `UNAVAILABLE` and
@@ -1060,8 +1060,8 @@ components:
     EventQosStatus:
       description: |
         The current status of a requested or previously available session. Applicable values in the event are:
-        *  `AVAILABLE` - The requested QoS has been provided by the network. NOTE: this event will be sent always, also if status within the response to `createSession` is already `AVAILABLE`
-        *  `UNAVAILABLE` - A requested or previously available QoS session is currently unavailable. `statusInfo` may provide additional information about the reason for the unavailability. NOTE: this event will be sent always, also if the user deletes the session explicitly
+        *  `AVAILABLE` - The requested QoS has been provided by the network.
+        *  `UNAVAILABLE` - A requested or previously available QoS session is now unavailable. `statusInfo` may provide additional information about the reason for the unavailability.
       type: string
       enum:
         - AVAILABLE
