@@ -73,14 +73,11 @@ externalDocs:
 security:
   - oAuth2ClientCredentials: []
 servers:
-  - url: "{apiRoot}/{basePath}"
+  - url: "{apiRoot}/qod/v0"
     variables:
       apiRoot:
         default: http://localhost:9091
-        description: API root
-      basePath:
-        default: qod/v0
-        description: Base path for the QoD API
+        description: API root, defined by the service provider, e.g. `api.example.com` or `api.example.com/somepath`
 tags:
   - name: QoS Sessions
     description: Manage QoS sessions
