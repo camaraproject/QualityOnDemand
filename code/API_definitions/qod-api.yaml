@@ -105,10 +105,10 @@ paths:
         A `QOS_STATUS_CHANGED` event notification with `qosStatus` as `UNAVAILABLE` will also be send if the network terminates the session before the requested duration expired
 
         NOTE: in case of a `QOS_STATUS_CHANGED` event with `qosStatus` as `UNAVAILABLE` and `statusInfo` as `NETWORK_TERMINATED` the resources of the QoS session
-        are not directly released, but will get deleted automatically only 360 seconds after the event.
-        This behavior should allow clients which are not receiving notification events but are polling the session information the opportunity
-        to see the `qosStatus` `UNAVAILABLE` and `statusInfo` `NETWORK_TERMINATED`. Before a client can attempt to create a new QoD session
-        for the same device and flow within this time period they must release the session resources with an explicit `delete` operation.
+        are not directly released, but will get deleted automatically at earliest 360 seconds after the event.
+        This behavior allows clients which are not receiving notification events but are polling to get the session information with
+        the `qosStatus` `UNAVAILABLE` and `statusInfo` `NETWORK_TERMINATED`. Before a client can attempt to create a new QoD session
+        for the same device and flow period they must release the session resources with an explicit `delete` operation if not yet automatically deleted.
 
       operationId: createSession
       requestBody:
