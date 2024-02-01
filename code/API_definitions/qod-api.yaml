@@ -38,7 +38,7 @@ info:
     Duration (in seconds) for which the QoS session (between application client and application server) should be created. This parameter is optional. When not specified, a default session duration (e.g. 24 hours) is applied. The user may request a termination before its expiration.
 
     * **Notification URL and token**:
-    Developers may provide a callback URL on which notifications (eg. session termination) regarding the session can be received from the service provider. This is an optional parameter.
+    Developers may provide a callback URL on which notifications about all status change events of the session (eg. session termination) can be received from the service provider. This is an optional parameter.
 
     # API functionality
 
@@ -89,7 +89,24 @@ paths:
       tags:
         - QoS Sessions
       summary: Creates a new session
-      description: Create QoS Session to manage latency/throughput priorities
+      description: |
+        Create QoS Session to manage latency/throughput priorities
+
+        If the qosStatus in the API response is "AVAILABLE" and a notification callback is provided the client will receive in addition to the response a
+        `QOS_STATUS_CHANGED` event notification with `qosStatus` as `AVAILABLE`.
+
+        If the `qosStatus` in the API response is `REQUESTED`, the client will receive either
+        - a `QOS_STATUS_CHANGED` event notification with `qosStatus` as `AVAILABLE` after the network notifies that it has created the requested session, or
+        - a `QOS_STATUS_CHANGED` event notification with `qosStatus` as `UNAVAILABLE` and `statusInfo` as `NETWORK_TERMINATED` after the network notifies that it has failed to provide the requested session.
+
+        A `QOS_STATUS_CHANGED` event notification with `qosStatus` as `UNAVAILABLE` will also be send if the network terminates the session before the requested duration expired
+
+        NOTE: in case of a `QOS_STATUS_CHANGED` event with `qosStatus` as `UNAVAILABLE` and `statusInfo` as `NETWORK_TERMINATED` the resources of the QoS session
+        are not directly released, but will get deleted automatically at earliest 360 seconds after the event.
+        This behavior allows clients which are not receiving notification events but are polling to get the session information with
+        the `qosStatus` `UNAVAILABLE` and `statusInfo` `NETWORK_TERMINATED`. Before a client can attempt to create a new QoD session
+        for the same device and flow period they must release the session resources with an explicit `delete` operation if not yet automatically deleted.
+
       operationId: createSession
       requestBody:
         description: Parameters to create a new session
@@ -107,7 +124,7 @@ paths:
               summary: "Session notifications callback"
               description: |
                 Important: this endpoint is to be implemented by the API consumer.
-                The QoD server will call this endpoint whenever any network related event occurs.
+                The QoD server will call this endpoint whenever any QoS session change (e.g. network termination) related event occurs.
                 Currently only QOS_STATUS_CHANGED event is defined.
               operationId: postNotification
               requestBody:
@@ -276,7 +293,13 @@ paths:
       tags:
         - QoS Sessions
       summary: Delete a QoS session
-      description: Free resources related to QoS session
+      description: |
+        Release resources related to QoS session
+
+        If the notification callback is provided and the `qosStatus` of the session was `AVAILABLE` the client will receive in addition to the response a `QOS_STATUS_CHANGED` event with
+        - `qosStatus` as `UNAVAILABLE` and
+        - `statusInfo` as `DELETE_REQUESTED`
+        There will be no notification event if the `qosStatus` was already `UNAVAILABLE`.
       operationId: deleteSession
       parameters:
         - name: sessionId
@@ -892,10 +915,13 @@ components:
         Reason for the new `qosStatus`. Currently `statusInfo` is only applicable when `qosStatus` is 'UNAVAILABLE'.
         * `DURATION_EXPIRED` - Session terminated due to requested duration expired
         * `NETWORK_TERMINATED` - Network terminated the session before the requested duration expired
+        * `DELETE_REQUESTED`- User requested the deletion of the session before the requested duration expired
+
       type: string
       enum:
         - DURATION_EXPIRED
         - NETWORK_TERMINATED
+        - DELETE_REQUESTED
 
     Device:
       description: |
@@ -1039,8 +1065,8 @@ components:
     EventQosStatus:
       description: |
         The current status of a requested or previously available session. Applicable values in the event are:
-        *  `AVAILABLE` - The requested QoS has been provided by the network
-        *  `UNAVAILABLE` - A requested or previously available QoS session is currently unavailable. `statusInfo` may provide additional information about the reason for the unavailability.
+        *  `AVAILABLE` - The requested QoS has been provided by the network.
+        *  `UNAVAILABLE` - A requested or previously available QoS session is now unavailable. `statusInfo` may provide additional information about the reason for the unavailability.
       type: string
       enum:
         - AVAILABLE
