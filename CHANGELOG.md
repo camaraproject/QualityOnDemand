@@ -2,6 +2,7 @@
 
 ## Table of Contents
 
+- [v0.10.0-rc2](#v0100-rc2)
 - [v0.10.0-rc](#v0100-rc)
 - [v0.9.0](#v090)
 - [v0.9.0-rc](#v090-rc)
@@ -13,14 +14,32 @@ Version numbers 0.2.x to 0.7.x were intentionally not used to avoid conflicts wi
 
 **Please be aware that the project will have frequent updates to the main branch. There are no compatibility guarantees associated with code in any branch, including main, until it has been released. For example, changes may be reverted before a release is published. For the best results, use the latest published release.**
 
-# v0.10.0-rc
+# v0.10.0-rc2
 
-**This is the release candidate of v0.10.0 - containing the upcoming fourth alpha version of the Quality-On-Demand (QoD) API**
+**This is the second release candidate of v0.10.0 - containing the upcoming fourth alpha version of the Quality-On-Demand (QoD) API**
 
 - API definition **with inline documentation**:
-  - OpenAPI [YAML spec file](https://github.com/camaraproject/QualityOnDemand/blob/release-0.10.0-rc/code/API_definitions/qod-api.yaml)
-  - [View it on ReDoc](https://redocly.github.io/redoc/?url=https://raw.githubusercontent.com/camaraproject/QualityOnDemand/release-0.10.0-rc/code/API_definitions/qod-api.yaml&nocors)
-  - [View it on Swagger Editor](https://editor.swagger.io/?url=https://raw.githubusercontent.com/camaraproject/QualityOnDemand/release-0.10.0-rc/code/API_definitions/qod-api.yaml)
+  - [View it on ReDoc](https://redocly.github.io/redoc/?url=https://raw.githubusercontent.com/camaraproject/QualityOnDemand/v0.10.0-rc2/code/API_definitions/qod-api.yaml&nocors)
+  - [View it on Swagger Editor](https://editor.swagger.io/?url=https://raw.githubusercontent.com/camaraproject/QualityOnDemand/v0.10.0-rc2/code/API_definitions/qod-api.yaml)
+  - OpenAPI [YAML spec file](https://github.com/camaraproject/QualityOnDemand/blob/v0.10.0-rc2/code/API_definitions/qod-api.yaml)
+
+## Changes compared to [v0.10.0-rc](#v0100-rc)
+
+* Added a new error example for DurationOutOfRangeForQoSProfile by @jlurien in https://github.com/camaraproject/QualityOnDemand/pull/259
+* Moved "basePath" /qod/v0 to "url"-property and introduced "apiroot" in definition of server  @maxl2287 in https://github.com/camaraproject/QualityOnDemand/pull/252
+* Added a note to maxDuration parameter within qosProfile schema about the limit of 86400 seconds by @hdamker in https://github.com/camaraproject/QualityOnDemand/pull/256
+* Added statusInfo 'DELETE_REQUESTED' for qosStatus 'UNAVAILABLE' and clarified notification events in documentation by @hdamker in https://github.com/camaraproject/QualityOnDemand/pull/258:
+  * notifications will be sent for all changes of QosStatus, even if initiated by the client.
+  * what will happen when qosStatus changes from 'AVAILABLE' to 'UNAVAILABLE' due to 'NETWORK_TERMINATED'
+
+# v0.10.0-rc
+
+**This is the first release candidate of v0.10.0 - containing the upcoming fourth alpha version of the Quality-On-Demand (QoD) API**
+
+- API definition **with inline documentation**:
+  - [View it on ReDoc](https://redocly.github.io/redoc/?url=https://raw.githubusercontent.com/camaraproject/QualityOnDemand/v0.10.0-rc/code/API_definitions/qod-api.yaml&nocors)
+  - [View it on Swagger Editor](https://editor.swagger.io/?url=https://raw.githubusercontent.com/camaraproject/QualityOnDemand/v0.10.0-rc/code/API_definitions/qod-api.yaml)
+  - OpenAPI [YAML spec file](https://github.com/camaraproject/QualityOnDemand/blob/v0.10.0-rc/code/API_definitions/qod-api.yaml)
 
 ## Please note:
 
