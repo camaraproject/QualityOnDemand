@@ -31,6 +31,8 @@ Version numbers 0.2.x to 0.7.x were intentionally not used to avoid conflicts wi
 * Added statusInfo 'DELETE_REQUESTED' for qosStatus 'UNAVAILABLE' and clarified notification events in documentation by @hdamker in https://github.com/camaraproject/QualityOnDemand/pull/258:
   * notifications will be sent for all changes of QosStatus, even if initiated by the client.
   * what will happen when qosStatus changes from 'AVAILABLE' to 'UNAVAILABLE' due to 'NETWORK_TERMINATED'
+ 
+**Full Changelog**: https://github.com/camaraproject/QualityOnDemand/compare/v0.10.0-rc...v0.10.0-rc2
 
 # v0.10.0-rc
 
