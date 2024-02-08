@@ -2,6 +2,7 @@
 
 ## Table of Contents
 
+- **[v0.10.0](#v0100)**
 - [v0.10.0-rc2](#v0100-rc2)
 - [v0.10.0-rc](#v0100-rc)
 - [v0.9.0](#v090)
@@ -13,6 +14,58 @@
 Version numbers 0.2.x to 0.7.x were intentionally not used to avoid conflicts with local implementations.
 
 **Please be aware that the project will have frequent updates to the main branch. There are no compatibility guarantees associated with code in any branch, including main, until it has been released. For example, changes may be reverted before a release is published. For the best results, use the latest published release.**
+
+# v0.10.0
+
+**This release contains the fourth alpha version of the Quality-On-Demand (QoD) API.**
+
+- API definition **with inline documentation**:
+  - [View it on ReDoc](https://redocly.github.io/redoc/?url=https://raw.githubusercontent.com/camaraproject/QualityOnDemand/release-0.10.0/code/API_definitions/qod-api.yaml&nocors)
+  - [View it on Swagger Editor](https://editor.swagger.io/?url=https://raw.githubusercontent.com/camaraproject/QualityOnDemand/release-0.10.0/code/API_definitions/qod-api.yaml)
+  - OpenAPI [YAML spec file](https://github.com/camaraproject/QualityOnDemand/blob/release-0.10.0/code/API_definitions/qod-api.yaml)
+
+### Please note:
+
+- **This release contains significant changes compared to v0.9.0, and the QoD API is not backward compatible**
+  - Within notifications the schema `EventNotification`has been replace by `CloudEvent` in accordance with the updated CAMARA Design Guidelines
+  - If within `device` an IPv6 address is used it must be a single IPv6 address (out of the prefix used by the device)
+- This release includes changes to be compliant with the [Design Guidelines](https://github.com/camaraproject/Commonalities/blob/release-0.2.0/documentation/API-design-guidelines.md#10-security) and other documents in [release v0.2 of CAMARA Commonalities](https://github.com/camaraproject/Commonalities/tree/release-0.2.0)
+- Please note also that this is still a v0.x release and further releases before the first stable major release might introduce again breaking changes (e.g. to comply with changes agreed within Commonalities)
+
+### Main Changes
+
+* Aligned event notification with CloudEvent spec which will allow API consumers and implementators to use standard libraries and tools which are available to handle CloudEvents (https://cloudevents.io/)
+* Added a new operation `/sessions/{sessionId}/extend` which allows to extend the duration of an active session 
+
+### Added
+
+* Added new endpoint to extend duration of an active session by @emil-cheung in https://github.com/camaraproject/QualityOnDemand/pull/216
+* Introduced of linting with Megalinter and Swagger Editor Validator by @RandyLevensalor, @maxl2287 and @ravindrapalaskar17 in https://github.com/camaraproject/QualityOnDemand/pull/206, https://github.com/camaraproject/QualityOnDemand/pull/207, https://github.com/camaraproject/QualityOnDemand/pull/212, and  https://github.com/camaraproject/QualityOnDemand/pull/215
+* Added global tags element  by @rartych in https://github.com/camaraproject/QualityOnDemand/pull/227
+* Added a new error example for DurationOutOfRangeForQoSProfile by @jlurien in https://github.com/camaraproject/QualityOnDemand/pull/259
+
+### Changed
+
+* Align event notification with CloudEvents spec by @jlurien in https://github.com/camaraproject/QualityOnDemand/pull/224
+* Moved "description" out of "allOf" declaration by @maxl2287 in https://github.com/camaraproject/QualityOnDemand/pull/205
+  * Note: this change shouldn't have an impact for API consumers but is relevant for implementations of the API.
+* Single IP addresses in Device model specified with standard formats instead of patterns by @jlurien in https://github.com/camaraproject/QualityOnDemand/pull/237
+* Moved "basePath" /qod/v0 to "url"-property and introduced "apiroot" in definition of server  @maxl2287 in https://github.com/camaraproject/QualityOnDemand/pull/252
+* Added statusInfo 'DELETE_REQUESTED' for qosStatus 'UNAVAILABLE' and clarified notification events in documentation by @hdamker in https://github.com/camaraproject/QualityOnDemand/pull/258
+
+### Fixed
+
+* NA
+  
+### Removed
+
+* NA
+
+## New Contributors
+* @ravindrapalaskar17 made their first contribution in https://github.com/camaraproject/QualityOnDemand/pull/215
+* @rartych made their first contribution in https://github.com/camaraproject/QualityOnDemand/pull/227
+
+**Full Changelog**: https://github.com/camaraproject/QualityOnDemand/compare/v0.9.0...v0.10.0
 
 # v0.10.0-rc2
 
