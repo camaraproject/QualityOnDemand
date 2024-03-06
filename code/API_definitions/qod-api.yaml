@@ -66,7 +66,7 @@ info:
   license:
     name: Apache 2.0
     url: https://www.apache.org/licenses/LICENSE-2.0.html
-  version: 0.10.0
+  version: unreleased (0.11.0 work in progress or patch release 0.10.1)
 externalDocs:
   description: Product documentation at Camara
   url: https://github.com/camaraproject/
