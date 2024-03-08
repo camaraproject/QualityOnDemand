@@ -949,14 +949,21 @@ components:
 
     ApplicationServer:
       description: |
-        A server hosting backend applications to deliver some business logic to clients.
+        A server hosting backend applications to deliver a service to the identified `device`.
 
-        The developer can choose to provide the below specified device identifiers:
-
+        The developer must provide at least one of the following device identifiers:
         * `ipv4Address`
         * `ipv6Address`
+
+        In addition, the developer can specify an `applicationId` for policy control / audit purposes. The `applicationId` is not sufficient in itself to identity the application server.
       type: object
       properties:
+        applicationId:
+          description: |
+            A public identifier that uniquely identifies the application initiating a QoS session. The applicationId is more granular than the clientId, which identifies the unique customer. A client or customer could have one or more applications that need to be tracked. The Id is systematically relayed to downstream systems, including but not limited to, the Network Exposure Function (NEF) and the Policy Control Function (PCF) within the 5G framework.
+            The primary utility of this transmission is to facilitate the application of relevant policies, ensuring that the application is appropriately tagged within usage records.
+          type: string
+          example: XRapp123
         ipv4Address:
           $ref: "#/components/schemas/ApplicationServerIpv4Address"
         ipv6Address:
