@@ -28,23 +28,17 @@ Repository to describe, develop, document and test the QualityOnDemand API famil
 
 * Note: Please be aware that the project will have frequent updates to the main branch. There are no compatibility guarantees associated with code in any branch, including main, until a new release is created. For example, changes may be reverted before a release is created. **For best results, use the latest available release**.
 
-* **The Release Candidate for v0.10.0 of the Quality-On-Demand API is available. This upcoming release will contain the fourth alpha version of the QoD API**<br>Until the release there are bug fixes to be expected. The release candidate is suitable for implementors, but it is not recommended to use the API with customers in productive environments.
-* The release candidate for v0.10.0 is available in the [release-0.10.0-rc branch](https://github.com/camaraproject/QualityOnDemand/tree/release-0.10.0-rc)
-  - API definition v0.10.0-rc with inline documentation:
-    - [View it on ReDoc](https://redocly.github.io/redoc/?url=https://raw.githubusercontent.com/camaraproject/QualityOnDemand/release-0.10.0-rc/code/API_definitions/qod-api.yaml&nocors)
-    - [View it on Swagger Editor](https://editor.swagger.io/?url=https://raw.githubusercontent.com/camaraproject/QualityOnDemand/release-0.10.0-rc/code/API_definitions/qod-api.yaml)
-    - OpenAPI [YAML spec file](https://github.com/camaraproject/QualityOnDemand/blob/release-0.10.0-rc/code/API_definitions/qod-api.yaml)
-  - For changes between v0.10.0-rc and v0.9.0 see the [CHANGELOG.md](https://github.com/camaraproject/QualityOnDemand/blob/main/CHANGELOG.md)
+* **The latest available and released version 0.10.0 is available within the [release-0.10.0 branch](https://github.com/camaraproject/QualityOnDemand/tree/release-0.10.0)**
+  - API definition v0.10.0 with inline documentation:
+    - [View it on ReDoc](https://redocly.github.io/redoc/?url=https://raw.githubusercontent.com/camaraproject/QualityOnDemand/release-0.10.0/code/API_definitions/qod-api.yaml&nocors)
+    - [View it on Swagger Editor](https://editor.swagger.io/?url=https://raw.githubusercontent.com/camaraproject/QualityOnDemand/release-0.10.0/code/API_definitions/qod-api.yaml)
+    - OpenAPI [YAML spec file](https://github.com/camaraproject/QualityOnDemand/blob/release-0.10.0/code/API_definitions/qod-api.yaml)
+   
+* The previous released version v0.9.0 is availabe within the [release-0.9.0 branch](https://github.com/camaraproject/QualityOnDemand/tree/release-0.9.0)
+* For changes between v0.10.0 and v0.9.0 see the [CHANGELOG.md](https://github.com/camaraproject/QualityOnDemand/blob/main/CHANGELOG.md)
+  
+* Provider implementations (PI) are available within separate repositories (partly for previous releases):
 
-* The latest available and released version 0.9.0 is available within the [release-0.9.0 branch](https://github.com/camaraproject/QualityOnDemand/tree/release-0.9.0)
-  - API definition v0.9.0 with inline documentation:
-    - [View it on ReDoc](https://redocly.github.io/redoc/?url=https://raw.githubusercontent.com/camaraproject/QualityOnDemand/release-0.9.0/code/API_definitions/qod-api.yaml&nocors)
-    - [View it on Swagger Editor](https://editor.swagger.io/?url=https://raw.githubusercontent.com/camaraproject/QualityOnDemand/release-0.9.0/code/API_definitions/qod-api.yaml)
-    - OpenAPI [YAML spec file](https://github.com/camaraproject/QualityOnDemand/blob/release-0.9.0/code/API_definitions/qod-api.yaml)
-
-* The previous released version v0.8.1 is availabe within the [release-0.8.1 branch](https://github.com/camaraproject/QualityOnDemand/tree/release-0.8.1)
-
-* Provider implementations (PI) are available within separate repositories:
   * [QualityOnDemand_PI1](https://github.com/camaraproject/QualityOnDemand_PI1) by Deutsche Telekom
   * [QualityOnDemand_PI2](https://github.com/camaraproject/QualityOnDemand_PI2) by Orange
   * [QualityOnDemand_PI3](https://github.com/camaraproject/QualityOnDemand_PI3) by Spry Fox Networks
