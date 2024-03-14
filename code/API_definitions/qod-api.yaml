@@ -1263,7 +1263,7 @@ components:
         startedAt: 1639479600
         expiresAt: 1639566000
         qosStatus: UNAVAILABLE
-        statusInfo: DELETE_REQUESTED
+        statusInfo: NETWORK_TERMINATED
 
     QOS_STATUS_CHANGED_EXAMPLE:
       summary: QoS status changed
