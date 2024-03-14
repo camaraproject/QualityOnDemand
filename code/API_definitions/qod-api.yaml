@@ -272,6 +272,13 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/SessionInfo"
+              examples:
+                SESSION_AVAILABLE:
+                  $ref: '#/components/examples/SESSION_AVAILABLE_EXAMPLE'
+                SESSION_REQUESTED:
+                  $ref: '#/components/examples/SESSION_REQUESTED_EXAMPLE'
+                SESSION_UNAVAILABLE:
+                  $ref: '#/components/examples/SESSION_UNAVAILABLE_EXAMPLE'
         "400":
           $ref: "#/components/responses/Generic400"
         "401":
@@ -519,6 +526,8 @@ components:
               format: int64
             qosStatus:
               $ref: "#/components/schemas/QosStatus"
+            statusInfo:
+              $ref: "#/components/schemas/StatusInfo"
             messages:
               type: array
               items:
@@ -1201,6 +1210,61 @@ components:
             message: "Service unavailable"
 
   examples:
+    SESSION_AVAILABLE_EXAMPLE:
+      summary: QoS session status is available
+      value:
+        duration: 86400
+        device:
+          ipv4Address:
+            publicAddress: 84.125.93.10
+            publicPort: 59765
+        applicationServer:
+          ipv4Address: 192.168.0.1/24
+        qosProfile: QCI_1_voice
+        webhook:
+          notificationUrl: https://application-server.com
+        sessionId: 3fa85f64-5717-4562-b3fc-2c963f66afa6
+        startedAt: 1639479600
+        expiresAt: 1639566000
+        qosStatus: AVAILABLE
+
+    SESSION_REQUESTED_EXAMPLE:
+      summary: QoS session status is requested
+      value:
+        duration: 86400
+        device:
+          ipv4Address:
+            publicAddress: 84.125.93.10
+            publicPort: 59765
+        applicationServer:
+          ipv4Address: 192.168.0.1/24
+        qosProfile: QCI_1_voice
+        webhook:
+          notificationUrl: https://application-server.com
+        sessionId: 3fa85f64-5717-4562-b3fc-2c963f66afa6
+        startedAt: 1639479600
+        expiresAt: 1639566000
+        qosStatus: REQUESTED
+
+    SESSION_UNAVAILABLE_EXAMPLE:
+      summary: QoS session is unavailable
+      value:
+        duration: 86400
+        device:
+          ipv4Address:
+            publicAddress: 84.125.93.10
+            publicPort: 59765
+        applicationServer:
+          ipv4Address: 192.168.0.1/24
+        qosProfile: QCI_1_voice
+        webhook:
+          notificationUrl: https://application-server.com
+        sessionId: 3fa85f64-5717-4562-b3fc-2c963f66afa6
+        startedAt: 1639479600
+        expiresAt: 1639566000
+        qosStatus: UNAVAILABLE
+        statusInfo: DELETE_REQUESTED
+
     QOS_STATUS_CHANGED_EXAMPLE:
       summary: QoS status changed
       value:
