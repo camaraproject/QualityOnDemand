@@ -1,4 +1,6 @@
 ---
+# CAMARA Project - YAML linting configuration for yamllint https://yamllint.readthedocs.io/en/latest/rules.html
+# 31.01.2024 - initial version
 
 yaml-files:
   - '*.yaml'
@@ -11,6 +13,7 @@ rules:
   colons: enable
   commas: enable
   comments:
+    min-spaces-from-content: 1
     level: error
   comments-indentation:
     level: error
@@ -24,7 +27,7 @@ rules:
   key-ordering: disable
   line-length: disable
   new-line-at-end-of-file: enable
-  new-lines: enable
+  new-lines: disable
   octal-values: disable
   quoted-strings: disable
   trailing-spaces: enable
