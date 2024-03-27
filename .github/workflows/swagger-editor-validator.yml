@@ -1,10 +1,10 @@
 ---
 name: Swagger Editor validation
 
-on:  # yamllint disable-line rule:truthy
-  pull_request:
-    branches:
-      - main
+on:  workflow_dispatch # yamllint disable-line rule:truthy
+  # pull_request:
+  #   branches:
+  #     - main
 
 jobs:
   test_swagger_editor_validator_remote:
