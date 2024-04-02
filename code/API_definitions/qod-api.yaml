@@ -499,54 +499,10 @@ components:
       type: string
       format: uuid
 
-    SessionInfo:
-      description: Session related information.
-      allOf:
-        - $ref: "#/components/schemas/CreateSession"
-        - type: object
-          properties:
-            sessionId:
-              $ref: "#/components/schemas/SessionId"
-            startedAt:
-              type: integer
-              example: 1639479600
-              description: Timestamp of session start in seconds since Unix epoch
-              format: int64
-            expiresAt:
-              type: integer
-              example: 1639566000
-              description: Timestamp of session expiration if the session was not deleted, in seconds since Unix epoch
-              format: int64
-            qosStatus:
-              $ref: "#/components/schemas/QosStatus"
-            messages:
-              type: array
-              items:
-                $ref: "#/components/schemas/Message"
-          required:
-            - sessionId
-            - duration
-            - startedAt
-            - expiresAt
-            - qosStatus
-
-    CreateSession:
-      description: Attributes required to create a session
+    BaseSessionInfo:
+      description: Common attributes of a QoD session
       type: object
       properties:
-        duration:
-          description: |
-            Session duration in seconds. Maximal value of 24 hours is used if not set.
-            After session is expired the, client will receive a `QOS_STATUS_CHANGED` event with
-             - `qosStatus` as `UNAVAILABLE`, and,
-             - `statusInfo` as `DURATION_EXPIRED`.
-            See notification callback.
-          type: integer
-          format: int32
-          minimum: 1
-          maximum: 86400
-          default: 86400
-          example: 86400
         device:
           $ref: "#/components/schemas/Device"
         applicationServer:
@@ -581,6 +537,62 @@ components:
         - device
         - applicationServer
         - qosProfile
+
+    SessionInfo:
+      description: Session related information.
+      allOf:
+        - $ref: "#/components/schemas/BaseSessionInfo"
+        - type: object
+          properties:
+            sessionId:
+              $ref: "#/components/schemas/SessionId"
+            duration:
+              type: integer
+              format: int32
+              minimum: 1
+              example: 86400
+            startedAt:
+              type: integer
+              example: 1639479600
+              description: Timestamp of session start in seconds since Unix epoch
+              format: int64
+            expiresAt:
+              type: integer
+              example: 1639566000
+              description: Timestamp of session expiration if the session was not deleted, in seconds since Unix epoch
+              format: int64
+            qosStatus:
+              $ref: "#/components/schemas/QosStatus"
+            messages:
+              type: array
+              items:
+                $ref: "#/components/schemas/Message"
+          required:
+            - sessionId
+            - duration
+            - startedAt
+            - expiresAt
+            - qosStatus
+
+    CreateSession:
+      description: Attributes required to create a session
+      allOf:
+        - $ref: "#/components/schemas/BaseSessionInfo"
+        - type: object
+          properties:
+            duration:
+              description: |
+                Session duration in seconds. Maximal value of 24 hours is used if not set.
+                After session is expired the, client will receive a `QOS_STATUS_CHANGED` event with
+                - `qosStatus` as `UNAVAILABLE`, and,
+                - `statusInfo` as `DURATION_EXPIRED`.
+                See notification callback.
+              type: integer
+              format: int32
+              minimum: 1
+              maximum: 86400
+              default: 86400
+              example: 86400
 
     Port:
       description: TCP or UDP port number
