@@ -18,7 +18,7 @@ Version numbers 0.2.x to 0.7.x were intentionally not used to avoid conflicts wi
 
 # v0.10.1
 
-** v0.10.1 is a patch release of v0.10.0 of the Quality-On-Demand (QoD) API. Please read also the notes and changes for v0.10.0 release**
+**v0.10.1 is a patch release of v0.10.0 of the Quality-On-Demand (QoD) API. Please read also the notes and changes for v0.10.0 release**
 
 - API definition **with inline documentation**:
   - [View it on ReDoc](https://redocly.github.io/redoc/?url=https://raw.githubusercontent.com/camaraproject/QualityOnDemand/v0.10.1/code/API_definitions/qod-api.yaml&nocors)
