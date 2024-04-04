@@ -2,8 +2,8 @@
 
 ## Table of Contents
 
-- [v0.10.1](#v0101)**
-- **[v0.10.0](#v0100)**
+- **[v0.10.1](#v0101)**
+- [v0.10.0](#v0100)
 - [v0.10.0-rc2](#v0100-rc2)
 - [v0.10.0-rc](#v0100-rc)
 - [v0.9.0](#v090)
@@ -18,7 +18,7 @@ Version numbers 0.2.x to 0.7.x were intentionally not used to avoid conflicts wi
 
 # v0.10.1
 
-**This is a patch release of v0.10.0 of the Quality-On-Demand (QoD) API. Please read also the notes and changes for v0.10.0**
+** v0.10.1 is a patch release of v0.10.0 of the Quality-On-Demand (QoD) API. Please read also the notes and changes for v0.10.0 release**
 
 - API definition **with inline documentation**:
   - [View it on ReDoc](https://redocly.github.io/redoc/?url=https://raw.githubusercontent.com/camaraproject/QualityOnDemand/v0.10.1/code/API_definitions/qod-api.yaml&nocors)
@@ -27,7 +27,16 @@ Version numbers 0.2.x to 0.7.x were intentionally not used to avoid conflicts wi
  
 ### Fixed
 
-...
+* Updated the documentation to address the lack of `statusInfo` in `SessionInfo` temporary by @hdamker in https://github.com/camaraproject/QualityOnDemand/pull/269
+  * Note: The parameter `statusInfo` will be added to `SessionInfo` within next regular release
+* Fixed maximum duration in session info and improved documentation by @emil-cheung in https://github.com/camaraproject/QualityOnDemand/pull/277
+  * Improved the documentation of "Extend the duration of an active session"
+  * Improved the datatype "SessionInfo" to remove the maximum limit of duration
+
+### Further changes within the project
+
+* Added configuration for linting ruleset by @rartych in https://github.com/camaraproject/QualityOnDemand/pull/270
+* Updated the project scope in the README.md by @RandyLevensalor in https://github.com/camaraproject/QualityOnDemand/pull/255
 
 # v0.10.0
 
