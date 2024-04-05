@@ -1005,7 +1005,7 @@ components:
         - required: [publicAddress, publicPort]
       example:
         {
-          "publicAddress": "192.0.2.0",
+          "publicAddress": "203.0.113.0",
           "publicPort": 59765
         }
 
@@ -1013,7 +1013,7 @@ components:
       description: A single IPv4 address with no subnet mask
       type: string
       format: ipv4
-      example: "192.0.2.0"
+      example: "203.0.113.0"
 
     DeviceIpv6Address:
       description: |
@@ -1216,7 +1216,7 @@ components:
         duration: 86400
         device:
           ipv4Address:
-            publicAddress: 192.0.2.0
+            publicAddress: 203.0.113.0
             publicPort: 59765
         applicationServer:
           ipv4Address: 198.51.100.0/24
@@ -1234,7 +1234,7 @@ components:
         duration: 86400
         device:
           ipv4Address:
-            publicAddress: 192.0.2.0
+            publicAddress: 203.0.113.0
             publicPort: 59765
         applicationServer:
           ipv4Address: 198.51.100.0/24
@@ -1252,7 +1252,7 @@ components:
         duration: 86400
         device:
           ipv4Address:
-            publicAddress: 192.0.2.0
+            publicAddress: 203.0.113.0
             publicPort: 59765
         applicationServer:
           ipv4Address: 198.51.100.0/24
