@@ -1005,7 +1005,7 @@ components:
         - required: [publicAddress, publicPort]
       example:
         {
-          "publicAddress": "84.125.93.10",
+          "publicAddress": "192.0.2.0",
           "publicPort": 59765
         }
 
@@ -1013,7 +1013,7 @@ components:
       description: A single IPv4 address with no subnet mask
       type: string
       format: ipv4
-      example: "84.125.93.10"
+      example: "192.0.2.0"
 
     DeviceIpv6Address:
       description: |
@@ -1216,10 +1216,10 @@ components:
         duration: 86400
         device:
           ipv4Address:
-            publicAddress: 84.125.93.10
+            publicAddress: 192.0.2.0
             publicPort: 59765
         applicationServer:
-          ipv4Address: 192.168.0.1/24
+          ipv4Address: 198.51.100.0/24
         qosProfile: QCI_1_voice
         webhook:
           notificationUrl: https://application-server.com
@@ -1234,10 +1234,10 @@ components:
         duration: 86400
         device:
           ipv4Address:
-            publicAddress: 84.125.93.10
+            publicAddress: 192.0.2.0
             publicPort: 59765
         applicationServer:
-          ipv4Address: 192.168.0.1/24
+          ipv4Address: 198.51.100.0/24
         qosProfile: QCI_1_voice
         webhook:
           notificationUrl: https://application-server.com
@@ -1252,10 +1252,10 @@ components:
         duration: 86400
         device:
           ipv4Address:
-            publicAddress: 84.125.93.10
+            publicAddress: 192.0.2.0
             publicPort: 59765
         applicationServer:
-          ipv4Address: 192.168.0.1/24
+          ipv4Address: 198.51.100.0/24
         qosProfile: QCI_1_voice
         webhook:
           notificationUrl: https://application-server.com
