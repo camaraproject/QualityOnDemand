@@ -250,7 +250,38 @@ paths:
         - oAuth2ClientCredentials: []
         - threeLegged:
             - "qod-sessions-write"
-
+    get:
+      tags:
+        - QoS sessions
+      summary: Get all active sessions information
+      description: Get information about all active sessions authorized to be retrieved by the provided access token.
+      operationId: getSessions
+      parameters:
+        - name: phoneNumber
+          in: query
+          required: false
+          description: Allows filtering of sessions by device (phone number).
+          schema:
+            $ref: "#/components/schemas/PhoneNumber"
+      responses:
+        "200":
+          description: Contains information about the complete list of active sessions
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SessionInfoList"
+        "401":
+          $ref: "#/components/responses/Generic401"
+        "403":
+          $ref: "#/components/responses/Generic403"
+        "500":
+          $ref: "#/components/responses/Generic500"
+        "503":
+          $ref: "#/components/responses/Generic503"
+      security:
+        - oAuth2ClientCredentials: []
+        - threeLegged:
+            - "qod-sessions-read"
   /sessions/{sessionId}:
     get:
       tags:
@@ -529,6 +560,19 @@ components:
             - startedAt
             - expiresAt
             - qosStatus
+
+    SessionInfoList:
+      description: List response of active sessions authorized to be retrieved by the provided access token.
+      type: object
+      required:
+        - sessions
+      properties:
+        sessions:
+          description: Array of sessions to be returned.
+          type: array
+          minItems: 0
+          items:
+            $ref: "#/components/schemas/SessionInfo"
 
     CreateSession:
       description: Attributes required to create a session
