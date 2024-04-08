@@ -334,14 +334,14 @@ paths:
         - QoS Sessions
       summary: "Extend the duration of an active session"
       description: |
-        Extend the duration of an active QoS session. If this operation is executed successfully, the new duration of the target session will be the original duration plus the additional duration.
-        The new remaining duration shall not exceed the maximum duration limit. Otherwise, the new remaining duration will be set to the maximum limit. The remaining duration is calculated as the 'expiresAt' minus the current time of the extendDuration API call.
-        An example: A QoD session was orginally created with duration 80,000 seconds. 10,000 seconds later, the deveoper wants to extend the session with 20,000 seconds.
+        Extend the overall duration of an active QoS session. If this operation is executed successfully, the new duration of the target session will be the original duration plus the additionally requested duration.
+        The new remaining duration of the QoS session shall not exceed the maximum remaining duration limit (currently fixed at 86,400 seconds) where the remaining duration is calculated as the difference between the `expiresAt` and current time when the request to extend the session duration is received. If this maximum limit would be exceeded, the overall duration shall be set such that the remaining duration is equal to this limit.
+        An example: A QoD session was originally created with duration 80,000 seconds. 10,000 seconds later, the developer requested to extend the session by 20,000 seconds.
         - Original duration: 80,000 seconds
         - Elapsed time: 10,000 seconds
         - Remaining duration: 70,000 seconds
-        - New remaining duration: 86,400 seconds
-        - New duration: 96,400 seconds
+        - New remaining duration: 86,400 seconds (the maximum allowed)
+        - New overall session duration: 96,400 seconds
       operationId: extendQosSessionDuration
       parameters:
         - name: sessionId
