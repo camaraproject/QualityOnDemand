@@ -28,11 +28,11 @@ Repository to describe, develop, document and test the QualityOnDemand API famil
 
 * Note: Please be aware that the project will have frequent updates to the main branch. There are no compatibility guarantees associated with code in any branch, including main, until a new release is created. For example, changes may be reverted before a release is created. **For best results, use the latest available release**.
 
-* **The latest available and released version 0.10.0 is available within the [release-0.10.0 branch](https://github.com/camaraproject/QualityOnDemand/tree/release-0.10.0)**
-  - API definition v0.10.0 with inline documentation:
-    - [View it on ReDoc](https://redocly.github.io/redoc/?url=https://raw.githubusercontent.com/camaraproject/QualityOnDemand/release-0.10.0/code/API_definitions/qod-api.yaml&nocors)
-    - [View it on Swagger Editor](https://editor.swagger.io/?url=https://raw.githubusercontent.com/camaraproject/QualityOnDemand/release-0.10.0/code/API_definitions/qod-api.yaml)
-    - OpenAPI [YAML spec file](https://github.com/camaraproject/QualityOnDemand/blob/release-0.10.0/code/API_definitions/qod-api.yaml)
+* **The latest available and released version 0.10.1 is available [here](https://github.com/camaraproject/QualityOnDemand/tree/release-0.10.1)**
+  - API definition v0.10.1 with inline documentation:
+    - [View it on ReDoc](https://redocly.github.io/redoc/?url=https://raw.githubusercontent.com/camaraproject/QualityOnDemand/release-0.10.1/code/API_definitions/qod-api.yaml&nocors)
+    - [View it on Swagger Editor](https://editor.swagger.io/?url=https://raw.githubusercontent.com/camaraproject/QualityOnDemand/release-0.10.1/code/API_definitions/qod-api.yaml)
+    - OpenAPI [YAML spec file](https://github.com/camaraproject/QualityOnDemand/blob/release-0.10.1/code/API_definitions/qod-api.yaml)
    
 * The previous released version v0.9.0 is availabe within the [release-0.9.0 branch](https://github.com/camaraproject/QualityOnDemand/tree/release-0.9.0)
 * For changes between v0.10.0 and v0.9.0 see the [CHANGELOG.md](https://github.com/camaraproject/QualityOnDemand/blob/main/CHANGELOG.md)
