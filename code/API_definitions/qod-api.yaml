@@ -1239,7 +1239,7 @@ components:
             publicPort: 59765
         applicationServer:
           ipv4Address: 198.51.100.0/24
-        qosProfile: QCI_1_voice
+        qosProfile: QOS_L
         webhook:
           notificationUrl: https://application-server.com
         sessionId: 3fa85f64-5717-4562-b3fc-2c963f66afa6
@@ -1257,7 +1257,7 @@ components:
             publicPort: 59765
         applicationServer:
           ipv4Address: 198.51.100.0/24
-        qosProfile: QCI_1_voice
+        qosProfile: QOS_L
         webhook:
           notificationUrl: https://application-server.com
         sessionId: 3fa85f64-5717-4562-b3fc-2c963f66afa6
@@ -1275,7 +1275,7 @@ components:
             publicPort: 59765
         applicationServer:
           ipv4Address: 198.51.100.0/24
-        qosProfile: QCI_1_voice
+        qosProfile: QOS_L
         webhook:
           notificationUrl: https://application-server.com
         sessionId: 3fa85f64-5717-4562-b3fc-2c963f66afa6
