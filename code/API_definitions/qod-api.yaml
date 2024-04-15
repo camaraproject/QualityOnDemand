@@ -66,7 +66,7 @@ info:
   license:
     name: Apache 2.0
     url: https://www.apache.org/licenses/LICENSE-2.0.html
-  version: wip
+  version: 0.11.0-wip
 externalDocs:
   description: Product documentation at Camara
   url: https://github.com/camaraproject/
@@ -341,7 +341,14 @@ paths:
         - QoS Sessions
       summary: "Extend the duration of an active session"
       description: |
-        Extend the duration of an active QoS session. If this operation is executed successfully, the new duration of the target session will be the original duration plus the additional duration. The remaining duration plus the requested additional duration shall not exceed the maximum limit. Otherwise, the new remaining duration will be the maximum limit.
+        Extend the overall duration of an active QoS session. If this operation is executed successfully, the new duration of the target session will be the original duration plus the additionally requested duration.
+        The new remaining duration of the QoS session shall not exceed the maximum remaining duration limit (currently fixed at 86,400 seconds) where the remaining duration is calculated as the difference between the `expiresAt` and current time when the request to extend the session duration is received. If this maximum limit would be exceeded, the overall duration shall be set such that the remaining duration is equal to this limit.
+        An example: A QoD session was originally created with duration 80,000 seconds. 10,000 seconds later, the developer requested to extend the session by 20,000 seconds.
+        - Original duration: 80,000 seconds
+        - Elapsed time: 10,000 seconds
+        - Remaining duration: 70,000 seconds
+        - New remaining duration: 86,400 seconds (the maximum allowed)
+        - New overall session duration: 96,400 seconds
       operationId: extendQosSessionDuration
       parameters:
         - name: sessionId
@@ -506,56 +513,10 @@ components:
       type: string
       format: uuid
 
-    SessionInfo:
-      description: Session related information.
-      allOf:
-        - $ref: "#/components/schemas/CreateSession"
-        - type: object
-          properties:
-            sessionId:
-              $ref: "#/components/schemas/SessionId"
-            startedAt:
-              type: integer
-              example: 1639479600
-              description: Timestamp of session start in seconds since Unix epoch
-              format: int64
-            expiresAt:
-              type: integer
-              example: 1639566000
-              description: Timestamp of session expiration if the session was not deleted, in seconds since Unix epoch
-              format: int64
-            qosStatus:
-              $ref: "#/components/schemas/QosStatus"
-            statusInfo:
-              $ref: "#/components/schemas/StatusInfo"
-            messages:
-              type: array
-              items:
-                $ref: "#/components/schemas/Message"
-          required:
-            - sessionId
-            - duration
-            - startedAt
-            - expiresAt
-            - qosStatus
-
-    CreateSession:
-      description: Attributes required to create a session
+    BaseSessionInfo:
+      description: Common attributes of a QoD session
       type: object
       properties:
-        duration:
-          description: |
-            Session duration in seconds. Maximal value of 24 hours is used if not set.
-            After session is expired the, client will receive a `QOS_STATUS_CHANGED` event with
-             - `qosStatus` as `UNAVAILABLE`, and,
-             - `statusInfo` as `DURATION_EXPIRED`.
-            See notification callback.
-          type: integer
-          format: int32
-          minimum: 1
-          maximum: 86400
-          default: 86400
-          example: 86400
         device:
           $ref: "#/components/schemas/Device"
         applicationServer:
@@ -590,6 +551,64 @@ components:
         - device
         - applicationServer
         - qosProfile
+
+    SessionInfo:
+      description: Session related information.
+      allOf:
+        - $ref: "#/components/schemas/BaseSessionInfo"
+        - type: object
+          properties:
+            sessionId:
+              $ref: "#/components/schemas/SessionId"
+            duration:
+              type: integer
+              format: int32
+              minimum: 1
+              example: 86400
+            startedAt:
+              type: integer
+              example: 1639479600
+              description: Timestamp of session start in seconds since Unix epoch
+              format: int64
+            expiresAt:
+              type: integer
+              example: 1639566000
+              description: Timestamp of session expiration if the session was not deleted, in seconds since Unix epoch
+              format: int64
+            qosStatus:
+              $ref: "#/components/schemas/QosStatus"
+            statusInfo:
+              $ref: "#/components/schemas/StatusInfo"
+            messages:
+              type: array
+              items:
+                $ref: "#/components/schemas/Message"
+          required:
+            - sessionId
+            - duration
+            - startedAt
+            - expiresAt
+            - qosStatus
+
+    CreateSession:
+      description: Attributes required to create a session
+      allOf:
+        - $ref: "#/components/schemas/BaseSessionInfo"
+        - type: object
+          properties:
+            duration:
+              description: |
+                Session duration in seconds. Maximal value of 24 hours is used if not set.
+                After session is expired the, client will receive a `QOS_STATUS_CHANGED` event with
+                - `qosStatus` as `UNAVAILABLE`, and,
+                - `statusInfo` as `DURATION_EXPIRED`.
+                See notification callback.
+              type: integer
+              format: int32
+              minimum: 1
+              maximum: 86400
+              default: 86400
+              example: 86400
 
     Port:
       description: TCP or UDP port number
