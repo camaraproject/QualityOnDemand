@@ -549,7 +549,7 @@ components:
       description: Correlation id for the different services
       schema:
         type: string
- 
+
   headers:
     x-correlator:
       description: Correlation id for the different services
@@ -868,7 +868,7 @@ components:
       pattern: "^[a-zA-Z0-9_.-]+$"
 
     Rate:
-      description: Specification of rate 
+      description: Specification of rate
       type: object
       properties:
         value:
@@ -882,7 +882,7 @@ components:
           $ref: "#/components/schemas/RateUnitEnum"
 
     Duration:
-      description: Specification of duration 
+      description: Specification of duration
       type: object
       properties:
         value:
@@ -893,7 +893,7 @@ components:
           minimum: 1
         unit:
           $ref: "#/components/schemas/TimeUnitEnum"
-          
+
     TimeUnitEnum:
       description: Units of time
       type: string
@@ -1319,7 +1319,7 @@ components:
   examples:
     QOS_STATUS_CHANGED_EXAMPLE:
       description: QoS status changed
-      summary: Cloud event example for QoS status change to UNAVAILABLE due to DURATION_EXPIRED 
+      summary: Cloud event example for QoS status change to UNAVAILABLE due to DURATION_EXPIRED
       value:
         id: 83a0d986-0866-4f38-b8c0-fc65bfcda452
         source: 'https://api.example.com/qod/v0/sessions/123e4567-e89b-12d3-a456-426614174000'
