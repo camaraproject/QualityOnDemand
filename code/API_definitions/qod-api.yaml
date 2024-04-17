@@ -275,8 +275,6 @@ paths:
               examples:
                 SESSION_AVAILABLE:
                   $ref: '#/components/examples/SESSION_AVAILABLE_EXAMPLE'
-                SESSION_REQUESTED:
-                  $ref: '#/components/examples/SESSION_REQUESTED_EXAMPLE'
                 SESSION_UNAVAILABLE:
                   $ref: '#/components/examples/SESSION_UNAVAILABLE_EXAMPLE'
         "400":
@@ -1246,24 +1244,6 @@ components:
         startedAt: 1639479600
         expiresAt: 1639566000
         qosStatus: AVAILABLE
-
-    SESSION_REQUESTED_EXAMPLE:
-      summary: QoS session status is requested
-      value:
-        duration: 86400
-        device:
-          ipv4Address:
-            publicAddress: 203.0.113.0
-            publicPort: 59765
-        applicationServer:
-          ipv4Address: 198.51.100.0/24
-        qosProfile: QOS_L
-        webhook:
-          notificationUrl: https://application-server.com
-        sessionId: 3fa85f64-5717-4562-b3fc-2c963f66afa6
-        startedAt: 1639479600
-        expiresAt: 1639566000
-        qosStatus: REQUESTED
 
     SESSION_UNAVAILABLE_EXAMPLE:
       summary: QoS session is unavailable
