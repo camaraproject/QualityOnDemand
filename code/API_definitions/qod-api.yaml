@@ -66,7 +66,7 @@ info:
   license:
     name: Apache 2.0
     url: https://www.apache.org/licenses/LICENSE-2.0.html
-  version: 0.10.1
+  version: wip
 externalDocs:
   description: Product documentation at Camara
   url: https://github.com/camaraproject/
@@ -104,7 +104,7 @@ paths:
         NOTE: in case of a `QOS_STATUS_CHANGED` event with `qosStatus` as `UNAVAILABLE` and `statusInfo` as `NETWORK_TERMINATED` the resources of the QoS session
         are not directly released, but will get deleted automatically at earliest 360 seconds after the event.
         This behavior allows clients which are not receiving notification events but are polling to get the session information with
-        the `qosStatus` `UNAVAILABLE` (the `statusInfo` parameter is not included in the current version but will be adding to `SessionInfo` in an upcoming release). Before a client can attempt to create a new QoD session
+        the `qosStatus` `UNAVAILABLE` and `statusInfo` `NETWORK_TERMINATED`. Before a client can attempt to create a new QoD session
         for the same device and flow period they must release the session resources with an explicit `delete` operation if not yet automatically deleted.
 
       operationId: createSession
@@ -272,6 +272,11 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/SessionInfo"
+              examples:
+                SESSION_AVAILABLE:
+                  $ref: '#/components/examples/SESSION_AVAILABLE_EXAMPLE'
+                SESSION_UNAVAILABLE:
+                  $ref: '#/components/examples/SESSION_UNAVAILABLE_EXAMPLE'
         "400":
           $ref: "#/components/responses/Generic400"
         "401":
@@ -570,6 +575,8 @@ components:
               format: int64
             qosStatus:
               $ref: "#/components/schemas/QosStatus"
+            statusInfo:
+              $ref: "#/components/schemas/StatusInfo"
             messages:
               type: array
               items:
@@ -1015,7 +1022,7 @@ components:
         - required: [publicAddress, publicPort]
       example:
         {
-          "publicAddress": "84.125.93.10",
+          "publicAddress": "203.0.113.0",
           "publicPort": 59765
         }
 
@@ -1023,7 +1030,7 @@ components:
       description: A single IPv4 address with no subnet mask
       type: string
       format: ipv4
-      example: "84.125.93.10"
+      example: "203.0.113.0"
 
     DeviceIpv6Address:
       description: |
@@ -1036,7 +1043,7 @@ components:
 
     ApplicationServerIpv4Address:
       type: string
-      example: "192.168.0.1/24"
+      example: "198.51.100.0/24"
       description: |
         IPv4 address may be specified in form <address/mask> as:
           - address - an IPv4 number in dotted-quad form 1.2.3.4. Only this exact IP number will match the flow control rule.
@@ -1220,6 +1227,43 @@ components:
             message: "Service unavailable"
 
   examples:
+    SESSION_AVAILABLE_EXAMPLE:
+      summary: QoS session status is available
+      value:
+        duration: 86400
+        device:
+          ipv4Address:
+            publicAddress: 203.0.113.0
+            publicPort: 59765
+        applicationServer:
+          ipv4Address: 198.51.100.0/24
+        qosProfile: QOS_L
+        webhook:
+          notificationUrl: https://application-server.com
+        sessionId: 3fa85f64-5717-4562-b3fc-2c963f66afa6
+        startedAt: 1639479600
+        expiresAt: 1639566000
+        qosStatus: AVAILABLE
+
+    SESSION_UNAVAILABLE_EXAMPLE:
+      summary: QoS session is unavailable
+      value:
+        duration: 86400
+        device:
+          ipv4Address:
+            publicAddress: 203.0.113.0
+            publicPort: 59765
+        applicationServer:
+          ipv4Address: 198.51.100.0/24
+        qosProfile: QOS_L
+        webhook:
+          notificationUrl: https://application-server.com
+        sessionId: 3fa85f64-5717-4562-b3fc-2c963f66afa6
+        startedAt: 1639479600
+        expiresAt: 1639566000
+        qosStatus: UNAVAILABLE
+        statusInfo: NETWORK_TERMINATED
+
     QOS_STATUS_CHANGED_EXAMPLE:
       summary: QoS status changed
       value:
