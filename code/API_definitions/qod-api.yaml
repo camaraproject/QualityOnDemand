@@ -108,6 +108,8 @@ paths:
         for the same device and flow period they must release the session resources with an explicit `delete` operation if not yet automatically deleted.
 
       operationId: createSession
+      parameters:
+        - $ref: "#/components/parameters/x-correlator"
       requestBody:
         description: Parameters to create a new session
         content:
@@ -127,6 +129,8 @@ paths:
                 The QoD server will call this endpoint whenever any QoS session change (e.g. network termination) related event occurs.
                 Currently only QOS_STATUS_CHANGED event is defined.
               operationId: postNotification
+              parameters:
+                - $ref: "#/components/parameters/x-correlator"
               requestBody:
                 required: true
                 content:
@@ -139,6 +143,9 @@ paths:
               responses:
                 "204":
                   description: Successful notification
+                  headers:
+                    x-correlator:
+                      $ref: '#/components/headers/x-correlator'
                 "400":
                   $ref: "#/components/responses/Generic400"
                 "401":
@@ -155,12 +162,18 @@ paths:
       responses:
         "201":
           description: Session created
+          headers:
+            x-correlator:
+              $ref: '#/components/headers/x-correlator'
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/SessionInfo"
         "400":
           description: Invalid input for createSession operation
+          headers:
+            x-correlator:
+              $ref: '#/components/headers/x-correlator'
           content:
             application/json:
               schema:
@@ -232,6 +245,9 @@ paths:
           $ref: "#/components/responses/Generic403"
         "409":
           description: Conflict
+          headers:
+            x-correlator:
+              $ref: '#/components/headers/x-correlator'
           content:
             application/json:
               schema:
@@ -265,9 +281,13 @@ paths:
           required: true
           schema:
             $ref: "#/components/schemas/SessionId"
+        - $ref: "#/components/parameters/x-correlator"
       responses:
         "200":
           description: Contains information about active session
+          headers:
+            x-correlator:
+              $ref: '#/components/headers/x-correlator'
           content:
             application/json:
               schema:
@@ -313,9 +333,13 @@ paths:
           required: true
           schema:
             $ref: "#/components/schemas/SessionId"
+        - $ref: "#/components/parameters/x-correlator"
       responses:
         "204":
           description: Session deleted
+          headers:
+            x-correlator:
+              $ref: '#/components/headers/x-correlator'
         "400":
           $ref: "#/components/responses/Generic400"
         "401":
@@ -355,6 +379,7 @@ paths:
           required: true
           schema:
             $ref: "#/components/schemas/SessionId"
+        - $ref: "#/components/parameters/x-correlator"
       requestBody:
         description: Parameters to extend the duration of an active session
         content:
@@ -365,12 +390,18 @@ paths:
       responses:
         "200":
           description: Contains information about active session
+          headers:
+            x-correlator:
+              $ref: '#/components/headers/x-correlator'
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/SessionInfo"
         "400":
           description: Invalid input for extendQosSessionDuration operation
+          headers:
+            x-correlator:
+              $ref: '#/components/headers/x-correlator'
           content:
             application/json:
               schema:
@@ -421,12 +452,17 @@ paths:
           required: false
         - name: status
           in: query
+          description: Qos Profile status
           schema:
             $ref: '#/components/schemas/QosProfileStatusEnum'
           required: false
+        - $ref: "#/components/parameters/x-correlator"
       responses:
         "200":
           description: Contains information about QoS Profiles
+          headers:
+            x-correlator:
+              $ref: '#/components/headers/x-correlator'
           content:
             application/json:
               schema:
@@ -455,12 +491,17 @@ paths:
       parameters:
         - name: name
           in: path
+          description: Qos Profile name
           required: true
           schema:
             $ref: "#/components/schemas/QosProfileName"
+        - $ref: "#/components/parameters/x-correlator"
       responses:
         "200":
           description: Contains information about QoS Profiles
+          headers:
+            x-correlator:
+              $ref: '#/components/headers/x-correlator'
           content:
             application/json:
               schema:
@@ -489,6 +530,7 @@ components:
           tokenUrl: https://api.example.com/oauth/token
           scopes: {}
     notificationsBearerAuth:
+      description: Bearer authentication for notifications
       type: http
       scheme: bearer
       bearerFormat: "{$request.body#/webhook/notificationAuthToken}"
@@ -504,6 +546,20 @@ components:
             qod-sessions-write: Creation and update of QoS sessions
             qod-sessions-delete: Deletion of QoS sessions
             qod-profiles-read: Retrieval of QoS profiles
+
+  parameters:
+    x-correlator:
+      name: x-correlator
+      in: header
+      description: Correlation id for the different services
+      schema:
+        type: string
+
+  headers:
+    x-correlator:
+      description: Correlation id for the different services
+      schema:
+        type: string
 
   schemas:
     SessionId:
@@ -530,6 +586,7 @@ components:
         qosProfile:
           $ref: "#/components/schemas/QosProfileName"
         webhook:
+          description: Callback URL on which notifications about all status change events of the session (eg. session termination) can be received
           type: object
           required:
             - notificationUrl
@@ -615,10 +672,12 @@ components:
       maximum: 65535
 
     PortsSpec:
+      description: Specification of several TCP or UDP ports
       type: object
       minProperties: 1
       properties:
         ranges:
+          description: Range of TCP or UDP ports
           type: array
           minItems: 1
           items:
@@ -632,6 +691,7 @@ components:
               to:
                 $ref: "#/components/schemas/Port"
         ports:
+          description: Array of TCP or UDP ports
           type: array
           minItems: 1
           items:
@@ -815,9 +875,11 @@ components:
       pattern: "^[a-zA-Z0-9_.-]+$"
 
     Rate:
+      description: Specification of rate
       type: object
       properties:
         value:
+          description: Quantity of rate
           type: integer
           example: 10
           format: int32
@@ -827,19 +889,20 @@ components:
           $ref: "#/components/schemas/RateUnitEnum"
 
     Duration:
+      description: Specification of duration
       type: object
       properties:
         value:
+          description: Quantity of duration
           type: integer
           example: 12
           format: int32
           minimum: 1
         unit:
-          allOf:
-            - $ref: "#/components/schemas/TimeUnitEnum"
-            - example: Minutes
+          $ref: "#/components/schemas/TimeUnitEnum"
 
     TimeUnitEnum:
+      description: Units of time
       type: string
       enum:
         - Days
@@ -863,6 +926,7 @@ components:
         - DEPRECATED
 
     RateUnitEnum:
+      description: Units of rate
       type: string
       enum:
         - bps
@@ -916,6 +980,7 @@ components:
           org.camaraproject.qod.v0.qos-status-changed: '#/components/schemas/EventQosStatusChanged'
 
     EventQosStatusChanged:
+      description: Event to notify a QoS status change
       allOf:
         - $ref: "#/components/schemas/CloudEvent"
         - type: object
@@ -1063,6 +1128,7 @@ components:
             - 2001:db8:85a3:8d3::/64
 
     Message:
+      description: Message with additional information
       type: object
       properties:
         severity:
@@ -1099,6 +1165,7 @@ components:
         - UNAVAILABLE
 
     ErrorInfo:
+      description: Common schema for errors
       type: object
       properties:
         status:
@@ -1118,6 +1185,9 @@ components:
   responses:
     Generic400:
       description: Invalid input
+      headers:
+        x-correlator:
+          $ref: '#/components/headers/x-correlator'
       content:
         application/json:
           schema:
@@ -1129,6 +1199,9 @@ components:
 
     Generic401:
       description: Unauthorized
+      headers:
+        x-correlator:
+          $ref: '#/components/headers/x-correlator'
       content:
         application/json:
           schema:
@@ -1140,6 +1213,9 @@ components:
 
     Generic403:
       description: Forbidden
+      headers:
+        x-correlator:
+          $ref: '#/components/headers/x-correlator'
       content:
         application/json:
           schema:
@@ -1151,6 +1227,9 @@ components:
 
     SessionNotFound404:
       description: Session not found
+      headers:
+        x-correlator:
+          $ref: '#/components/headers/x-correlator'
       content:
         application/json:
           schema:
@@ -1162,6 +1241,9 @@ components:
 
     QosProfilesNotFound404:
       description: Qos Profiles not found
+      headers:
+        x-correlator:
+          $ref: '#/components/headers/x-correlator'
       content:
         application/json:
           schema:
@@ -1173,6 +1255,9 @@ components:
 
     QosProfileNotFound404:
       description: Qos Profile not found
+      headers:
+        x-correlator:
+          $ref: '#/components/headers/x-correlator'
       content:
         application/json:
           schema:
@@ -1184,6 +1269,9 @@ components:
 
     Generic500:
       description: Internal server error
+      headers:
+        x-correlator:
+          $ref: '#/components/headers/x-correlator'
       content:
         application/json:
           schema:
@@ -1195,6 +1283,9 @@ components:
 
     QoSProfile500:
       description: Internal server error
+      headers:
+        x-correlator:
+          $ref: '#/components/headers/x-correlator'
       content:
         application/json:
           schema:
@@ -1206,6 +1297,9 @@ components:
 
     Generic501:
       description: Not Implemented
+      headers:
+        x-correlator:
+          $ref: '#/components/headers/x-correlator'
       content:
         application/json:
           schema:
@@ -1217,6 +1311,9 @@ components:
 
     Generic503:
       description: Service unavailable
+      headers:
+        x-correlator:
+          $ref: '#/components/headers/x-correlator'
       content:
         application/json:
           schema:
@@ -1265,7 +1362,8 @@ components:
         statusInfo: NETWORK_TERMINATED
 
     QOS_STATUS_CHANGED_EXAMPLE:
-      summary: QoS status changed
+      description: QoS status changed
+      summary: Cloud event example for QoS status change to UNAVAILABLE due to DURATION_EXPIRED
       value:
         id: 83a0d986-0866-4f38-b8c0-fc65bfcda452
         source: 'https://api.example.com/qod/v0/sessions/123e4567-e89b-12d3-a456-426614174000'
