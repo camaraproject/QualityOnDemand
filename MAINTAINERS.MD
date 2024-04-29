@@ -1,14 +1,14 @@
-| Org                    | Name                                                |
-| -----------------------| ----------------------------------------------------|
-| Deutsche Telekom AG | Herbert Damker |
-| Ericsson | Emil Zhang |
-| Orange | Sylvain Morel |
-| Orange | Patrice Conil |
-| Spry Fox Networks | Ramesh Shanmugasundaram |
-| Telefonica | Jose Luis Urien |
-| Telefonica | Jesus Peña| 
-| Vodafone | Eric Murray |
-| Verizon/ 5GFF| Syed Rehman |
-| Verizon/ 5GFF| Mahesh Chapalamadugu |
-| KDDI | Toshi (Toshiyasu) Wakayama |
-| CableLabs | Randy Levensalor |
+| Org                    | Name                 | GitHub Name        |
+| -----------------------| -------------------- | ------------------ |
+| Deutsche Telekom AG | Herbert Damker | hdamker |
+| Ericsson | Emil Zhang | emil-cheung |
+| Orange | Sylvain Morel | SylMOREL |
+| Orange | Patrice Conil | patrice-conil |
+| Spry Fox Networks | Ramesh Shanmugasundaram | sfnuser |
+| Telefonica | Jose Luis Urien | jlurien |
+| Telefonica | Jesus Peña| jpengar |
+| Vodafone | Eric Murray | eric-murray |
+| Verizon/ 5GFF| Syed Rehman | SyeddR |
+| Verizon/ 5GFF| Mahesh Chapalamadugu | |
+| KDDI | Toshi (Toshiyasu) Wakayama | ToshiWakayama-KDDI |
+| CableLabs | Randy Levensalor | RandyLevensalor |
