@@ -2,7 +2,7 @@ openapi: 3.0.3
 info:
   title: QoS Profiles
   description: |
-    The QoS Profiles API allows the discovery of Quality of Service (QoS) profiles and its characteristics. 
+    The QoS Profiles API allows the discovery of Quality of Service (QoS) profiles and its characteristics.
 
     # Introduction
 
@@ -473,5 +473,3 @@ components:
             status: 503
             code: UNAVAILABLE
             message: "Service unavailable"
-
-
