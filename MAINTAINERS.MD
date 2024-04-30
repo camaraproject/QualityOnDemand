@@ -9,6 +9,6 @@
 | Telefonica | Jesus Peña| jpengar |
 | Vodafone | Eric Murray | eric-murray |
 | Verizon/ 5GFF| Syed Rehman | SyeddR |
-| Verizon/ 5GFF| Mahesh Chapalamadugu | |
+| Verizon/ 5GFF| Mahesh Chapalamadugu | maheshc01 |
 | KDDI | Toshi (Toshiyasu) Wakayama | ToshiWakayama-KDDI |
 | CableLabs | Randy Levensalor | RandyLevensalor |
