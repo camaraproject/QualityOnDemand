@@ -71,7 +71,7 @@ externalDocs:
 security:
   - oAuth2ClientCredentials: []
 servers:
-  - url: "{apiRoot}/quality-on-demand/v-wip"
+  - url: "{apiRoot}/quality-on-demand/vwip"
     variables:
       apiRoot:
         default: http://localhost:9091
