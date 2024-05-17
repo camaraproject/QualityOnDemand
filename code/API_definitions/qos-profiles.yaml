@@ -32,7 +32,7 @@ externalDocs:
 security:
   - oAuth2ClientCredentials: []
 servers:
-  - url: "{apiRoot}/qos-profiles/v-wip"
+  - url: "{apiRoot}/qos-profiles/vwip"
     variables:
       apiRoot:
         default: http://localhost:9091
