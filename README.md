@@ -13,7 +13,9 @@ Repository to describe, develop, document and test the QualityOnDemand API famil
 
 * Service APIs for “Quality on Demand” (see APIBacklog.md)
 * It provides the customer with the ability to:  
-  * set quality for access network connections (e.g. mobile device connection or fixed access between a home gateway and the service providers gateway router)  
+  * set quality for a flow within an access network connections (e.g. mobile device connection or fixed access between a home gateway and the service providers gateway router)
+      * Session mode, for a specific duration
+      * Provision mode, indefinitely for each time the device connects to the same access network
   * get notification if network cannot fulfill  
 * Describe, develop, document and test the APIs (with 1-2 Service Providers)  
 * Started: October 2021
