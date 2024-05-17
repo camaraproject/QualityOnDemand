@@ -1,6 +1,6 @@
 openapi: 3.0.3
 info:
-  title: QoD for enhanced communication
+  title: Quality-On-Demand
   description: |
     The Quality-On-Demand (QoD) API provides programmable interface for developers and other users (capabilities consumers) to request stable latency or throughput managed by Telco networks without the necessity to have an in-depth knowledge of the 4G/5G system or the overall complexity of the Telecom Systems.
 
@@ -23,7 +23,7 @@ info:
     Security access keys such as OAuth 2.0 client credentials used by client applications to invoke the QoD API.
 
     * **QoS profiles and QoS profile labels**:
-    Latency or throughput requirements of the application mapped to relevant QoS profile class.
+    Latency, throughput or priority requirements of the application mapped to relevant QoS profile values. The set of QoS Profiles that an operator is offering can be retrieved by means of the [QoS Profile API](link TBC).
 
     * **Identifier for the device**:
     At least one identifier for the device (user equipment) out of four options: IPv4 address, IPv6 address, Phone number, or Network Access Identifier [[5]](#5) assigned by the mobile network operator for the device.
@@ -55,8 +55,6 @@ info:
 
     ![QoD Management API](https://raw.githubusercontent.com/camaraproject/QualityOnDemand/main/documentation/API_documentation/resources/QoD_details.PNG)
 
-    How QoS profiles are mapped to connectivity characteristics are subject to agreements between the communication service provider and the API invoker. Within the CAMARA project, you can find a sample for such a mapping of QoS profiles. [CAMARA QoS Profiles Mapping Table (REFERENCE DRAFT)](https://github.com/camaraproject/QualityOnDemand/blob/main/documentation/API_documentation/QoSProfile_Mapping_Table.md)
-
     # Further info and support
 
     (FAQs will be added in a later version of the documentation)
@@ -73,7 +71,7 @@ externalDocs:
 security:
   - oAuth2ClientCredentials: []
 servers:
-  - url: "{apiRoot}/qod/v0"
+  - url: "{apiRoot}/quality-on-demand/vwip"
     variables:
       apiRoot:
         default: http://localhost:9091
@@ -81,8 +79,6 @@ servers:
 tags:
   - name: QoS Sessions
     description: Manage QoS sessions
-  - name: QoS Profiles
-    description: Manage QoS Profiles
 paths:
   /sessions:
     post:
@@ -434,91 +430,6 @@ paths:
         - threeLegged:
             - "qod-sessions-write"
 
-  /qos-profiles:
-    get:
-      tags:
-        - QoS Profiles
-      summary: "Get All QoS Profiles"
-      description: |
-        Returns all QoS Profiles that match the given criteria.
-        If no criteria is given, all QoS Profiles are returned.
-      operationId: getQosProfiles
-      parameters:
-        - name: name
-          in: query
-          description: QoS Profile name
-          schema:
-            type: string
-          required: false
-        - name: status
-          in: query
-          description: Qos Profile status
-          schema:
-            $ref: '#/components/schemas/QosProfileStatusEnum'
-          required: false
-        - $ref: "#/components/parameters/x-correlator"
-      responses:
-        "200":
-          description: Contains information about QoS Profiles
-          headers:
-            x-correlator:
-              $ref: '#/components/headers/x-correlator'
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  $ref: "#/components/schemas/QosProfile"
-        "401":
-          $ref: "#/components/responses/Generic401"
-        "403":
-          $ref: "#/components/responses/Generic403"
-        "404":
-          $ref: "#/components/responses/QosProfilesNotFound404"
-        "500":
-          $ref: "#/components/responses/QoSProfile500"
-        "503":
-          $ref: "#/components/responses/Generic503"
-
-  /qos-profiles/{name}:
-    get:
-      tags:
-        - QoS Profiles
-      summary: "Get QoS Profile for a given name"
-      operationId: getQosProfile
-      description: |
-        Returns a QoS Profile that matches the given name.
-      parameters:
-        - name: name
-          in: path
-          description: Qos Profile name
-          required: true
-          schema:
-            $ref: "#/components/schemas/QosProfileName"
-        - $ref: "#/components/parameters/x-correlator"
-      responses:
-        "200":
-          description: Contains information about QoS Profiles
-          headers:
-            x-correlator:
-              $ref: '#/components/headers/x-correlator'
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/QosProfile"
-        "400":
-          $ref: "#/components/responses/Generic400"
-        "401":
-          $ref: "#/components/responses/Generic401"
-        "403":
-          $ref: "#/components/responses/Generic403"
-        "404":
-          $ref: "#/components/responses/QosProfileNotFound404"
-        "500":
-          $ref: "#/components/responses/QoSProfile500"
-        "503":
-          $ref: "#/components/responses/Generic503"
-
 components:
   securitySchemes:
     oAuth2ClientCredentials:
@@ -719,146 +630,6 @@ components:
       required:
         - requestedAdditionalDuration
 
-
-    QosProfile:
-      description: |
-        Data type with attributes of a QosProfile
-      type: object
-      properties:
-        name:
-          $ref: "#/components/schemas/QosProfileName"
-        description:
-          description: |
-            A description of the QoS profile.
-          type: string
-          example: "QoS profile for video streaming"
-        status:
-          $ref: "#/components/schemas/QosProfileStatusEnum"
-        targetMinUpstreamRate:
-          description: |
-            This is the target minimum upstream rate for the QoS profile.
-            For 5G networks 3GPP Guaranteed Bit Rate (GBR) refers to a dedicated, fixed data rate assigned to
-            specific services, ensuring a minimum performance level. As per 3GPP TS 23.203,
-            GBR is a QoS parameter used to manage traffic classes in mobile networks. It
-            provides a stable data rate for latency-sensitive applications, such as voice calls or
-            video streaming, helping maintain a consistent user experience. When this attribute is set
-            this could imply that a GBR QCI is used, though mechanisms on the network can be used to
-            ensure a minimum performance level without using a GBR QCI.
-            The committed data rate allocated to specific services, ensuring a consistent level of
-            performance. For DOCSIS networks, the "Minimum Reserved Traffic Rate" is defined in the
-            DOCSIS 3.1 - MAC and Upper Layer Protocols Interface Specification"
-            and it ensures a consistent level of performance for specific services within the network.
-          allOf:
-            - $ref: "#/components/schemas/Rate"
-        maxUpstreamRate:
-          description: |
-            The maximum best effort data
-          allOf:
-            - $ref: "#/components/schemas/Rate"
-        maxUpstreamBurstRate:
-          description: |
-            When defined, this is the maximum upstream burst rate for the QoS profile, that will enable
-            the network to burst data at a higher rate than the maxUpstreamRate for a period of time.
-          allOf:
-            - $ref: "#/components/schemas/Rate"
-        targetMinDownstreamRate:
-          description: |
-            This is the target minimum downstream rate for the QoS profile.
-            For 5G networks 3GPP Guaranteed Bit Rate (GBR) refers to a dedicated, fixed data rate assigned to
-            specific services, ensuring a minimum performance level. As per 3GPP TS 23.203,
-            GBR is a QoS parameter used to manage traffic classes in mobile networks. It
-            provides a stable data rate for latency-sensitive applications, such as voice calls or
-            video streaming, helping maintain a consistent user experience.  When this attribute is set
-            this could imply that a GBR QCI is used, though mechanisms on the network can be used to
-            ensure a minimum performance level without using a GBR QCI.
-            The committed data rate allocated to specific services, ensuring a consistent level of
-            performance. DOCSIS networks, the "Minimum Reserved Traffic Rate" is defined in the
-            DOCSIS 3.1 - MAC and Upper Layer Protocols Interface Specification"
-            and it ensures a consistent level of performance for specific services within the network.
-          allOf:
-            - $ref: "#/components/schemas/Rate"
-        maxDownstreamRate:
-          description: |
-            The maximum best effort rate
-          allOf:
-            - $ref: "#/components/schemas/Rate"
-        maxDownstreamBurstRate:
-          description: |
-            When defined, this is the maximum downstream burst rate for the QoS profile, that will enable
-            the network to burst data at a higher rate than the maxDownstreamRate for a period of time.
-            This can result in improved user experience when there is additional network capacity.
-            For instance, when a user is streaming a video, the network can burst data at a higher rate
-            to fill the buffer, and then return to the maxUpstreamRate once the buffer is full.
-          allOf:
-            - $ref: "#/components/schemas/Rate"
-        minDuration:
-          description: |
-            The shortest time period that this profile can be deployed.
-          allOf:
-            - $ref: "#/components/schemas/Duration"
-        maxDuration:
-          description: |
-            The maximum time period that this profile can be deployed.
-            NOTE: currently the duration within `sessionInfo` is limited to 86400 seconds (1 day).
-            The value of `maxDuration` shouldn't therefore exceed this time period. The limitation might be removed in later versions.
-          allOf:
-            - $ref: "#/components/schemas/Duration"
-        priority:
-          type: integer
-          example: 20
-          description: |
-            Priority levels allow efficient resource allocation and ensure optimal performance
-            for various services in each technology, with the highest priority traffic receiving
-            preferential treatment.
-            The lower value the higher priority.
-            Not all access networks use the same priority range, so this priority will be
-            scaled to the access network's priority range.
-          format: int32
-          minimum: 1
-          maximum: 100
-        packetDelayBudget:
-          description: |
-            The packet delay budget is the maximum allowable one-way latency between the customer's device
-            and the gateway from the operator's network to other networks. By limiting the delay, the network
-            can provide an acceptable level of performance for various services, such as voice calls,
-            video streaming, and data.
-            The end-to-end or round trip latency will be about two times this value plus the latency not controlled
-            by the operator
-          allOf:
-            - $ref: "#/components/schemas/Duration"
-        jitter:
-          description: |
-            The jitter requirement aims to limit the maximum variation in round-trip
-            packet delay for the 99th percentile of traffic, following ITU Y.1540
-            standards. It considers only acknowledged packets in a session, which are
-            packets that receive a confirmation of receipt from the recipient (e.g.,
-            using TCP). This requirement helps maintain consistent latency, essential
-            for real-time applications such as VoIP, video calls, and gaming.
-          allOf:
-            - $ref: "#/components/schemas/Duration"
-        packetErrorLossRate:
-          type: integer
-          description: |
-            The exponential power of the allowable error loss rate 10^(-N).
-            For instance 3 would be an error loss rate of 10 to the power of -3 (0.001)
-
-            For 5G network the 3GPP specification TS 23.203 defines the packet error loss rate QCI attribute. It
-            describes the Quality of Service (QoS) Class Identifier (QCI) parameters used to
-            differentiate traffic classes in mobile networks, ensuring appropriate resource
-            allocation and performance for various services.
-
-            The packet error loss rate is one of the QCI attributes, providing information on the
-            acceptable packet loss rate for a specific traffic class. This attribute helps maintain
-            the desired performance level for services like voice calls, video streaming, or data
-            transfers within the 3GPP mobile network.
-          format: int32
-          minimum: 1
-          maximum: 10
-          example: 3
-      required:
-        - name
-        - status
-
     QosProfileName:
       description: |
         A unique name for identifying a specific QoS profile.
@@ -867,73 +638,13 @@ components:
           - A UUID style string
           - Support for predefined profiles QOS_S, QOS_M, QOS_L, and QOS_E
           - A searchable descriptive name
+        The set of QoS Profiles that an operator is offering can be retrieved by means of the [QoS Profile API](link TBC).
       type: string
       example: QCI_1_voice
       minLength: 3
       maxLength: 256
       format: string
       pattern: "^[a-zA-Z0-9_.-]+$"
-
-    Rate:
-      description: Specification of rate
-      type: object
-      properties:
-        value:
-          description: Quantity of rate
-          type: integer
-          example: 10
-          format: int32
-          minimum: 0
-          maximum: 1024
-        unit:
-          $ref: "#/components/schemas/RateUnitEnum"
-
-    Duration:
-      description: Specification of duration
-      type: object
-      properties:
-        value:
-          description: Quantity of duration
-          type: integer
-          example: 12
-          format: int32
-          minimum: 1
-        unit:
-          $ref: "#/components/schemas/TimeUnitEnum"
-
-    TimeUnitEnum:
-      description: Units of time
-      type: string
-      enum:
-        - Days
-        - Hours
-        - Minutes
-        - Seconds
-        - Milliseconds
-        - Microseconds
-        - Nanoseconds
-
-    QosProfileStatusEnum:
-      description: |
-        The current status of the QoS Profile
-        - `ACTIVE`- QoS Profile is available to be used
-        - `INACTIVE`- QoS Profile is not currently available to be deployed
-        - `DEPRECATED`- QoS profile is actively being used in a QoD session, but can not be deployed in new QoD sessions
-      type: string
-      enum:
-        - ACTIVE
-        - INACTIVE
-        - DEPRECATED
-
-    RateUnitEnum:
-      description: Units of rate
-      type: string
-      enum:
-        - bps
-        - kbps
-        - Mbps
-        - Gbps
-        - Tbps
 
     CloudEvent:
       description: Event compliant with the CloudEvents specification
@@ -1239,34 +950,6 @@ components:
             code: NOT_FOUND
             message: "Session Id does not exist"
 
-    QosProfilesNotFound404:
-      description: Qos Profiles not found
-      headers:
-        x-correlator:
-          $ref: '#/components/headers/x-correlator'
-      content:
-        application/json:
-          schema:
-            $ref: "#/components/schemas/ErrorInfo"
-          example:
-            status: 404
-            code: NOT_FOUND
-            message: "No QoS Profiles found"
-
-    QosProfileNotFound404:
-      description: Qos Profile not found
-      headers:
-        x-correlator:
-          $ref: '#/components/headers/x-correlator'
-      content:
-        application/json:
-          schema:
-            $ref: "#/components/schemas/ErrorInfo"
-          example:
-            status: 404
-            code: NOT_FOUND
-            message: "QosProfile Id does not exist"
-
     Generic500:
       description: Internal server error
       headers:
@@ -1280,20 +963,6 @@ components:
             status: 500
             code: INTERNAL
             message: "Internal server error: ..."
-
-    QoSProfile500:
-      description: Internal server error
-      headers:
-        x-correlator:
-          $ref: '#/components/headers/x-correlator'
-      content:
-        application/json:
-          schema:
-            $ref: "#/components/schemas/ErrorInfo"
-          example:
-            status: 500
-            code: INTERNAL
-            message: "Internal server error: Could not get QoS Profile"
 
     Generic501:
       description: Not Implemented
