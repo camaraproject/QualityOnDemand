@@ -55,6 +55,12 @@ info:
 
     ![QoD Management API](https://raw.githubusercontent.com/camaraproject/QualityOnDemand/main/documentation/API_documentation/resources/QoD_details.PNG)
 
+    # Authorization and Authentication
+
+    CAMARA guidelines defines a set of authorization flows which can grant API clients access to the API functionality, as outlined in the document [CAMARA-API-access-and-user-consent.md](https://github.com/camaraproject/IdentityAndConsentManagement/blob/main/documentation/CAMARA-API-access-and-user-consent.md). Which specific authorization flows are to be used will be determined during onboarding process, happening between the API Client and the Telco Operator exposing the API, taking into account the declared purpose for accessing the API, while also being subject to the prevailing legal framework dictated by local legislation.
+
+    It is important to remark that in cases where personal user data is processed by the API, and users can exercise their rights through mechanisms such as opt-in and/or opt-out, the use of 3-legged access tokens becomes mandatory. This measure ensures that the API remains in strict compliance with user privacy preferences and regulatory obligations, upholding the principles of transparency and user-centric data control.
+ 
     # Further info and support
 
     (FAQs will be added in a later version of the documentation)
@@ -65,20 +71,22 @@ info:
     name: Apache 2.0
     url: https://www.apache.org/licenses/LICENSE-2.0.html
   version: wip
+
 externalDocs:
   description: Product documentation at Camara
   url: https://github.com/camaraproject/
-security:
-  - oAuth2ClientCredentials: []
+
 servers:
   - url: "{apiRoot}/quality-on-demand/vwip"
     variables:
       apiRoot:
         default: http://localhost:9091
         description: API root, defined by the service provider, e.g. `api.example.com` or `api.example.com/somepath`
+
 tags:
   - name: QoS Sessions
     description: Manage QoS sessions
+
 paths:
   /sessions:
     post:
@@ -104,6 +112,9 @@ paths:
         for the same device and flow period they must release the session resources with an explicit `delete` operation if not yet automatically deleted.
 
       operationId: createSession
+      security:
+        - openId:
+          - quality-on-demand:sessions:create
       parameters:
         - $ref: "#/components/parameters/x-correlator"
       requestBody:
@@ -258,10 +269,6 @@ paths:
           $ref: "#/components/responses/Generic501"
         "503":
           $ref: "#/components/responses/Generic503"
-      security:
-        - oAuth2ClientCredentials: []
-        - threeLegged:
-            - "qod-sessions-write"
 
   /sessions/{sessionId}:
     get:
@@ -270,6 +277,9 @@ paths:
       summary: Get QoS session information
       description: Querying for QoS session resource information details
       operationId: getSession
+      security:
+        - openId:
+          - quality-on-demand:sessions:read
       parameters:
         - name: sessionId
           in: path
@@ -305,10 +315,6 @@ paths:
           $ref: "#/components/responses/Generic500"
         "503":
           $ref: "#/components/responses/Generic503"
-      security:
-        - oAuth2ClientCredentials: []
-        - threeLegged:
-            - "qod-sessions-read"
 
     delete:
       tags:
@@ -322,6 +328,9 @@ paths:
         - `statusInfo` as `DELETE_REQUESTED`
         There will be no notification event if the `qosStatus` was already `UNAVAILABLE`.
       operationId: deleteSession
+      security:
+        - openId:
+          - quality-on-demand:sessions:delete
       parameters:
         - name: sessionId
           in: path
@@ -348,10 +357,6 @@ paths:
           $ref: "#/components/responses/Generic500"
         "503":
           $ref: "#/components/responses/Generic503"
-      security:
-        - oAuth2ClientCredentials: []
-        - threeLegged:
-            - "qod-sessions-delete"
 
   /sessions/{sessionId}/extend:
     post:
@@ -368,6 +373,9 @@ paths:
         - New remaining duration: 86,400 seconds (the maximum allowed)
         - New overall session duration: 96,400 seconds
       operationId: extendQosSessionDuration
+      security:
+        - openId:
+          - quality-on-demand:sessions:update
       parameters:
         - name: sessionId
           in: path
@@ -425,39 +433,18 @@ paths:
           $ref: "#/components/responses/Generic500"
         "503":
           $ref: "#/components/responses/Generic503"
-      security:
-        - oAuth2ClientCredentials: []
-        - threeLegged:
-            - "qod-sessions-write"
 
 components:
   securitySchemes:
-    oAuth2ClientCredentials:
-      description: |
-        The QoD API makes use of the OAUTH 2.0 client credentials grant which is applicable for server to server use cases involving trusted partners or clients without any protected user data involved. In this method the API invoker client is registered as a confidential client with an authorization grant type of client_credentials
-      type: oauth2
-      flows:
-        clientCredentials:
-          tokenUrl: https://api.example.com/oauth/token
-          scopes: {}
+    openId:
+      type: openIdConnect
+      openIdConnectUrl: https://example.com/.well-known/openid-configuration
     notificationsBearerAuth:
       description: Bearer authentication for notifications
       type: http
       scheme: bearer
       bearerFormat: "{$request.body#/webhook/notificationAuthToken}"
-    threeLegged:
-      type: oauth2
-      description: This API uses OAuth 2 with the authorization code grant flow.
-      flows:
-        authorizationCode:
-          authorizationUrl: https://api.example.com/oauth2/authorize
-          tokenUrl: https://api.example.com/oauth/token
-          scopes:
-            qod-sessions-read: Retrieval of QoS sessions
-            qod-sessions-write: Creation and update of QoS sessions
-            qod-sessions-delete: Deletion of QoS sessions
-            qod-profiles-read: Retrieval of QoS profiles
-
+ 
   parameters:
     x-correlator:
       name: x-correlator
