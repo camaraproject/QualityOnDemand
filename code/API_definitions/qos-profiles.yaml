@@ -60,7 +60,7 @@ paths:
       operationId: getQosProfiles
       security:
         - openId:
-          - qos-profiles:qos-profiles:read
+            - qos-profiles:qos-profiles:read
       parameters:
         - name: name
           in: query
@@ -108,7 +108,7 @@ paths:
         Returns a QoS Profile that matches the given name.
       security:
         - openId:
-          - qos-profiles:qos-profiles:read
+            - qos-profiles:qos-profiles:read
       parameters:
         - name: name
           in: path
