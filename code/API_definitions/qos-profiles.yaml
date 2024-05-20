@@ -16,6 +16,12 @@ info:
 
     How QoS profiles are mapped to connectivity characteristics are subject to agreements between the communication service provider and the API invoker. Within the CAMARA project, you can find a sample for such a mapping of QoS profiles. [CAMARA QoS Profiles Mapping Table (REFERENCE DRAFT)](https://github.com/camaraproject/QualityOnDemand/blob/main/documentation/API_documentation/QoSProfile_Mapping_Table.md)
 
+    # Authorization and Authentication
+
+    CAMARA guidelines defines a set of authorization flows which can grant API clients access to the API functionality, as outlined in the document [CAMARA-API-access-and-user-consent.md](https://github.com/camaraproject/IdentityAndConsentManagement/blob/main/documentation/CAMARA-API-access-and-user-consent.md). Which specific authorization flows are to be used will be determined during onboarding process, happening between the API Client and the Telco Operator exposing the API, taking into account the declared purpose for accessing the API, while also being subject to the prevailing legal framework dictated by local legislation.
+
+    It is important to remark that in cases where personal user data is processed by the API, and users can exercise their rights through mechanisms such as opt-in and/or opt-out, the use of 3-legged access tokens becomes mandatory. This measure ensures that the API remains in strict compliance with user privacy preferences and regulatory obligations, upholding the principles of transparency and user-centric data control.
+
     # Further info and support
 
     (FAQs will be added in a later version of the documentation)
@@ -26,20 +32,22 @@ info:
     name: Apache 2.0
     url: https://www.apache.org/licenses/LICENSE-2.0.html
   version: wip
+
 externalDocs:
   description: Product documentation at Camara
   url: https://github.com/camaraproject/
-security:
-  - oAuth2ClientCredentials: []
+
 servers:
   - url: "{apiRoot}/qos-profiles/vwip"
     variables:
       apiRoot:
         default: http://localhost:9091
         description: API root, defined by the service provider, e.g. `api.example.com` or `api.example.com/somepath`
+
 tags:
   - name: QoS Profiles
     description: Manage QoS Profiles
+
 paths:
   /qos-profiles:
     get:
@@ -50,6 +58,9 @@ paths:
         Returns all QoS Profiles that match the given criteria.
         If no criteria is given, all QoS Profiles are returned.
       operationId: getQosProfiles
+      security:
+        - openId:
+          - qos-profiles:qos-profiles:read
       parameters:
         - name: name
           in: query
@@ -95,6 +106,9 @@ paths:
       operationId: getQosProfile
       description: |
         Returns a QoS Profile that matches the given name.
+      security:
+        - openId:
+          - qos-profiles:qos-profiles:read
       parameters:
         - name: name
           in: path
@@ -128,14 +142,9 @@ paths:
 
 components:
   securitySchemes:
-    oAuth2ClientCredentials:
-      description: |
-        The QoS Profiles API makes use of the OAUTH 2.0 client credentials grant which is applicable for server to server use cases involving trusted partners or clients without any protected user data involved. In this method the API invoker client is registered as a confidential client with an authorization grant type of client_credentials
-      type: oauth2
-      flows:
-        clientCredentials:
-          tokenUrl: https://api.example.com/oauth/token
-          scopes: {}
+    openId:
+      type: openIdConnect
+      openIdConnectUrl: https://example.com/.well-known/openid-configuration
 
   parameters:
     x-correlator:
