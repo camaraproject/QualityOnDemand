@@ -252,6 +252,23 @@ paths:
                 status: 409
                 code: CONFLICT
                 message: "Another session is created for the same device"
+        "429":
+          description: Rate limit or quota exceeded
+          headers:
+            x-correlator:
+              $ref: '#/components/headers/x-correlator'
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorInfo"
+              examples:
+                QuotaExceeded:
+                  summary: Quota exceeded
+                  description: The requested duration exceeds the overall sessions time cap for this device or application, in certain period of time or contract duration.
+                  value:
+                    status: 429
+                    code: QUOTA_EXCEEDED
+                    message: "Requested duration exceeds the contracted quota for the current device"
         "500":
           $ref: "#/components/responses/Generic500"
         "501":
