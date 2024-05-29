@@ -231,8 +231,7 @@ components:
         maxDuration:
           description: |
             The maximum time period that this profile can be deployed.
-            NOTE: currently the duration within `sessionInfo` is limited to 86400 seconds (1 day).
-            The value of `maxDuration` shouldn't therefore exceed this time period. The limitation might be removed in later versions.
+            Overall session duration must not exceed this value. This includes the initial requested duration plus any extensions.
           allOf:
             - $ref: "#/components/schemas/Duration"
         priority:
