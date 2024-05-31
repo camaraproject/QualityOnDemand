@@ -362,7 +362,7 @@ paths:
         The overall duration of the QoS session, including the additional extended duration, shall not exceed the maximum duration limit fixed for the QoS Profile. If the current duration plus the value of `requestedAdditionalDuration` exceeds the maximum limit, the new overall duration shall be capped to the maximum value allowed.
         An example: For a QoS profile limited to a `maxDuration` of 50,000 seconds, a QoD session was originally created with duration 30,000 seconds. Before the session expires, the developer requests to extend the session by another 30,000 seconds:
         - Previous duration: 30,000 seconds
-        - Requested additional duration: 30,000 seconds 
+        - Requested additional duration: 30,000 seconds
         - New overall session duration: 50,000 seconds (the maximum allowed)
       operationId: extendQosSessionDuration
       parameters:
@@ -525,9 +525,9 @@ components:
               $ref: "#/components/schemas/SessionId"
             duration:
               description: |
-                Session duration in seconds. Implementations can grant the requested session duration or set a different duration, based on network policies or conditions. 
+                Session duration in seconds. Implementations can grant the requested session duration or set a different duration, based on network policies or conditions.
                 - When `qosStatus` is "REQUESTED", the value is the duration to be scheduled, granted by the implementation.
-                - When `qosStatus` is AVAILABLE", the value is the overall duration since `startedAt. When the session is extended, the value is the new overall duration of the session. 
+                - When `qosStatus` is AVAILABLE", the value is the overall duration since `startedAt. When the session is extended, the value is the new overall duration of the session.
                 - When `qosStatus` is "UNAVAILABLE", the value is the overall effective duration since `startedAt` until the session was terminated.
               type: integer
               format: int32
@@ -569,7 +569,7 @@ components:
           properties:
             duration:
               description: |
-                Requested session duration in seconds. Value may be explicitly limited for the QoS profile, as specified in the [Qos Profile API](TBC). Implementations can grant the requested session duration or set a different duration, based on network policies or conditions. 
+                Requested session duration in seconds. Value may be explicitly limited for the QoS profile, as specified in the [Qos Profile API](TBC). Implementations can grant the requested session duration or set a different duration, based on network policies or conditions.
               type: integer
               format: int32
               minimum: 1
