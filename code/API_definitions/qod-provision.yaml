@@ -155,7 +155,7 @@ paths:
           $ref: "#/components/responses/Generic503"
       security:
         - openId:
-          - "qod-provision:provisions:create"
+            - "qod-provision:provisions:create"
 
   /provisions/{provisionId}:
     get:  
@@ -196,7 +196,7 @@ paths:
           $ref: "#/components/responses/Generic503"
       security:
         - openId:
-          - "qod-provision:provisions:read"
+            - "qod-provision:provisions:read"
 
     delete:
       tags:
@@ -233,7 +233,7 @@ paths:
           $ref: "#/components/responses/Generic503"
       security:
         - openId:
-          - "qod-provision:provisions:delete"
+            - "qod-provision:provisions:delete"
 
   /provisions/retrieve:
     post:
@@ -284,7 +284,7 @@ paths:
           $ref: "#/components/responses/Generic503"
       security:
         - openId:
-          - "qod-provision:provisions:read"
+            - "qod-provision:provisions:read"
 
 components:
   securitySchemes:
