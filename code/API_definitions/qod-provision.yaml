@@ -1,0 +1,970 @@
+openapi: 3.0.3
+info:
+  title: QoD Provision API
+  description: |
+    The Quality-On-Demand (QoD) Provision API offers a programmable interface for developers to request the assignment of a certain QoS Profile to a certain device or application flows, indefinitely.
+
+    This API sets up the configuration in the network so the requested QoS profile is applied to the specified device or application flows, at any time while the provision is available. The device or application traffic will be treated with a certain QoS profile by the network whenever the device is connected to the network, until the provision is revoked.
+    
+    # Relevant terms and definitions
+   
+    * **QoS profiles and QoS profile labels**:
+    Latency, throughput or priority requirements of the application mapped to relevant QoS profile values. The set of QoS Profiles that an operator is offering can be retrieved by means of the [QoS Profile API](link TBC).
+
+    * **Identifier for the device**:
+    At least one identifier for the device (user equipment) out of four options: IPv4 address, IPv6 address, Phone number, or Network Access Identifier assigned by the network operator for the device, at the request time. When multiple identifiers are provided, they must identify the same device. After the provision request is accepted, the device may get different IP addresses, but the provision will still apply to the device that was identified during the request process. 
+
+    * **Identifier for the application server**:
+    IPv4 and/or IPv6 address of the application server (application backend). If not specified, the default value is all possible IP addresses, that is `0.0.0.0/0` in IPv4 notation, or `::/0` in IPv6 notation.
+
+    * **App-Flow (between the application client and application server)**:
+    The precise application data flow the developer wants to prioritize and/or have stable latency or throughput for. This flow is in the current API version determined by the identifiers used for the device and the application server. And it can be further elaborated with details such as ports or port-ranges. Future version of the API might allow more detailed flow identification features.
+
+      - If the application server is not specified, the QoS profile will apply to all flows between the device and the network.
+
+    * **Notification URL and token**:
+    Developers may provide a callback URL on which notifications about all status change events (eg. provision termination) can be received from the service provider. This is an optional parameter.
+
+    # Resources and Operations overview
+    The API defines four operations:
+
+    - An operation to setup a new QoD provision for a given device.
+    - An operation to get the information about a specific QoD provision, identified by its `provisionId`.
+    - An operation to get all the QoD provisions for a given device.
+    - An operation to terminate a QoD provision, identified by its `provisionId`.
+
+
+    ### Authorization and authentication
+
+    CAMARA guidelines defines a set of authorization flows which can grant API clients access to the API functionality, as outlined in the document [CAMARA-API-access-and-user-consent.md](https://github.com/camaraproject/IdentityAndConsentManagement/blob/main/documentation/CAMARA-API-access-and-user-consent.md). Which specific authorization flows are to be used will be determined during onboarding process, happening between the API Client and the Telco Operator exposing the API, taking into account the declared purpose for accessing the API, while also being subject to the prevailing legal framework dictated by local legislation.
+
+    It is important to remark that in cases where personal user data is processed by the API, and users can exercise their rights through mechanisms such as opt-in and/or opt-out, the use of 3-legged access tokens becomes mandatory. This measure ensures that the API remains in strict compliance with user privacy preferences and regulatory obligations, upholding the principles of transparency and user-centric data control.
+    
+  termsOfService: http://swagger.io/terms/
+  contact:
+    email: project-email@sample.com
+  license:
+    name: Apache 2.0
+    url: https://www.apache.org/licenses/LICENSE-2.0.html
+  version: wip
+externalDocs:
+  description: Product documentation at Camara
+  url: https://github.com/camaraproject/
+servers:
+  - url: "{apiRoot}/qod-provision/vwip"
+    variables:
+      apiRoot:
+        default: http://localhost:9091
+        description: API root, defined by the service provider, e.g. `api.example.com` or `api.example.com/somepath`
+tags:
+  - name: QoD Provision
+    description: Manage the provision of QoD
+paths:
+  /provisions:
+    post:
+      tags:
+        - QoD Provision
+      summary: Sets a new QoD provision
+      description: |
+        Triggers a new provision in the operator to assign certain QoS Profile to certain device or application flows.
+
+        - If the provision is completed synchronously, the response will be 201 with `status` = `AVAILABLE`.        
+        - If the provision request is accepted but not yet completed, the response will be 201 with `status` = `REQUESTED`.        
+        - If the operator determines synchronously that the provision request cannot be fulfilled, the response will be 201 with `status` = `UNAVAILABLE`.
+        
+        - If the request includes a webhook, the client will receive a `status-changed` event with the outcome of the process. The event will be sent also for synchronous operations.
+
+        NOTE: When the provision status becomes `UNAVAILABLE`, the QoD provision resource is not immediately released, but will get deleted automatically, at earliest 360 seconds after.
+        This behavior allows clients which are not receiving notification events but are polling, to get the provision status information. Before a client can attempt to create a new QoD provision for the same device and flow, they must release the provision resources with an explicit `delete` operation if not yet automatically deleted.
+      
+      operationId: createProvision
+      parameters:
+        - $ref: "#/components/parameters/x-correlator"
+      requestBody:
+        description: Parameters to create a new provision
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateProvision"
+        required: true
+      callbacks:
+        notifications:
+          "{$request.body#/webhook/notificationUrl}":
+            post:
+              summary: Provision notifications callback
+              description: |
+                Important: this endpoint is to be implemented by the API consumer.
+                The QoD server will call this endpoint whenever any QoD provision change related event occurs.
+                Currently only `PROVISION_STATUS_CHANGED` event is defined.
+              operationId: postProvisionNotification
+              parameters:
+                - $ref: "#/components/parameters/x-correlator"
+              requestBody:
+                required: true
+                content:
+                  application/cloudevents+json:
+                    schema:
+                      $ref: "#/components/schemas/CloudEvent"
+                    examples:
+                      PROVISION_STATUS_CHANGED_EXAMPLE:
+                        $ref: "#/components/examples/PROVISION_STATUS_CHANGED_EXAMPLE"
+              responses:
+                "204":
+                  description: Successful notification
+                  headers:
+                    x-correlator:
+                      $ref: "#/components/headers/x-correlator"
+                "400":
+                  $ref: "#/components/responses/Generic400"
+                "401":
+                  $ref: "#/components/responses/Generic401"
+                "403":
+                  $ref: "#/components/responses/Generic403"
+                "500":
+                  $ref: "#/components/responses/Generic500"
+                "503":
+                  $ref: "#/components/responses/Generic503"
+              security:
+                - {}
+                - notificationsBearerAuth: []
+      responses:
+        "201":
+          description: Provision created
+          headers:
+            x-correlator:
+              $ref: "#/components/headers/x-correlator"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ProvisionInfo"
+        "400":
+          $ref: "#/components/responses/Generic400"
+        "401":
+          $ref: "#/components/responses/Generic401"
+        "403":
+          $ref: "#/components/responses/Generic403"
+        "404":
+          $ref: "#/components/responses/DeviceNotFound404"
+        "409":
+          $ref: "#/components/responses/ProvisionConflict409"
+        "422":
+          $ref: "#/components/responses/Generic422"
+        "500":
+          $ref: "#/components/responses/Generic500"
+        "503":
+          $ref: "#/components/responses/Generic503"
+      security:
+        - openId:
+          - "qod-provision:provisions:create"
+
+  /provisions/{provisionId}:
+    get:
+      tags:
+        - QoD Provision
+      summary: Get QoD provision information
+      description: Querying for QoD provisions resource information details
+      operationId: getProvision
+      parameters:
+        - $ref: "#/components/parameters/provisionId"
+        - $ref: "#/components/parameters/x-correlator"
+      responses:
+        "200":
+          description: Contains information about active provision
+          headers:
+            x-correlator:
+              $ref: "#/components/headers/x-correlator"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ProvisionInfo"
+              examples:
+                PROVISION_AVAILABLE:
+                  $ref: "#/components/examples/PROVISION_AVAILABLE"
+                PROVISION_UNAVAILABLE:
+                  $ref: "#/components/examples/PROVISION_UNAVAILABLE"
+        "400":
+          $ref: "#/components/responses/Generic400"
+        "401":
+          $ref: "#/components/responses/Generic401"
+        "403":
+          $ref: "#/components/responses/Generic403"
+        "404":
+          $ref: "#/components/responses/Generic404"
+        "500":
+          $ref: "#/components/responses/Generic500"
+        "503":
+          $ref: "#/components/responses/Generic503"
+      security:
+        - openId:
+          - "qod-provision:provisions:read"
+
+    delete:
+      tags:
+        - QoD Provision
+      summary: Deletes a QoD provision
+      description: |
+        Release resources related to QoS provision.
+
+        If the notification callback is provided and the provision status was `AVAILABLE`, the client will receive in addition to the response a `PROVISION_STATUS_CHANGED` event with
+        - `status` as `UNAVAILABLE` and
+        - `statusInfo` as `DELETE_REQUESTED`
+        There will be no notification event if the `status` was already `UNAVAILABLE`.
+      operationId: deleteProvision
+      parameters:
+        - $ref: "#/components/parameters/provisionId"
+        - $ref: "#/components/parameters/x-correlator"
+      responses:
+        "204":
+          description: Provision deleted
+          headers:
+            x-correlator:
+              $ref: "#/components/headers/x-correlator"
+        "400":
+          $ref: "#/components/responses/Generic400"
+        "401":
+          $ref: "#/components/responses/Generic401"
+        "403":
+          $ref: "#/components/responses/Generic403"
+        "404":
+          $ref: "#/components/responses/Generic404"
+        "500":
+          $ref: "#/components/responses/Generic500"
+        "503":
+          $ref: "#/components/responses/Generic503"
+      security:
+        - openId:
+          - "qod-provision:provisions:delete"
+
+  /provisions/retrieve:
+    post:
+      tags:
+        - QoD Provision
+      summary: Gets QoD provisions for a given device
+      description: |
+        Retrieves all the QoD provisions for a given device. An implementation may allow multiple provisions for the same device.
+      operationId: retrieveProvisions
+      parameters:
+        - $ref: "#/components/parameters/x-correlator"
+      requestBody:
+        description: Parameters to retrieve provisions
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/RetrieveProvisions"
+        required: true
+      responses:
+        "200":
+          description: Provision created. An empty array is returned if no provisions are found.
+          headers:
+            x-correlator:
+              $ref: "#/components/headers/x-correlator"
+          content:
+            application/json:
+              schema:
+                type: array
+                minItems: 0
+                items:
+                  $ref: "#/components/schemas/ProvisionInfo"
+              examples:
+                RETRIEVE_PROVISIONS:
+                  $ref: "#/components/examples/RETRIEVE_PROVISIONS"
+        "400":
+          $ref: "#/components/responses/Generic400"
+        "401":
+          $ref: "#/components/responses/Generic401"
+        "403":
+          $ref: "#/components/responses/Generic403"
+        "404":
+          $ref: "#/components/responses/DeviceNotFound404"
+        "422":
+          $ref: "#/components/responses/Generic422"
+        "500":
+          $ref: "#/components/responses/Generic500"
+        "503":
+          $ref: "#/components/responses/Generic503"
+      security:
+        - openId:
+          - "qod-provision:provisions:read"
+
+components:
+  securitySchemes:
+    openId:
+      description: OpenID Connect authentication
+      type: openIdConnect
+      openIdConnectUrl: https://example.com/.well-known/openid-configuration
+    notificationsBearerAuth:
+      description: Bearer authentication for notifications
+      type: http
+      scheme: bearer
+      bearerFormat: "{$request.body#/webhook/notificationAuthToken}"
+
+  parameters:
+    provisionId:
+      name: provisionId
+      in: path
+      description: Provision ID that was obtained from the createProvision operation
+      required: true
+      schema:
+        $ref: "#/components/schemas/ProvisionId"
+
+    x-correlator:
+      name: x-correlator
+      in: header
+      description: Correlation id for the different services
+      schema:
+        type: string
+
+  headers:
+    x-correlator:
+      description: Correlation id for the different services
+      schema:
+        type: string
+
+  schemas:
+    ProvisionId:
+      description: Provision Identifier in UUID format
+      type: string
+      format: uuid
+
+    BaseProvisionInfo:
+      description: Common attributes of a QoD provision
+      type: object
+      properties:
+        device:
+          $ref: "#/components/schemas/Device"
+        applicationServer:
+          $ref: "#/components/schemas/ApplicationServer"
+        devicePorts:
+          description: The ports used locally by the device for flows to which the requested QoS profile should apply. If omitted, then the qosProfile will apply to all flows between the device and the specified application server address and ports
+          allOf:
+            - $ref: "#/components/schemas/PortsSpec"
+        applicationServerPorts:
+          description: A list of single ports or port ranges on the application server. If omitted, then the qosProfile will apply to all flows between the device and the specified application server address. If `applicationServer` is not specified, then `applicationServerPorts` must not be included.
+          allOf:
+            - $ref: "#/components/schemas/PortsSpec"
+        qosProfile:
+          $ref: "#/components/schemas/QosProfileName"
+        webhook:
+          description: Callback URL on which notifications about all status change events of the provision process (eg. provision termination) can be received
+          type: object
+          required:
+            - notificationUrl
+          properties:
+            notificationUrl:
+              type: string
+              format: uri
+              example: "https://application-server.com"
+              description: Allows asynchronous delivery of provision related events
+            notificationAuthToken:
+              type: string
+              minLength: 20
+              maxLength: 256
+              example: "c8974e592c2fa383d4a3960714"
+              description: Authentication token for callback API
+      required:
+        - device
+        - qosProfile
+
+    ProvisionInfo:
+      description: Provision related information.
+      allOf:
+        - $ref: "#/components/schemas/BaseProvisionInfo"
+        - type: object
+          properties:
+            provisionId:
+              $ref: "#/components/schemas/ProvisionId"
+            startedAt:
+              description: Date and time when the provision became "AVAILABLE". Not to be returned when `status` is "REQUESTED". Format must follow RFC 3339 and must indicate time zone (UTC or local).
+              type: string
+              format: date-time
+              example: "2024-06-01T12:00:00Z"
+            status:
+              $ref: "#/components/schemas/Status"
+            statusInfo:
+              $ref: "#/components/schemas/StatusInfo"
+            messages:
+              type: array
+              items:
+                $ref: "#/components/schemas/Message"
+          required:
+            - provisionId
+            - status
+
+    CreateProvision:
+      description: Attributes to request a new QoD provision
+      allOf:
+        - $ref: "#/components/schemas/BaseProvisionInfo"
+
+    RetrieveProvisions:
+      description: Attributes to look for QoD provisions
+      type: object
+      properties:
+        device:
+          $ref: "#/components/schemas/Device"
+      required:
+        - device
+
+    Port:
+      description: TCP or UDP port number
+      type: integer
+      minimum: 0
+      maximum: 65535
+
+    PortsSpec:
+      description: Specification of several TCP or UDP ports
+      type: object
+      minProperties: 1
+      properties:
+        ranges:
+          description: Range of TCP or UDP ports
+          type: array
+          minItems: 1
+          items:
+            type: object
+            required:
+              - from
+              - to
+            properties:
+              from:
+                $ref: "#/components/schemas/Port"
+              to:
+                $ref: "#/components/schemas/Port"
+        ports:
+          description: Array of TCP or UDP ports
+          type: array
+          minItems: 1
+          items:
+            $ref: "#/components/schemas/Port"
+      example:
+        ranges:
+          - from: 5010
+            to: 5020
+        ports:
+          - 5060
+          - 5070
+
+    QosProfileName:
+      description: |
+        A unique name for identifying a specific QoS profile.
+        This may follow different formats depending on the service providers implementation.
+        Some options addresses:
+          - A UUID style string
+          - Support for predefined profiles QOS_S, QOS_M, QOS_L, and QOS_E
+          - A searchable descriptive name
+        The set of QoS Profiles that an operator is offering can be retrieved by means of the [QoS Profile API](link TBC).
+      type: string
+      example: QCI_1_voice
+      minLength: 3
+      maxLength: 256
+      format: string
+      pattern: "^[a-zA-Z0-9_.-]+$"
+
+    CloudEvent:
+      description: Event compliant with the CloudEvents specification
+      required:
+        - id
+        - source
+        - specversion
+        - type
+        - time
+      properties:
+        id:
+          description: Identifier of this event, that must be unique in the source context.
+          type: string
+        source:
+          description: Identifies the context in which an event happened in the specific Provider Implementation.
+          type: string
+          format: uri-reference
+        type:
+          description: The type of the event.
+          type: string
+          enum:
+            - "org.camaraproject.qod-provision.vwip.status-changed"
+        specversion:
+          description: Version of the specification to which this event conforms (must be 1.0 if it conforms to cloudevents 1.0.2 version)
+          type: string
+          enum:
+            - "1.0"
+        datacontenttype:
+          description: 'media-type that describes the event payload encoding, must be "application/json" for CAMARA APIs'
+          type: string
+          enum:
+            - "application/json"
+        data:
+          description: Event notification details payload, which depends on the event type
+          type: object
+        time:
+          description: |
+            Timestamp of when the occurrence happened. It must follow RFC 3339
+          type: string
+          format: date-time
+      discriminator:
+        propertyName: "type"
+        mapping:
+          org.camaraproject.qod-provision.vwip.status-changed: "#/components/schemas/EventStatusChanged"
+
+    EventStatusChanged:
+      description: Event to notify a QoD provision status change
+      allOf:
+        - $ref: "#/components/schemas/CloudEvent"
+        - type: object
+          properties:
+            data:
+              type: object
+              description: Event details depending on the event type
+              required:
+                - provisionId
+                - qosStatus
+              properties:
+                provisionId:
+                  $ref: "#/components/schemas/ProvisionId"
+                status:
+                  $ref: "#/components/schemas/StatusChanged"
+                statusInfo:
+                  $ref: "#/components/schemas/StatusInfo"
+          required:
+            - data
+
+    StatusInfo:
+      description: |
+        Reason for the new `status`. Currently `statusInfo` is only applicable when `status` is `UNAVAILABLE`.
+        * `NETWORK_TERMINATED` - Network terminated the QoD provision
+        * `DELETE_REQUESTED`- User requested the deletion of the QoD provision
+
+      type: string
+      enum:
+        - NETWORK_TERMINATED
+        - DELETE_REQUESTED
+
+    Device:
+      description: |
+        End-user equipment able to connect to the network. Examples of devices include smartphones or IoT sensors/actuators.
+
+        The developer can choose to provide the below specified device identifiers:
+
+        * `ipv4Address`
+        * `ipv6Address`
+        * `phoneNumber`
+        * `networkAccessIdentifier`
+
+        NOTE: the MNO might support only a subset of these options. The API invoker can provide multiple identifiers to be compatible across different MNOs. In this case the identifiers MUST belong to the same device
+      type: object
+      properties:
+        phoneNumber:
+          $ref: "#/components/schemas/PhoneNumber"
+        networkAccessIdentifier:
+          $ref: "#/components/schemas/NetworkAccessIdentifier"
+        ipv4Address:
+          $ref: "#/components/schemas/DeviceIpv4Addr"
+        ipv6Address:
+          $ref: "#/components/schemas/DeviceIpv6Address"
+      minProperties: 1
+
+    ApplicationServer:
+      description: |
+        A server hosting backend applications to deliver some business logic to clients.
+
+        The developer can choose to provide the below specified device identifiers:
+
+        * `ipv4Address`
+        * `ipv6Address`
+
+        If omitted the default value is all possible IP addresses, that is `0.0.0.0/0` in IPv4 notation, or `::/0` in IPv6 notation.
+      type: object
+      properties:
+        ipv4Address:
+          $ref: "#/components/schemas/ApplicationServerIpv4Address"
+        ipv6Address:
+          $ref: "#/components/schemas/ApplicationServerIpv6Address"
+      minProperties: 1
+
+    NetworkAccessIdentifier:
+      description: A public identifier addressing a subscription in a mobile network. In 3GPP terminology, it corresponds to the GPSI formatted with the External Identifier ({Local Identifier}@{Domain Identifier}). Unlike the telephone number, the network access identifier is not subjected to portability ruling in force, and is individually managed by each operator.
+      type: string
+      example: "123456789@domain.com"
+
+    PhoneNumber:
+      description: A public identifier addressing a telephone subscription. In mobile networks it corresponds to the MSISDN (Mobile Station International Subscriber Directory Number). In order to be globally unique it has to be formatted in international format, according to E.164 standard, prefixed with '+'.
+      type: string
+      pattern: '^\+[1-9][0-9]{4,14}$'
+      example: "+123456789"
+
+    DeviceIpv4Addr:
+      type: object
+      description: |
+        The device should be identified by either the public (observed) IP address and port as seen by the application server, or the private (local) and any public (observed) IP addresses in use by the device (this information can be obtained by various means, for example from some DNS servers).
+
+        If the allocated and observed IP addresses are the same (i.e. NAT is not in use) then  the same address should be specified for both publicAddress and privateAddress.
+
+        If NAT64 is in use, the device should be identified by its publicAddress and publicPort, or separately by its allocated IPv6 address (field ipv6Address of the Device object)
+
+        In all cases, publicAddress must be specified, along with at least one of either privateAddress or publicPort, dependent upon which is known. In general, mobile devices cannot be identified by their public IPv4 address alone.
+      properties:
+        publicAddress:
+          $ref: "#/components/schemas/SingleIpv4Addr"
+        privateAddress:
+          $ref: "#/components/schemas/SingleIpv4Addr"
+        publicPort:
+          $ref: "#/components/schemas/Port"
+      anyOf:
+        - required: [publicAddress, privateAddress]
+        - required: [publicAddress, publicPort]
+      example:
+        {
+          "publicAddress": "203.0.113.0",
+          "publicPort": 59765
+        }
+
+    SingleIpv4Addr:
+      description: A single IPv4 address with no subnet mask
+      type: string
+      format: ipv4
+      example: "203.0.113.0"
+
+    DeviceIpv6Address:
+      description: |
+        The device should be identified by the observed IPv6 address, or by any single IPv6 address from within the subnet allocated to the device (e.g. adding ::0 to the /64 prefix).
+
+        The provision shall apply to all IP flows between the device subnet and the specified application server, unless further restricted by the optional parameters devicePorts or applicationServerPorts.
+      type: string
+      format: ipv6
+      example: 2001:db8:85a3:8d3:1319:8a2e:370:7344
+
+    ApplicationServerIpv4Address:
+      type: string
+      example: "198.51.100.0/24"
+      description: |
+        IPv4 address may be specified in form <address/mask> as:
+          - address - an IPv4 number in dotted-quad form 1.2.3.4. Only this exact IP number will match the flow control rule.
+          - address/mask - an IP number as above with a mask width of the form 1.2.3.4/24.
+            In this case, all IP numbers from 1.2.3.0 to 1.2.3.255 will match. The bit width MUST be valid for the IP version.
+
+    ApplicationServerIpv6Address:
+      type: string
+      example: "2001:db8:85a3:8d3:1319:8a2e:370:7344"
+      description: |
+        IPv6 address may be specified in form <address/mask> as:
+          - address - The /128 subnet is optional for single addresses:
+            - 2001:db8:85a3:8d3:1319:8a2e:370:7344
+            - 2001:db8:85a3:8d3:1319:8a2e:370:7344/128
+          - address/mask - an IP v6 number with a mask:
+            - 2001:db8:85a3:8d3::0/64
+            - 2001:db8:85a3:8d3::/64
+
+    Message:
+      description: Message with additional information
+      type: object
+      properties:
+        severity:
+          description: Message severity
+          type: string
+          enum: ["INFO", "WARNING"]
+        description:
+          description: Detailed message text
+          type: string
+      required:
+        - severity
+        - description
+
+    Status:
+      description: |
+        The current status of the requested QoD provision. The status can be one of the following:
+        * `REQUESTED` - QoD provision has been requested but is still being processed.
+        * `AVAILABLE` - The requested QoS profile has been provisioned to the device or application flows, and is active.
+        * `UNAVAILABLE` - The QoD provision request has been processed but is not active. `statusInfo` may provide additional information about the reason for the unavailability.
+      enum:
+        - REQUESTED
+        - AVAILABLE
+        - UNAVAILABLE
+
+    StatusChanged:
+      description: |
+        The current status of a requested or previously available QoD provision. Applicable values in the event are:
+        *  `AVAILABLE` - The requested QoS profile has been provisioned to the device or application flows, and is active.
+        *  `UNAVAILABLE` - A requested or previously available QoD provision is now unavailable. `statusInfo` may provide additional information about the reason for the unavailability.
+      type: string
+      enum:
+        - AVAILABLE
+        - UNAVAILABLE
+
+    ErrorInfo:
+      description: Common schema for errors
+      type: object
+      properties:
+        status:
+          type: integer
+          description: HTTP status code returned along with this error response
+        code:
+          type: string
+          description: Code given to this error
+        message:
+          type: string
+          description: Detailed error description
+      required:
+        - status
+        - code
+        - message
+
+  responses:
+    Generic400:
+      description: Bad Request
+      headers:
+        x-correlator:
+          $ref: "#/components/headers/x-correlator"
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ErrorInfo"
+          examples:
+            GENERIC_400_INVALID_ARGUMENT:
+              summary: Generic Invalid Argument
+              description: Invalid Argument. Generic Syntax Exception
+              value:
+                status: 400
+                code: INVALID_ARGUMENT
+                message: Client specified an invalid argument, request body or query param.
+            GENERIC_400_OUT_OF_RANGE:
+              summary: Generic Out of Range
+              description: Out of Range. Specific Syntax Exception used when a given field has a pre-defined range or a invalid filter criteria combination is requested
+              value:
+                status: 400
+                code: OUT_OF_RANGE
+                message: Client specified an invalid range.
+
+    Generic401:
+      description: Unauthorized
+      headers:
+        x-correlator:
+          $ref: "#/components/headers/x-correlator"
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ErrorInfo"
+          examples:
+            GENERIC_401_UNAUTHENTICATED:
+              summary: Generic Unauthenticated
+              description: Request cannot be authenticated
+              value:
+                status: 401
+                code: UNAUTHENTICATED
+                message: Request not authenticated due to missing, invalid, or expired credentials.
+            GENERIC_401_AUTHENTICATION_REQUIRED:
+              summary: Generic Authentication Required
+              description: New authentication is needed, authentication is no longer valid
+              value:
+                status: 401
+                code: AUTHENTICATION_REQUIRED
+                message: New authentication is required.
+
+    Generic403:
+      description: Forbidden
+      headers:
+        x-correlator:
+          $ref: "#/components/headers/x-correlator"
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ErrorInfo"
+          examples:
+            GENERIC_403_PERMISSION_DENIED:
+              summary: Generic Permission Denied
+              description: Permission denied. OAuth2 token access does not have the required scope or when the user fails operational security
+              value:
+                status: 403
+                code: PERMISSION_DENIED
+                message: Client does not have sufficient permissions to perform this action.
+            GENERIC_403_INVALID_TOKEN_CONTEXT:
+              summary: Invalid access token context
+              description: Reflects some inconsistency between information in some field of the API and the related OAuth2 Token
+              value:
+                status: 403
+                code: INVALID_TOKEN_CONTEXT
+                message: "{{field}} is not consistent with access token."
+
+    Generic404:
+      description: Not found
+      headers:
+        x-correlator:
+          $ref: "#/components/headers/x-correlator"
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ErrorInfo"
+          examples:
+            GENERIC_404_NOT_FOUND:
+              summary: Generic Not Found
+              description: Resource is not found
+              value:
+                status: 404
+                code: NOT_FOUND
+                message: "{{resource}} is not found"
+
+    Generic422:
+      description: Unprocessable entity
+      headers:
+        x-correlator:
+          $ref: "#/components/headers/x-correlator"
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ErrorInfo"
+          examples:
+            GENERIC_422_UNPROCESSABLE_ENTITY:
+              summary: Unprocessable entity
+              description: The request was well-formed but was unable to be processed due to semantic errors or not applicable values. This is the generic error code for 422 responses.
+              value:
+                status: 422
+                code: UNPROCESSABLE_ENTITY
+                message: "Value not acceptable: ..."          
+            GENERIC_422_DEVICE_NOT_APPLICABLE:
+              summary: Service not applicable to the device
+              description: The provided device is not compatible with the requested operation, according to the service provider rules.
+              value:
+                status: 422
+                code: DEVICE_NOT_APPLICABLE
+                message: "The device is not applicable for the requested operation"
+            GENERIC_422_DEVICE_IDENTIFIERS_MISMATCH:
+              summary: Device identifiers mismatch
+              description: Several device identifiers are provided but do not match the same device
+              value:
+                status: 422
+                code: DEVICE_IDENTIFIERS_MISMATCH
+                message: "The provided device identifiers do not match the same device"
+            GENERIC_422_UNSUPPORTED_DEVICE_IDENTIFIERS:
+              summary: None of the provided device identifiers is supported by the implementation
+              description: Message may list the supported device identifiers
+              value:
+                status: 422
+                code: UNSUPPORTED_DEVICE_IDENTIFIERS
+                message: "Supported device supported are: ..."
+
+    Generic500:
+      description: Internal server error
+      headers:
+        x-correlator:
+          $ref: "#/components/headers/x-correlator"
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ErrorInfo"
+          examples:
+            GENERIC_500_INTERNAL:
+              summary: Generic Internal
+              description: Problem in Server side. Regular Server Exception
+              value:
+                status: 500
+                code: INTERNAL
+                message: "Internal server error"
+
+    Generic503:
+      description: Service unavailable
+      headers:
+        x-correlator:
+          $ref: "#/components/headers/x-correlator"
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ErrorInfo"
+          examples:
+            GENERIC_503_UNAVAILABLE:
+              summary: Generic Unavailable
+              description: Service is not available. Temporary situation usually related to maintenance process in the server side
+              value:
+                status: 503
+                code: UNAVAILABLE
+                message: "Service unavailable"
+
+    DeviceNotFound404:
+      description: Device not found
+      headers:
+        x-correlator:
+          $ref: "#/components/headers/x-correlator"
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ErrorInfo"
+          examples:
+            ERROR_404_DEVICE_NOT_FOUND:
+              summary: Some identifier cannot be matched to a device
+              description: One or more of the provided device identifiers do not match any device
+              value:
+                status: 404
+                code: DEVICE_NOT_FOUND
+                message: "No device found for a provided identifier"
+
+    ProvisionConflict409:
+      description: Provision conflict
+      headers:
+        x-correlator:
+          $ref: "#/components/headers/x-correlator"
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ErrorInfo"
+          examples:
+            PROVISION_409_CONFLICT:
+              summary: Provision Conflict
+              description: The requested provision conflicts with an existing one
+              value:
+                status: 409
+                code: CONFLICT
+                message: "There is another active provision for the same device and/or flow"
+                
+  examples:
+    PROVISION_AVAILABLE:
+      summary: QoD provision status is available
+      description: The provision has become available
+      value:
+        device:
+          ipv4Address:
+            publicAddress: 203.0.113.0
+            publicPort: 59765
+        qosProfile: QOS_L
+        webhook:
+          notificationUrl: https://application-server.com
+        provisionId: 3fa85f64-5717-4562-b3fc-2c963f66afa6
+        startedAt: 2024-05-12T17:32:01Z
+        status: AVAILABLE
+
+    PROVISION_UNAVAILABLE:
+      summary: QoD provision status is unavailable
+      description: The provision could not be created or is not active anymore
+      value:
+        duration: 86400
+        device:
+          phoneNumber: "+123456789"
+        qosProfile: QOS_L
+        webhook:
+          notificationUrl: https://application-server.com
+        provisionId: 3fa85f64-5717-4562-b3fc-2c963f66afa6
+        startedAt: 2024-05-12T17:32:01Z
+        status: UNAVAILABLE
+        statusInfo: NETWORK_TERMINATED
+
+    PROVISION_STATUS_CHANGED_EXAMPLE:
+      description: Provision status changed
+      summary: Cloud event example for QoD provision status change to UNAVAILABLE due to 
+      value:
+        id: 83a0d986-0866-4f38-b8c0-fc65bfcda452
+        source: https://api.example.com/qod-provision/vwip/provisions/123e4567-e89b-12d3-a456-426614174000
+        specversion: "1.0"
+        type: org.camaraproject.qod-provision.vwip.status-changed
+        time: 2021-12-12T00:00:00Z
+        data:
+          provisionId: 123e4567-e89b-12d3-a456-426614174000
+          status: UNAVAILABLE
+          statusInfo: NETWORK_TERMINATED
+
+    RETRIEVE_PROVISIONS:
+      summary: Provisions for a given device
+      description: Several provisions may exist for a given device
+      value:
+        - device:
+            phoneNumber: "+123456789"
+          qosProfile: QOS_L
+          webhook:
+            notificationUrl: https://application-server.com
+          provisionId: 3fa85f64-5717-4562-b3fc-2c963f66afa6
+          startedAt: 2024-05-12T17:32:01Z
+          status: AVAILABLE
+
