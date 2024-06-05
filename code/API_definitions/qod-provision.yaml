@@ -5,9 +5,9 @@ info:
     The Quality-On-Demand (QoD) Provision API offers a programmable interface for developers to request the assignment of a certain QoS Profile to a certain device or application flows, indefinitely.
 
     This API sets up the configuration in the network so the requested QoS profile is applied to the specified device or application flows, at any time while the provision is available. The device or application traffic will be treated with a certain QoS profile by the network whenever the device is connected to the network, until the provision is revoked.
-  
+
     # Relevant terms and definitions
-  
+
     * **QoS profiles and QoS profile labels**:
     Latency, throughput or priority requirements of the application mapped to relevant QoS profile values. The set of QoS Profiles that an operator is offering can be retrieved by means of the [QoS Profile API](link TBC).
 
@@ -39,7 +39,7 @@ info:
     CAMARA guidelines defines a set of authorization flows which can grant API clients access to the API functionality, as outlined in the document [CAMARA-API-access-and-user-consent.md](https://github.com/camaraproject/IdentityAndConsentManagement/blob/main/documentation/CAMARA-API-access-and-user-consent.md). Which specific authorization flows are to be used will be determined during onboarding process, happening between the API Client and the Telco Operator exposing the API, taking into account the declared purpose for accessing the API, while also being subject to the prevailing legal framework dictated by local legislation.
 
     It is important to remark that in cases where personal user data is processed by the API, and users can exercise their rights through mechanisms such as opt-in and/or opt-out, the use of 3-legged access tokens becomes mandatory. This measure ensures that the API remains in strict compliance with user privacy preferences and regulatory obligations, upholding the principles of transparency and user-centric data control.
-  
+
   termsOfService: http://swagger.io/terms/
   contact:
     email: project-email@sample.com
@@ -158,7 +158,7 @@ paths:
             - "qod-provision:provisions:create"
 
   /provisions/{provisionId}:
-    get:  
+    get:
       tags:
         - QoD Provision
       summary: Get QoD provision information
