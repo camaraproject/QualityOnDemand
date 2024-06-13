@@ -496,6 +496,8 @@ components:
             - $ref: "#/components/schemas/PortsSpec"
         qosProfile:
           $ref: "#/components/schemas/QosProfileName"
+        applicationProfileId:
+          $ref: "#/components/schemas/ApplicationProfileId"
         webhook:
           description: Callback URL on which notifications about all status change events of the session (eg. session termination) can be received
           type: object
@@ -645,6 +647,12 @@ components:
       maxLength: 256
       format: string
       pattern: "^[a-zA-Z0-9_.-]+$"
+
+    ApplicationProfileId:
+      description:
+        Identifier for the Aplpication Profile which contains information with respect to what are the ideal network performance KPIs required for best end user experience.
+      type: string
+      format: uuid
 
     CloudEvent:
       description: Event compliant with the CloudEvents specification
