@@ -775,7 +775,7 @@ components:
       type: string
       pattern: '^\+[1-9][0-9]{4,14}$'
       example: "+123456789"
-      
+
     DeviceIpv4Addr:
       type: object
       description: |
