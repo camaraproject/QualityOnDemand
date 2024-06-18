@@ -22,7 +22,7 @@ info:
 
     - An operation to setup a new QoD provision for a given device.
     - An operation to get the information about a specific QoD provision, identified by its `provisionId`.
-    - An operation to get all the QoD provisions for a given device.
+    - An operation to get the QoD provisions for a given device.
     - An operation to terminate a QoD provision, identified by its `provisionId`.
 
 
@@ -161,7 +161,7 @@ paths:
         - $ref: "#/components/parameters/x-correlator"
       responses:
         "200":
-          description: Contains information about active provision
+          description: Returns information about an active provision
           headers:
             x-correlator:
               $ref: "#/components/headers/x-correlator"
@@ -240,35 +240,32 @@ paths:
     post:
       tags:
         - QoD Provision
-      summary: Gets QoD provisions for a given device
+      summary: Gets the QoD provision for a given device
       description: |
-        Retrieves all the QoD provisions for a given device. An implementation may allow multiple provisions for the same device.
-      operationId: retrieveProvisions
+        Retrieves the QoD provision for a given device.
+      operationId: retrieveProvision
       parameters:
         - $ref: "#/components/parameters/x-correlator"
       requestBody:
-        description: Parameters to retrieve provisions
+        description: Parameters to retrieve a provision by device
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/RetrieveProvisions"
+              $ref: "#/components/schemas/RetrieveProvision"
         required: true
       responses:
         "200":
-          description: Provision created. An empty array is returned if no provisions are found.
+          description: Returns information about an active provision for the device. If no provision is found for the device, an error response 404 is returned with code "PROVISION_NOT_FOUND".
           headers:
             x-correlator:
               $ref: "#/components/headers/x-correlator"
           content:
             application/json:
               schema:
-                type: array
-                minItems: 0
-                items:
-                  $ref: "#/components/schemas/ProvisionInfo"
+                $ref: "#/components/schemas/ProvisionInfo"
               examples:
-                RETRIEVE_PROVISIONS:
-                  $ref: "#/components/examples/RETRIEVE_PROVISIONS"
+                PROVISION_AVAILABLE:
+                  $ref: "#/components/examples/PROVISION_AVAILABLE"
         "400":
           $ref: "#/components/responses/Generic400"
         "401":
@@ -276,7 +273,7 @@ paths:
         "403":
           $ref: "#/components/responses/Generic403"
         "404":
-          $ref: "#/components/responses/DeviceNotFound404"
+          $ref: "#/components/responses/RetrieveProvision404"
         "422":
           $ref: "#/components/responses/Generic422"
         "500":
@@ -382,7 +379,7 @@ components:
       allOf:
         - $ref: "#/components/schemas/BaseProvisionInfo"
 
-    RetrieveProvisions:
+    RetrieveProvision:
       description: Attributes to look for QoD provisions
       type: object
       properties:
@@ -790,6 +787,31 @@ components:
                 code: DEVICE_NOT_FOUND
                 message: "No device found for a provided identifier"
 
+    RetrieveProvision404:
+      description: Device or provision not found 
+      headers:
+        x-correlator:
+          $ref: "#/components/headers/x-correlator"
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ErrorInfo"
+          examples:
+            ERROR_404_DEVICE_NOT_FOUND:
+              summary: Some identifier cannot be matched to a device
+              description: One or more of the provided device identifiers do not match any device
+              value:
+                status: 404
+                code: DEVICE_NOT_FOUND
+                message: "No device found for a provided identifier"
+            ERROR_404_PROVISION_NOT_FOUND:
+              summary: No provision found for the device
+              description: The provided device is valid but does not have any provision
+              value:
+                status: 404
+                code: PROVISION_NOT_FOUND
+                message: "No provision found for the provided device"
+
     ProvisionConflict409:
       description: Provision conflict
       headers:
@@ -814,9 +836,7 @@ components:
       description: The provision has become available
       value:
         device:
-          ipv4Address:
-            publicAddress: 203.0.113.0
-            publicPort: 59765
+          phoneNumber: "+123456789"
         qosProfile: QOS_L
         webhook:
           notificationUrl: https://application-server.com
@@ -830,7 +850,9 @@ components:
       value:
         duration: 86400
         device:
-          phoneNumber: "+123456789"
+          ipv4Address:
+            publicAddress: 203.0.113.0
+            publicPort: 59765
         qosProfile: QOS_L
         webhook:
           notificationUrl: https://application-server.com
@@ -852,16 +874,3 @@ components:
           provisionId: 123e4567-e89b-12d3-a456-426614174000
           status: UNAVAILABLE
           statusInfo: NETWORK_TERMINATED
-
-    RETRIEVE_PROVISIONS:
-      summary: Provisions for a given device
-      description: Several provisions may exist for a given device
-      value:
-        - device:
-            phoneNumber: "+123456789"
-          qosProfile: QOS_L
-          webhook:
-            notificationUrl: https://application-server.com
-          provisionId: 3fa85f64-5717-4562-b3fc-2c963f66afa6
-          startedAt: 2024-05-12T17:32:01Z
-          status: AVAILABLE
