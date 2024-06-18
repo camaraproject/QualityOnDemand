@@ -2,9 +2,9 @@ openapi: 3.0.3
 info:
   title: QoD Provision API
   description: |
-    The Quality-On-Demand (QoD) Provision API offers a programmable interface for developers to request the assignment of a certain QoS Profile to a certain device or application flows, indefinitely.
+    The Quality-On-Demand (QoD) Provision API offers a programmable interface for developers to request the assignment of a certain QoS Profile to a certain device, indefinitely.
 
-    This API sets up the configuration in the network so the requested QoS profile is applied to the specified device or application flows, at any time while the provision is available. The device or application traffic will be treated with a certain QoS profile by the network whenever the device is connected to the network, until the provision is revoked.
+    This API sets up the configuration in the network so the requested QoS profile is applied to an specified device, at any time while the provision is available. The device traffic will be treated with a certain QoS profile by the network whenever the device is connected to the network, until the provision is revoked.
 
     # Relevant terms and definitions
 
@@ -12,15 +12,7 @@ info:
     Latency, throughput or priority requirements of the application mapped to relevant QoS profile values. The set of QoS Profiles that an operator is offering can be retrieved by means of the [QoS Profile API](link TBC).
 
     * **Identifier for the device**:
-    At least one identifier for the device (user equipment) out of four options: IPv4 address, IPv6 address, Phone number, or Network Access Identifier assigned by the network operator for the device, at the request time. When multiple identifiers are provided, they must identify the same device. After the provision request is accepted, the device may get different IP addresses, but the provision will still apply to the device that was identified during the request process.
-
-    * **Identifier for the application server**:
-    IPv4 and/or IPv6 address of the application server (application backend). If not specified, the default value is all possible IP addresses, that is `0.0.0.0/0` in IPv4 notation, or `::/0` in IPv6 notation.
-
-    * **App-Flow (between the application client and application server)**:
-    The precise application data flow the developer wants to prioritize and/or have stable latency or throughput for. This flow is in the current API version determined by the identifiers used for the device and the application server. And it can be further elaborated with details such as ports or port-ranges. Future version of the API might allow more detailed flow identification features.
-
-      - If the application server is not specified, the QoS profile will apply to all flows between the device and the network.
+    At least one identifier for the device (user equipment) out of four options: IPv4 address, IPv6 address, Phone number, or Network Access Identifier assigned by the network operator for the device, at the request time. When multiple identifiers are provided, they must identify the same device. After the provision request is accepted, the device may get different IP addresses, but the provision will still apply to the device that was identified during the request process.between the device and the network.
 
     * **Notification URL and token**:
     Developers may provide a callback URL on which notifications about all status change events (eg. provision termination) can be received from the service provider. This is an optional parameter.
@@ -66,7 +58,7 @@ paths:
         - QoD Provision
       summary: Sets a new QoD provision
       description: |
-        Triggers a new provision in the operator to assign certain QoS Profile to certain device or application flows.
+        Triggers a new provision in the operator to assign certain QoS Profile to certain device.
 
         - If the provision is completed synchronously, the response will be 201 with `status` = `AVAILABLE`.
         - If the provision request is accepted but not yet completed, the response will be 201 with `status` = `REQUESTED`.
@@ -75,7 +67,7 @@ paths:
         - If the request includes a webhook, the client will receive a `status-changed` event with the outcome of the process. The event will be sent also for synchronous operations.
 
         NOTE: When the provision status becomes `UNAVAILABLE`, the QoD provision resource is not immediately released, but will get deleted automatically, at earliest 360 seconds after.
-        This behavior allows clients which are not receiving notification events but are polling, to get the provision status information. Before a client can attempt to create a new QoD provision for the same device and flow, they must release the provision resources with an explicit `delete` operation if not yet automatically deleted.
+        This behavior allows clients which are not receiving notification events but are polling, to get the provision status information. Before a client can attempt to create a new QoD provision for the same device, they must release the provision resources with an explicit `delete` operation if not yet automatically deleted.
 
       operationId: createProvision
       parameters:
@@ -205,7 +197,7 @@ paths:
       description: |
         Release resources related to QoS provision.
 
-        If the notification callback is provided and the provision status was `AVAILABLE`, the client will receive in addition to the response a `PROVISION_STATUS_CHANGED` event with
+        If the notification callback is provided and the provision status was `AVAILABLE`, when the deletion is completed, the client will receive in addition to the response a `PROVISION_STATUS_CHANGED` event with
         - `status` as `UNAVAILABLE` and
         - `statusInfo` as `DELETE_REQUESTED`
         There will be no notification event if the `status` was already `UNAVAILABLE`.
@@ -219,6 +211,15 @@ paths:
           headers:
             x-correlator:
               $ref: "#/components/headers/x-correlator"
+        "202":
+          description: Deletion request accepted to be processed. It applies for an async deletion process. `status` in the response will be `AVAILABLE` with `statusInfo` set to `DELETE_REQUESTED`.
+          headers:
+            x-correlator:
+              $ref: "#/components/headers/x-correlator"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ProvisionInfo"
         "400":
           $ref: "#/components/responses/Generic400"
         "401":
@@ -332,16 +333,6 @@ components:
       properties:
         device:
           $ref: "#/components/schemas/Device"
-        applicationServer:
-          $ref: "#/components/schemas/ApplicationServer"
-        devicePorts:
-          description: The ports used locally by the device for flows to which the requested QoS profile should apply. If omitted, then the qosProfile will apply to all flows between the device and the specified application server address and ports
-          allOf:
-            - $ref: "#/components/schemas/PortsSpec"
-        applicationServerPorts:
-          description: A list of single ports or port ranges on the application server. If omitted, then the qosProfile will apply to all flows between the device and the specified application server address. If `applicationServer` is not specified, then `applicationServerPorts` must not be included.
-          allOf:
-            - $ref: "#/components/schemas/PortsSpec"
         qosProfile:
           $ref: "#/components/schemas/QosProfileName"
         webhook:
@@ -382,10 +373,6 @@ components:
               $ref: "#/components/schemas/Status"
             statusInfo:
               $ref: "#/components/schemas/StatusInfo"
-            messages:
-              type: array
-              items:
-                $ref: "#/components/schemas/Message"
           required:
             - provisionId
             - status
@@ -409,39 +396,6 @@ components:
       type: integer
       minimum: 0
       maximum: 65535
-
-    PortsSpec:
-      description: Specification of several TCP or UDP ports
-      type: object
-      minProperties: 1
-      properties:
-        ranges:
-          description: Range of TCP or UDP ports
-          type: array
-          minItems: 1
-          items:
-            type: object
-            required:
-              - from
-              - to
-            properties:
-              from:
-                $ref: "#/components/schemas/Port"
-              to:
-                $ref: "#/components/schemas/Port"
-        ports:
-          description: Array of TCP or UDP ports
-          type: array
-          minItems: 1
-          items:
-            $ref: "#/components/schemas/Port"
-      example:
-        ranges:
-          - from: 5010
-            to: 5020
-        ports:
-          - 5060
-          - 5070
 
     QosProfileName:
       description: |
@@ -527,7 +481,7 @@ components:
 
     StatusInfo:
       description: |
-        Reason for the new `status`. Currently `statusInfo` is only applicable when `status` is `UNAVAILABLE`.
+        Reason for the new `status`:
         * `NETWORK_TERMINATED` - Network terminated the QoD provision
         * `DELETE_REQUESTED`- User requested the deletion of the QoD provision
 
@@ -558,24 +512,6 @@ components:
           $ref: "#/components/schemas/DeviceIpv4Addr"
         ipv6Address:
           $ref: "#/components/schemas/DeviceIpv6Address"
-      minProperties: 1
-
-    ApplicationServer:
-      description: |
-        A server hosting backend applications to deliver some business logic to clients.
-
-        The developer can choose to provide the below specified device identifiers:
-
-        * `ipv4Address`
-        * `ipv6Address`
-
-        If omitted the default value is all possible IP addresses, that is `0.0.0.0/0` in IPv4 notation, or `::/0` in IPv6 notation.
-      type: object
-      properties:
-        ipv4Address:
-          $ref: "#/components/schemas/ApplicationServerIpv4Address"
-        ipv6Address:
-          $ref: "#/components/schemas/ApplicationServerIpv6Address"
       minProperties: 1
 
     NetworkAccessIdentifier:
@@ -624,53 +560,15 @@ components:
     DeviceIpv6Address:
       description: |
         The device should be identified by the observed IPv6 address, or by any single IPv6 address from within the subnet allocated to the device (e.g. adding ::0 to the /64 prefix).
-
-        The provision shall apply to all IP flows between the device subnet and the specified application server, unless further restricted by the optional parameters devicePorts or applicationServerPorts.
       type: string
       format: ipv6
       example: 2001:db8:85a3:8d3:1319:8a2e:370:7344
-
-    ApplicationServerIpv4Address:
-      type: string
-      example: "198.51.100.0/24"
-      description: |
-        IPv4 address may be specified in form <address/mask> as:
-          - address - an IPv4 number in dotted-quad form 1.2.3.4. Only this exact IP number will match the flow control rule.
-          - address/mask - an IP number as above with a mask width of the form 1.2.3.4/24.
-            In this case, all IP numbers from 1.2.3.0 to 1.2.3.255 will match. The bit width MUST be valid for the IP version.
-
-    ApplicationServerIpv6Address:
-      type: string
-      example: "2001:db8:85a3:8d3:1319:8a2e:370:7344"
-      description: |
-        IPv6 address may be specified in form <address/mask> as:
-          - address - The /128 subnet is optional for single addresses:
-            - 2001:db8:85a3:8d3:1319:8a2e:370:7344
-            - 2001:db8:85a3:8d3:1319:8a2e:370:7344/128
-          - address/mask - an IP v6 number with a mask:
-            - 2001:db8:85a3:8d3::0/64
-            - 2001:db8:85a3:8d3::/64
-
-    Message:
-      description: Message with additional information
-      type: object
-      properties:
-        severity:
-          description: Message severity
-          type: string
-          enum: ["INFO", "WARNING"]
-        description:
-          description: Detailed message text
-          type: string
-      required:
-        - severity
-        - description
 
     Status:
       description: |
         The current status of the requested QoD provision. The status can be one of the following:
         * `REQUESTED` - QoD provision has been requested but is still being processed.
-        * `AVAILABLE` - The requested QoS profile has been provisioned to the device or application flows, and is active.
+        * `AVAILABLE` - The requested QoS profile has been provisioned to the device, and is active.
         * `UNAVAILABLE` - The QoD provision request has been processed but is not active. `statusInfo` may provide additional information about the reason for the unavailability.
       enum:
         - REQUESTED
@@ -680,7 +578,7 @@ components:
     StatusChanged:
       description: |
         The current status of a requested or previously available QoD provision. Applicable values in the event are:
-        *  `AVAILABLE` - The requested QoS profile has been provisioned to the device or application flows, and is active.
+        *  `AVAILABLE` - The requested QoS profile has been provisioned to the device, and is active.
         *  `UNAVAILABLE` - A requested or previously available QoD provision is now unavailable. `statusInfo` may provide additional information about the reason for the unavailability.
       type: string
       enum:
@@ -908,7 +806,7 @@ components:
               value:
                 status: 409
                 code: CONFLICT
-                message: "There is another active provision for the same device and/or flow"
+                message: "There is another active provision for the same device"
 
   examples:
     PROVISION_AVAILABLE:
