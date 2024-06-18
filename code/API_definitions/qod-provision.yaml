@@ -788,7 +788,7 @@ components:
                 message: "No device found for a provided identifier"
 
     RetrieveProvision404:
-      description: Device or provision not found 
+      description: Device or provision not found
       headers:
         x-correlator:
           $ref: "#/components/headers/x-correlator"
