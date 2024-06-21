@@ -24,7 +24,7 @@ Repository to describe, develop, document and test the QualityOnDemand API famil
 ## Meetings
 
 * Meetings are held virtually: [Meeting registration / Join](https://zoom-lfx.platform.linuxfoundation.org/meeting/94112812156?password=f238d6af-c959-48d7-a862-abdb3c648e40)
-* Schedule: bi-weekly, Friday, 2 PM CET/CEST (13:00 UTC, 12:00 UTC during European DST). For date/time of the next meeting, see previous [meeting minutes](https://wiki.camaraproject.org/display/CAM/QualityOnDemand+2024+Minutes).
+* Schedule: bi-weekly, Friday, 2 PM CET/CEST (13:00 UTC, 12:00 UTC during European DST). For date/time of the next meeting, see previous [meeting minutes](https://wiki.camaraproject.org/x/0AOeAQ).
 
 ## Status and released versions
 
