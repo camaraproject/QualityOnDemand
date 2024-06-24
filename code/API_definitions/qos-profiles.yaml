@@ -56,7 +56,7 @@ paths:
       summary: "Get All QoS Profiles"
       description: |
         Returns all QoS Profiles that match the given criteria, or all profiles if no criteria is specified.
-        
+
         The access token may be either a 2-legged or 3-legged access token. If the access token is 3-legged, all returned QoS Profiles must be available to all end users associated with the access token.
 
       operationId: getQosProfiles
