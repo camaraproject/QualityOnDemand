@@ -55,8 +55,10 @@ paths:
         - QoS Profiles
       summary: "Get All QoS Profiles"
       description: |
-        Returns all QoS Profiles that match the given criteria.
-        If no criteria is given, all QoS Profiles are returned.
+        Returns all QoS Profiles that match the given criteria, or all profiles if no criteria is specified.
+        
+        The access token may be either a 2-legged or 3-legged access token. If the access token is 3-legged, all returned QoS Profiles must be available to all end users associated with the access token.
+
       operationId: getQosProfiles
       security:
         - openId:
@@ -106,6 +108,9 @@ paths:
       operationId: getQosProfile
       description: |
         Returns a QoS Profile that matches the given name.
+
+        The access token may be either a 2-legged or 3-legged access token. If the access token is 3-legged, a QoS Profile is only returned if available to all end users associated with the access token.
+
       security:
         - openId:
             - qos-profiles:qos-profiles:read
