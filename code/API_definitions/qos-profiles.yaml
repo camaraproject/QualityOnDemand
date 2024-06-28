@@ -501,20 +501,6 @@ components:
                 code: NOT_ACCEPTABLE
                 message: The server cannot produce a response matching the content requested by the client through `Accept-*` headers.
 
-    SessionInConflict409:
-      description: Conflict
-      headers:
-        x-correlator:
-          $ref: '#/components/headers/x-correlator'
-      content:
-        application/json:
-          schema:
-            $ref: "#/components/schemas/ErrorInfo"
-          example:
-            status: 409
-            code: CONFLICT
-            message: "Another session is created for the same device"
-
     Generic429:
       description: Too Many Requests
       headers:

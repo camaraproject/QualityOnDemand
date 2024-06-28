@@ -1009,7 +1009,7 @@ components:
           example:
             status: 409
             code: CONFLICT
-            message: "Another session is created for the same device"
+            message: Creating multiple sessions for a device are not allowed.
 
     Generic415:
       description: Unsupported Media Type
