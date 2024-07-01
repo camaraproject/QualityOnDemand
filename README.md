@@ -16,15 +16,15 @@ Repository to describe, develop, document and test the QualityOnDemand API famil
   * set quality for a flow within an access network connections (e.g. mobile device connection or fixed access between a home gateway and the service providers gateway router)
       * Session mode, for a specific duration
       * Provision mode, indefinitely for each time the device connects to the same access network
-  * get notification if network cannot fulfill  
-* Describe, develop, document and test the APIs (with 1-2 Service Providers)  
+  * get notification if the network cannot fulfill  
+* Describe, develop, document and test the APIs (with 1–2 Service Providers)  
 * Started: October 2021
 * Location: virtually  
 
 ## Meetings
 
 * Meetings are held virtually: [Meeting registration / Join](https://zoom-lfx.platform.linuxfoundation.org/meeting/94112812156?password=f238d6af-c959-48d7-a862-abdb3c648e40)
-* Schedule: bi-weekly, Friday, 2 PM CET/CEST (13:00 UTC, 12:00 UTC during European DST). For date/time of next meeting see previous [meeting minutes](https://wiki.camaraproject.org/display/CAM/Quality+on+Demand+Meeting+Minutes).
+* Schedule: bi-weekly, Friday, 2 PM CET/CEST (13:00 UTC, 12:00 UTC during European DST). For date/time of the next meeting, see previous [meeting minutes](https://wiki.camaraproject.org/x/0AOeAQ).
 
 ## Status and released versions
 
@@ -36,7 +36,7 @@ Repository to describe, develop, document and test the QualityOnDemand API famil
     - [View it on Swagger Editor](https://editor.swagger.io/?url=https://raw.githubusercontent.com/camaraproject/QualityOnDemand/release-0.10.1/code/API_definitions/qod-api.yaml)
     - OpenAPI [YAML spec file](https://github.com/camaraproject/QualityOnDemand/blob/release-0.10.1/code/API_definitions/qod-api.yaml)
    
-* The previous released version v0.9.0 is availabe within the [release-0.9.0 branch](https://github.com/camaraproject/QualityOnDemand/tree/release-0.9.0)
+* The previous released version v0.9.0 is available within the [release-0.9.0 branch](https://github.com/camaraproject/QualityOnDemand/tree/release-0.9.0)
 * For changes between v0.10.0 and v0.9.0 see the [CHANGELOG.md](https://github.com/camaraproject/QualityOnDemand/blob/main/CHANGELOG.md)
   
 * Provider implementations (PI) are available within separate repositories (partly for previous releases):
@@ -47,5 +47,5 @@ Repository to describe, develop, document and test the QualityOnDemand API famil
 
 ## Contributorship and mailing list
 
-* To subscribe / unsubscribe to the mailing list of this Sub Project and thus be / resign as Contributor please visit <https://lists.camaraproject.org/g/sp-qod>.
+* To subscribe / unsubscribe to the mailing list of this Sub Project and thus be / resign as Contributor, please visit <https://lists.camaraproject.org/g/sp-qod>.
 * A message to all Contributors of this Sub Project can be sent using <sp-qod@lists.camaraproject.org>.
