@@ -549,10 +549,6 @@ components:
               $ref: "#/components/schemas/QosStatus"
             statusInfo:
               $ref: "#/components/schemas/StatusInfo"
-            messages:
-              type: array
-              items:
-                $ref: "#/components/schemas/Message"
           required:
             - sessionId
             - duration
@@ -834,21 +830,6 @@ components:
           - address/mask - an IP v6 number with a mask:
             - 2001:db8:85a3:8d3::0/64
             - 2001:db8:85a3:8d3::/64
-
-    Message:
-      description: Message with additional information
-      type: object
-      properties:
-        severity:
-          description: Message severity
-          type: string
-          enum: ["INFO", "WARNING"]
-        description:
-          description: Detailed message text
-          type: string
-      required:
-        - severity
-        - description
 
     QosStatus:
       description: |
