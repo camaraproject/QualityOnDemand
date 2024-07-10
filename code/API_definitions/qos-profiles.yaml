@@ -82,10 +82,6 @@ paths:
           $ref: "#/components/responses/Generic403"
         "404":
           $ref: "#/components/responses/QosProfilesNotFound404"
-        "405":
-          $ref: "#/components/responses/Generic405"
-        "406":
-          $ref: "#/components/responses/Generic406"
         "429":
           $ref: "#/components/responses/Generic429"
         "500":
@@ -127,10 +123,6 @@ paths:
           $ref: "#/components/responses/Generic403"
         "404":
           $ref: "#/components/responses/QosProfileNotFound404"
-        "405":
-          $ref: "#/components/responses/Generic405"
-        "406":
-          $ref: "#/components/responses/Generic406"
         "429":
           $ref: "#/components/responses/Generic429"
         "500":
@@ -466,40 +458,6 @@ components:
             status: 404
             code: NOT_FOUND
             message: "QosProfile Id does not exist"
-
-    Generic405:
-      description: Method Not Allowed
-      headers:
-        x-correlator:
-          $ref: '#/components/headers/x-correlator'
-      content:
-        application/json:
-          schema:
-            $ref: "#/components/schemas/ErrorInfo"
-          examples:
-            GENERIC_405_METHOD_NOT_ALLOWED:
-              description: Invalid HTTP verb used with a given endpoint
-              value:
-                status: 405
-                code: METHOD_NOT_ALLOWED
-                message: The requested method is not allowed/supported on the target resource.
-
-    Generic406:
-      description: Not Acceptable
-      headers:
-        x-correlator:
-          $ref: "#/components/headers/x-correlator"
-      content:
-        application/json:
-          schema:
-            $ref: "#/components/schemas/ErrorInfo"
-          examples:
-            GENERIC_406_NOT_ACCEPTABLE:
-              description: API Server does not accept the media type (`Accept-*` header) indicated by API client
-              value:
-                status: 406
-                code: NOT_ACCEPTABLE
-                message: The server cannot produce a response matching the content requested by the client through `Accept-*` headers.
 
     Generic429:
       description: Too Many Requests
