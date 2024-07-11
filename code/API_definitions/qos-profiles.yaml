@@ -74,15 +74,6 @@ paths:
                 type: array
                 items:
                   $ref: "#/components/schemas/QosProfile"
-        "400":
-          description: Invalid input for getQosProfiles operation
-          headers:
-            x-correlator:
-              $ref: '#/components/headers/x-correlator'
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/ErrorInfo"
         "401":
           $ref: "#/components/responses/Generic401"
         "403":
