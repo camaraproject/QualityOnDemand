@@ -45,7 +45,8 @@ paths:
       summary: "Get All QoS Profiles"
       description: |
         Returns all QoS Profiles that match the given criteria.
-        If no criteria is given, all QoS Profiles are returned.
+        If the client credentials specify a device, the QoS Profiles returned are those that are applicable to the device.
+        If no criteria is given and the credentials don't specify a device, all QoS Profiles are returned.
       operationId: getQosProfiles
       parameters:
         - name: name
@@ -73,6 +74,83 @@ paths:
                 type: array
                 items:
                   $ref: "#/components/schemas/QosProfile"
+        "400":
+          description: Invalid input for getQosProfiles operation
+          headers:
+            x-correlator:
+              $ref: '#/components/headers/x-correlator'
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorInfo"
+        "401":
+          $ref: "#/components/responses/Generic401"
+        "403":
+          $ref: "#/components/responses/Generic403"
+        "404":
+          $ref: "#/components/responses/QosProfilesNotFound404"
+        "500":
+          $ref: "#/components/responses/QoSProfile500"
+        "503":
+          $ref: "#/components/responses/Generic503"
+
+  /qos-profiles-by-device:
+    post:
+      tags:
+        - QoS Profiles
+      summary: Get QoS profiles avaialable for a given device
+      description: |
+        Return all QoS Profiles for a given device.
+      operationId: qosProfilesDevice
+      parameters:
+        - $ref: "#/components/parameters/x-correlator"
+      requestBody:
+        description: Parameters to query QoS Profiles for a given device
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/QosProfileDeviceRequest"
+        required: true
+      responses:
+        "200":
+          description: Contains information about QoS Profiles
+          headers:
+            x-correlator:
+              $ref: '#/components/headers/x-correlator'
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/QosProfile"
+        "400":
+          description: Invalid input for getQosProfiles operation
+          headers:
+            x-correlator:
+              $ref: '#/components/headers/x-correlator'
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorInfo"
+              examples:
+                Generic400:
+                  summary: Some parameter combinations or parameter values provided are not schema compliant
+                  value:
+                    status: 400
+                    code: INVALID_ARGUMENT
+                    message: "Schema validation failed at  ..."
+                InconsistentDeviceProperties:
+                  summary: Device parameters provided identify different devices
+                  value:
+                    status: 400
+                    code: INVALID_ARGUMENT
+                    message: "Multiple inconsistent parameters specified: device"
+                CannotIdentifyDevice:
+                  summary: No device can be identified from provided parameters
+                  value:
+                    status: 400
+                    code: INVALID_ARGUMENT
+                    message: "Unable to identify device from specified parameters: device"
         "401":
           $ref: "#/components/responses/Generic401"
         "403":
@@ -362,6 +440,103 @@ components:
         - Mbps
         - Gbps
         - Tbps
+
+    QosProfileDeviceRequest:
+      description: |
+        Request object for QoS Profiles for a given device
+      type: object
+      properties:
+        device:
+          $ref: "#/components/schemas/Device"
+        name:
+          $ref: "#/components/schemas/QosProfileName"
+        status:
+          $ref: '#/components/schemas/QosProfileStatusEnum'
+      required:
+        - device
+
+    Device:
+      description: |
+        End-user equipment able to connect to a mobile network. Examples of devices include smartphones or IoT sensors/actuators.
+
+        The developer can choose to provide the below specified device identifiers:
+
+        * `ipv4Address`
+        * `ipv6Address`
+        * `phoneNumber`
+        * `networkAccessIdentifier`
+
+        NOTE: the MNO might support only a subset of these options. The API invoker can provide multiple identifiers to be compatible across different MNOs. In this case the identifiers MUST belong to the same device
+      type: object
+      properties:
+        phoneNumber:
+          $ref: "#/components/schemas/PhoneNumber"
+        networkAccessIdentifier:
+          $ref: "#/components/schemas/NetworkAccessIdentifier"
+        ipv4Address:
+          $ref: "#/components/schemas/DeviceIpv4Addr"
+        ipv6Address:
+          $ref: "#/components/schemas/DeviceIpv6Address"
+      minProperties: 1
+      maxProperties: 4
+
+    NetworkAccessIdentifier:
+      description: A public identifier addressing a subscription in a mobile network. In 3GPP terminology, it corresponds to the GPSI formatted with the External Identifier ({Local Identifier}@{Domain Identifier}). Unlike the telephone number, the network access identifier is not subjected to portability ruling in force, and is individually managed by each operator.
+      type: string
+      example: "123456789@domain.com"
+
+    PhoneNumber:
+      description: A public identifier addressing a telephone subscription. In mobile networks it corresponds to the MSISDN (Mobile Station International Subscriber Directory Number). In order to be globally unique it has to be formatted in international format, according to E.164 standard, prefixed with '+'.
+      type: string
+      pattern: '^\+[1-9][0-9]{4,14}$'
+      example: "+123456789"
+
+    DeviceIpv4Addr:
+      type: object
+      description: |
+        The device should be identified by either the public (observed) IP address and port as seen by the application server, or the private (local) and any public (observed) IP addresses in use by the device (this information can be obtained by various means, for example from some DNS servers).
+
+        If the allocated and observed IP addresses are the same (i.e. NAT is not in use) then  the same address should be specified for both publicAddress and privateAddress.
+
+        If NAT64 is in use, the device should be identified by its publicAddress and publicPort, or separately by its allocated IPv6 address (field ipv6Address of the Device object)
+
+        In all cases, publicAddress must be specified, along with at least one of either privateAddress or publicPort, dependent upon which is known. In general, mobile devices cannot be identified by their public IPv4 address alone.
+      properties:
+        publicAddress:
+          $ref: "#/components/schemas/SingleIpv4Addr"
+        privateAddress:
+          $ref: "#/components/schemas/SingleIpv4Addr"
+        publicPort:
+          $ref: "#/components/schemas/Port"
+      anyOf:
+        - required: [publicAddress, privateAddress]
+        - required: [publicAddress, publicPort]
+      example:
+        {
+          "publicAddress": "203.0.113.0",
+          "publicPort": 59765
+        }
+
+    Port:
+      description: TCP or UDP port number
+      type: integer
+      minimum: 0
+      maximum: 65535
+
+    SingleIpv4Addr:
+      description: A single IPv4 address with no subnet mask
+      type: string
+      format: ipv4
+      example: "203.0.113.0"
+
+    DeviceIpv6Address:
+      description: |
+        The device should be identified by the observed IPv6 address, or by any single IPv6 address from within the subnet allocated to the device (e.g. adding ::0 to the /64 prefix).
+
+        The session shall apply to all IP flows between the device subnet and the specified application server, unless further restricted by the optional parameters devicePorts or applicationServerPorts.
+      type: string
+      format: ipv6
+      example: 2001:db8:85a3:8d3:1319:8a2e:370:7344
 
     ErrorInfo:
       description: Common schema for errors
