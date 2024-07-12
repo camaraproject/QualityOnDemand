@@ -56,7 +56,7 @@ paths:
     post:
       tags:
         - QoD Provisioning
-      summary: Sets a new provisioning of QoS for a device 
+      summary: Sets a new provisioning of QoS for a device
       description: |
         Triggers a new provisioning in the operator to assign certain QoS Profile to certain device.
 
