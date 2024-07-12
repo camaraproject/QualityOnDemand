@@ -52,7 +52,9 @@ paths:
         - QoS Profiles
       summary: Get QoS profiles avaialable for a given device
       description: |
-        Return all QoS Profiles for a given device.
+        Returns all QoS Profiles that match the given criteria.
+        If the client credentials specify a device, the QoS Profiles returned are those that are applicable to the device.
+        If no criteria is given and the credentials don't specify a device, all QoS Profiles are returned.
       operationId: qosProfilesDevice
       parameters:
         - $ref: "#/components/parameters/x-correlator"
