@@ -82,8 +82,6 @@ paths:
           $ref: "#/components/responses/Generic403"
         "404":
           $ref: "#/components/responses/QosProfilesNotFound404"
-        "429":
-          $ref: "#/components/responses/Generic429"
         "500":
           $ref: "#/components/responses/QoSProfile500"
         "503":
@@ -123,8 +121,6 @@ paths:
           $ref: "#/components/responses/Generic403"
         "404":
           $ref: "#/components/responses/QosProfileNotFound404"
-        "429":
-          $ref: "#/components/responses/Generic429"
         "500":
           $ref: "#/components/responses/QoSProfile500"
         "503":
@@ -458,29 +454,6 @@ components:
             status: 404
             code: NOT_FOUND
             message: "QosProfile Id does not exist"
-
-    Generic429:
-      description: Too Many Requests
-      headers:
-        x-correlator:
-          $ref: "#/components/headers/x-correlator"
-      content:
-        application/json:
-          schema:
-            $ref: "#/components/schemas/ErrorInfo"
-          examples:
-            GENERIC_429_QUOTA_EXCEEDED:
-              description: Request is rejected due to exceeding a business quota limit
-              value:
-                status: 429
-                code: QUOTA_EXCEEDED
-                message: Either out of resource quota or reaching rate limiting.
-            GENERIC_429_TOO_MANY_REQUESTS:
-              description: API Server request limit is overpassed
-              value:
-                status: 429
-                code: TOO_MANY_REQUESTS
-                message: Either out of resource quota or reaching rate limiting.
 
     QoSProfile500:
       description: Internal server error
