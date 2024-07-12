@@ -47,56 +47,6 @@ tags:
 
 paths:
   /qos-profiles:
-    get:
-      tags:
-        - QoS Profiles
-      summary: "Get All QoS Profiles"
-      description: |
-        Returns all QoS Profiles that match the given criteria, or all profiles if no criteria is specified.
-
-        The access token may be either a 2-legged or 3-legged access token. If the access token is 3-legged, all returned QoS Profiles must be available to all end users associated with the access token.
-      operationId: getQosProfiles
-      security:
-        - openId:
-            - qos-profiles:qos-profiles:read
-      parameters:
-        - name: name
-          in: query
-          description: QoS Profile name
-          schema:
-            type: string
-          required: false
-        - name: status
-          in: query
-          description: Qos Profile status
-          schema:
-            $ref: '#/components/schemas/QosProfileStatusEnum'
-          required: false
-        - $ref: "#/components/parameters/x-correlator"
-      responses:
-        "200":
-          description: Contains information about QoS Profiles
-          headers:
-            x-correlator:
-              $ref: '#/components/headers/x-correlator'
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  $ref: "#/components/schemas/QosProfile"
-        "401":
-          $ref: "#/components/responses/Generic401"
-        "403":
-          $ref: "#/components/responses/Generic403"
-        "404":
-          $ref: "#/components/responses/QosProfilesNotFound404"
-        "500":
-          $ref: "#/components/responses/QoSProfile500"
-        "503":
-          $ref: "#/components/responses/Generic503"
-
-  /qos-profiles-by-device:
     post:
       tags:
         - QoS Profiles
@@ -455,8 +405,6 @@ components:
           $ref: "#/components/schemas/QosProfileName"
         status:
           $ref: '#/components/schemas/QosProfileStatusEnum'
-      required:
-        - device
 
     Device:
       description: |
