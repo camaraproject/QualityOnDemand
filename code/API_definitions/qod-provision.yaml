@@ -1,10 +1,10 @@
 openapi: 3.0.3
 info:
-  title: QoD Provision API
+  title: QoD Provisioning API
   description: |
-    The Quality-On-Demand (QoD) Provision API offers a programmable interface for developers to request the assignment of a certain QoS Profile to a certain device, indefinitely.
+    The Quality-On-Demand (QoD) Provisioning API offers a programmable interface for developers to request the assignment of a certain QoS Profile to a certain device, indefinitely.
 
-    This API sets up the configuration in the network so the requested QoS profile is applied to an specified device, at any time while the provision is available. The device traffic will be treated with a certain QoS profile by the network whenever the device is connected to the network, until the provision is revoked.
+    This API sets up the configuration in the network so the requested QoS profile is applied to an specified device, at any time while the provisioning is available. The device traffic will be treated with a certain QoS profile by the network whenever the device is connected to the network, until the provisioning is revoked.
 
     # Relevant terms and definitions
 
@@ -12,18 +12,18 @@ info:
     Latency, throughput or priority requirements of the application mapped to relevant QoS profile values. The set of QoS Profiles that an operator is offering can be retrieved by means of the [QoS Profile API](link TBC).
 
     * **Identifier for the device**:
-    At least one identifier for the device (user equipment) out of four options: IPv4 address, IPv6 address, Phone number, or Network Access Identifier assigned by the network operator for the device, at the request time. When multiple identifiers are provided, they must identify the same device. After the provision request is accepted, the device may get different IP addresses, but the provision will still apply to the device that was identified during the request process.between the device and the network.
+    At least one identifier for the device (user equipment) out of four options: IPv4 address, IPv6 address, Phone number, or Network Access Identifier assigned by the network operator for the device, at the request time. When multiple identifiers are provided, they must identify the same device. After the provisioning request is accepted, the device may get different IP addresses, but the provisioning will still apply to the device that was identified during the request process.between the device and the network.
 
     * **Notification URL and token**:
-    Developers may provide a callback URL on which notifications about all status change events (eg. provision termination) can be received from the service provider. This is an optional parameter.
+    Developers may provide a callback URL on which notifications about all status change events (eg. provisioning termination) can be received from the service provider. This is an optional parameter.
 
     # Resources and Operations overview
     The API defines four operations:
 
-    - An operation to setup a new QoD provision for a given device.
-    - An operation to get the information about a specific QoD provision, identified by its `provisionId`.
-    - An operation to get the QoD provisions for a given device.
-    - An operation to terminate a QoD provision, identified by its `provisionId`.
+    - An operation to setup a new QoD provisioning for a given device.
+    - An operation to get the information about a specific QoD provisioning, identified by its `provisioningId`.
+    - An operation to get the QoD provisioning for a given device.
+    - An operation to terminate a QoD provisioning, identified by its `provisioningId`.
 
 
     ### Authorization and authentication
@@ -43,52 +43,52 @@ externalDocs:
   description: Product documentation at Camara
   url: https://github.com/camaraproject/
 servers:
-  - url: "{apiRoot}/qod-provision/vwip"
+  - url: "{apiRoot}/qod-provisioning/vwip"
     variables:
       apiRoot:
         default: http://localhost:9091
         description: API root, defined by the service provider, e.g. `api.example.com` or `api.example.com/somepath`
 tags:
-  - name: QoD Provision
-    description: Manage the provision of QoD
+  - name: QoD Provisioning
+    description: Manage the provisioning of QoD
 paths:
-  /provisions:
+  /device-qos:
     post:
       tags:
-        - QoD Provision
-      summary: Sets a new QoD provision
+        - QoD Provisioning
+      summary: Sets a new provisioning of QoS for a device 
       description: |
-        Triggers a new provision in the operator to assign certain QoS Profile to certain device.
+        Triggers a new provisioning in the operator to assign certain QoS Profile to certain device.
 
-        - If the provision is completed synchronously, the response will be 201 with `status` = `AVAILABLE`.
-        - If the provision request is accepted but not yet completed, the response will be 201 with `status` = `REQUESTED`.
-        - If the operator determines synchronously that the provision request cannot be fulfilled, the response will be 201 with `status` = `UNAVAILABLE`.
+        - If the provisioning is completed synchronously, the response will be 201 with `status` = `AVAILABLE`.
+        - If the provisioning request is accepted but not yet completed, the response will be 201 with `status` = `REQUESTED`.
+        - If the operator determines synchronously that the provisioning request cannot be fulfilled, the response will be 201 with `status` = `UNAVAILABLE`.
 
         - If the request includes a webhook, the client will receive a `status-changed` event with the outcome of the process. The event will be sent also for synchronous operations.
 
-        NOTE: When the provision status becomes `UNAVAILABLE`, the QoD provision resource is not immediately released, but will get deleted automatically, at earliest 360 seconds after.
-        This behavior allows clients which are not receiving notification events but are polling, to get the provision status information. Before a client can attempt to create a new QoD provision for the same device, they must release the provision resources with an explicit `delete` operation if not yet automatically deleted.
+        NOTE: When the provisioning status becomes `UNAVAILABLE`, the QoD provisioning resource is not immediately released, but will get deleted automatically, at earliest 360 seconds after.
+        This behavior allows clients which are not receiving notification events but are polling, to get the provisioning status information. Before a client can attempt to create a new QoD provisioning for the same device, they must release the provisioning resources with an explicit `delete` operation if not yet automatically deleted.
 
-      operationId: createProvision
+      operationId: createProvisioning
       parameters:
         - $ref: "#/components/parameters/x-correlator"
       requestBody:
-        description: Parameters to create a new provision
+        description: Parameters to create a new provisioning
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/CreateProvision"
+              $ref: "#/components/schemas/CreateProvisioning"
         required: true
       callbacks:
         notifications:
           "{$request.body#/webhook/notificationUrl}":
             post:
-              summary: Provision notifications callback
+              summary: Provisioning notifications callback
               description: |
                 Important: this endpoint is to be implemented by the API consumer.
-                The QoD server will call this endpoint whenever any QoD provision change related event occurs.
-                Currently only `PROVISION_STATUS_CHANGED` event is defined.
-              operationId: postProvisionNotification
+                The QoD server will call this endpoint whenever any QoD provisioning change related event occurs.
+                Currently only `PROVISIONING_STATUS_CHANGED` event is defined.
+              operationId: postProvisioningNotification
               parameters:
                 - $ref: "#/components/parameters/x-correlator"
               requestBody:
@@ -98,8 +98,8 @@ paths:
                     schema:
                       $ref: "#/components/schemas/CloudEvent"
                     examples:
-                      PROVISION_STATUS_CHANGED_EXAMPLE:
-                        $ref: "#/components/examples/PROVISION_STATUS_CHANGED_EXAMPLE"
+                      PROVISIONING_STATUS_CHANGED_EXAMPLE:
+                        $ref: "#/components/examples/PROVISIONING_STATUS_CHANGED_EXAMPLE"
               responses:
                 "204":
                   description: Successful notification
@@ -121,14 +121,14 @@ paths:
                 - notificationsBearerAuth: []
       responses:
         "201":
-          description: Provision created
+          description: Provisioning created
           headers:
             x-correlator:
               $ref: "#/components/headers/x-correlator"
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/ProvisionInfo"
+                $ref: "#/components/schemas/ProvisioningInfo"
         "400":
           $ref: "#/components/responses/Generic400"
         "401":
@@ -138,7 +138,7 @@ paths:
         "404":
           $ref: "#/components/responses/DeviceNotFound404"
         "409":
-          $ref: "#/components/responses/ProvisionConflict409"
+          $ref: "#/components/responses/ProvisioningConflict409"
         "422":
           $ref: "#/components/responses/Generic422"
         "500":
@@ -147,33 +147,33 @@ paths:
           $ref: "#/components/responses/Generic503"
       security:
         - openId:
-            - "qod-provision:provisions:create"
+            - "qod-provisioning:device-qos:create"
 
-  /provisions/{provisionId}:
+  /device-qos/{provisioningId}:
     get:
       tags:
-        - QoD Provision
-      summary: Get QoD provision information
-      description: Querying for QoD provisions resource information details
-      operationId: getProvision
+        - QoD Provisioning
+      summary: Get QoD provisioning information
+      description: Querying for QoD provisioning resource information details
+      operationId: getProvisioningById
       parameters:
-        - $ref: "#/components/parameters/provisionId"
+        - $ref: "#/components/parameters/provisioningId"
         - $ref: "#/components/parameters/x-correlator"
       responses:
         "200":
-          description: Returns information about an active provision
+          description: Returns information about certain provisioning
           headers:
             x-correlator:
               $ref: "#/components/headers/x-correlator"
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/ProvisionInfo"
+                $ref: "#/components/schemas/ProvisioningInfo"
               examples:
-                PROVISION_AVAILABLE:
-                  $ref: "#/components/examples/PROVISION_AVAILABLE"
-                PROVISION_UNAVAILABLE:
-                  $ref: "#/components/examples/PROVISION_UNAVAILABLE"
+                PROVISIONING_AVAILABLE:
+                  $ref: "#/components/examples/PROVISIONING_AVAILABLE"
+                PROVISIONING_UNAVAILABLE:
+                  $ref: "#/components/examples/PROVISIONING_UNAVAILABLE"
         "400":
           $ref: "#/components/responses/Generic400"
         "401":
@@ -188,26 +188,26 @@ paths:
           $ref: "#/components/responses/Generic503"
       security:
         - openId:
-            - "qod-provision:provisions:read"
+            - "qod-provisioning:device-qos:read"
 
     delete:
       tags:
-        - QoD Provision
-      summary: Deletes a QoD provision
+        - QoD Provisioning
+      summary: Deletes a QoD provisioning
       description: |
-        Release resources related to QoS provision.
+        Release resources related to QoS provisioning.
 
-        If the notification callback is provided and the provision status was `AVAILABLE`, when the deletion is completed, the client will receive in addition to the response a `PROVISION_STATUS_CHANGED` event with
+        If the notification callback is provided and the provisioning status was `AVAILABLE`, when the deletion is completed, the client will receive in addition to the response a `PROVISIONING_STATUS_CHANGED` event with
         - `status` as `UNAVAILABLE` and
         - `statusInfo` as `DELETE_REQUESTED`
         There will be no notification event if the `status` was already `UNAVAILABLE`.
-      operationId: deleteProvision
+      operationId: deleteProvisioning
       parameters:
-        - $ref: "#/components/parameters/provisionId"
+        - $ref: "#/components/parameters/provisioningId"
         - $ref: "#/components/parameters/x-correlator"
       responses:
         "204":
-          description: Provision deleted
+          description: Provisioning deleted
           headers:
             x-correlator:
               $ref: "#/components/headers/x-correlator"
@@ -219,7 +219,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/ProvisionInfo"
+                $ref: "#/components/schemas/ProvisioningInfo"
         "400":
           $ref: "#/components/responses/Generic400"
         "401":
@@ -234,38 +234,38 @@ paths:
           $ref: "#/components/responses/Generic503"
       security:
         - openId:
-            - "qod-provision:provisions:delete"
+            - "qod-provisioning:device-qos:delete"
 
-  /provisions/retrieve:
+  /device-qos/retrieve:
     post:
       tags:
-        - QoD Provision
-      summary: Gets the QoD provision for a given device
+        - QoD Provisioning
+      summary: Gets the QoD provisioning for a given device
       description: |
-        Retrieves the QoD provision for a given device.
-      operationId: retrieveProvision
+        Retrieves the QoD provisioning for a given device.
+      operationId: retrieveProvisioningByDevice
       parameters:
         - $ref: "#/components/parameters/x-correlator"
       requestBody:
-        description: Parameters to retrieve a provision by device
+        description: Parameters to retrieve a provisioning by device
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/RetrieveProvision"
+              $ref: "#/components/schemas/RetrieveProvisioning"
         required: true
       responses:
         "200":
-          description: Returns information about an active provision for the device. If no provision is found for the device, an error response 404 is returned with code "PROVISION_NOT_FOUND".
+          description: Returns information about QoS provisioning for the device. If no provisioning is found for the device, an error response 404 is returned with code "PROVISIONING_NOT_FOUND".
           headers:
             x-correlator:
               $ref: "#/components/headers/x-correlator"
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/ProvisionInfo"
+                $ref: "#/components/schemas/ProvisioningInfo"
               examples:
-                PROVISION_AVAILABLE:
-                  $ref: "#/components/examples/PROVISION_AVAILABLE"
+                PROVISIONING_AVAILABLE:
+                  $ref: "#/components/examples/PROVISIONING_AVAILABLE"
         "400":
           $ref: "#/components/responses/Generic400"
         "401":
@@ -273,7 +273,7 @@ paths:
         "403":
           $ref: "#/components/responses/Generic403"
         "404":
-          $ref: "#/components/responses/RetrieveProvision404"
+          $ref: "#/components/responses/RetrieveProvisioning404"
         "422":
           $ref: "#/components/responses/Generic422"
         "500":
@@ -282,7 +282,7 @@ paths:
           $ref: "#/components/responses/Generic503"
       security:
         - openId:
-            - "qod-provision:provisions:read"
+            - "qod-provisioning:device-qos:read"
 
 components:
   securitySchemes:
@@ -297,13 +297,13 @@ components:
       bearerFormat: "{$request.body#/webhook/notificationAuthToken}"
 
   parameters:
-    provisionId:
-      name: provisionId
+    provisioningId:
+      name: provisioningId
       in: path
-      description: Provision ID that was obtained from the createProvision operation
+      description: Provisioning ID that was obtained from the createProvision operation
       required: true
       schema:
-        $ref: "#/components/schemas/ProvisionId"
+        $ref: "#/components/schemas/ProvisioningId"
 
     x-correlator:
       name: x-correlator
@@ -319,13 +319,13 @@ components:
         type: string
 
   schemas:
-    ProvisionId:
-      description: Provision Identifier in UUID format
+    ProvisioningId:
+      description: Provisioning Identifier in UUID format
       type: string
       format: uuid
 
-    BaseProvisionInfo:
-      description: Common attributes of a QoD provision
+    BaseProvisioningInfo:
+      description: Common attributes of a QoD provisioning
       type: object
       properties:
         device:
@@ -333,7 +333,7 @@ components:
         qosProfile:
           $ref: "#/components/schemas/QosProfileName"
         webhook:
-          description: Callback URL on which notifications about all status change events of the provision process (eg. provision termination) can be received
+          description: Callback URL on which notifications about all status change events of the provisioning process (eg. provisioning termination) can be received
           type: object
           required:
             - notificationUrl
@@ -342,7 +342,7 @@ components:
               type: string
               format: uri
               example: "https://application-server.com"
-              description: Allows asynchronous delivery of provision related events
+              description: Allows asynchronous delivery of provisioning related events
             notificationAuthToken:
               type: string
               minLength: 20
@@ -353,16 +353,16 @@ components:
         - device
         - qosProfile
 
-    ProvisionInfo:
-      description: Provision related information.
+    ProvisioningInfo:
+      description: Provisioning related information.
       allOf:
-        - $ref: "#/components/schemas/BaseProvisionInfo"
+        - $ref: "#/components/schemas/BaseProvisioningInfo"
         - type: object
           properties:
-            provisionId:
-              $ref: "#/components/schemas/ProvisionId"
+            provisioningId:
+              $ref: "#/components/schemas/ProvisioningId"
             startedAt:
-              description: Date and time when the provision became "AVAILABLE". Not to be returned when `status` is "REQUESTED". Format must follow RFC 3339 and must indicate time zone (UTC or local).
+              description: Date and time when the provisioning became "AVAILABLE". Not to be returned when `status` is "REQUESTED". Format must follow RFC 3339 and must indicate time zone (UTC or local).
               type: string
               format: date-time
               example: "2024-06-01T12:00:00Z"
@@ -371,16 +371,16 @@ components:
             statusInfo:
               $ref: "#/components/schemas/StatusInfo"
           required:
-            - provisionId
+            - provisioningId
             - status
 
-    CreateProvision:
-      description: Attributes to request a new QoD provision
+    CreateProvisioning:
+      description: Attributes to request a new QoD provisioning
       allOf:
-        - $ref: "#/components/schemas/BaseProvisionInfo"
+        - $ref: "#/components/schemas/BaseProvisioningInfo"
 
-    RetrieveProvision:
-      description: Attributes to look for QoD provisions
+    RetrieveProvisioning:
+      description: Attributes to look for QoD provisioning
       type: object
       properties:
         device:
@@ -430,7 +430,7 @@ components:
           description: The type of the event.
           type: string
           enum:
-            - "org.camaraproject.qod-provision.vwip.status-changed"
+            - "org.camaraproject.qod-provisioning.vwip.status-changed"
         specversion:
           description: Version of the specification to which this event conforms (must be 1.0 if it conforms to cloudevents 1.0.2 version)
           type: string
@@ -452,10 +452,10 @@ components:
       discriminator:
         propertyName: "type"
         mapping:
-          org.camaraproject.qod-provision.vwip.status-changed: "#/components/schemas/EventStatusChanged"
+          org.camaraproject.qod-provisioning.vwip.status-changed: "#/components/schemas/EventStatusChanged"
 
     EventStatusChanged:
-      description: Event to notify a QoD provision status change
+      description: Event to notify a QoD provisioning status change
       allOf:
         - $ref: "#/components/schemas/CloudEvent"
         - type: object
@@ -464,11 +464,11 @@ components:
               type: object
               description: Event details depending on the event type
               required:
-                - provisionId
+                - provisioningId
                 - qosStatus
               properties:
-                provisionId:
-                  $ref: "#/components/schemas/ProvisionId"
+                provisioningId:
+                  $ref: "#/components/schemas/ProvisioningId"
                 status:
                   $ref: "#/components/schemas/StatusChanged"
                 statusInfo:
@@ -479,8 +479,8 @@ components:
     StatusInfo:
       description: |
         Reason for the new `status`:
-        * `NETWORK_TERMINATED` - Network terminated the QoD provision
-        * `DELETE_REQUESTED`- User requested the deletion of the QoD provision
+        * `NETWORK_TERMINATED` - Network terminated the QoD provisioning
+        * `DELETE_REQUESTED`- User requested the deletion of the QoD provisioning
 
       type: string
       enum:
@@ -563,10 +563,10 @@ components:
 
     Status:
       description: |
-        The current status of the requested QoD provision. The status can be one of the following:
-        * `REQUESTED` - QoD provision has been requested but is still being processed.
+        The current status of the requested QoD provisioning. The status can be one of the following:
+        * `REQUESTED` - QoD provisioning has been requested but is still being processed.
         * `AVAILABLE` - The requested QoS profile has been provisioned to the device, and is active.
-        * `UNAVAILABLE` - The QoD provision request has been processed but is not active. `statusInfo` may provide additional information about the reason for the unavailability.
+        * `UNAVAILABLE` - The QoD provisioning request has been processed but is not active. `statusInfo` may provide additional information about the reason for the unavailability.
       enum:
         - REQUESTED
         - AVAILABLE
@@ -574,9 +574,9 @@ components:
 
     StatusChanged:
       description: |
-        The current status of a requested or previously available QoD provision. Applicable values in the event are:
+        The current status of a requested or previously available QoD provisioning. Applicable values in the event are:
         *  `AVAILABLE` - The requested QoS profile has been provisioned to the device, and is active.
-        *  `UNAVAILABLE` - A requested or previously available QoD provision is now unavailable. `statusInfo` may provide additional information about the reason for the unavailability.
+        *  `UNAVAILABLE` - A requested or previously available QoD provisioning is now unavailable. `statusInfo` may provide additional information about the reason for the unavailability.
       type: string
       enum:
         - AVAILABLE
@@ -787,8 +787,8 @@ components:
                 code: DEVICE_NOT_FOUND
                 message: "No device found for a provided identifier"
 
-    RetrieveProvision404:
-      description: Device or provision not found
+    RetrieveProvisioning404:
+      description: Device or provisioning not found
       headers:
         x-correlator:
           $ref: "#/components/headers/x-correlator"
@@ -804,16 +804,16 @@ components:
                 status: 404
                 code: DEVICE_NOT_FOUND
                 message: "No device found for a provided identifier"
-            ERROR_404_PROVISION_NOT_FOUND:
-              summary: No provision found for the device
-              description: The provided device is valid but does not have any provision
+            ERROR_404_PROVISIONING_NOT_FOUND:
+              summary: No provisioning found for the device
+              description: The provided device is valid but does not have any provisioning
               value:
                 status: 404
-                code: PROVISION_NOT_FOUND
-                message: "No provision found for the provided device"
+                code: PROVISIONING_NOT_FOUND
+                message: "No provisioning found for the provided device"
 
-    ProvisionConflict409:
-      description: Provision conflict
+    ProvisioningConflict409:
+      description: Provisioning conflict
       headers:
         x-correlator:
           $ref: "#/components/headers/x-correlator"
@@ -822,31 +822,31 @@ components:
           schema:
             $ref: "#/components/schemas/ErrorInfo"
           examples:
-            PROVISION_409_CONFLICT:
-              summary: Provision Conflict
-              description: The requested provision conflicts with an existing one
+            PROVISIONING_409_CONFLICT:
+              summary: Provisioning Conflict
+              description: The requested provisioning conflicts with an existing one
               value:
                 status: 409
                 code: CONFLICT
-                message: "There is another active provision for the same device"
+                message: "There is another existing provisioning for the same device"
 
   examples:
-    PROVISION_AVAILABLE:
-      summary: QoD provision status is available
-      description: The provision has become available
+    PROVISIONING_AVAILABLE:
+      summary: QoD provisioning status is available
+      description: The provisioning has become available
       value:
         device:
           phoneNumber: "+123456789"
         qosProfile: QOS_L
         webhook:
           notificationUrl: https://application-server.com
-        provisionId: 3fa85f64-5717-4562-b3fc-2c963f66afa6
+        provisioningId: 3fa85f64-5717-4562-b3fc-2c963f66afa6
         startedAt: 2024-05-12T17:32:01Z
         status: AVAILABLE
 
-    PROVISION_UNAVAILABLE:
-      summary: QoD provision status is unavailable
-      description: The provision could not be created or is not active anymore
+    PROVISIONING_UNAVAILABLE:
+      summary: QoD provisioning status is unavailable
+      description: The provisioning could not be created or is not active anymore
       value:
         duration: 86400
         device:
@@ -856,21 +856,21 @@ components:
         qosProfile: QOS_L
         webhook:
           notificationUrl: https://application-server.com
-        provisionId: 3fa85f64-5717-4562-b3fc-2c963f66afa6
+        provisioningId: 3fa85f64-5717-4562-b3fc-2c963f66afa6
         startedAt: 2024-05-12T17:32:01Z
         status: UNAVAILABLE
         statusInfo: NETWORK_TERMINATED
 
-    PROVISION_STATUS_CHANGED_EXAMPLE:
-      description: Provision status changed
-      summary: Cloud event example for QoD provision status change to UNAVAILABLE due to NETWORK_TERMINATED
+    PROVISIONING_STATUS_CHANGED_EXAMPLE:
+      description: Provisioning status changed
+      summary: Cloud event example for QoD provisioning status change to UNAVAILABLE due to NETWORK_TERMINATED
       value:
         id: 83a0d986-0866-4f38-b8c0-fc65bfcda452
-        source: https://api.example.com/qod-provision/vwip/provisions/123e4567-e89b-12d3-a456-426614174000
+        source: https://api.example.com/qod-provisioning/vwip/device-qos/123e4567-e89b-12d3-a456-426614174000
         specversion: "1.0"
-        type: org.camaraproject.qod-provision.vwip.status-changed
+        type: org.camaraproject.qod-provisioning.vwip.status-changed
         time: 2021-12-12T00:00:00Z
         data:
-          provisionId: 123e4567-e89b-12d3-a456-426614174000
+          provisioningId: 123e4567-e89b-12d3-a456-426614174000
           status: UNAVAILABLE
           statusInfo: NETWORK_TERMINATED
