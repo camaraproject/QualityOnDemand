@@ -26,7 +26,7 @@ info:
     Latency, throughput or priority requirements of the application mapped to relevant QoS profile values. The set of QoS Profiles that an operator is offering can be retrieved by means of the [QoS Profile API](link TBC).
 
     * **Identifier for the device**:
-    At least one identifier for the device (user equipment) out of four options: IPv4 address, IPv6 address, Phone number, or Network Access Identifier [[5]](#5) assigned by the mobile network operator for the device.
+    At least one identifier for the device (user equipment) out of four options: IPv4 address, IPv6 address, Phone number, or Network Access Identifier assigned by the mobile network operator for the device. Note: Network Access Identifier is defined for future use and will not be supported with v0.11.0 of the API.
 
     * **Identifier for the application server**:
     IPv4 and/or IPv6 address of the application server (application backend)
