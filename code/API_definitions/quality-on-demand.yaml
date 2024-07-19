@@ -61,9 +61,34 @@ info:
 
     It is important to remark that in cases where personal user data is processed by the API, and users can exercise their rights through mechanisms such as opt-in and/or opt-out, the use of 3-legged access tokens becomes mandatory. This measure ensures that the API remains in strict compliance with user privacy preferences and regulatory obligations, upholding the principles of transparency and user-centric data control.
 
+    # Identifying a device from the access token
+
+    This specification defines the `device` object field as optional in API requests, specifically in cases where the API is accessed using a 3-legged access token, and the device can be uniquely identified by the token. This approach simplifies API usage for API consumers by relying on the device information associated with the access token used to invoke the API.
+
+    ## Handling of device information:
+
+    ### Optional device object for 3-legged tokens:
+
+    - When using a 3-legged access token, the device associated with the access token must be considered as the device for the API request. This means that the device object is not required in the request, and if included it must identify the same device, therefore **it is recommended NOT to include it in these scenarios** to simplify the API usage and avoid additional validations.
+
+    ### Validation mechanism:
+
+    - The server will extract the device identification from the access token, if available.
+    - If the API request additionally includes a `device` object when using a 3-legged access token, the API will validate that the device identifier provided matches the one associated with the access token.
+    - If there is a mismatch, the API will respond with a 403 - INVALID_TOKEN_CONTEXT error, indicating that the device information in the request does not match the token.
+
+    ### Error handling for unidentifiable devices:
+
+    - If the `device` object is not included in the request and the device information cannot be derived from the 3-legged access token, the server will return a 422 `UNIDENTIFIABLE_DEVICE` error.
+
+    ### Restrictions for tokens without an associated authenticated identifier:
+
+    - For scenarios which do not have a single device identifier associated to the token during the authentication flow, e.g. 2-legged access tokens, the `device` object MUST be provided in the API request. This ensures that the device identification is explicit and valid for each API call made with these tokens.
+    
     # Further info and support
 
     (FAQs will be added in a later version of the documentation)
+    
   license:
     name: Apache 2.0
     url: https://www.apache.org/licenses/LICENSE-2.0.html
@@ -106,7 +131,7 @@ paths:
         - In case of a `QOS_STATUS_CHANGED` event with `qosStatus` as `UNAVAILABLE` and `statusInfo` as `NETWORK_TERMINATED` the resources of the QoS session are not directly released, but will get deleted automatically at earliest 360 seconds after the event.
 
           This behavior allows clients which are not receiving notification events but are polling to get the session information with the `qosStatus` `UNAVAILABLE` and `statusInfo` `NETWORK_TERMINATED`. Before a client can attempt to create a new QoD session for the same device and flow period they must release the session resources with an explicit `delete` operation if not yet automatically deleted.
-        - The access token may be either 2-legged or 3-legged. If a 3-legged access token is used, the end user identified by the `device` parameter must also be associated with the access token.
+        - The access token may be either 2-legged or 3-legged. If a 3-legged access token which is associated with a device is used, it is recommended NOT to include the `device` parameter in the request (see "Handling of device information" within the API description for details).
 
       operationId: createSession
       security:
@@ -267,7 +292,7 @@ paths:
         Querying for QoS session resource information details
 
         **NOTES:**
-        - The access token may be either 2-legged or 3-legged. If a 3-legged access token is used, the end user associated with the session must also be associated with the access token.
+        - The access token may be either 2-legged or 3-legged. If a 3-legged access token is used, the end user (and device) associated with the session must also be associated with the access token.
 
       operationId: getSession
       security:
@@ -324,7 +349,7 @@ paths:
         There will be no notification event if the `qosStatus` was already `UNAVAILABLE`.
 
         **NOTES:**
-        - The access token may be either 2-legged or 3-legged. If a 3-legged access token is used, the end user associated with the session must also be associated with the access token.
+        - The access token may be either 2-legged or 3-legged. If a 3-legged access token is used, the end user (and device) associated with the session must also be associated with the access token.
 
       operationId: deleteSession
       security:
@@ -373,7 +398,7 @@ paths:
         - New overall session duration: 50,000 seconds (the maximum allowed)
 
         **NOTES:**
-        - The access token may be either 2-legged or 3-legged. If a 3-legged access token is used, the end user associated with the session must also be associated with the access token.
+        - The access token may be either 2-legged or 3-legged. If a 3-legged access token is used, the end user (and device) associated with the session must also be associated with the access token.
 
       operationId: extendQosSessionDuration
       security:
@@ -506,7 +531,6 @@ components:
               example: "c8974e592c2fa383d4a3960714"
               description: Authentication token for callback API
       required:
-        - device
         - applicationServer
         - qosProfile
 
