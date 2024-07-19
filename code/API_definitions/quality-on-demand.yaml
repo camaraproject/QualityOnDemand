@@ -312,7 +312,7 @@ paths:
         "403":
           $ref: "#/components/responses/Generic403"
         "404":
-          $ref: "#/components/responses/SessionNotFound404"
+          $ref: "#/components/responses/Generic404"
         "500":
           $ref: "#/components/responses/Generic500"
         "503":
@@ -358,7 +358,7 @@ paths:
         "403":
           $ref: "#/components/responses/Generic403"
         "404":
-          $ref: "#/components/responses/SessionNotFound404"
+          $ref: "#/components/responses/Generic404"
         "500":
           $ref: "#/components/responses/Generic500"
         "503":
@@ -436,11 +436,63 @@ paths:
         "403":
           $ref: "#/components/responses/Generic403"
         "404":
-          $ref: "#/components/responses/SessionNotFound404"
+          $ref: "#/components/responses/Generic404"
         "500":
           $ref: "#/components/responses/Generic500"
         "503":
           $ref: "#/components/responses/Generic503"
+
+  /sessions/retrieve:
+    post:
+      tags:
+        - QoS Sessions
+      summary: Get all QoS session information for a given device
+      description: |
+        Querying for QoS session resource information details for a given device
+
+        **NOTES:**
+        - The access token may be either 2-legged or 3-legged. If a 3-legged access token is used, the end user associated with the session must also be associated with the access token.
+        - If no QoS session is found for the device, an empty array is returned.
+      operationId: retrieveSessions
+      parameters:
+        - $ref: "#/components/parameters/x-correlator"
+      requestBody:
+        description: Parameters to get QoS session information by device
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/RetrieveSessionsInput"
+        required: true
+      responses:
+        "200":
+          description: Returns the QoS sessions information for a given device. A device may have multiple sessions, thus the response is an array. An empty array is returned if no sessions are found.
+          headers:
+            x-correlator:
+              $ref: "#/components/headers/x-correlator"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/RetrieveSessionsOutput"
+              examples:
+                PROVISIONING_AVAILABLE:
+                  $ref: "#/components/examples/RETRIEVE_SESSIONS_EXAMPLE"
+        "400":
+          $ref: "#/components/responses/Generic400"
+        "401":
+          $ref: "#/components/responses/Generic401"
+        "403":
+          $ref: "#/components/responses/Generic403"
+        "404":
+          $ref: "#/components/responses/Generic404"
+        "422":
+          $ref: "#/components/responses/Generic422"
+        "500":
+          $ref: "#/components/responses/Generic500"
+        "503":
+          $ref: "#/components/responses/Generic503"
+      security:
+        - openId:
+            - "quality-on-demand:sessions:read"
 
 components:
   securitySchemes:
@@ -872,6 +924,22 @@ components:
         - code
         - message
 
+    RetrieveSessionsInput:
+      description: Parameters to get QoS session information by device
+      type: object
+      required:
+        - device
+      properties:
+        device:
+          $ref: "#/components/schemas/Device"
+
+    RetrieveSessionsOutput:
+      description: QoS session information for a given device
+      type: array
+      items:
+        $ref: "#/components/schemas/SessionInfo"
+      minItems: 0
+
   responses:
     Generic400:
       description: Invalid input
@@ -915,8 +983,26 @@ components:
             code: PERMISSION_DENIED
             message: "Operation not allowed: ..."
 
-    SessionNotFound404:
-      description: Session not found
+    Generic404:
+      description: Not found
+      headers:
+        x-correlator:
+          $ref: "#/components/headers/x-correlator"
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ErrorInfo"
+          examples:
+            GENERIC_404_NOT_FOUND:
+              summary: Generic Not Found
+              description: Resource is not found
+              value:
+                status: 404
+                code: NOT_FOUND
+                message: "{{resource}} is not found"
+
+    Generic422:
+      description: Unprocessable entity
       headers:
         x-correlator:
           $ref: '#/components/headers/x-correlator'
@@ -925,9 +1011,9 @@ components:
           schema:
             $ref: "#/components/schemas/ErrorInfo"
           example:
-            status: 404
-            code: NOT_FOUND
-            message: "Session Id does not exist"
+            status: 422
+            code: UNPROCESSABLE_ENTITY
+            message: "Value not acceptable: ..."
 
     Generic500:
       description: Internal server error
@@ -1024,3 +1110,20 @@ components:
           sessionId: '123e4567-e89b-12d3-a456-426614174000'
           qosStatus: 'UNAVAILABLE'
           statusInfo: 'DURATION_EXPIRED'
+
+    RETRIEVE_SESSIONS_EXAMPLE:
+      summary: List of QoS sessions for the device
+      description: A single QoS session for the device is available
+      value:
+        - duration: 3600
+          device:
+            phoneNumber: "+123456789"
+          applicationServer:
+            ipv4Address: 0.0.0.0/0
+          qosProfile: QOS_L
+          webhook:
+            notificationUrl: https://application-server.com
+          sessionId: 3fa85f64-5717-4562-b3fc-2c963f66afa6
+          startedAt: "2024-06-01T12:00:00Z"
+          expiresAt: "2024-06-01T13:00:00Z"
+          qosStatus: AVAILABLE
