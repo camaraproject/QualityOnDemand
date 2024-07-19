@@ -223,24 +223,6 @@ paths:
                     status: 400
                     code: INVALID_ARGUMENT
                     message: "Expected property is missing: device"
-                InsufficientDeviceProperties:
-                  summary: Device must be identified by at least one parameter
-                  value:
-                    status: 400
-                    code: INVALID_ARGUMENT
-                    message: "Insufficient properties specified: device"
-                InconsistentDeviceProperties:
-                  summary: Device parameters provided identify different devices
-                  value:
-                    status: 400
-                    code: INVALID_ARGUMENT
-                    message: "Multiple inconsistent parameters specified: device"
-                CannotIdentifyDevice:
-                  summary: No device can be identified from provided parameters
-                  value:
-                    status: 400
-                    code: INVALID_ARGUMENT
-                    message: "Unable to identify device from specified parameters: device"
                 InvalidDevicePublicPortValue:
                   summary: Invalid port specified for device public port
                   value:
@@ -277,12 +259,12 @@ paths:
           $ref: "#/components/responses/Generic403"
         "409":
           $ref: "#/components/responses/SessionInConflict409"
+        "422":
+          $ref: "#/components/responses/Generic422"
         "429":
           $ref: "#/components/responses/Generic429"
         "500":
           $ref: "#/components/responses/Generic500"
-        "501":
-          $ref: "#/components/responses/Generic501"
         "503":
           $ref: "#/components/responses/Generic503"
 
@@ -899,46 +881,73 @@ components:
 
   responses:
     Generic400:
-      description: Invalid input
+      description: Bad Request
       headers:
         x-correlator:
-          $ref: '#/components/headers/x-correlator'
+          $ref: "#/components/headers/x-correlator"
       content:
         application/json:
           schema:
             $ref: "#/components/schemas/ErrorInfo"
-          example:
-            status: 400
-            code: INVALID_ARGUMENT
-            message: "Schema validation failed at  ..."
+          examples:
+            GENERIC_400_INVALID_ARGUMENT:
+              description: Invalid Argument. Generic Syntax Exception
+              value:
+                status: 400
+                code: INVALID_ARGUMENT
+                message: Client specified an invalid argument, request body or query param.
+            GENERIC_400_OUT_OF_RANGE:
+              description: Out of Range. Specific Syntax Exception used when a given field has a pre-defined range or a invalid filter criteria combination is requested
+              value:
+                status: 400
+                code: OUT_OF_RANGE
+                message: Client specified an invalid range.
 
     Generic401:
       description: Unauthorized
       headers:
         x-correlator:
-          $ref: '#/components/headers/x-correlator'
+          $ref: "#/components/headers/x-correlator"
       content:
         application/json:
           schema:
             $ref: "#/components/schemas/ErrorInfo"
-          example:
-            status: 401
-            code: UNAUTHENTICATED
-            message: "Authorization failed: ..."
+          examples:
+            GENERIC_401_UNAUTHENTICATED:
+              description: Request cannot be authenticated
+              value:
+                status: 401
+                code: UNAUTHENTICATED
+                message: Request not authenticated due to missing, invalid, or expired credentials.
+            GENERIC_401_AUTHENTICATION_REQUIRED:
+              description: New authentication is needed, authentication is no longer valid
+              value:
+                status: 401
+                code: AUTHENTICATION_REQUIRED
+                message: New authentication is required.
 
     Generic403:
       description: Forbidden
       headers:
         x-correlator:
-          $ref: '#/components/headers/x-correlator'
+          $ref: "#/components/headers/x-correlator"
       content:
         application/json:
           schema:
             $ref: "#/components/schemas/ErrorInfo"
-          example:
-            status: 403
-            code: PERMISSION_DENIED
-            message: "Operation not allowed: ..."
+          examples:
+            GENERIC_403_PERMISSION_DENIED:
+              description: Permission denied. OAuth2 token access does not have the required scope or when the user fails operational security
+              value:
+                status: 403
+                code: PERMISSION_DENIED
+                message: Client does not have sufficient permissions to perform this action.
+            GENERIC_403_INVALID_TOKEN_CONTEXT:
+              description: Reflect some inconsistency between information in some field of the API and the related OAuth2 Token
+              value:
+                status: 403
+                code: INVALID_TOKEN_CONTEXT
+                message: "{{field}} is not consistent with access token."
 
     SessionNotFound404:
       description: Session not found
@@ -967,6 +976,29 @@ components:
             status: 409
             code: CONFLICT
             message: Conflict with an existing session for the same device.
+
+    Generic422:
+      description: Unprocessable Content
+      headers:
+        x-correlator:
+          $ref: "#/components/headers/x-correlator"
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ErrorInfo"
+          examples:
+            GENERIC_422_DEVICE_IDENTIFIERS_MISMATCH:
+              description: Inconsistency between device identifiers not pointing to the same device
+              value:
+                status: 422
+                code: DEVICE_IDENTIFIERS_MISMATCH
+                message: Provided device identifiers are not consistent.
+            GENERIC_422_DEVICE_NOT_APPLICABLE:
+              description: Service is not available for the provided device
+              value:
+                status: 422
+                code: DEVICE_NOT_APPLICABLE
+                message: The service is not available for the provided device.
 
     Generic429:
       description: Too Many Requests
@@ -1004,23 +1036,6 @@ components:
             status: 500
             code: INTERNAL
             message: "Internal server error: ..."
-
-    Generic501:
-      description: Not Implemented
-      headers:
-        x-correlator:
-          $ref: '#/components/headers/x-correlator'
-      content:
-        application/json:
-          schema:
-            $ref: "#/components/schemas/ErrorInfo"
-          examples:
-            GENERIC_501_NOT_IMPLEMENTED:
-              description: Service not implemented. The use of this code should be avoided as far as possible to get the objective to reach aligned implementations
-              value:
-                status: 501
-                code: NOT_IMPLEMENTED
-                message: This functionality is not implemented yet.
 
     Generic503:
       description: Service Unavailable
