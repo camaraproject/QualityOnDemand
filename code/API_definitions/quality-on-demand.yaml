@@ -981,6 +981,20 @@ components:
             code: PERMISSION_DENIED
             message: "Operation not allowed: ..."
 
+    SessionNotFound404:
+      description: Session not found
+      headers:
+        x-correlator:
+          $ref: '#/components/headers/x-correlator'
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ErrorInfo"
+          example:
+            status: 404
+            code: NOT_FOUND
+            message: "Session Id does not exist"
+
     Generic404:
       description: Not found
       headers:
