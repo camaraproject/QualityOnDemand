@@ -442,7 +442,7 @@ paths:
         "503":
           $ref: "#/components/responses/Generic503"
 
-  /sessions/retrieve:
+  /retrieve-sessions:
     post:
       tags:
         - QoS Sessions
@@ -452,6 +452,7 @@ paths:
 
         **NOTES:**
         - The access token may be either 2-legged or 3-legged. If a 3-legged access token is used, the end user associated with the session must also be associated with the access token.
+        - If a 2-legged access token is used, all returned sessions must have been created by the same API client given in the access token.
         - If no QoS session is found for the device, an empty array is returned.
       operationId: retrieveSessions
       parameters:
@@ -492,7 +493,7 @@ paths:
           $ref: "#/components/responses/Generic503"
       security:
         - openId:
-            - "quality-on-demand:sessions:read"
+            - "quality-on-demand:sessions:retrieve-by-device"
 
 components:
   securitySchemes:
