@@ -5,7 +5,7 @@
 # For more details, read the following article on GitHub: https://help.github.com/articles/about-codeowners/.
 
 # These are the default owners for the whole content of this repository. The default owners are automatically added as reviewers when you open a pull request, unless different owners are specified in the file.
-* @hdamker @eric-murray @RandyLevensalor
+* @hdamker @eric-murray @RandyLevensalor @jlurien
 
 # Owners of the CODEOWNER and Maintainer.md files are the admins of CAMARA (to allow them to keep the teams within the CAMARA organization in sync in case of changes)
 /CODEOWNERS @camaraproject/admins
