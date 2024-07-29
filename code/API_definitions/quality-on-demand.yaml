@@ -1014,7 +1014,7 @@ components:
               description: Service is not available for the provided device
               value:
                 status: 422
-                code:  UNIDENTIFIABLE_DEVICE
+                code: UNIDENTIFIABLE_DEVICE
                 message: The device cannot be identified.
 
     Generic429:
