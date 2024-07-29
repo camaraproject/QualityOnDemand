@@ -315,7 +315,7 @@ paths:
         "403":
           $ref: "#/components/responses/Generic403"
         "404":
-          $ref: "#/components/responses/SessionNotFound404"
+          $ref: "#/components/responses/Generic404"
         "429":
           $ref: "#/components/responses/Generic429"
         "500":
@@ -363,7 +363,7 @@ paths:
         "403":
           $ref: "#/components/responses/Generic403"
         "404":
-          $ref: "#/components/responses/SessionNotFound404"
+          $ref: "#/components/responses/Generic404"
         "429":
           $ref: "#/components/responses/Generic429"
         "500":
@@ -443,7 +443,7 @@ paths:
         "403":
           $ref: "#/components/responses/Generic403"
         "404":
-          $ref: "#/components/responses/SessionNotFound404"
+          $ref: "#/components/responses/Generic404"
         "429":
           $ref: "#/components/responses/Generic429"
         "500":
@@ -951,19 +951,28 @@ components:
                 code: INVALID_TOKEN_CONTEXT
                 message: "{{field}} is not consistent with access token."
 
-    SessionNotFound404:
-      description: Session not found
+    Generic404:
+      description: Not found
       headers:
         x-correlator:
-          $ref: '#/components/headers/x-correlator'
+          $ref: "#/components/headers/x-correlator"
       content:
         application/json:
           schema:
             $ref: "#/components/schemas/ErrorInfo"
-          example:
-            status: 404
-            code: NOT_FOUND
-            message: "Session Id does not exist"
+          examples:
+            GENERIC_404_NOT_FOUND:
+              description: Resource is not found
+              value:
+                status: 404
+                code: NOT_FOUND
+                message: The specified resource is not found.
+            GENERIC_404_DEVICE_NOT_FOUND:
+              description: Device identifier not found
+              value:
+                status: 404
+                code: DEVICE_NOT_FOUND
+                message: Device identifier not found.
 
     SessionInConflict409:
       description: Conflict
@@ -1001,6 +1010,12 @@ components:
                 status: 422
                 code: DEVICE_NOT_APPLICABLE
                 message: The service is not available for the provided device.
+            GENERIC_422_UNIDENTIFIABLE_DEVICE:
+              description: Service is not available for the provided device
+              value:
+                status: 422
+                code:  UNIDENTIFIABLE_DEVICE
+                message: The device cannot be identified.
 
     Generic429:
       description: Too Many Requests
