@@ -523,7 +523,7 @@ components:
 
     SessionInfo:
       description: |
-        Session related information returned in responses. 
+        Session related information returned in responses.
         Within the optional device object only one identifier will be returned (with the original value provided in CreateSession).
         If no device identifier was provided in CreateSession (together with a 3-legged token), no device object will be returned in SessionInfo.
         Please note that IP addresses of devices can change and get reused and can't be used in these cases again to identify the same device.
