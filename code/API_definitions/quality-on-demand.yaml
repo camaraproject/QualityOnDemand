@@ -532,7 +532,7 @@ components:
         Session related information returned in responses.
         Within the optional device object only one identifier will be returned (with the original value provided in CreateSession).
         If no device identifier was provided in CreateSession (together with a 3-legged token), no device object will be returned in SessionInfo.
-        Please note that IP addresses of devices can change and get reused and can't be used in these cases again to identify the same device.
+        Please note that IP addresses of devices can change and get reused, so the original values may no longer identify the same device. They identified the device at the time of session creation.
       allOf:
         - $ref: "#/components/schemas/BaseSessionInfo"
         - type: object
