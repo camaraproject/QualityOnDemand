@@ -79,33 +79,7 @@ paths:
                 items:
                   $ref: "#/components/schemas/QosProfile"
         "400":
-          description: Invalid input for getQosProfiles operation
-          headers:
-            x-correlator:
-              $ref: '#/components/headers/x-correlator'
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/ErrorInfo"
-              examples:
-                Generic400:
-                  summary: Some parameter combinations or parameter values provided are not schema compliant
-                  value:
-                    status: 400
-                    code: INVALID_ARGUMENT
-                    message: "Schema validation failed at  ..."
-                InconsistentDeviceProperties:
-                  summary: Device parameters provided identify different devices
-                  value:
-                    status: 400
-                    code: INVALID_ARGUMENT
-                    message: "Multiple inconsistent parameters specified: device"
-                CannotIdentifyDevice:
-                  summary: No device can be identified from provided parameters
-                  value:
-                    status: 400
-                    code: INVALID_ARGUMENT
-                    message: "Unable to identify device from specified parameters: device"
+          $ref: "#/components/responses/Generic400"
         "401":
           $ref: "#/components/responses/Generic401"
         "403":
@@ -418,9 +392,9 @@ components:
         * `ipv4Address`
         * `ipv6Address`
         * `phoneNumber`
-        * `networkAccessIdentifier`
+        NOTE1: the network operator might support only a subset of these options. The API invoker can provide multiple identifiers to be compatible across different operators. In this case the identifiers MUST belong to the same device
+        NOTE2: for the Commonalities release v0.4, we are enforcing that the networkAccessIdentifier is only part of the schema for future-proofing, and CAMARA does not currently allow its use. After the CAMARA meta-release work is concluded and the relevant issues are resolved, its use will need to be explicitly documented in the guidelines.
 
-        NOTE: the MNO might support only a subset of these options. The API invoker can provide multiple identifiers to be compatible across different MNOs. In this case the identifiers MUST belong to the same device
       type: object
       properties:
         phoneNumber:
