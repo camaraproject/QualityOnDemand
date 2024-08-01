@@ -204,57 +204,7 @@ paths:
               schema:
                 $ref: "#/components/schemas/SessionInfo"
         "400":
-          description: Invalid input for createSession operation
-          headers:
-            x-correlator:
-              $ref: '#/components/headers/x-correlator'
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/ErrorInfo"
-              examples:
-                Generic400:
-                  summary: Some parameter combinations or parameter values provided are not schema compliant
-                  value:
-                    status: 400
-                    code: INVALID_ARGUMENT
-                    message: "Schema validation failed at  ..."
-                DeviceMissing:
-                  summary: Device must be specified
-                  value:
-                    status: 400
-                    code: INVALID_ARGUMENT
-                    message: "Expected property is missing: device"
-                InvalidDevicePublicPortValue:
-                  summary: Invalid port specified for device public port
-                  value:
-                    status: 400
-                    code: OUT_OF_RANGE
-                    message: "Invalid port value specified: device.ipv4Address.publicPort"
-                ApplicationServerMissing:
-                  summary: Application server must be specified
-                  value:
-                    status: 400
-                    code: INVALID_ARGUMENT
-                    message: "Expected property is missing: applicationServer"
-                QoSProfileMissing:
-                  summary: Required QoS profile must be specified
-                  value:
-                    status: 400
-                    code: INVALID_ARGUMENT
-                    message: "Expected property is missing: qosProfile"
-                InvalidDevicePortsRanges:
-                  summary: Invalid port ranges specified for devicePorts
-                  value:
-                    status: 400
-                    code: OUT_OF_RANGE
-                    message: "Invalid port ranges specified: devicePorts"
-                DurationOutOfRangeForQoSProfile:
-                  summary: The requested duration is out of the allowed range for the specific QoS profile
-                  value:
-                    status: 400
-                    code: OUT_OF_RANGE
-                    message: "The requested duration is out of the allowed range for the specific QoS profile"
+          $ref: "#/components/responses/Generic400"
         "401":
           $ref: "#/components/responses/Generic401"
         "403":
@@ -914,6 +864,12 @@ components:
                 status: 400
                 code: OUT_OF_RANGE
                 message: Client specified an invalid range.
+            DurationOutOfRangeForQoSProfile:
+              summary: The requested duration is out of the allowed range for the specific QoS profile
+              value:
+                status: 400
+                code: OUT_OF_RANGE
+                message: "The requested duration is out of the allowed range for the specific QoS profile"
 
     Generic401:
       description: Unauthorized
