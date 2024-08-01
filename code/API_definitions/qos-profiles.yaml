@@ -121,7 +121,7 @@ paths:
         "403":
           $ref: "#/components/responses/Generic403"
         "404":
-          $ref: "#/components/responses/QosProfilesNotFound404"
+          $ref: "#/components/responses/Generic404"
         "500":
           $ref: "#/components/responses/Generic500"
         "503":
@@ -166,7 +166,7 @@ paths:
         "403":
           $ref: "#/components/responses/Generic403"
         "404":
-          $ref: "#/components/responses/QosProfileNotFound404"
+          $ref: "#/components/responses/Generic404"
         "500":
           $ref: "#/components/responses/Generic500"
         "503":
@@ -495,33 +495,28 @@ components:
                 code: INVALID_TOKEN_CONTEXT
                 message: "{{field}} is not consistent with access token."
 
-    QosProfilesNotFound404:
-      description: Qos Profiles not found
+    Generic404:
+      description: Not found
       headers:
         x-correlator:
-          $ref: '#/components/headers/x-correlator'
+          $ref: "#/components/headers/x-correlator"
       content:
         application/json:
           schema:
             $ref: "#/components/schemas/ErrorInfo"
-          example:
-            status: 404
-            code: NOT_FOUND
-            message: "No QoS Profiles found"
-
-    QosProfileNotFound404:
-      description: Qos Profile not found
-      headers:
-        x-correlator:
-          $ref: '#/components/headers/x-correlator'
-      content:
-        application/json:
-          schema:
-            $ref: "#/components/schemas/ErrorInfo"
-          example:
-            status: 404
-            code: NOT_FOUND
-            message: "QosProfile Id does not exist"
+          examples:
+            GENERIC_404_NOT_FOUND:
+              description: Resource is not found
+              value:
+                status: 404
+                code: NOT_FOUND
+                message: The specified resource is not found.
+            GENERIC_404_DEVICE_NOT_FOUND:
+              description: Device identifier not found
+              value:
+                status: 404
+                code: DEVICE_NOT_FOUND
+                message: Device identifier not found.
 
     Generic422:
       description: Unprocessable Content
