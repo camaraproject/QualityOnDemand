@@ -445,14 +445,16 @@ paths:
     post:
       tags:
         - QoS Sessions
-      summary: Get all QoS session information for a given device
+      summary: Get QoS session information for a device
       description: |
-        Querying for QoS session resource information details for a given device
+        Querying for QoS session resource information details for a device
 
         **NOTES:**
-        - The access token may be either 2-legged or 3-legged. If a 3-legged access token is used, the end user associated with the session must also be associated with the access token.
-        - If a 2-legged access token is used, all returned sessions must have been created by the same API client given in the access token.
-        - If no QoS session is found for the device, an empty array is returned.
+        - The access token may be either 2-legged or 3-legged.
+          - If a 3-legged access token is used, the end user (and device) associated with the session must also be associated with the access token. In this case it is recommended NOT to include the `device` parameter in the request (see "Handling of device information" within the API description for details).
+          - If a 2-legged access token is used, the device parameter must be provided and identify a device.
+        - The session must have been created by the same API client given in the access token
+        - If no QoS session is found for the requested device, an empty array is returned.
       operationId: retrieveSessions
       parameters:
         - $ref: "#/components/parameters/x-correlator"
@@ -474,8 +476,10 @@ paths:
               schema:
                 $ref: "#/components/schemas/RetrieveSessionsOutput"
               examples:
-                PROVISIONING_AVAILABLE:
+                RETRIEVE_SESSIONS_ONE_ITEM:
                   $ref: "#/components/examples/RETRIEVE_SESSIONS_EXAMPLE"
+                RETRIEVE_SESSIONS_NO_ITEMS:
+                  $ref: "#/components/examples/RETRIEVE_SESSIONS_EMPTY_EXAMPLE"
         "400":
           $ref: "#/components/responses/Generic400"
         "401":
@@ -486,6 +490,8 @@ paths:
           $ref: "#/components/responses/Generic404"
         "422":
           $ref: "#/components/responses/Generic422"
+        "429":
+          $ref: "#/components/responses/Generic429"
         "500":
           $ref: "#/components/responses/Generic500"
         "503":
@@ -927,8 +933,6 @@ components:
     RetrieveSessionsInput:
       description: Parameters to get QoS session information by device
       type: object
-      required:
-        - device
       properties:
         device:
           $ref: "#/components/schemas/Device"
@@ -1184,3 +1188,8 @@ components:
           startedAt: "2024-06-01T12:00:00Z"
           expiresAt: "2024-06-01T13:00:00Z"
           qosStatus: AVAILABLE
+
+    RETRIEVE_SESSIONS_EMPTY_EXAMPLE:
+      summary: No sessions found for the device
+      description: An empty array is returned when no sessions are found for the device
+      value: []
