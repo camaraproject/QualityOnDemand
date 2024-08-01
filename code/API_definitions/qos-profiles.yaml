@@ -53,7 +53,9 @@ paths:
       summary: Get QoS profiles avaialable for a given device
       description: |
         Returns all QoS Profiles that match the given criteria.
-        The access token may be either a 2-legged or 3-legged access token. If the access token is 3-legged, all returned QoS Profiles will be available to all end users associated with the access token.
+        **NOTES:**
+        - The access token may be either a 2-legged or 3-legged access token. 
+        - If the access token is 3-legged, all returned QoS Profiles will be available to all end users associated with the access token.
       operationId: qosProfilesDevice
       parameters:
         - $ref: "#/components/parameters/x-correlator"
