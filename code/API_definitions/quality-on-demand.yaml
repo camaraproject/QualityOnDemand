@@ -101,7 +101,7 @@ info:
 
 externalDocs:
   description: Product documentation at Camara
-  url: https://github.com/camaraproject/
+  url: https://github.com/camaraproject/QualityOnDemand
 
 servers:
   - url: "{apiRoot}/quality-on-demand/vwip"
@@ -211,6 +211,8 @@ paths:
           $ref: "#/components/responses/Generic401"
         "403":
           $ref: "#/components/responses/Generic403"
+        "404":
+          $ref: "#/components/responses/Generic404"
         "409":
           $ref: "#/components/responses/SessionInConflict409"
         "422":
