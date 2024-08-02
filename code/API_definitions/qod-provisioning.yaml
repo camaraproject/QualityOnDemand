@@ -309,6 +309,7 @@ paths:
           application/json:
             schema:
               $ref: "#/components/schemas/RetrieveProvisioningByDevice"
+        required: true
       responses:
         "200":
           description: Returns information about QoS provisioning for the device.
