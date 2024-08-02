@@ -464,7 +464,6 @@ paths:
           application/json:
             schema:
               $ref: "#/components/schemas/RetrieveSessionsInput"
-        required: true
       responses:
         "200":
           description: Returns the QoS sessions information for a given device. A device may have multiple sessions, thus the response is an array. An empty array is returned if no sessions are found.
