@@ -12,7 +12,7 @@ info:
 
     ![QoD API Overview](https://raw.githubusercontent.com/camaraproject/QualityOnDemand/main/documentation/API_documentation/resources/QoD_latency_overview.PNG)
 
-    The usage of the API is based on QoS session resources, which can be created (based on available QoS profiles), queried and deleted. The deletion of a requested session can be triggered by the API consumer or can be triggered automatically. The automatic process is triggered either when the requested specified duration of a QoS session has reached its limit or the default session expiration time has been reached (within an example provider implementation it is set to 24hrs).
+    The usage of the API is based on QoS session resources, which can be created (based on available QoS profiles), queried and deleted. The deletion of a requested session can be triggered by the API consumer or can be triggered automatically once the QoS session has reached its limit.
 
     # Relevant terms and definitions
 
@@ -26,7 +26,7 @@ info:
     Latency, throughput or priority requirements of the application mapped to relevant QoS profile values. The set of QoS Profiles that an operator is offering can be retrieved by means of the [QoS Profile API](link TBC).
 
     * **Identifier for the device**:
-    At least one identifier for the device (user equipment) out of four options: IPv4 address, IPv6 address, Phone number, or Network Access Identifier [[5]](#5) assigned by the mobile network operator for the device.
+    At least one identifier for the device (user equipment) out of four options: IPv4 address, IPv6 address, Phone number, or Network Access Identifier assigned by the mobile network operator for the device. Note: Network Access Identifier is defined for future use and will not be supported with v0.11.0 of the API.
 
     * **Identifier for the application server**:
     IPv4 and/or IPv6 address of the application server (application backend)
@@ -35,7 +35,7 @@ info:
     The precise application data flow the developer wants to prioritize and have stable latency or throughput for. This flow is in the current API version determined by the identifiers used for the device and the application server. And it can be further elaborated with details such as ports or port-ranges. Future version of the API might allow more detailed flow identification features.
 
     * **Duration**:
-    Duration (in seconds) for which the QoS session (between application client and application server) should be created. This parameter is optional. When not specified, a default session duration (e.g. 24 hours) is applied. The user may request a termination before its expiration.
+    Duration (in seconds) for which the QoS session (between application client and application server) should be created. Limits for session duration can be set by the implementation for the QoS profile. The user may request a termination before its expiration.
 
     * **Notification URL and token**:
     Developers may provide a callback URL on which notifications about all status change events of the session (eg. session termination) can be received from the service provider. This is an optional parameter.
@@ -55,30 +55,37 @@ info:
 
     ![QoD Management API](https://raw.githubusercontent.com/camaraproject/QualityOnDemand/main/documentation/API_documentation/resources/QoD_details.PNG)
 
+    # Authorization and Authentication
+
+    [Camara Security and Interoperability Profile](https://github.com/camaraproject/IdentityAndConsentManagement/blob/main/documentation/CAMARA-Security-Interoperability.md) provides details on how a client requests an access token.
+
+    Which specific authorization flows are to be used will be determined during onboarding process, happening between the API Client and the Telco Operator exposing the API, taking into account the declared purpose for accessing the API, while also being subject to the prevailing legal framework dictated by local legislation.
+
+    It is important to remark that in cases where personal user data is processed by the API, and users can exercise their rights through mechanisms such as opt-in and/or opt-out, the use of 3-legged access tokens becomes mandatory. This measure ensures that the API remains in strict compliance with user privacy preferences and regulatory obligations, upholding the principles of transparency and user-centric data control.
+
     # Further info and support
 
     (FAQs will be added in a later version of the documentation)
-  termsOfService: http://swagger.io/terms/
-  contact:
-    email: project-email@sample.com
   license:
     name: Apache 2.0
     url: https://www.apache.org/licenses/LICENSE-2.0.html
   version: wip
+
 externalDocs:
   description: Product documentation at Camara
   url: https://github.com/camaraproject/
-security:
-  - oAuth2ClientCredentials: []
+
 servers:
   - url: "{apiRoot}/quality-on-demand/vwip"
     variables:
       apiRoot:
         default: http://localhost:9091
         description: API root, defined by the service provider, e.g. `api.example.com` or `api.example.com/somepath`
+
 tags:
   - name: QoS Sessions
     description: Manage QoS sessions
+
 paths:
   /sessions:
     post:
@@ -97,13 +104,16 @@ paths:
 
         A `QOS_STATUS_CHANGED` event notification with `qosStatus` as `UNAVAILABLE` will also be send if the network terminates the session before the requested duration expired
 
-        NOTE: in case of a `QOS_STATUS_CHANGED` event with `qosStatus` as `UNAVAILABLE` and `statusInfo` as `NETWORK_TERMINATED` the resources of the QoS session
-        are not directly released, but will get deleted automatically at earliest 360 seconds after the event.
-        This behavior allows clients which are not receiving notification events but are polling to get the session information with
-        the `qosStatus` `UNAVAILABLE` and `statusInfo` `NETWORK_TERMINATED`. Before a client can attempt to create a new QoD session
-        for the same device and flow period they must release the session resources with an explicit `delete` operation if not yet automatically deleted.
+        **NOTES:**
+        - In case of a `QOS_STATUS_CHANGED` event with `qosStatus` as `UNAVAILABLE` and `statusInfo` as `NETWORK_TERMINATED` the resources of the QoS session are not directly released, but will get deleted automatically at earliest 360 seconds after the event.
+
+          This behavior allows clients which are not receiving notification events but are polling to get the session information with the `qosStatus` `UNAVAILABLE` and `statusInfo` `NETWORK_TERMINATED`. Before a client can attempt to create a new QoD session for the same device and flow period they must release the session resources with an explicit `delete` operation if not yet automatically deleted.
+        - The access token may be either 2-legged or 3-legged. If a 3-legged access token is used, the end user identified by the `device` parameter must also be associated with the access token.
 
       operationId: createSession
+      security:
+        - openId:
+            - quality-on-demand:sessions:create
       parameters:
         - $ref: "#/components/parameters/x-correlator"
       requestBody:
@@ -240,36 +250,31 @@ paths:
         "403":
           $ref: "#/components/responses/Generic403"
         "409":
-          description: Conflict
-          headers:
-            x-correlator:
-              $ref: '#/components/headers/x-correlator'
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/ErrorInfo"
-              example:
-                status: 409
-                code: CONFLICT
-                message: "Another session is created for the same device"
+          $ref: "#/components/responses/SessionInConflict409"
+        "429":
+          $ref: "#/components/responses/Generic429"
         "500":
           $ref: "#/components/responses/Generic500"
         "501":
           $ref: "#/components/responses/Generic501"
         "503":
           $ref: "#/components/responses/Generic503"
-      security:
-        - oAuth2ClientCredentials: []
-        - threeLegged:
-            - "qod-sessions-write"
 
   /sessions/{sessionId}:
     get:
       tags:
         - QoS Sessions
       summary: Get QoS session information
-      description: Querying for QoS session resource information details
+      description: |
+        Querying for QoS session resource information details
+
+        **NOTES:**
+        - The access token may be either 2-legged or 3-legged. If a 3-legged access token is used, the end user associated with the session must also be associated with the access token.
+
       operationId: getSession
+      security:
+        - openId:
+            - quality-on-demand:sessions:read
       parameters:
         - name: sessionId
           in: path
@@ -301,14 +306,12 @@ paths:
           $ref: "#/components/responses/Generic403"
         "404":
           $ref: "#/components/responses/SessionNotFound404"
+        "429":
+          $ref: "#/components/responses/Generic429"
         "500":
           $ref: "#/components/responses/Generic500"
         "503":
           $ref: "#/components/responses/Generic503"
-      security:
-        - oAuth2ClientCredentials: []
-        - threeLegged:
-            - "qod-sessions-read"
 
     delete:
       tags:
@@ -321,7 +324,14 @@ paths:
         - `qosStatus` as `UNAVAILABLE` and
         - `statusInfo` as `DELETE_REQUESTED`
         There will be no notification event if the `qosStatus` was already `UNAVAILABLE`.
+
+        **NOTES:**
+        - The access token may be either 2-legged or 3-legged. If a 3-legged access token is used, the end user associated with the session must also be associated with the access token.
+
       operationId: deleteSession
+      security:
+        - openId:
+            - quality-on-demand:sessions:delete
       parameters:
         - name: sessionId
           in: path
@@ -344,14 +354,12 @@ paths:
           $ref: "#/components/responses/Generic403"
         "404":
           $ref: "#/components/responses/SessionNotFound404"
+        "429":
+          $ref: "#/components/responses/Generic429"
         "500":
           $ref: "#/components/responses/Generic500"
         "503":
           $ref: "#/components/responses/Generic503"
-      security:
-        - oAuth2ClientCredentials: []
-        - threeLegged:
-            - "qod-sessions-delete"
 
   /sessions/{sessionId}/extend:
     post:
@@ -359,15 +367,20 @@ paths:
         - QoS Sessions
       summary: "Extend the duration of an active session"
       description: |
-        Extend the overall duration of an active QoS session. If this operation is executed successfully, the new duration of the target session will be the original duration plus the additionally requested duration.
-        The new remaining duration of the QoS session shall not exceed the maximum remaining duration limit (currently fixed at 86,400 seconds) where the remaining duration is calculated as the difference between the `expiresAt` and current time when the request to extend the session duration is received. If this maximum limit would be exceeded, the overall duration shall be set such that the remaining duration is equal to this limit.
-        An example: A QoD session was originally created with duration 80,000 seconds. 10,000 seconds later, the developer requested to extend the session by 20,000 seconds.
-        - Original duration: 80,000 seconds
-        - Elapsed time: 10,000 seconds
-        - Remaining duration: 70,000 seconds
-        - New remaining duration: 86,400 seconds (the maximum allowed)
-        - New overall session duration: 96,400 seconds
+        Extend the overall session duration of an active QoS session.
+        The overall duration of the QoS session, including the additional extended duration, shall not exceed the maximum duration limit fixed for the QoS Profile. If the current duration plus the value of `requestedAdditionalDuration` exceeds the maximum limit, the new overall duration shall be capped to the maximum value allowed.
+        An example: For a QoS profile limited to a `maxDuration` of 50,000 seconds, a QoD session was originally created with duration 30,000 seconds. Before the session expires, the developer requests to extend the session by another 30,000 seconds:
+        - Previous duration: 30,000 seconds
+        - Requested additional duration: 30,000 seconds
+        - New overall session duration: 50,000 seconds (the maximum allowed)
+
+        **NOTES:**
+        - The access token may be either 2-legged or 3-legged. If a 3-legged access token is used, the end user associated with the session must also be associated with the access token.
+
       operationId: extendQosSessionDuration
+      security:
+        - openId:
+            - quality-on-demand:sessions:update
       parameters:
         - name: sessionId
           in: path
@@ -421,42 +434,23 @@ paths:
           $ref: "#/components/responses/Generic403"
         "404":
           $ref: "#/components/responses/SessionNotFound404"
+        "429":
+          $ref: "#/components/responses/Generic429"
         "500":
           $ref: "#/components/responses/Generic500"
         "503":
           $ref: "#/components/responses/Generic503"
-      security:
-        - oAuth2ClientCredentials: []
-        - threeLegged:
-            - "qod-sessions-write"
 
 components:
   securitySchemes:
-    oAuth2ClientCredentials:
-      description: |
-        The QoD API makes use of the OAUTH 2.0 client credentials grant which is applicable for server to server use cases involving trusted partners or clients without any protected user data involved. In this method the API invoker client is registered as a confidential client with an authorization grant type of client_credentials
-      type: oauth2
-      flows:
-        clientCredentials:
-          tokenUrl: https://api.example.com/oauth/token
-          scopes: {}
+    openId:
+      type: openIdConnect
+      openIdConnectUrl: https://example.com/.well-known/openid-configuration
     notificationsBearerAuth:
       description: Bearer authentication for notifications
       type: http
       scheme: bearer
       bearerFormat: "{$request.body#/webhook/notificationAuthToken}"
-    threeLegged:
-      type: oauth2
-      description: This API uses OAuth 2 with the authorization code grant flow.
-      flows:
-        authorizationCode:
-          authorizationUrl: https://api.example.com/oauth2/authorize
-          tokenUrl: https://api.example.com/oauth/token
-          scopes:
-            qod-sessions-read: Retrieval of QoS sessions
-            qod-sessions-write: Creation and update of QoS sessions
-            qod-sessions-delete: Deletion of QoS sessions
-            qod-profiles-read: Retrieval of QoS profiles
 
   parameters:
     x-correlator:
@@ -527,33 +521,37 @@ components:
             sessionId:
               $ref: "#/components/schemas/SessionId"
             duration:
+              description: |
+                Session duration in seconds. Implementations can grant the requested session duration or set a different duration, based on network policies or conditions.
+                - When `qosStatus` is "REQUESTED", the value is the duration to be scheduled, granted by the implementation.
+                - When `qosStatus` is AVAILABLE", the value is the overall duration since `startedAt. When the session is extended, the value is the new overall duration of the session.
+                - When `qosStatus` is "UNAVAILABLE", the value is the overall effective duration since `startedAt` until the session was terminated.
               type: integer
               format: int32
               minimum: 1
-              example: 86400
+              example: 3600
             startedAt:
-              type: integer
-              example: 1639479600
-              description: Timestamp of session start in seconds since Unix epoch
-              format: int64
+              description: Date and time when the QoS status became "AVAILABLE". Not to be returned when `qosStatus` is "REQUESTED". Format must follow RFC 3339 and must indicate time zone (UTC or local).
+              type: string
+              format: date-time
+              example: "2024-06-01T12:00:00Z"
             expiresAt:
-              type: integer
-              example: 1639566000
-              description: Timestamp of session expiration if the session was not deleted, in seconds since Unix epoch
-              format: int64
+              description: |
+                Date and time of the QoS session expiration. Format must follow RFC 3339 and must indicate time zone (UTC or local).
+                - When `qosStatus` is "AVAILABLE", it is the limit time when the session is scheduled to finnish, if not terminated by other means.
+                - When `qosStatus` is "UNAVAILABLE", it is the time when the session was terminated.
+                - Not to be returned when `qosStatus` is "REQUESTED".
+                When the session is extended, the value is the new expiration time of the session.
+              type: string
+              format: date-time
+              example: "2024-06-01T13:00:00Z"
             qosStatus:
               $ref: "#/components/schemas/QosStatus"
             statusInfo:
               $ref: "#/components/schemas/StatusInfo"
-            messages:
-              type: array
-              items:
-                $ref: "#/components/schemas/Message"
           required:
             - sessionId
             - duration
-            - startedAt
-            - expiresAt
             - qosStatus
 
     CreateSession:
@@ -564,17 +562,13 @@ components:
           properties:
             duration:
               description: |
-                Session duration in seconds. Maximal value of 24 hours is used if not set.
-                After session is expired the, client will receive a `QOS_STATUS_CHANGED` event with
-                - `qosStatus` as `UNAVAILABLE`, and,
-                - `statusInfo` as `DURATION_EXPIRED`.
-                See notification callback.
+                Requested session duration in seconds. Value may be explicitly limited for the QoS profile, as specified in the [Qos Profile API](TBC). Implementations can grant the requested session duration or set a different duration, based on network policies or conditions.
               type: integer
               format: int32
               minimum: 1
-              maximum: 86400
-              default: 86400
-              example: 86400
+              example: 3600
+          required:
+            - duration
 
     Port:
       description: TCP or UDP port number
@@ -621,12 +615,11 @@ components:
       properties:
         requestedAdditionalDuration:
           description: |
-            Additional duration in seconds to be extended.
+            Additional duration in seconds to be added to the current session duration. The overall session duration, including extensions, shall not exceed the maximum duration limit for the QoS Profile.
           type: integer
           format: int32
           minimum: 1
-          maximum: 86399
-          example: 60
+          example: 1800
       required:
         - requestedAdditionalDuration
 
@@ -771,10 +764,10 @@ components:
       example: "123456789@domain.com"
 
     PhoneNumber:
-      description: A public identifier addressing a telephone subscription. In mobile networks it corresponds to the MSISDN (Mobile Station International Subscriber Directory Number). In order to be globally unique it has to be formatted in international format, according to E.164 standard, optionally prefixed with '+'.
+      description: A public identifier addressing a telephone subscription. In mobile networks it corresponds to the MSISDN (Mobile Station International Subscriber Directory Number). In order to be globally unique it has to be formatted in international format, according to E.164 standard, prefixed with '+'.
       type: string
-      pattern: '^\+?[0-9]{5,15}$'
-      example: "123456789"
+      pattern: '^\+[1-9][0-9]{4,14}$'
+      example: "+123456789"
 
     DeviceIpv4Addr:
       type: object
@@ -837,21 +830,6 @@ components:
           - address/mask - an IP v6 number with a mask:
             - 2001:db8:85a3:8d3::0/64
             - 2001:db8:85a3:8d3::/64
-
-    Message:
-      description: Message with additional information
-      type: object
-      properties:
-        severity:
-          description: Message severity
-          type: string
-          enum: ["INFO", "WARNING"]
-        description:
-          description: Detailed message text
-          type: string
-      required:
-        - severity
-        - description
 
     QosStatus:
       description: |
@@ -950,6 +928,43 @@ components:
             code: NOT_FOUND
             message: "Session Id does not exist"
 
+    SessionInConflict409:
+      description: Conflict
+      headers:
+        x-correlator:
+          $ref: '#/components/headers/x-correlator'
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ErrorInfo"
+          example:
+            status: 409
+            code: CONFLICT
+            message: Conflict with an existing session for the same device.
+
+    Generic429:
+      description: Too Many Requests
+      headers:
+        x-correlator:
+          $ref: "#/components/headers/x-correlator"
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ErrorInfo"
+          examples:
+            GENERIC_429_QUOTA_EXCEEDED:
+              description: Request is rejected due to exceeding a business quota limit
+              value:
+                status: 429
+                code: QUOTA_EXCEEDED
+                message: Either out of resource quota or reaching rate limiting.
+            GENERIC_429_TOO_MANY_REQUESTS:
+              description: API Server request limit is overpassed
+              value:
+                status: 429
+                code: TOO_MANY_REQUESTS
+                message: Either out of resource quota or reaching rate limiting.
+
     Generic500:
       description: Internal server error
       headers:
@@ -973,30 +988,37 @@ components:
         application/json:
           schema:
             $ref: "#/components/schemas/ErrorInfo"
-          example:
-            status: 501
-            code: NOT_IMPLEMENTED
-            message: "Service not implemented for the specified user device"
+          examples:
+            GENERIC_501_NOT_IMPLEMENTED:
+              description: Service not implemented. The use of this code should be avoided as far as possible to get the objective to reach aligned implementations
+              value:
+                status: 501
+                code: NOT_IMPLEMENTED
+                message: This functionality is not implemented yet.
 
     Generic503:
-      description: Service unavailable
+      description: Service Unavailable
       headers:
         x-correlator:
-          $ref: '#/components/headers/x-correlator'
+          $ref: "#/components/headers/x-correlator"
       content:
         application/json:
           schema:
             $ref: "#/components/schemas/ErrorInfo"
-          example:
-            status: 503
-            code: UNAVAILABLE
-            message: "Service unavailable"
+          examples:
+            GENERIC_503_UNAVAILABLE:
+              description: Service is not available. Temporary situation usually related to maintenance process in the server side
+              value:
+                status: 503
+                code: UNAVAILABLE
+                message: Service Unavailable.
 
   examples:
     SESSION_AVAILABLE_EXAMPLE:
       summary: QoS session status is available
+      description: QoS session info when status is available
       value:
-        duration: 86400
+        duration: 3600
         device:
           ipv4Address:
             publicAddress: 203.0.113.0
@@ -1007,14 +1029,15 @@ components:
         webhook:
           notificationUrl: https://application-server.com
         sessionId: 3fa85f64-5717-4562-b3fc-2c963f66afa6
-        startedAt: 1639479600
-        expiresAt: 1639566000
+        startedAt: "2024-06-01T12:00:00Z"
+        expiresAt: "2024-06-01T13:00:00Z"
         qosStatus: AVAILABLE
 
     SESSION_UNAVAILABLE_EXAMPLE:
       summary: QoS session is unavailable
+      description: QoS session info when status is unavailable due to network termination
       value:
-        duration: 86400
+        duration: 2428
         device:
           ipv4Address:
             publicAddress: 203.0.113.0
@@ -1025,20 +1048,20 @@ components:
         webhook:
           notificationUrl: https://application-server.com
         sessionId: 3fa85f64-5717-4562-b3fc-2c963f66afa6
-        startedAt: 1639479600
-        expiresAt: 1639566000
+        startedAt: "2024-06-01T12:00:00Z"
+        expiresAt: "2024-06-01T12:40:28Z"
         qosStatus: UNAVAILABLE
         statusInfo: NETWORK_TERMINATED
 
     QOS_STATUS_CHANGED_EXAMPLE:
-      description: QoS status changed
-      summary: Cloud event example for QoS status change to UNAVAILABLE due to DURATION_EXPIRED
+      summary: QoS status changed
+      description: Cloud event example for QoS status change to UNAVAILABLE due to DURATION_EXPIRED
       value:
         id: 83a0d986-0866-4f38-b8c0-fc65bfcda452
         source: 'https://api.example.com/qod/v0/sessions/123e4567-e89b-12d3-a456-426614174000'
         specversion: '1.0'
         type: 'org.camaraproject.qod.v0.qos-status-changed'
-        time: '2021-12-12T00:00:00Z'
+        time: '2024-06-01T13:00:00Z'
         data:
           sessionId: '123e4567-e89b-12d3-a456-426614174000'
           qosStatus: 'UNAVAILABLE'
