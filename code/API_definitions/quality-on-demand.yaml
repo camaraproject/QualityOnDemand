@@ -136,7 +136,9 @@ paths:
         - In case of a `QOS_STATUS_CHANGED` event with `qosStatus` as `UNAVAILABLE` and `statusInfo` as `NETWORK_TERMINATED` the resources of the QoS session are not directly released, but will get deleted automatically at earliest 360 seconds after the event.
 
           This behavior allows clients which are not receiving notification events but are polling to get the session information with the `qosStatus` `UNAVAILABLE` and `statusInfo` `NETWORK_TERMINATED`. Before a client can attempt to create a new QoD session for the same device and flow period they must release the session resources with an explicit `delete` operation if not yet automatically deleted.
-        - The access token may be either 2-legged or 3-legged. If a 3-legged access token which is associated with a device is used, it is recommended NOT to include the `device` parameter in the request (see "Handling of device information" within the API description for details).
+        - The access token may be either 2-legged or 3-legged. 
+          - If a 3-legged access token which is associated with a device is used, it is recommended NOT to include the `device` parameter in the request (see "Handling of device information" within the API description for details).
+          - If a 2-legged access token is used, the device parameter must be provided and identify a device.
 
       operationId: createSession
       security:
