@@ -100,7 +100,7 @@ info:
   x-camara-commonalities: 0.4.0
 
 externalDocs:
-  description: Product documentation at Camara
+  description: Project documentation at Camara
   url: https://github.com/camaraproject/QualityOnDemand
 
 servers:
