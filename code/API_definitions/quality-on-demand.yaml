@@ -39,7 +39,7 @@ info:
 
     * **Sink URL and credentials**:
     Developers may provide a callback URL (`sink` param) on which notifications about all status change events of the session (eg. session termination) can be received from the service provider. This is an optional parameter.
-    Additionally, sink credentials may be provided to authenticate and authorize the delivery of events to the sink.
+    Additionally, sink credentials may be provided to authenticate and authorize the delivery of events to the sink. In order to be updated in future this object is polymorphic. See detail below. It is RECOMMENDED for subscription consumer to provide credential to protect notification endpoint.
 
     # API functionality
 
