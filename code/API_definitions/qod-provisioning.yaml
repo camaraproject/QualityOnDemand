@@ -16,7 +16,7 @@ info:
     At least one identifier for the device (user equipment) out of four options: IPv4 address, IPv6 address, Phone number, or Network Access Identifier assigned by the network operator for the device, at the request time. After the provisioning request is accepted, the device may get different IP addresses, but the provisioning will still apply to the device that was identified during the request process. Note: Network Access Identifier is defined for future use and will not be supported with v0.1 of the API.
 
     * **Notification URL and token**:
-    Developers may provide a callback URL on which notifications about all status change events (eg. provisioning termination) can be received from the service provider. This is an optional parameter.
+    Developers may provide a callback URL (`sink`) on which notifications about all status change events (eg. provisioning termination) can be received from the service provider. This is an optional parameter. The notification will be sent as a CloudEvent compliant message. If `sink` is included, it is RECOMMENDED for the client to provide as well the `sinkCredential` property to protect the notification enpoint. In the current version,`sinkCredential.credentialType` MUST be set to `ACCESSTOKEN` if provided.
 
     # Resources and Operations overview
     The API defines four operations:
@@ -90,7 +90,7 @@ paths:
         - If the provisioning request is accepted but not yet completed, the response will be 201 with `status` = `REQUESTED`.
         - If the operator determines synchronously that the provisioning request cannot be fulfilled, the response will be 201 with `status` = `UNAVAILABLE`.
 
-        - If the request includes a webhook, the client will receive a `status-changed` event with the outcome of the process. The event will be sent also for synchronous operations.
+        - If the request includes  the `sink` and `sinkCredential` properties, the client will receive a `status-changed` event with the outcome of the process. The event will be sent also for synchronous operations.
 
         **NOTES:**
         - When the provisioning status becomes `UNAVAILABLE`, the QoD provisioning resource is not immediately released, but will get deleted automatically, at earliest 360 seconds after.
@@ -112,7 +112,7 @@ paths:
         required: true
       callbacks:
         notifications:
-          "{$request.body#/webhook/notificationUrl}":
+          "{$request.body#/sink}":
             post:
               summary: Provisioning notifications callback
               description: |
@@ -143,6 +143,10 @@ paths:
                   $ref: "#/components/responses/Generic401"
                 "403":
                   $ref: "#/components/responses/Generic403"
+                "410":
+                  $ref: "#/components/responses/Generic410"
+                "429":
+                  $ref: "#/components/responses/Generic429"
                 "500":
                   $ref: "#/components/responses/Generic500"
                 "503":
@@ -355,7 +359,7 @@ components:
       description: Bearer authentication for notifications
       type: http
       scheme: bearer
-      bearerFormat: "{$request.body#/webhook/notificationAuthToken}"
+      bearerFormat: "{$request.body#/sinkCredential.credentialType}"
 
   parameters:
     provisioningId:
@@ -393,23 +397,13 @@ components:
           $ref: "#/components/schemas/Device"
         qosProfile:
           $ref: "#/components/schemas/QosProfileName"
-        webhook:
-          description: Callback URL on which notifications about all status change events of the provisioning process (eg. provisioning termination) can be received
-          type: object
-          required:
-            - notificationUrl
-          properties:
-            notificationUrl:
-              type: string
-              format: uri
-              example: "https://application-server.com"
-              description: Allows asynchronous delivery of provisioning related events
-            notificationAuthToken:
-              type: string
-              minLength: 20
-              maxLength: 256
-              example: "c8974e592c2fa383d4a3960714"
-              description: Authentication token for callback API
+        sink:
+          type: string
+          format: url
+          description: The address to which events shall be delivered using the selected protocol.
+          example: "https://endpoint.example.com/sink"
+        sinkCredential:
+          $ref: "#/components/schemas/SinkCredential"        
       required:
         - qosProfile
 
@@ -448,6 +442,100 @@ components:
       properties:
         device:
           $ref: "#/components/schemas/Device"
+
+    SinkCredential:
+      description: A sink credential provides authentication or authorization information necessary to enable delivery of events to a target.
+      type: object
+      properties:
+        credentialType:
+          type: string
+          enum:
+            - PLAIN
+            - ACCESSTOKEN
+            - REFRESHTOKEN
+          description: "The type of the credential."
+      discriminator:
+        propertyName: credentialType
+        mapping:
+          PLAIN: "#/components/schemas/PlainCredential"
+          ACCESSTOKEN: "#/components/schemas/AccessTokenCredential"
+          REFRESHTOKEN: "#/components/schemas/RefreshTokenCredential"
+      required:
+        - credentialType
+
+    PlainCredential:
+      type: object
+      description: A plain credential as a combination of an identifier and a secret.
+      allOf:
+        - $ref: "#/components/schemas/SinkCredential"
+        - type: object
+          required:
+            - identifier
+            - secret
+          properties:
+            identifier:
+              description: The identifier might be an account or username.
+              type: string
+            secret:
+              description: The secret might be a password or passphrase.
+              type: string
+
+    AccessTokenCredential:
+      type: object
+      description: An access token credential.
+      allOf:
+        - $ref: "#/components/schemas/SinkCredential"
+        - type: object
+          properties:
+            accessToken:
+              description: REQUIRED. An access token is a previously acquired token granting access to the target resource.
+              type: string
+            accessTokenExpiresUtc:
+              type: string
+              format: date-time
+              description: REQUIRED. An absolute UTC instant at which the token shall be considered expired.
+            accessTokenType:
+              description: REQUIRED. Type of the access token (See [OAuth 2.0](https://tools.ietf.org/html/rfc6749#section-7.1)).
+              type: string
+              enum:
+                - bearer
+          required:
+            - accessToken
+            - accessTokenExpiresUtc
+            - accessTokenType
+
+    RefreshTokenCredential:
+      type: object
+      description: An access token credential with a refresh token.
+      allOf:
+        - $ref: "#/components/schemas/SinkCredential"
+        - type: object
+          properties:
+            accessToken:
+              description: REQUIRED. An access token is a previously acquired token granting access to the target resource.
+              type: string
+            accessTokenExpiresUtc:
+              type: string
+              format: date-time
+              description: REQUIRED. An absolute UTC instant at which the token shall be considered expired.
+            accessTokenType:
+              description: REQUIRED. Type of the access token (See [OAuth 2.0](https://tools.ietf.org/html/rfc6749#section-7.1)).
+              type: string
+              enum:
+                - bearer
+            refreshToken:
+              description: REQUIRED. An refresh token credential used to acquire access tokens.
+              type: string
+            refreshTokenEndpoint:
+              type: string
+              format: uri
+              description: REQUIRED. A URL at which the refresh token can be traded for an access token.
+      required:
+        - accessToken
+        - accessTokenExpiresUtc
+        - accessTokenType
+        - refreshToken
+        - refreshTokenEndpoint
 
     Port:
       description: TCP or UDP port number
@@ -674,14 +762,12 @@ components:
             $ref: "#/components/schemas/ErrorInfo"
           examples:
             GENERIC_400_INVALID_ARGUMENT:
-              summary: Generic Invalid Argument
               description: Invalid Argument. Generic Syntax Exception
               value:
                 status: 400
                 code: INVALID_ARGUMENT
                 message: Client specified an invalid argument, request body or query param.
             GENERIC_400_OUT_OF_RANGE:
-              summary: Generic Out of Range
               description: Out of Range. Specific Syntax Exception used when a given field has a pre-defined range or a invalid filter criteria combination is requested
               value:
                 status: 400
@@ -699,14 +785,12 @@ components:
             $ref: "#/components/schemas/ErrorInfo"
           examples:
             GENERIC_401_UNAUTHENTICATED:
-              summary: Generic Unauthenticated
               description: Request cannot be authenticated
               value:
                 status: 401
                 code: UNAUTHENTICATED
                 message: Request not authenticated due to missing, invalid, or expired credentials.
             GENERIC_401_AUTHENTICATION_REQUIRED:
-              summary: Generic Authentication Required
               description: New authentication is needed, authentication is no longer valid
               value:
                 status: 401
@@ -724,15 +808,13 @@ components:
             $ref: "#/components/schemas/ErrorInfo"
           examples:
             GENERIC_403_PERMISSION_DENIED:
-              summary: Generic Permission Denied
               description: Permission denied. OAuth2 token access does not have the required scope or when the user fails operational security
               value:
                 status: 403
                 code: PERMISSION_DENIED
                 message: Client does not have sufficient permissions to perform this action.
             GENERIC_403_INVALID_TOKEN_CONTEXT:
-              summary: Invalid access token context
-              description: Reflects some inconsistency between information in some field of the API and the related OAuth2 Token
+              description: Reflect some inconsistency between information in some field of the API and the related OAuth2 Token
               value:
                 status: 403
                 code: INVALID_TOKEN_CONTEXT
@@ -749,12 +831,11 @@ components:
             $ref: "#/components/schemas/ErrorInfo"
           examples:
             GENERIC_404_NOT_FOUND:
-              summary: Generic Not Found
               description: Resource is not found
               value:
                 status: 404
                 code: NOT_FOUND
-                message: "{{resource}} is not found"
+                message: The specified resource is not found.
 
     GenericDevice404:
       description: Not found
@@ -767,12 +848,11 @@ components:
             $ref: "#/components/schemas/ErrorInfo"
           examples:
             GENERIC_404_NOT_FOUND:
-              summary: Generic Not Found
               description: Resource is not found
               value:
                 status: 404
                 code: NOT_FOUND
-                message: "{{resource}} is not found"
+                message: The specified resource is not found.
             GENERIC_404_DEVICE_NOT_FOUND:
               description: Device identifier not found
               value:
@@ -791,13 +871,29 @@ components:
             $ref: "#/components/schemas/ErrorInfo"
           examples:
             PROVISIONING_409_CONFLICT:
-              summary: Provisioning Conflict
               description: The requested provisioning conflicts with an existing one
               value:
                 status: 409
                 code: CONFLICT
                 message: "There is another existing provisioning for the same device"
 
+    Generic410:
+      description: Gone
+      headers:
+        x-correlator:
+          $ref: "#/components/headers/x-correlator"
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ErrorInfo"
+          examples:
+            GENERIC_410_GONE:
+              description: Use in notifications flow to allow API Consumer to indicate that its callback is no longer available
+              value:
+                status: 410
+                code: GONE
+                message: Access to the target resource is no longer available.
+                
     Generic422:
       description: Unprocessable entity
       headers:
@@ -809,28 +905,24 @@ components:
             $ref: "#/components/schemas/ErrorInfo"
           examples:
             GENERIC_422_UNPROCESSABLE_ENTITY:
-              summary: Unprocessable entity
               description: The request was well-formed but was unable to be processed due to semantic errors or not applicable values. This is the generic error code for 422 responses.
               value:
                 status: 422
                 code: UNPROCESSABLE_ENTITY
                 message: "Value not acceptable: ..."
-            GENERIC_422_DEVICE_NOT_APPLICABLE:
-              summary: Service not applicable to the device
-              description: The provided device is not compatible with the requested operation, according to the service provider rules.
-              value:
-                status: 422
-                code: DEVICE_NOT_APPLICABLE
-                message: "The device is not applicable for the requested operation"
             GENERIC_422_DEVICE_IDENTIFIERS_MISMATCH:
-              summary: Device identifiers mismatch
-              description: Several device identifiers are provided but do not match the same device
+              description: Inconsistency between device identifiers not pointing to the same device
               value:
                 status: 422
                 code: DEVICE_IDENTIFIERS_MISMATCH
-                message: "The provided device identifiers do not match the same device"
+                message: Provided device identifiers are not consistent.
+            GENERIC_422_DEVICE_NOT_APPLICABLE:
+              description: Service is not available for the provided device
+              value:
+                status: 422
+                code: DEVICE_NOT_APPLICABLE
+                message: The service is not available for the provided device.
             GENERIC_422_UNSUPPORTED_DEVICE_IDENTIFIERS:
-              summary: None of the provided device identifiers is supported by the implementation
               description: Message may list the supported device identifiers
               value:
                 status: 422
@@ -877,12 +969,11 @@ components:
             $ref: "#/components/schemas/ErrorInfo"
           examples:
             GENERIC_500_INTERNAL:
-              summary: Generic Internal
               description: Problem in Server side. Regular Server Exception
               value:
                 status: 500
                 code: INTERNAL
-                message: "Internal server error"
+                message: Unknown server error. Typically a server bug.
 
     Generic503:
       description: Service unavailable
@@ -895,12 +986,11 @@ components:
             $ref: "#/components/schemas/ErrorInfo"
           examples:
             GENERIC_503_UNAVAILABLE:
-              summary: Generic Unavailable
               description: Service is not available. Temporary situation usually related to maintenance process in the server side
               value:
                 status: 503
                 code: UNAVAILABLE
-                message: "Service unavailable"
+                message: Service Unavailable.
 
   examples:
     PROVISIONING_AVAILABLE:
@@ -910,8 +1000,12 @@ components:
         device:
           phoneNumber: "+123456789"
         qosProfile: QOS_L
-        webhook:
-          notificationUrl: https://application-server.com
+        sink: https://application-server.com/callback
+        sinkCredential:
+          credentialType: ACCESSTOKEN
+          accessToken: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c"
+          accessTokenExpiresUtc: "2024-12-01T12:00:00Z"
+          accessTokenType: bearer
         provisioningId: 3fa85f64-5717-4562-b3fc-2c963f66afa6
         startedAt: 2024-05-12T17:32:01Z
         status: AVAILABLE
@@ -926,8 +1020,12 @@ components:
             publicAddress: 203.0.113.0
             publicPort: 59765
         qosProfile: QOS_L
-        webhook:
-          notificationUrl: https://application-server.com
+        sink: https://application-server.com/callback
+        sinkCredential:
+          credentialType: ACCESSTOKEN
+          accessToken: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c"
+          accessTokenExpiresUtc: "2024-12-01T12:00:00Z"
+          accessTokenType: bearer
         provisioningId: 3fa85f64-5717-4562-b3fc-2c963f66afa6
         startedAt: 2024-05-12T17:32:01Z
         status: UNAVAILABLE
@@ -938,8 +1036,12 @@ components:
       description: Device is optional in responses and must not be provided if it was not provided in the request
       value:
         qosProfile: QOS_M
-        webhook:
-          notificationUrl: https://application-server.com
+        sink: https://application-server.com/callback
+        sinkCredential:
+          credentialType: ACCESSTOKEN
+          accessToken: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c"
+          accessTokenExpiresUtc: "2024-12-01T12:00:00Z"
+          accessTokenType: bearer
         provisioningId: 3fa85f64-5717-4562-b3fc-2c963f66afa6
         startedAt: 2024-05-12T17:32:01Z
         status: AVAILABLE
