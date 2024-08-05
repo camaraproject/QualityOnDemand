@@ -184,7 +184,7 @@ paths:
                     x-correlator:
                       $ref: '#/components/headers/x-correlator'
                 "400":
-                  $ref: "#/components/responses/Generic400"
+                  $ref: "#/components/responses/CreateSessionBadRequest400"
                 "401":
                   $ref: "#/components/responses/Generic401"
                 "403":
@@ -913,8 +913,8 @@ components:
         - message
 
   responses:
-    Generic400:
-      description: Bad Request
+    CreateSessionBadRequest400:
+      description: Bad Request when creating a session
       headers:
         x-correlator:
           $ref: "#/components/headers/x-correlator"
@@ -941,6 +941,33 @@ components:
                 status: 400
                 code: QUALITY_ON_DEMAND.DURATION_OUT_OF_RANGE
                 message: The requested duration is out of the allowed range for the specific QoS profile
+            GENERIC_400_INVALID_CREDENTIAL:
+              value:
+                status: 400
+                code: "INVALID_CREDENTIAL"
+                message: "Only Access token is supported"
+            GENERIC_400_INVALID_TOKEN:
+              value:
+                status: 400
+                code: "INVALID_TOKEN"
+                message: "Only bearer token is supported"
+
+    Generic400:
+      description: Bad Request
+      headers:
+        x-correlator:
+          $ref: "#/components/headers/x-correlator"
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ErrorInfo"
+          examples:
+            GENERIC_400_INVALID_ARGUMENT:
+              description: Invalid Argument. Generic Syntax Exception
+              value:
+                status: 400
+                code: INVALID_ARGUMENT
+                message: Client specified an invalid argument, request body or query param.
 
     Generic401:
       description: Unauthorized
