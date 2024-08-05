@@ -80,7 +80,7 @@ paths:
     post:
       tags:
         - QoS Profiles
-      summary: Get QoS profiles avaialable for a given device
+      summary: Get QoS profiles available for a given device
       description: |
         Returns all QoS Profiles that match the given criteria.
         **NOTES:**
