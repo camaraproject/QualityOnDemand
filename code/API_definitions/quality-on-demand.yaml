@@ -64,17 +64,45 @@ info:
 
     It is important to remark that in cases where personal user data is processed by the API, and users can exercise their rights through mechanisms such as opt-in and/or opt-out, the use of 3-legged access tokens becomes mandatory. This measure ensures that the API remains in strict compliance with user privacy preferences and regulatory obligations, upholding the principles of transparency and user-centric data control.
 
+    # Identifying a device from the access token
+
+    This specification defines the `device` object field as optional in API requests, specifically in cases where the API is accessed using a 3-legged access token, and the device can be uniquely identified by the token. This approach simplifies API usage for API consumers by relying on the device information associated with the access token used to invoke the API.
+
+    ## Handling of device information:
+
+    ### Optional device object for 3-legged tokens:
+
+    - When using a 3-legged access token, the device associated with the access token must be considered as the device for the API request. This means that the device object is not required in the request, and if included it must identify the same device, therefore **it is recommended NOT to include it in these scenarios** to simplify the API usage and avoid additional validations.
+
+    ### Validation mechanism:
+
+    - The server will extract the device identification from the access token, if available.
+    - If the API request additionally includes a `device` object when using a 3-legged access token, the API will validate that the device identifier provided matches the one associated with the access token.
+    - If there is a mismatch, the API will respond with a 403 - INVALID_TOKEN_CONTEXT error, indicating that the device information in the request does not match the token.
+
+    ### Error handling for unidentifiable devices:
+
+    - If the `device` object is not included in the request and the device information cannot be derived from the 3-legged access token, the server will return a 422 `UNIDENTIFIABLE_DEVICE` error.
+
+    ### Restrictions for tokens without an associated authenticated identifier:
+
+    - For scenarios which do not have a single device identifier associated to the token during the authentication flow, e.g. 2-legged access tokens, the `device` object MUST be provided in the API request. This ensures that the device identification is explicit and valid for each API call made with these tokens.
+
     # Further info and support
 
     (FAQs will be added in a later version of the documentation)
+
+  version: wip
+
   license:
     name: Apache 2.0
     url: https://www.apache.org/licenses/LICENSE-2.0.html
-  version: wip
+
+  x-camara-commonalities: 0.4.0
 
 externalDocs:
-  description: Product documentation at Camara
-  url: https://github.com/camaraproject/
+  description: Project documentation at Camara
+  url: https://github.com/camaraproject/QualityOnDemand
 
 servers:
   - url: "{apiRoot}/quality-on-demand/vwip"
@@ -109,7 +137,9 @@ paths:
         - In case of a `QOS_STATUS_CHANGED` event with `qosStatus` as `UNAVAILABLE` and `statusInfo` as `NETWORK_TERMINATED` the resources of the QoS session are not directly released, but will get deleted automatically at earliest 360 seconds after the event.
 
           This behavior allows clients which are not receiving notification events but are polling to get the session information with the `qosStatus` `UNAVAILABLE` and `statusInfo` `NETWORK_TERMINATED`. Before a client can attempt to create a new QoD session for the same device and flow period they must release the session resources with an explicit `delete` operation if not yet automatically deleted.
-        - The access token may be either 2-legged or 3-legged. If a 3-legged access token is used, the end user identified by the `device` parameter must also be associated with the access token.
+        - The access token may be either 2-legged or 3-legged.
+          - If a 3-legged access token which is associated with a device is used, it is recommended NOT to include the `device` parameter in the request (see "Handling of device information" within the API description for details).
+          - If a 2-legged access token is used, the device parameter must be provided and identify a device.
 
       operationId: createSession
       security:
@@ -179,87 +209,21 @@ paths:
               schema:
                 $ref: "#/components/schemas/SessionInfo"
         "400":
-          description: Invalid input for createSession operation
-          headers:
-            x-correlator:
-              $ref: '#/components/headers/x-correlator'
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/ErrorInfo"
-              examples:
-                Generic400:
-                  summary: Some parameter combinations or parameter values provided are not schema compliant
-                  value:
-                    status: 400
-                    code: INVALID_ARGUMENT
-                    message: "Schema validation failed at  ..."
-                DeviceMissing:
-                  summary: Device must be specified
-                  value:
-                    status: 400
-                    code: INVALID_ARGUMENT
-                    message: "Expected property is missing: device"
-                InsufficientDeviceProperties:
-                  summary: Device must be identified by at least one parameter
-                  value:
-                    status: 400
-                    code: INVALID_ARGUMENT
-                    message: "Insufficient properties specified: device"
-                InconsistentDeviceProperties:
-                  summary: Device parameters provided identify different devices
-                  value:
-                    status: 400
-                    code: INVALID_ARGUMENT
-                    message: "Multiple inconsistent parameters specified: device"
-                CannotIdentifyDevice:
-                  summary: No device can be identified from provided parameters
-                  value:
-                    status: 400
-                    code: INVALID_ARGUMENT
-                    message: "Unable to identify device from specified parameters: device"
-                InvalidDevicePublicPortValue:
-                  summary: Invalid port specified for device public port
-                  value:
-                    status: 400
-                    code: OUT_OF_RANGE
-                    message: "Invalid port value specified: device.ipv4Address.publicPort"
-                ApplicationServerMissing:
-                  summary: Application server must be specified
-                  value:
-                    status: 400
-                    code: INVALID_ARGUMENT
-                    message: "Expected property is missing: applicationServer"
-                QoSProfileMissing:
-                  summary: Required QoS profile must be specified
-                  value:
-                    status: 400
-                    code: INVALID_ARGUMENT
-                    message: "Expected property is missing: qosProfile"
-                InvalidDevicePortsRanges:
-                  summary: Invalid port ranges specified for devicePorts
-                  value:
-                    status: 400
-                    code: OUT_OF_RANGE
-                    message: "Invalid port ranges specified: devicePorts"
-                DurationOutOfRangeForQoSProfile:
-                  summary: The requested duration is out of the allowed range for the specific QoS profile
-                  value:
-                    status: 400
-                    code: OUT_OF_RANGE
-                    message: "The requested duration is out of the allowed range for the specific QoS profile"
+          $ref: "#/components/responses/Generic400"
         "401":
           $ref: "#/components/responses/Generic401"
         "403":
           $ref: "#/components/responses/Generic403"
+        "404":
+          $ref: "#/components/responses/GenericDevice404"
         "409":
           $ref: "#/components/responses/SessionInConflict409"
+        "422":
+          $ref: "#/components/responses/Generic422"
         "429":
           $ref: "#/components/responses/Generic429"
         "500":
           $ref: "#/components/responses/Generic500"
-        "501":
-          $ref: "#/components/responses/Generic501"
         "503":
           $ref: "#/components/responses/Generic503"
 
@@ -272,7 +236,9 @@ paths:
         Querying for QoS session resource information details
 
         **NOTES:**
-        - The access token may be either 2-legged or 3-legged. If a 3-legged access token is used, the end user associated with the session must also be associated with the access token.
+        - The access token may be either 2-legged or 3-legged.
+        - If a 3-legged access token is used, the end user (and device) associated with the session must also be associated with the access token.
+        - The session must have been created by the same API client given in the access token
 
       operationId: getSession
       security:
@@ -308,7 +274,7 @@ paths:
         "403":
           $ref: "#/components/responses/Generic403"
         "404":
-          $ref: "#/components/responses/SessionNotFound404"
+          $ref: "#/components/responses/Generic404"
         "429":
           $ref: "#/components/responses/Generic429"
         "500":
@@ -329,7 +295,9 @@ paths:
         There will be no notification event if the `qosStatus` was already `UNAVAILABLE`.
 
         **NOTES:**
-        - The access token may be either 2-legged or 3-legged. If a 3-legged access token is used, the end user associated with the session must also be associated with the access token.
+        - The access token may be either 2-legged or 3-legged.
+        - If a 3-legged access token is used, the end user (and device) associated with the session must also be associated with the access token.
+        - The session must must have been created by the same API client given in the access token
 
       operationId: deleteSession
       security:
@@ -356,7 +324,7 @@ paths:
         "403":
           $ref: "#/components/responses/Generic403"
         "404":
-          $ref: "#/components/responses/SessionNotFound404"
+          $ref: "#/components/responses/Generic404"
         "429":
           $ref: "#/components/responses/Generic429"
         "500":
@@ -378,7 +346,9 @@ paths:
         - New overall session duration: 50,000 seconds (the maximum allowed)
 
         **NOTES:**
-        - The access token may be either 2-legged or 3-legged. If a 3-legged access token is used, the end user associated with the session must also be associated with the access token.
+        - The access token may be either 2-legged or 3-legged.
+        - If a 3-legged access token is used, the end user (and device) associated with the session must also be associated with the access token.
+        - The session must must have been created by the same API client given in the access token
 
       operationId: extendQosSessionDuration
       security:
@@ -410,33 +380,13 @@ paths:
               schema:
                 $ref: "#/components/schemas/SessionInfo"
         "400":
-          description: Invalid input for extendQosSessionDuration operation
-          headers:
-            x-correlator:
-              $ref: '#/components/headers/x-correlator'
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/ErrorInfo"
-              examples:
-                Generic400:
-                  summary: Some parameter combinations or parameter values provided are not schema compliant
-                  value:
-                    status: 400
-                    code: INVALID_ARGUMENT
-                    message: "Schema validation failed at  ..."
-                InactiveSession:
-                  summary: The target session is inactive
-                  value:
-                    status: 400
-                    code: INVALID_ARGUMENT
-                    message: "The target session is inactive"
+          $ref: "#/components/responses/Generic400"
         "401":
           $ref: "#/components/responses/Generic401"
         "403":
           $ref: "#/components/responses/Generic403"
         "404":
-          $ref: "#/components/responses/SessionNotFound404"
+          $ref: "#/components/responses/Generic404"
         "429":
           $ref: "#/components/responses/Generic429"
         "500":
@@ -503,12 +453,14 @@ components:
           allOf:
             - $ref: "#/components/schemas/SinkCredential"
       required:
-        - device
         - applicationServer
         - qosProfile
 
     SessionInfo:
-      description: Session related information.
+      description: |
+        Session related information returned in responses.
+        Optional device object only to be returned if provided in createSession. If more than one type of device identifier was provided, only one identifier will be returned (at implementation choice and with the original value provided in createSession).
+        Please note that IP addresses of devices can change and get reused, so the original values may no longer identify the same device. They identified the device at the time of session creation.
       allOf:
         - $ref: "#/components/schemas/BaseSessionInfo"
         - type: object
@@ -817,7 +769,8 @@ components:
         * `phoneNumber`
         * `networkAccessIdentifier`
 
-        NOTE: the MNO might support only a subset of these options. The API invoker can provide multiple identifiers to be compatible across different MNOs. In this case the identifiers MUST belong to the same device
+        NOTE1: the network operator might support only a subset of these options. The API invoker can provide multiple identifiers to be compatible across different network operators. In this case the identifiers MUST belong to the same device
+        NOTE2: for the Commonalities release v0.4, we are enforcing that the networkAccessIdentifier is only part of the schema for future-proofing, and CAMARA does not currently allow its use. After the CAMARA meta-release work is concluded and the relevant issues are resolved, its use will need to be explicitly documented in the guidelines.
       type: object
       properties:
         phoneNumber:
@@ -961,60 +914,119 @@ components:
 
   responses:
     Generic400:
-      description: Invalid input
+      description: Bad Request
       headers:
         x-correlator:
-          $ref: '#/components/headers/x-correlator'
+          $ref: "#/components/headers/x-correlator"
       content:
         application/json:
           schema:
             $ref: "#/components/schemas/ErrorInfo"
-          example:
-            status: 400
-            code: INVALID_ARGUMENT
-            message: "Schema validation failed at  ..."
+          examples:
+            GENERIC_400_INVALID_ARGUMENT:
+              description: Invalid Argument. Generic Syntax Exception
+              value:
+                status: 400
+                code: INVALID_ARGUMENT
+                message: Client specified an invalid argument, request body or query param.
+            GENERIC_400_OUT_OF_RANGE:
+              description: Out of Range. Specific Syntax Exception used when a given field has a pre-defined range or a invalid filter criteria combination is requested
+              value:
+                status: 400
+                code: OUT_OF_RANGE
+                message: Client specified an invalid range.
+            DurationOutOfRangeForQoSProfile:
+              description: The requested duration is out of the allowed range for the specific QoS profile
+              value:
+                status: 400
+                code: QUALITY_ON_DEMAND.DURATION_OUT_OF_RANGE
+                message: The requested duration is out of the allowed range for the specific QoS profile
 
     Generic401:
       description: Unauthorized
       headers:
         x-correlator:
-          $ref: '#/components/headers/x-correlator'
+          $ref: "#/components/headers/x-correlator"
       content:
         application/json:
           schema:
             $ref: "#/components/schemas/ErrorInfo"
-          example:
-            status: 401
-            code: UNAUTHENTICATED
-            message: "Authorization failed: ..."
+          examples:
+            GENERIC_401_UNAUTHENTICATED:
+              description: Request cannot be authenticated
+              value:
+                status: 401
+                code: UNAUTHENTICATED
+                message: Request not authenticated due to missing, invalid, or expired credentials.
+            GENERIC_401_AUTHENTICATION_REQUIRED:
+              description: New authentication is needed, authentication is no longer valid
+              value:
+                status: 401
+                code: AUTHENTICATION_REQUIRED
+                message: New authentication is required.
 
     Generic403:
       description: Forbidden
       headers:
         x-correlator:
-          $ref: '#/components/headers/x-correlator'
+          $ref: "#/components/headers/x-correlator"
       content:
         application/json:
           schema:
             $ref: "#/components/schemas/ErrorInfo"
-          example:
-            status: 403
-            code: PERMISSION_DENIED
-            message: "Operation not allowed: ..."
+          examples:
+            GENERIC_403_PERMISSION_DENIED:
+              description: Permission denied. OAuth2 token access does not have the required scope or when the user fails operational security
+              value:
+                status: 403
+                code: PERMISSION_DENIED
+                message: Client does not have sufficient permissions to perform this action.
+            GENERIC_403_INVALID_TOKEN_CONTEXT:
+              description: Reflect some inconsistency between information in some field of the API and the related OAuth2 Token
+              value:
+                status: 403
+                code: INVALID_TOKEN_CONTEXT
+                message: "{{field}} is not consistent with access token."
 
-    SessionNotFound404:
-      description: Session not found
+    Generic404:
+      description: Not found
       headers:
         x-correlator:
-          $ref: '#/components/headers/x-correlator'
+          $ref: "#/components/headers/x-correlator"
       content:
         application/json:
           schema:
             $ref: "#/components/schemas/ErrorInfo"
-          example:
-            status: 404
-            code: NOT_FOUND
-            message: "Session Id does not exist"
+          examples:
+            GENERIC_404_NOT_FOUND:
+              description: Resource is not found
+              value:
+                status: 404
+                code: NOT_FOUND
+                message: The specified resource is not found.
+
+    GenericDevice404:
+      description: Not found
+      headers:
+        x-correlator:
+          $ref: "#/components/headers/x-correlator"
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ErrorInfo"
+          examples:
+            GENERIC_404_NOT_FOUND:
+              description: Resource is not found
+              value:
+                status: 404
+                code: NOT_FOUND
+                message: The specified resource is not found.
+            GENERIC_404_DEVICE_NOT_FOUND:
+              description: Device identifier not found
+              value:
+                status: 404
+                code: DEVICE_NOT_FOUND
+                message: Device identifier not found.
 
     SessionInConflict409:
       description: Conflict
@@ -1046,6 +1058,35 @@ components:
                 status: 410
                 code: GONE
                 message: Access to the target resource is no longer available.
+
+    Generic422:
+      description: Unprocessable Content
+      headers:
+        x-correlator:
+          $ref: "#/components/headers/x-correlator"
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ErrorInfo"
+          examples:
+            GENERIC_422_DEVICE_IDENTIFIERS_MISMATCH:
+              description: Inconsistency between device identifiers not pointing to the same device
+              value:
+                status: 422
+                code: DEVICE_IDENTIFIERS_MISMATCH
+                message: Provided device identifiers are not consistent.
+            GENERIC_422_DEVICE_NOT_APPLICABLE:
+              description: Service is not available for the provided device
+              value:
+                status: 422
+                code: DEVICE_NOT_APPLICABLE
+                message: The service is not available for the provided device.
+            GENERIC_422_UNIDENTIFIABLE_DEVICE:
+              description: Service is not available for the provided device
+              value:
+                status: 422
+                code: UNIDENTIFIABLE_DEVICE
+                message: The device cannot be identified.
 
     Generic429:
       description: Too Many Requests
@@ -1083,23 +1124,6 @@ components:
             status: 500
             code: INTERNAL
             message: "Internal server error: ..."
-
-    Generic501:
-      description: Not Implemented
-      headers:
-        x-correlator:
-          $ref: '#/components/headers/x-correlator'
-      content:
-        application/json:
-          schema:
-            $ref: "#/components/schemas/ErrorInfo"
-          examples:
-            GENERIC_501_NOT_IMPLEMENTED:
-              description: Service not implemented. The use of this code should be avoided as far as possible to get the objective to reach aligned implementations
-              value:
-                status: 501
-                code: NOT_IMPLEMENTED
-                message: This functionality is not implemented yet.
 
     Generic503:
       description: Service Unavailable
