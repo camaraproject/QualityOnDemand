@@ -37,9 +37,9 @@ info:
     * **Duration**:
     Duration (in seconds) for which the QoS session (between application client and application server) should be created. Limits for session duration can be set by the implementation for the QoS profile. The user may request a termination before its expiration.
 
-    * **Sink URL and credentials**:
-    Developers may provide a callback URL (`sink` param) on which notifications about all status change events of the session (eg. session termination) can be received from the service provider. This is an optional parameter.
-    Additionally, sink credentials may be provided to authenticate and authorize the delivery of events to the sink. In order to be updated in future this object is polymorphic. See detail below. It is RECOMMENDED for subscription consumer to provide credential to protect notification endpoint.
+     * **Notification URL and token**:
+    Developers may provide a callback URL (`sink`) on which notifications about all status change events (eg. provisioning termination) can be received from the service provider. This is an optional parameter. The notification will be sent as a CloudEvent compliant message. 
+    If `sink` is included, it is RECOMMENDED for the client to provide as well the `sinkCredential` property to protect the notification endpoint. In the current version,`sinkCredential.credentialType` MUST be set to `ACCESSTOKEN` if provided.
 
     # API functionality
 
@@ -159,6 +159,8 @@ paths:
                   $ref: "#/components/responses/Generic401"
                 "403":
                   $ref: "#/components/responses/Generic403"
+                "410":
+                  $ref: "#/components/responses/Generic410"
                 "500":
                   $ref: "#/components/responses/Generic500"
                 "503":
@@ -451,7 +453,7 @@ components:
       description: Bearer authentication for notifications
       type: http
       scheme: bearer
-      bearerFormat: "{$request.body#/webhook/notificationAuthToken}"
+      bearerFormat: "{$request.body#sinkCredential.credentialType}"
 
   parameters:
     x-correlator:
@@ -1027,6 +1029,23 @@ components:
             status: 409
             code: CONFLICT
             message: Conflict with an existing session for the same device.
+
+    Generic410:
+      description: Gone
+      headers:
+        x-correlator:
+          $ref: "#/components/headers/x-correlator"
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ErrorInfo"
+          examples:
+            GENERIC_410_GONE:
+              description: Use in notifications flow to allow API Consumer to indicate that its callback is no longer available
+              value:
+                status: 410
+                code: GONE
+                message: Access to the target resource is no longer available.
 
     Generic429:
       description: Too Many Requests
