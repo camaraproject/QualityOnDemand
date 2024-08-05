@@ -606,12 +606,6 @@ components:
                 status: 404
                 code: NOT_FOUND
                 message: The specified resource is not found.
-            GENERIC_404_DEVICE_NOT_FOUND:
-              description: Device identifier not found
-              value:
-                status: 404
-                code: DEVICE_NOT_FOUND
-                message: Device identifier not found.
 
     GenericDevice404:
       description: Not found
