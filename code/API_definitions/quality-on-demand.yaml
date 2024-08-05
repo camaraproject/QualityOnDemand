@@ -37,8 +37,9 @@ info:
     * **Duration**:
     Duration (in seconds) for which the QoS session (between application client and application server) should be created. Limits for session duration can be set by the implementation for the QoS profile. The user may request a termination before its expiration.
 
-    * **Notification URL and token**:
-    Developers may provide a callback URL on which notifications about all status change events of the session (eg. session termination) can be received from the service provider. This is an optional parameter.
+    * **Sink URL and credentials**:
+    Developers may provide a callback URL (`sink` param) on which notifications about all status change events of the session (eg. session termination) can be received from the service provider. This is an optional parameter.
+    Additionally, sink credentials may be provided to authenticate and authorize the delivery of events to the sink.
 
     # API functionality
 
@@ -49,7 +50,7 @@ info:
     * The prioritized App-Flow is described by providing information such as device IP address (or other device identifier) & application server IP addresses and port/port-ranges.
     * The developer can optionally specify the duration for which they need the prioritized App-flow.
     * Stable latency or throughput is requested by selecting from the list of QoS profiles made available by the service provider (e.g. QOS_E) to map latency and throughput requirements.
-    * The developer can optionally also specify callback URL on which notifications for the session can be sent. <br>
+    * The developer can optionally also specify callback URL (`sink` param) on which notifications for the session can be sent. <br>
 
     Following diagram shows the interaction between different components
 
@@ -125,7 +126,7 @@ paths:
         required: true
       callbacks:
         notifications:
-          "{$request.body#/webhook/notificationUrl}":
+          "{$request.body#/sink}":
             post:
               tags:
                 - Session notifications callback
@@ -490,23 +491,15 @@ components:
             - $ref: "#/components/schemas/PortsSpec"
         qosProfile:
           $ref: "#/components/schemas/QosProfileName"
-        webhook:
-          description: Callback URL on which notifications about all status change events of the session (eg. session termination) can be received
-          type: object
-          required:
-            - notificationUrl
-          properties:
-            notificationUrl:
-              type: string
-              format: uri
-              example: "https://application-server.com"
-              description: Allows asynchronous delivery of session related events
-            notificationAuthToken:
-              type: string
-              minLength: 20
-              maxLength: 256
-              example: "c8974e592c2fa383d4a3960714"
-              description: Authentication token for callback API
+        sink:
+          type: string
+          format: url
+          description: The address to which events about all status change events of the session (e.g. session termination) shall be delivered.
+          example: "https://endpoint.example.com/sink"
+        sinkCredential:
+          description: A sink credential provides authentication or authorization information necessary to enable delivery of events to a target.
+          allOf:
+            - $ref: "#/components/schemas/SinkCredential"
       required:
         - device
         - applicationServer
@@ -609,6 +602,99 @@ components:
           - 5060
           - 5070
 
+    SinkCredential:
+      type: object
+      properties:
+        credentialType:
+          type: string
+          enum:
+            - PLAIN
+            - ACCESSTOKEN
+            - REFRESHTOKEN
+          description: "The type of the credential."
+      discriminator:
+        propertyName: credentialType
+        mapping:
+          PLAIN: "#/components/schemas/PlainCredential"
+          ACCESSTOKEN: "#/components/schemas/AccessTokenCredential"
+          REFRESHTOKEN: "#/components/schemas/RefreshTokenCredential"
+      required:
+        - credentialType
+
+    PlainCredential:
+      type: object
+      description: A plain credential as a combination of an identifier and a secret.
+      allOf:
+        - $ref: "#/components/schemas/SinkCredential"
+        - type: object
+          required:
+            - identifier
+            - secret
+          properties:
+            identifier:
+              description: The identifier might be an account or username.
+              type: string
+            secret:
+              description: The secret might be a password or passphrase.
+              type: string
+
+    AccessTokenCredential:
+      type: object
+      description: An access token credential.
+      allOf:
+        - $ref: "#/components/schemas/SinkCredential"
+        - type: object
+          properties:
+            accessToken:
+              description: REQUIRED. An access token is a previously acquired token granting access to the target resource.
+              type: string
+            accessTokenExpiresUtc:
+              type: string
+              format: date-time
+              description: REQUIRED. An absolute UTC instant at which the token shall be considered expired.
+            accessTokenType:
+              description: REQUIRED. Type of the access token (See [OAuth 2.0](https://tools.ietf.org/html/rfc6749#section-7.1)).
+              type: string
+              enum:
+                - bearer
+          required:
+            - accessToken
+            - accessTokenExpiresUtc
+            - accessTokenType
+
+    RefreshTokenCredential:
+      type: object
+      description: An access token credential with a refresh token.
+      allOf:
+        - $ref: "#/components/schemas/SinkCredential"
+        - type: object
+          properties:
+            accessToken:
+              description: REQUIRED. An access token is a previously acquired token granting access to the target resource.
+              type: string
+            accessTokenExpiresUtc:
+              type: string
+              format: date-time
+              description: REQUIRED. An absolute UTC instant at which the token shall be considered expired.
+            accessTokenType:
+              description: REQUIRED. Type of the access token (See [OAuth 2.0](https://tools.ietf.org/html/rfc6749#section-7.1)).
+              type: string
+              enum:
+                - bearer
+            refreshToken:
+              description: REQUIRED. An refresh token credential used to acquire access tokens.
+              type: string
+            refreshTokenEndpoint:
+              type: string
+              format: uri
+              description: REQUIRED. A URL at which the refresh token can be traded for an access token.
+      required:
+        - accessToken
+        - accessTokenExpiresUtc
+        - accessTokenType
+        - refreshToken
+        - refreshTokenEndpoint
+
     ExtendSessionDuration:
       description: Attributes required to extend the duration of an active session
       type: object
@@ -659,7 +745,7 @@ components:
           description: The type of the event.
           type: string
           enum:
-            - 'org.camaraproject.qod.v0.qos-status-changed'
+            - "org.camaraproject.quality-on-demand.v0.qos-status-changed"
         specversion:
           description: Version of the specification to which this event conforms (must be 1.0 if it conforms to cloudevents 1.0.2 version)
           type: string
@@ -681,7 +767,7 @@ components:
       discriminator:
         propertyName: 'type'
         mapping:
-          org.camaraproject.qod.v0.qos-status-changed: '#/components/schemas/EventQosStatusChanged'
+          org.camaraproject.quality-on-demand.v0.qos-status-changed: "#/components/schemas/EventQosStatusChanged"
 
     EventQosStatusChanged:
       description: Event to notify a QoS status change
@@ -1026,8 +1112,7 @@ components:
         applicationServer:
           ipv4Address: 198.51.100.0/24
         qosProfile: QOS_L
-        webhook:
-          notificationUrl: https://application-server.com
+        sink: https://application-server.com/notifications
         sessionId: 3fa85f64-5717-4562-b3fc-2c963f66afa6
         startedAt: "2024-06-01T12:00:00Z"
         expiresAt: "2024-06-01T13:00:00Z"
@@ -1045,8 +1130,7 @@ components:
         applicationServer:
           ipv4Address: 198.51.100.0/24
         qosProfile: QOS_L
-        webhook:
-          notificationUrl: https://application-server.com
+        sink: https://application-server.com/notifications
         sessionId: 3fa85f64-5717-4562-b3fc-2c963f66afa6
         startedAt: "2024-06-01T12:00:00Z"
         expiresAt: "2024-06-01T12:40:28Z"
@@ -1060,7 +1144,7 @@ components:
         id: 83a0d986-0866-4f38-b8c0-fc65bfcda452
         source: 'https://api.example.com/qod/v0/sessions/123e4567-e89b-12d3-a456-426614174000'
         specversion: '1.0'
-        type: 'org.camaraproject.qod.v0.qos-status-changed'
+        type: "org.camaraproject.quality-on-demand.v0.qos-status-changed"
         time: '2024-06-01T13:00:00Z'
         data:
           sessionId: '123e4567-e89b-12d3-a456-426614174000'
