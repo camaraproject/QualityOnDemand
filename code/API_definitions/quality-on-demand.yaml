@@ -611,7 +611,7 @@ components:
             - PLAIN
             - ACCESSTOKEN
             - REFRESHTOKEN
-          description: "The type of the credential."
+          description: "The type of the credential. With the current API version the type MUST be set to `ACCESSTOKEN`"
       discriminator:
         propertyName: credentialType
         mapping:
