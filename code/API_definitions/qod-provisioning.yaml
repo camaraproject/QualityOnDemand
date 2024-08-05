@@ -403,7 +403,7 @@ components:
           description: The address to which events shall be delivered using the selected protocol.
           example: "https://endpoint.example.com/sink"
         sinkCredential:
-          $ref: "#/components/schemas/SinkCredential"        
+          $ref: "#/components/schemas/SinkCredential"
       required:
         - qosProfile
 
@@ -893,7 +893,7 @@ components:
                 status: 410
                 code: GONE
                 message: Access to the target resource is no longer available.
-                
+
     Generic422:
       description: Unprocessable entity
       headers:
