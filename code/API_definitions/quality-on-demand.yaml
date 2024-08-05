@@ -212,7 +212,7 @@ paths:
         "403":
           $ref: "#/components/responses/Generic403"
         "404":
-          $ref: "#/components/responses/Generic404"
+          $ref: "#/components/responses/GenericDevice404"
         "409":
           $ref: "#/components/responses/SessionInConflict409"
         "422":
@@ -901,6 +901,23 @@ components:
                 message: "{{field}} is not consistent with access token."
 
     Generic404:
+      description: Not found
+      headers:
+        x-correlator:
+          $ref: "#/components/headers/x-correlator"
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ErrorInfo"
+          examples:
+            GENERIC_404_NOT_FOUND:
+              description: Resource is not found
+              value:
+                status: 404
+                code: NOT_FOUND
+                message: The specified resource is not found.
+
+    GenericDevice404:
       description: Not found
       headers:
         x-correlator:
