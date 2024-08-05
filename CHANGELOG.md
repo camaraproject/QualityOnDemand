@@ -1,8 +1,8 @@
 # Changelog QualityOnDemand
 
 ## Table of Contents
-
-- **[v0.10.1](#v0101)**
+- [r1.1](#r11)
+- [v0.10.1](#v0101)
 - [v0.10.0](#v0100)
 - [v0.10.0-rc2](#v0100-rc2)
 - [v0.10.0-rc](#v0100-rc)
@@ -15,6 +15,85 @@
 Version numbers 0.2.x to 0.7.x were intentionally not used to avoid conflicts with local implementations.
 
 **Please be aware that the project will have frequent updates to the main branch. There are no compatibility guarantees associated with code in any branch, including main, until it has been released. For example, changes may be reverted before a release is published. For the best results, use the latest published release.**
+
+# r1.1
+## Release Notes
+
+This release contains the definition and documentation of
+* quality-on-demand v0.11.0-rc.1
+* qos-profiles v0.11.0-rc.1
+* qod-provisioning v0.1.0-rc.1
+
+The API definition(s) are based on
+* Commonalities v0.4.0-rc.1
+* Identity and Consent Management v0.2.0-rc.2
+
+Note: the previous qod v0.10.1 API with endpoints for QoS Sessions and QoS Profiles has been split into two APIs. There are additional breaking changes.
+
+## quality-on-demand v0.11.0-rc.1
+
+**quality-on-demand v0.11.0-rc.1 is the 1st release candidate of the version 0.11.0**
+Version 0.11.0 provides the QoS Sessions endpoints from v0.10.1, adds one endpoint /retrieve-sessions, and is aligned with Commonalities 0.4.0 and Identity and Consent Management 0.2.0.
+There are breaking changes compared to v0.10.1.
+
+- API definition **with inline documentation**:
+  - [View it on ReDoc](https://redocly.github.io/redoc/?url=https://raw.githubusercontent.com/camaraproject/QualityOnDemand/r1.1/code/API_definitions/quality-on-demand.yaml&nocors)
+  - [View it on Swagger Editor](https://editor.swagger.io/?url=https://raw.githubusercontent.com/camaraproject/QualityOnDemand/r1.1/code/API_definitions/quality-on-demand.yaml)
+  - OpenAPI [YAML spec file](https://github.com/camaraproject/QualityOnDemand/blob/r1.1/code/API_definitions/quality-on-demand.yaml)
+
+### Added
+* ...
+
+### Changed
+* ...
+
+### Fixed
+* ...
+
+### Removed
+* ...
+
+## qos-profiles v0.11.0-rc.1
+
+**qos-profiles v0.11.0-rc.1 is the 1st release candidate of the version 0.11.0**
+
+- API definition **with inline documentation**:
+  - [View it on ReDoc](https://redocly.github.io/redoc/?url=https://raw.githubusercontent.com/camaraproject/QualityOnDemand/r1.1/code/API_definitions/qos-profiles.yaml&nocors)
+  - [View it on Swagger Editor](https://editor.swagger.io/?url=https://raw.githubusercontent.com/camaraproject/QualityOnDemand/r1.1/code/API_definitions/qos-profiles.yaml)
+  - OpenAPI [YAML spec file](https://github.com/camaraproject/QualityOnDemand/blob/r1.1/code/API_definitions/qos-profiles.yaml)
+
+### Added
+* ...
+
+### Changed
+* ...
+
+### Fixed
+* ...
+
+### Removed
+* ...
+
+## qod-provisioning v0.1.0-rc.1
+
+**qod-provisioning v0.1.0-rc.1 is the 1st release candidate of the first initial version 0.1.0 of the API**
+
+- API definition **with inline documentation**:
+  - [View it on ReDoc](https://redocly.github.io/redoc/?url=https://raw.githubusercontent.com/camaraproject/QualityOnDemand/r1.1/code/API_definitions/qod-provisioning.yaml&nocors)
+  - [View it on Swagger Editor](https://editor.swagger.io/?url=https://raw.githubusercontent.com/camaraproject/QualityOnDemand/r1.1/code/API_definitions/qod-provisioning.yaml)
+  - OpenAPI [YAML spec file](https://github.com/camaraproject/QualityOnDemand/blob/r1.1/code/API_definitions/qod-provisioning.yaml)
+
+### Added
+* ...
+
+### Changed
+* ...
+
+### Fixed
+* ...
+
+### Removed
+* ...
 
 # v0.10.1
 
