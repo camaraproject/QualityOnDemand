@@ -1,7 +1,7 @@
 # Changelog QualityOnDemand
 
 ## Table of Contents
-- [r1.1](#r11)
+- **[r1.1](#r11)**
 - [v0.10.1](#v0101)
 - [v0.10.0](#v0100)
 - [v0.10.0-rc2](#v0100-rc2)
