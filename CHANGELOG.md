@@ -32,9 +32,9 @@ Note: the previous qod v0.10.1 API with endpoints for QoS Sessions and QoS Profi
 
 ## quality-on-demand v0.11.0-rc.1
 
-**quality-on-demand v0.11.0-rc.1 is the 1st release candidate of the version 0.11.0**
-Version 0.11.0 provides the QoS Sessions endpoints from v0.10.1, adds one endpoint /retrieve-sessions, and is aligned with Commonalities 0.4.0 and Identity and Consent Management 0.2.0.
-There are breaking changes compared to v0.10.1.
+**quality-on-demand v0.11.0-rc.1 is the first release candidate of the version 0.11.0**
+
+Version 0.11.0 provides the QoS Sessions endpoints from v0.10.1, adds one endpoint /retrieve-sessions, and is aligned with Commonalities 0.4.0 and Identity and Consent Management 0.2.0. **There are breaking changes compared to v0.10.1.**
 
 - API definition **with inline documentation**:
   - [View it on ReDoc](https://redocly.github.io/redoc/?url=https://raw.githubusercontent.com/camaraproject/QualityOnDemand/r1.1/code/API_definitions/quality-on-demand.yaml&nocors)
@@ -42,20 +42,35 @@ There are breaking changes compared to v0.10.1.
   - OpenAPI [YAML spec file](https://github.com/camaraproject/QualityOnDemand/blob/r1.1/code/API_definitions/quality-on-demand.yaml)
 
 ### Added
-* ...
+* New operation retrieveSessions to get a list of sessions for a given device by @jlurien in https://github.com/camaraproject/QualityOnDemand/pull/325
+* Added the `statusInfo` as parameter to `SessionInfo`  by @maxl2287 in https://github.com/camaraproject/QualityOnDemand/pull/273
+* Added x-correlator header to requests and responses by @jlurien in https://github.com/camaraproject/QualityOnDemand/pull/283
+* Added security scheme and scopes for each endpoint / method by @eric-murray in https://github.com/camaraproject/QualityOnDemand/pull/295
+
 
 ### Changed
-* ...
+* Made + prefix mandatory for phoneNumber by @jlurien in https://github.com/camaraproject/QualityOnDemand/pull/301
+* Clarification of concepts and properties related to the management of session duration and session extension by @jlurien in https://github.com/camaraproject/QualityOnDemand/pull/296
+* Updated Authorization and Authentication text to ICM release 0.2.0 wording by @eric-murray in https://github.com/camaraproject/QualityOnDemand/pull/327
+* Aligned quality-on-demand further with Commonalties 0.4.0 by @hdamker in https://github.com/camaraproject/QualityOnDemand/pull/326
+  * Added documentation about "Handling of device information" within the info description. 
+  * Made device parameter optional within createSession
+  * Aligned Device object and info object with Commonalities
+  * Updated Schemata for error responses according to Commonalities
 
 ### Fixed
-* ...
+* Removed unresolved documentation reference within quality-on-demand.yaml by @hdamker in https://github.com/camaraproject/QualityOnDemand/pull/324
 
 ### Removed
-* ...
+* Removed unused `messages` object in the `SessionInfo` schema by @sfnuser in https://github.com/camaraproject/QualityOnDemand/pull/312
+* Removed TermsOfService and Contact from APIs since they are optional and did not provide useful information by @RandyLevensalor in https://github.com/camaraproject/QualityOnDemand/pull/311
+* Removed cucumber directory and its content by @hdamker in https://github.com/camaraproject/QualityOnDemand/pull/323 
 
 ## qos-profiles v0.11.0-rc.1
 
-**qos-profiles v0.11.0-rc.1 is the 1st release candidate of the version 0.11.0**
+**qos-profiles v0.11.0-rc.1 is the first release candidate of the version 0.11.0**
+
+qos-profiles 0.11.0 provides the QoS Profiles endpoints from v0.10.1, changed the retrieval operation to allow the get the QoS Profiles available for a given device, and is aligned with Commonalities 0.4.0 and Identity and Consent Management 0.2.0. **There are breaking changes compared to v0.10.1.**
 
 - API definition **with inline documentation**:
   - [View it on ReDoc](https://redocly.github.io/redoc/?url=https://raw.githubusercontent.com/camaraproject/QualityOnDemand/r1.1/code/API_definitions/qos-profiles.yaml&nocors)
@@ -63,20 +78,25 @@ There are breaking changes compared to v0.10.1.
   - OpenAPI [YAML spec file](https://github.com/camaraproject/QualityOnDemand/blob/r1.1/code/API_definitions/qos-profiles.yaml)
 
 ### Added
-* ...
+* Added x-correlator header to requests and responses by @jlurien in https://github.com/camaraproject/QualityOnDemand/pull/283
+* Added security scheme and scopes for each endpoint / method by @eric-murray in https://github.com/camaraproject/QualityOnDemand/pull/295
 
 ### Changed
-* ...
+* Updated the description of `maxDuration`  by @jlurien in https://github.com/camaraproject/QualityOnDemand/pull/296
+* Updated Authorization and Authentication text to ICM release 0.2.0 wording by @eric-murray in https://github.com/camaraproject/QualityOnDemand/pull/327
+* Aligned qos-profiles further with Commonalties 0.4.0 by @hdamker in https://github.com/camaraproject/QualityOnDemand/pull/326
+  * Added documentation about "Handling of device information" within the info description. 
+  * Updated Schemata for error responses according to Commonalities
 
 ### Fixed
-* ...
+* n/a
 
 ### Removed
-* ...
+* Removed TermsOfService and Contact from APIs since they are optional and did not provide useful information by @RandyLevensalor in https://github.com/camaraproject/QualityOnDemand/pull/311
 
 ## qod-provisioning v0.1.0-rc.1
 
-**qod-provisioning v0.1.0-rc.1 is the 1st release candidate of the first initial version 0.1.0 of the API**
+**qod-provisioning v0.1.0-rc.1 is the release candidate of the first initial version 0.1.0 of the API**
 
 - API definition **with inline documentation**:
   - [View it on ReDoc](https://redocly.github.io/redoc/?url=https://raw.githubusercontent.com/camaraproject/QualityOnDemand/r1.1/code/API_definitions/qod-provisioning.yaml&nocors)
@@ -84,16 +104,18 @@ There are breaking changes compared to v0.10.1.
   - OpenAPI [YAML spec file](https://github.com/camaraproject/QualityOnDemand/blob/r1.1/code/API_definitions/qod-provisioning.yaml)
 
 ### Added
-* ...
+* Initial version of QoD Provision mode API by @jlurien in https://github.com/camaraproject/QualityOnDemand/pull/299
 
 ### Changed
-* ...
+* n/a
 
 ### Fixed
-* ...
+* n/a
 
 ### Removed
-* ...
+* n/a
+
+**Full Changelog**: https://github.com/camaraproject/QualityOnDemand/compare/v0.10.1...r1.1
 
 # v0.10.1
 
