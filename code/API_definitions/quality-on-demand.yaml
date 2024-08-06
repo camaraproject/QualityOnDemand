@@ -952,7 +952,7 @@ components:
                 code: "INVALID_TOKEN"
                 message: "Only bearer token is supported"
 
-    GenericExtendSessionDuration400 :
+    GenericExtendSessionDuration400:
       description: Bad Request
       headers:
         x-correlator:
