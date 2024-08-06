@@ -77,33 +77,25 @@ tags:
 
 paths:
   /qos-profiles:
-    get:
+    post:
       tags:
         - QoS Profiles
-      summary: "Get All QoS Profiles"
+      summary: Get QoS profiles available for a given device
       description: |
-        Returns all QoS Profiles that match the given criteria, or all profiles if no criteria is specified.
-
-        The access token may be either a 2-legged or 3-legged access token. If the access token is 3-legged, all returned QoS Profiles must be available to all end users associated with the access token.
-
-      operationId: getQosProfiles
-      security:
-        - openId:
-            - qos-profiles:qos-profiles:read
+        Returns all QoS Profiles that match the given criteria.
+        **NOTES:**
+        - The access token may be either a 2-legged or 3-legged access token.
+        - If the access token is 3-legged, all returned QoS Profiles will be available to all end users associated with the access token.
+      operationId: qosProfilesDevice
       parameters:
-        - name: name
-          in: query
-          description: QoS Profile name
-          schema:
-            type: string
-          required: false
-        - name: status
-          in: query
-          description: Qos Profile status
-          schema:
-            $ref: '#/components/schemas/QosProfileStatusEnum'
-          required: false
         - $ref: "#/components/parameters/x-correlator"
+      requestBody:
+        description: Parameters to query QoS Profiles for a given device
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/QosProfileDeviceRequest"
+        required: true
       responses:
         "200":
           description: Contains information about QoS Profiles
@@ -116,12 +108,18 @@ paths:
                 type: array
                 items:
                   $ref: "#/components/schemas/QosProfile"
+        "400":
+          $ref: "#/components/responses/Generic400"
         "401":
           $ref: "#/components/responses/Generic401"
         "403":
           $ref: "#/components/responses/Generic403"
         "404":
-          $ref: "#/components/responses/Generic404"
+          $ref: "#/components/responses/GenericDevice404"
+        "422":
+          $ref: "#/components/responses/Generic422"
+        "429":
+          $ref: "#/components/responses/Generic429"
         "500":
           $ref: "#/components/responses/Generic500"
         "503":
@@ -167,6 +165,8 @@ paths:
           $ref: "#/components/responses/Generic403"
         "404":
           $ref: "#/components/responses/Generic404"
+        "429":
+          $ref: "#/components/responses/Generic429"
         "500":
           $ref: "#/components/responses/Generic500"
         "503":
@@ -407,6 +407,101 @@ components:
         - Gbps
         - Tbps
 
+    QosProfileDeviceRequest:
+      description: |
+        Request object for QoS Profiles for a given device
+      type: object
+      properties:
+        device:
+          $ref: "#/components/schemas/Device"
+        name:
+          $ref: "#/components/schemas/QosProfileName"
+        status:
+          $ref: '#/components/schemas/QosProfileStatusEnum'
+
+    Device:
+      description: |
+        End-user equipment able to connect to a mobile network. Examples of devices include smartphones or IoT sensors/actuators.
+
+        The developer can choose to provide the below specified device identifiers:
+
+        * `ipv4Address`
+        * `ipv6Address`
+        * `phoneNumber`
+        NOTE1: the network operator might support only a subset of these options. The API invoker can provide multiple identifiers to be compatible across different operators. In this case the identifiers MUST belong to the same device
+        NOTE2: for the Commonalities release v0.4, we are enforcing that the networkAccessIdentifier is only part of the schema for future-proofing, and CAMARA does not currently allow its use. After the CAMARA meta-release work is concluded and the relevant issues are resolved, its use will need to be explicitly documented in the guidelines.
+
+      type: object
+      properties:
+        phoneNumber:
+          $ref: "#/components/schemas/PhoneNumber"
+        networkAccessIdentifier:
+          $ref: "#/components/schemas/NetworkAccessIdentifier"
+        ipv4Address:
+          $ref: "#/components/schemas/DeviceIpv4Addr"
+        ipv6Address:
+          $ref: "#/components/schemas/DeviceIpv6Address"
+      minProperties: 1
+      maxProperties: 4
+
+    NetworkAccessIdentifier:
+      description: A public identifier addressing a subscription in a mobile network. In 3GPP terminology, it corresponds to the GPSI formatted with the External Identifier ({Local Identifier}@{Domain Identifier}). Unlike the telephone number, the network access identifier is not subjected to portability ruling in force, and is individually managed by each operator.
+      type: string
+      example: "123456789@domain.com"
+
+    PhoneNumber:
+      description: A public identifier addressing a telephone subscription. In mobile networks it corresponds to the MSISDN (Mobile Station International Subscriber Directory Number). In order to be globally unique it has to be formatted in international format, according to E.164 standard, prefixed with '+'.
+      type: string
+      pattern: '^\+[1-9][0-9]{4,14}$'
+      example: "+123456789"
+
+    DeviceIpv4Addr:
+      type: object
+      description: |
+        The device should be identified by either the public (observed) IP address and port as seen by the application server, or the private (local) and any public (observed) IP addresses in use by the device (this information can be obtained by various means, for example from some DNS servers).
+
+        If the allocated and observed IP addresses are the same (i.e. NAT is not in use) then  the same address should be specified for both publicAddress and privateAddress.
+
+        If NAT64 is in use, the device should be identified by its publicAddress and publicPort, or separately by its allocated IPv6 address (field ipv6Address of the Device object)
+
+        In all cases, publicAddress must be specified, along with at least one of either privateAddress or publicPort, dependent upon which is known. In general, mobile devices cannot be identified by their public IPv4 address alone.
+      properties:
+        publicAddress:
+          $ref: "#/components/schemas/SingleIpv4Addr"
+        privateAddress:
+          $ref: "#/components/schemas/SingleIpv4Addr"
+        publicPort:
+          $ref: "#/components/schemas/Port"
+      anyOf:
+        - required: [publicAddress, privateAddress]
+        - required: [publicAddress, publicPort]
+      example:
+        {
+          "publicAddress": "203.0.113.0",
+          "publicPort": 59765
+        }
+
+    Port:
+      description: TCP or UDP port number
+      type: integer
+      minimum: 0
+      maximum: 65535
+
+    SingleIpv4Addr:
+      description: A single IPv4 address with no subnet mask
+      type: string
+      format: ipv4
+      example: "203.0.113.0"
+
+    DeviceIpv6Address:
+      description: |
+        The device should be identified by the observed IPv6 address, or by any single IPv6 address from within the subnet allocated to the device (e.g. adding ::0 to the /64 prefix).
+
+        The session shall apply to all IP flows between the device subnet and the specified application server, unless further restricted by the optional parameters devicePorts or applicationServerPorts.
+      type: string
+      format: ipv6
+      example: 2001:db8:85a3:8d3:1319:8a2e:370:7344
+
     ErrorInfo:
       description: Common schema for errors
       type: object
@@ -496,6 +591,23 @@ components:
                 message: "{{field}} is not consistent with access token."
 
     Generic404:
+      description: Not found
+      headers:
+        x-correlator:
+          $ref: "#/components/headers/x-correlator"
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ErrorInfo"
+          examples:
+            GENERIC_404_NOT_FOUND:
+              description: Resource is not found
+              value:
+                status: 404
+                code: NOT_FOUND
+                message: The specified resource is not found.
+
+    GenericDevice404:
       description: Not found
       headers:
         x-correlator:
