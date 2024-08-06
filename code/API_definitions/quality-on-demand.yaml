@@ -66,17 +66,19 @@ info:
     # Further info and support
 
     (FAQs will be added in a later version of the documentation)
+
   license:
     name: Apache 2.0
     url: https://www.apache.org/licenses/LICENSE-2.0.html
-  version: wip
+  version: 0.11.0-rc.1
+  x-camara-commonalities: 0.4.0-rc.1
 
 externalDocs:
   description: Product documentation at Camara
   url: https://github.com/camaraproject/
 
 servers:
-  - url: "{apiRoot}/quality-on-demand/vwip"
+  - url: "{apiRoot}/quality-on-demand/v0.11rc1"
     variables:
       apiRoot:
         default: http://localhost:9091
