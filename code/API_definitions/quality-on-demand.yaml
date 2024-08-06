@@ -1013,38 +1013,6 @@ components:
                 code: DEVICE_NOT_FOUND
                 message: Device identifier not found.
 
-    Generic404:
-      description: Not found
-      headers:
-        x-correlator:
-          $ref: "#/components/headers/x-correlator"
-      content:
-        application/json:
-          schema:
-            $ref: "#/components/schemas/ErrorInfo"
-          examples:
-            GENERIC_404_NOT_FOUND:
-              summary: Generic Not Found
-              description: Resource is not found
-              value:
-                status: 404
-                code: NOT_FOUND
-                message: "{{resource}} is not found"
-
-    Generic422:
-      description: Unprocessable entity
-      headers:
-        x-correlator:
-          $ref: '#/components/headers/x-correlator'
-      content:
-        application/json:
-          schema:
-            $ref: "#/components/schemas/ErrorInfo"
-          example:
-            status: 422
-            code: UNPROCESSABLE_ENTITY
-            message: "Value not acceptable: ..."
-
     SessionInConflict409:
       description: Conflict
       headers:
