@@ -184,7 +184,7 @@ paths:
                     x-correlator:
                       $ref: '#/components/headers/x-correlator'
                 "400":
-                  $ref: "#/components/responses/CreateSessionBadRequest400"
+                  $ref: "#/components/responses/Generic400"
                 "401":
                   $ref: "#/components/responses/Generic401"
                 "403":
@@ -209,7 +209,7 @@ paths:
               schema:
                 $ref: "#/components/schemas/SessionInfo"
         "400":
-          $ref: "#/components/responses/Generic400"
+          $ref: "#/components/responses/CreateSessionBadRequest400"
         "401":
           $ref: "#/components/responses/Generic401"
         "403":
@@ -380,7 +380,7 @@ paths:
               schema:
                 $ref: "#/components/schemas/SessionInfo"
         "400":
-          $ref: "#/components/responses/Generic400"
+          $ref: "#/components/responses/GenericExtendSessionDuration400"
         "401":
           $ref: "#/components/responses/Generic401"
         "403":
@@ -952,6 +952,35 @@ components:
                 code: "INVALID_TOKEN"
                 message: "Only bearer token is supported"
 
+    GenericExtendSessionDuration400 :
+      description: Bad Request
+      headers:
+        x-correlator:
+          $ref: "#/components/headers/x-correlator"
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ErrorInfo"
+          examples:
+            GENERIC_400_INVALID_ARGUMENT:
+              description: Invalid Argument. Generic Syntax Exception
+              value:
+                status: 400
+                code: INVALID_ARGUMENT
+                message: Client specified an invalid argument, request body or query param.
+            GENERIC_400_OUT_OF_RANGE:
+              description: Out of Range. Specific Syntax Exception used when a given field has a pre-defined range or a invalid filter criteria combination is requested
+              value:
+                status: 400
+                code: OUT_OF_RANGE
+                message: Client specified an invalid range.
+            DurationOutOfRangeForQoSProfile:
+              description: The requested duration is out of the allowed range for the specific QoS profile
+              value:
+                status: 400
+                code: QUALITY_ON_DEMAND.DURATION_OUT_OF_RANGE
+                message: The requested duration is out of the allowed range for the specific QoS profile
+
     Generic400:
       description: Bad Request
       headers:
@@ -968,6 +997,12 @@ components:
                 status: 400
                 code: INVALID_ARGUMENT
                 message: Client specified an invalid argument, request body or query param.
+            GENERIC_400_OUT_OF_RANGE:
+              description: Out of Range. Specific Syntax Exception used when a given field has a pre-defined range or a invalid filter criteria combination is requested
+              value:
+                status: 400
+                code: OUT_OF_RANGE
+                message: Client specified an invalid range.
 
     Generic401:
       description: Unauthorized
