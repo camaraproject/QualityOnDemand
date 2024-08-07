@@ -394,6 +394,65 @@ paths:
         "503":
           $ref: "#/components/responses/Generic503"
 
+  /retrieve-sessions:
+    post:
+      tags:
+        - QoS Sessions
+      summary: Get QoS session information for a device
+      description: |
+        Querying for QoS session resource information details for a device
+
+        **NOTES:**
+        - The access token may be either 2-legged or 3-legged.
+          - If a 3-legged access token is used, the end user (and device) associated with the session must also be associated with the access token. In this case it is recommended NOT to include the `device` parameter in the request (see "Handling of device information" within the API description for details).
+          - If a 2-legged access token is used, the device parameter must be provided and identify a device.
+        - The session must have been created by the same API client given in the access token
+        - If no QoS session is found for the requested device, an empty array is returned.
+      operationId: retrieveSessionsByDevice
+      parameters:
+        - $ref: "#/components/parameters/x-correlator"
+      requestBody:
+        description: Parameters to get QoS session information by device
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/RetrieveSessionsInput"
+        required: true
+      responses:
+        "200":
+          description: Returns the QoS sessions information for a given device. A device may have multiple sessions, thus the response is an array. An empty array is returned if no sessions are found.
+          headers:
+            x-correlator:
+              $ref: "#/components/headers/x-correlator"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/RetrieveSessionsOutput"
+              examples:
+                RETRIEVE_SESSIONS_ONE_ITEM:
+                  $ref: "#/components/examples/RETRIEVE_SESSIONS_EXAMPLE"
+                RETRIEVE_SESSIONS_NO_ITEMS:
+                  $ref: "#/components/examples/RETRIEVE_SESSIONS_EMPTY_EXAMPLE"
+        "400":
+          $ref: "#/components/responses/Generic400"
+        "401":
+          $ref: "#/components/responses/Generic401"
+        "403":
+          $ref: "#/components/responses/Generic403"
+        "404":
+          $ref: "#/components/responses/GenericDevice404"
+        "422":
+          $ref: "#/components/responses/Generic422"
+        "429":
+          $ref: "#/components/responses/Generic429"
+        "500":
+          $ref: "#/components/responses/Generic500"
+        "503":
+          $ref: "#/components/responses/Generic503"
+      security:
+        - openId:
+            - "quality-on-demand:sessions:retrieve-by-device"
+
 components:
   securitySchemes:
     openId:
@@ -912,6 +971,20 @@ components:
         - code
         - message
 
+    RetrieveSessionsInput:
+      description: Parameters to get QoS session information by device
+      type: object
+      properties:
+        device:
+          $ref: "#/components/schemas/Device"
+
+    RetrieveSessionsOutput:
+      description: QoS session information for a given device
+      type: array
+      items:
+        $ref: "#/components/schemas/SessionInfo"
+      minItems: 0
+
   responses:
     CreateSessionBadRequest400:
       description: Bad Request when creating a session
@@ -1255,3 +1328,25 @@ components:
           sessionId: '123e4567-e89b-12d3-a456-426614174000'
           qosStatus: 'UNAVAILABLE'
           statusInfo: 'DURATION_EXPIRED'
+
+    RETRIEVE_SESSIONS_EXAMPLE:
+      summary: List of QoS sessions for the device
+      description: A single QoS session for the device is available
+      value:
+        - duration: 3600
+          device:
+            phoneNumber: "+123456789"
+          applicationServer:
+            ipv4Address: 0.0.0.0/0
+          qosProfile: QOS_L
+          webhook:
+            notificationUrl: https://application-server.com
+          sessionId: 3fa85f64-5717-4562-b3fc-2c963f66afa6
+          startedAt: "2024-06-01T12:00:00Z"
+          expiresAt: "2024-06-01T13:00:00Z"
+          qosStatus: AVAILABLE
+
+    RETRIEVE_SESSIONS_EMPTY_EXAMPLE:
+      summary: No sessions found for the device
+      description: An empty array is returned when no sessions are found for the device
+      value: []
