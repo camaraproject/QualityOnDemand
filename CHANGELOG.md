@@ -78,10 +78,12 @@ qos-profiles 0.11.0 provides the QoS Profiles endpoints from v0.10.1, changed th
   - OpenAPI [YAML spec file](https://github.com/camaraproject/QualityOnDemand/blob/r1.1/code/API_definitions/qos-profiles.yaml)
 
 ### Added
+* Added the option to query profiles available on a given device by @RandyLevensalor in https://github.com/camaraproject/QualityOnDemand/pull/318
 * Added x-correlator header to requests and responses by @jlurien in https://github.com/camaraproject/QualityOnDemand/pull/283
 * Added security scheme and scopes for each endpoint / method by @eric-murray in https://github.com/camaraproject/QualityOnDemand/pull/295
 
 ### Changed
+* Changed the query for `/qos-profiles` from a GET to a POST to support the query for profiles available on a given device by @RandyLevensalor in https://github.com/camaraproject/QualityOnDemand/pull/318
 * Updated the description of `maxDuration`  by @jlurien in https://github.com/camaraproject/QualityOnDemand/pull/296
 * Updated Authorization and Authentication text to ICM release 0.2.0 wording by @eric-murray in https://github.com/camaraproject/QualityOnDemand/pull/327
 * Aligned qos-profiles further with Commonalties 0.4.0 by @hdamker in https://github.com/camaraproject/QualityOnDemand/pull/326
