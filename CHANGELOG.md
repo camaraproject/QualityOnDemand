@@ -19,7 +19,7 @@ Version numbers 0.2.x to 0.7.x were intentionally not used to avoid conflicts wi
 # r1.1
 ## Release Notes
 
-This release contains the definition and documentation of
+This pre-release contains the definition and documentation of
 * quality-on-demand v0.11.0-rc.1
 * qos-profiles v0.11.0-rc.1
 * qod-provisioning v0.1.0-rc.1
