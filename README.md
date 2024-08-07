@@ -56,7 +56,7 @@ The release r1.1 contains the following API definitions (with inline documentati
 
 * Meetings are held virtually 
   * Schedule: bi-weekly, Friday, 2 PM CET/CEST (13:00 UTC, 12:00 UTC during European DST). For date/time of the next meeting, see previous meeting minutes
-  * [Megistration / Join](https://zoom-lfx.platform.linuxfoundation.org/meeting/94112812156?password=f238d6af-c959-48d7-a862-abdb3c648e40)
+  * [Registration / Join](https://zoom-lfx.platform.linuxfoundation.org/meeting/94112812156?password=f238d6af-c959-48d7-a862-abdb3c648e40)
   * Minutes: Access [meeting minutes](https://wiki.camaraproject.org/x/0AOeAQ)
 * Mailing List
   * Subscribe / unsubscribe to the mailing list of this Sub Project <https://lists.camaraproject.org/g/sp-qod>.
