@@ -60,15 +60,15 @@ info:
   license:
     name: Apache 2.0
     url: https://www.apache.org/licenses/LICENSE-2.0.html
-  version: wip
-  x-camara-commonalities: 0.4.0
+  version: 0.1.0-rc.1
+  x-camara-commonalities: 0.4.0-rc.1
 
 externalDocs:
   description: Project documentation at CAMARA
   url: https://github.com/camaraproject/QualityOnDemand
 
 servers:
-  - url: "{apiRoot}/qod-provisioning/vwip"
+  - url: "{apiRoot}/qod-provisioning/v0.1rc1"
     variables:
       apiRoot:
         default: http://localhost:9091
@@ -400,7 +400,7 @@ components:
         sink:
           type: string
           format: url
-          description: The address to which events shall be delivered using the selected protocol.
+          description: The address to which events shall be delivered, using the HTTP protocol.
           example: "https://endpoint.example.com/sink"
         sinkCredential:
           $ref: "#/components/schemas/SinkCredential"
@@ -579,7 +579,7 @@ components:
           description: The type of the event.
           type: string
           enum:
-            - "org.camaraproject.qod-provisioning.vwip.status-changed"
+            - "org.camaraproject.qod-provisioning.v0.status-changed"
         specversion:
           description: Version of the specification to which this event conforms (must be 1.0 if it conforms to cloudevents 1.0.2 version)
           type: string
@@ -601,7 +601,7 @@ components:
       discriminator:
         propertyName: "type"
         mapping:
-          org.camaraproject.qod-provisioning.vwip.status-changed: "#/components/schemas/EventStatusChanged"
+          org.camaraproject.qod-provisioning.v0.status-changed: "#/components/schemas/EventStatusChanged"
 
     EventStatusChanged:
       description: Event to notify a QoD provisioning status change
@@ -1084,9 +1084,9 @@ components:
       summary: Cloud event example for QoD provisioning status change to UNAVAILABLE due to NETWORK_TERMINATED
       value:
         id: 83a0d986-0866-4f38-b8c0-fc65bfcda452
-        source: https://api.example.com/qod-provisioning/vwip/device-qos/123e4567-e89b-12d3-a456-426614174000
+        source: https://api.example.com/qod-provisioning/v0.1/device-qos/123e4567-e89b-12d3-a456-426614174000
         specversion: "1.0"
-        type: org.camaraproject.qod-provisioning.vwip.status-changed
+        type: org.camaraproject.qod-provisioning.v0.status-changed
         time: 2021-12-12T00:00:00Z
         data:
           provisioningId: 123e4567-e89b-12d3-a456-426614174000

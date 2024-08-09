@@ -92,20 +92,18 @@ info:
 
     (FAQs will be added in a later version of the documentation)
 
-  version: wip
-
   license:
     name: Apache 2.0
     url: https://www.apache.org/licenses/LICENSE-2.0.html
-
-  x-camara-commonalities: 0.4.0
+  version: 0.11.0-rc.1
+  x-camara-commonalities: 0.4.0-rc.1
 
 externalDocs:
   description: Project documentation at Camara
   url: https://github.com/camaraproject/QualityOnDemand
 
 servers:
-  - url: "{apiRoot}/quality-on-demand/vwip"
+  - url: "{apiRoot}/quality-on-demand/v0.11rc1"
     variables:
       apiRoot:
         default: http://localhost:9091
@@ -505,7 +503,7 @@ components:
         sink:
           type: string
           format: url
-          description: The address to which events about all status change events of the session (e.g. session termination) shall be delivered.
+          description: The address to which events about all status changes of the session (e.g. session termination) shall be delivered, using the HTTP protocol.
           example: "https://endpoint.example.com/sink"
         sinkCredential:
           description: A sink credential provides authentication or authorization information necessary to enable delivery of events to a target.
