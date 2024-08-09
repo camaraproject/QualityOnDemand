@@ -400,7 +400,7 @@ components:
         sink:
           type: string
           format: url
-          description: The address to which events shall be delivered using the selected protocol.
+          description: The address to which events shall be delivered, using the HTTP protocol.
           example: "https://endpoint.example.com/sink"
         sinkCredential:
           $ref: "#/components/schemas/SinkCredential"
