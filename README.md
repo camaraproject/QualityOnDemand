@@ -26,8 +26,8 @@ Repository to describe, develop, document and test the QualityOnDemand API famil
 
 * Note: Please be aware that the project will have frequent updates to the main branch. There are no compatibility guarantees associated with code in any branch, including main, until a new release is created. For example, changes may be reverted before a release is created. **For best results, use the latest public release**.
 
-* The latest public release is available here: https://github.com/camaraproject/DeviceStatus/releases/latest
-* For changes see [CHANGELOG.md](https://github.com/camaraproject/DeviceStatus/blob/main/CHANGELOG.md)
+* The latest public release is available here: https://github.com/camaraproject/QualityOnDemand/releases/latest
+* For changes see [CHANGELOG.md](https://github.com/camaraproject/QualityOnDemand/blob/main/CHANGELOG.md)
 
 * The current pre-release for the [Fall24 meta-release](https://wiki.camaraproject.org/display/CAM/Meta-release+Fall24) is [r1.1](https://github.com/camaraproject/QualityOnDemand/tree/r1.1)  
 The release r1.1 contains the following API definitions (with inline documentation):
