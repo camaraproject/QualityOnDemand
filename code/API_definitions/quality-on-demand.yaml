@@ -95,7 +95,7 @@ info:
   license:
     name: Apache 2.0
     url: https://www.apache.org/licenses/LICENSE-2.0.html
-  version: 0.11.0-rc.1
+  version: wip
   x-camara-commonalities: 0.4.0-rc.1
 
 externalDocs:
@@ -103,7 +103,7 @@ externalDocs:
   url: https://github.com/camaraproject/QualityOnDemand
 
 servers:
-  - url: "{apiRoot}/quality-on-demand/v0.11rc1"
+  - url: "{apiRoot}/quality-on-demand/vwip"
     variables:
       apiRoot:
         default: http://localhost:9091
@@ -1337,8 +1337,7 @@ components:
           applicationServer:
             ipv4Address: 0.0.0.0/0
           qosProfile: QOS_L
-          webhook:
-            notificationUrl: https://application-server.com
+          sink: https://application-server.com/notifications
           sessionId: 3fa85f64-5717-4562-b3fc-2c963f66afa6
           startedAt: "2024-06-01T12:00:00Z"
           expiresAt: "2024-06-01T13:00:00Z"
