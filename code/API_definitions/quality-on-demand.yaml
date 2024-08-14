@@ -48,7 +48,7 @@ info:
 
     * A specified App-Flow is prioritized to ensure stable latency or throughput for that flow.
     * The prioritized App-Flow is described by providing information such as device IP address (or other device identifier) & application server IP addresses and port/port-ranges.
-    * The developer can optionally specify the duration for which they need the prioritized App-flow.
+    * The developer specifies the duration for which they need the prioritized App-flow.
     * Stable latency or throughput is requested by selecting from the list of QoS profiles made available by the service provider (e.g. QOS_E) to map latency and throughput requirements.
     * The developer can optionally also specify callback URL (`sink` param) on which notifications for the session can be sent. <br>
 
