@@ -141,7 +141,7 @@ paths:
 
       security:
         - openId:
-            - qos-profiles:read
+            - qos-profiles:retrieve-qos-profiles
       parameters:
         - name: name
           in: path
