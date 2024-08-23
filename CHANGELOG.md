@@ -74,7 +74,7 @@ qos-profiles 0.11.0 provides the QoS Profiles endpoints from v0.10.1, changed th
   - OpenAPI [YAML spec file](https://github.com/camaraproject/QualityOnDemand/blob/r1.2/code/API_definitions/qos-profiles.yaml)
 
 ### Added
-* Added the option to query QoS profiles available on a given device by @RandyLevensalor in https://github.com/camaraproject/QualityOnDemand/pull/318
+* Added the option to query QoS profiles available on a given device by @RandyLevensalor in https://github.com/camaraproject/QualityOnDemand/pull/318 and https://github.com/camaraproject/QualityOnDemand/pull/348
 * Added `x-correlator` header to requests and responses by @jlurien in https://github.com/camaraproject/QualityOnDemand/pull/283
 * Added security scheme and scopes for each endpoint / method by @eric-murray in https://github.com/camaraproject/QualityOnDemand/pull/295
 
