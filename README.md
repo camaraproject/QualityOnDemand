@@ -22,31 +22,32 @@ Repository to describe, develop, document and test the QualityOnDemand API famil
 * Started: October 2021
 * Location: virtually  
 
-## Status and released versions
+## Release Information
 
 * Note: Please be aware that the project will have frequent updates to the main branch. There are no compatibility guarantees associated with code in any branch, including main, until a new release is created. For example, changes may be reverted before a release is created. **For best results, use the latest public release**.
 
-* The latest public release is available here: https://github.com/camaraproject/QualityOnDemand/releases/latest
+
+* **The latest public release is [r1.2](https://github.com/camaraproject/QualityOnDemand/tree/r1.2) with the following API definitions:**
+
+  * **quality-on-demand v0.11.0**  
+  [[YAML]](https://github.com/camaraproject/QualityOnDemand/blob/r1.2/code/API_definitions/quality-on-demand.yaml)
+  [[View it on ReDoc]](https://redocly.github.io/redoc/?url=https://raw.githubusercontent.com/camaraproject/QualityOnDemand/r1.2/code/API_definitions/quality-on-demand.yaml&nocors)
+  [[View it on Swagger Editor]](https://editor.swagger.io/?url=https://raw.githubusercontent.com/camaraproject/QualityOnDemand/r1.2/code/API_definitions/quality-on-demand.yaml)
+  
+  * **qos-profiles v0.11.0**  
+  [[YAML]](https://github.com/camaraproject/QualityOnDemand/blob/r1.2/code/API_definitions/qos-profiles.yaml)
+  [[View it on ReDoc]](https://redocly.github.io/redoc/?url=https://raw.githubusercontent.com/camaraproject/QualityOnDemand/r1.2/code/API_definitions/qos-profiles.yaml&nocors)
+  [[View it on Swagger Editor]](https://editor.swagger.io/?url=https://raw.githubusercontent.com/camaraproject/QualityOnDemand/r1.2/code/API_definitions/qos-profiles.yaml)
+
+  * qod-provisioning v0.1.0 (new, first initial version)  
+  [[YAML]](https://github.com/camaraproject/QualityOnDemand/blob/r1.2/code/API_definitions/qod-provisioning.yaml)
+  [[View it on ReDoc]](https://redocly.github.io/redoc/?url=https://raw.githubusercontent.com/camaraproject/QualityOnDemand/r1.2/code/API_definitions/qod-provisioning.yaml&nocors)
+  [[View it on Swagger Editor]](https://editor.swagger.io/?url=https://raw.githubusercontent.com/camaraproject/QualityOnDemand/r1.2/code/API_definitions/qod-provisioning.yaml)
+
+* Previous releases and pre-releases are available here: https://github.com/camaraproject/QualityOnDemand/releases/latest
 * For changes see [CHANGELOG.md](https://github.com/camaraproject/QualityOnDemand/blob/main/CHANGELOG.md)
 
-* The current pre-release for the [Fall24 meta-release](https://wiki.camaraproject.org/display/CAM/Meta-release+Fall24) is [r1.1](https://github.com/camaraproject/QualityOnDemand/tree/r1.1)  
-The release r1.1 contains the following API definitions (with inline documentation):
-  * **quality-on-demand v0.11.0-rc.1**  
-  [[YAML]](https://github.com/camaraproject/QualityOnDemand/blob/r1.1/code/API_definitions/quality-on-demand.yaml)
-  [[View it on ReDoc]](https://redocly.github.io/redoc/?url=https://raw.githubusercontent.com/camaraproject/QualityOnDemand/r1.1/code/API_definitions/quality-on-demand.yaml&nocors)
-  [[View it on Swagger Editor]](https://editor.swagger.io/?url=https://raw.githubusercontent.com/camaraproject/QualityOnDemand/r1.1/code/API_definitions/quality-on-demand.yaml)
-  
-  * **qos-profiles v0.11.0-rc.1**  
-  [[YAML]](https://github.com/camaraproject/QualityOnDemand/blob/r1.1/code/API_definitions/qos-profiles.yaml)
-  [[View it on ReDoc]](https://redocly.github.io/redoc/?url=https://raw.githubusercontent.com/camaraproject/QualityOnDemand/r1.1/code/API_definitions/qos-profiles.yaml&nocors)
-  [[View it on Swagger Editor]](https://editor.swagger.io/?url=https://raw.githubusercontent.com/camaraproject/QualityOnDemand/r1.1/code/API_definitions/qos-profiles.yaml)
-
-  * qod-provisioning v0.1.0-rc.1 (new, first initial version)  
-  [[YAML]](https://github.com/camaraproject/QualityOnDemand/blob/r1.1/code/API_definitions/qod-provisioning.yaml)
-  [[View it on ReDoc]](https://redocly.github.io/redoc/?url=https://raw.githubusercontent.com/camaraproject/QualityOnDemand/r1.1/code/API_definitions/qod-provisioning.yaml&nocors)
-  [[View it on Swagger Editor]](https://editor.swagger.io/?url=https://raw.githubusercontent.com/camaraproject/QualityOnDemand/r1.1/code/API_definitions/qod-provisioning.yaml)
-
-* Provider implementations (PI) are available within separate repositories (partly for previous releases):
+* Provider implementations (PI) for previous releases are available within separate repositories:
 
   * [QualityOnDemand_PI1](https://github.com/camaraproject/QualityOnDemand_PI1) by Deutsche Telekom
   * [QualityOnDemand_PI2](https://github.com/camaraproject/QualityOnDemand_PI2) by Orange
