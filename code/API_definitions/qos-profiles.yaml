@@ -89,7 +89,7 @@ paths:
       security:
         - openId:
             - qos-profiles:read
-      operationId: retrieveQoSProfilesByDevice
+      operationId: retrieveQoSProfiles
       parameters:
         - $ref: "#/components/parameters/x-correlator"
       requestBody:
@@ -128,12 +128,12 @@ paths:
         "503":
           $ref: "#/components/responses/Generic503"
 
-  /retrieve-qos-profiles/{name}:
+  /qos-profiles/{name}:
     get:
       tags:
         - QoS Profiles
       summary: "Get QoS Profile for a given name"
-      operationId: retrieveQosProfile
+      operationId: getQosProfile
       description: |
         Returns a QoS Profile that matches the given name.
 
