@@ -1,4 +1,4 @@
-Feature: CAMARA Quality On Demand API, v0.10.0-rc.1 - Operation createSession
+Feature: CAMARA Quality On Demand API, v0.11.0-rc.1 - Operation createSession
     # Input to be provided by the implementation to the tester
     #
     # Implementation indications:
@@ -213,7 +213,7 @@ Feature: CAMARA Quality On Demand API, v0.10.0-rc.1 - Operation createSession
         And the response property "$.code" is "INVALID_TOKEN" or "INVALID_ARGUMENT"
         And the response property "$.message" contains a user friendly text
 
-    @quality_on_demand_createSession_400.9_invalid_qos_profile
+    @quality_on_demand_createSession_400.9_non_existent_qos_profile
     Scenario: Error response for invalid qos profile in request body
         Given the request body property "qosProfile" is set to a non existent qos Profile
         When the request "createSession" is sent
@@ -313,7 +313,7 @@ Feature: CAMARA Quality On Demand API, v0.10.0-rc.1 - Operation createSession
         Given a valid testing device supported by the service, identified by the token or provided in the request body
         And a QoD session already exists for that device
         When the request "createSession" is sent
-        Then the response status code is 401
+        Then the response status code is 409
         And the response header "x-correlator" has same value as the request header "x-correlator"
         And the response header "Content-Type" is "application/json"
         And the response property "$.status" is 409

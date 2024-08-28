@@ -144,6 +144,7 @@ Feature: CAMARA QoD Provisioning API, v0.1.0-rc.1 - Operation deleteProvisioning
         # To test this, a token have to be obtained by a different client
         Given the header "Authorization" is set to a valid access token emitted to a client which did not created the QoD provisioning
         When the request "deleteProvisioning" is sent
+        Then the response status code is 403
         And the response header "x-correlator" has same value as the request header "x-correlator"
         And the response header "Content-Type" is "application/json"
         And the response property "$.status" is 403

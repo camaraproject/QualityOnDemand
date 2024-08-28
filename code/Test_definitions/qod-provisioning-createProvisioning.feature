@@ -145,7 +145,7 @@ Feature: CAMARA QoD Provisioning API, v0.1.0-rc.1 - Operation createProvisioning
     # The maximum is considered in the schema so a generic schema validator may fail and generate a 400 INVALID_ARGUMENT without further distinction, and both could be accepted
     @qod_provisioning_createProvisioning_400.6_out_of_range_port
     Scenario: Out of range port
-        Given the request body property  "$.device.ipv4Address.publicPort" is set to a value higher than 65535
+        Given the request body property  "$.device.ipv4Address.publicPort" is set to a value not between 0 and 65536
         When the request "createProvisioning" is sent
         Then the response status code is 400
         And the response header "x-correlator" has same value as the request header "x-correlator"
@@ -186,7 +186,7 @@ Feature: CAMARA QoD Provisioning API, v0.1.0-rc.1 - Operation createProvisioning
 
 
     # TBD if we neeed a dedicated code
-    @quality-on-demand_createSession_400.9_non_existent_qos_profile
+    @qod_provisioning_createProvisioning_400.9_non_existent_qos_profile
     Scenario: Non existent QoS profile
         Given the request body property "qosProfile" is set to a non-existent QoS Profile
         When the request "createProvisioning" is sent
@@ -317,7 +317,7 @@ Feature: CAMARA QoD Provisioning API, v0.1.0-rc.1 - Operation createProvisioning
         And the response property "$.message" contains a user friendly text
 
     # TBD if we neeed a dedicated code
-    @quality-on-demand_createSession_422.4_qos_profile_incompatible_device
+    @qod_provisioning_createProvisioning_422.4_qos_profile_incompatible_device
     Scenario: QoS profile is not suitable for the device
         Given that implementation has QoS Profiles restricted to certain devices
         And the request body property "qosProfile" is set to a restricted QoS Profile

@@ -108,8 +108,9 @@ Feature: CAMARA QoD Provisioning API, v0.1.0-rc.1 - Operation retrieveProvisioni
     # and both could be accepted
     @qod_provisioning_retrieveProvisioningByDevice_400.6_out_of_range_port
     Scenario: Out of range port
-        Given the request body property  "$.device.ipv4Address.publicPort" is set to a value higher than 65535
+        Given the request body property  "$.device.ipv4Address.publicPort" is set to a value not between 0 and 65536
         When the request "retrieveProvisioningByDevice" is sent
+        Then the response status code is 400
         And the response header "x-correlator" has same value as the request header "x-correlator"
         And the response header "Content-Type" is "application/json"
         And the response property "$.status" is 400
@@ -207,7 +208,7 @@ Feature: CAMARA QoD Provisioning API, v0.1.0-rc.1 - Operation retrieveProvisioni
 
     # Errors 422
 
-    @qod_provisioning_retrieveProvisioningByDevice_404.1_device_identifiers_unsupported
+    @qod_provisioning_retrieveProvisioningByDevice_422.1_device_identifiers_unsupported
     Scenario: None of the provided device identifiers is supported by the implementation
         Given that some type of device identifiers are not supported by the implementation
         And the request body property "$.device" only includes device identifiers not supported by the implementation
@@ -220,7 +221,7 @@ Feature: CAMARA QoD Provisioning API, v0.1.0-rc.1 - Operation retrieveProvisioni
         And the response property "$.message" contains a user friendly text
 
     # This scenario is under discussion
-    @qod_provisioning_retrieveProvisioningByDevice_404.2_device_identifiers_mismatch
+    @qod_provisioning_retrieveProvisioningByDevice_422.2_device_identifiers_mismatch
     Scenario: Device identifiers mismatch
         Given that al least 2 types of device identifiers are supported by the implementation
         And the request body property "$.device" includes several identifiers, each of them identifying a valid but different device
@@ -232,7 +233,7 @@ Feature: CAMARA QoD Provisioning API, v0.1.0-rc.1 - Operation retrieveProvisioni
         And the response property "$.code" is "DEVICE_IDENTIFIERS_MISMATCH"
         And the response property "$.message" contains a user friendly text
 
-    @qod_provisioning_retrieveProvisioningByDevice_404.3_device_not_supported
+    @qod_provisioning_retrieveProvisioningByDevice_422.3_device_not_supported
     Scenario: Service not available for the device
         Given that service is not supported for all devices commercialized by the operator
         And the service is not applicable for the device identified by the token or provided in the request body
@@ -245,7 +246,7 @@ Feature: CAMARA QoD Provisioning API, v0.1.0-rc.1 - Operation retrieveProvisioni
         And the response property "$.message" contains a user friendly text
 
     # Typically with a 2-legged access token
-    @qod_provisioning_retrieveProvisioningByDevice_404.4_unidentifiable_device
+    @qod_provisioning_retrieveProvisioningByDevice_422.4_unidentifiable_device
     Scenario: Device not included and cannot be deducted from the access token
         Given the header "Authorization" is set to a valid access which does not identifiy a single device
         And the request body property "$.device" is not included
