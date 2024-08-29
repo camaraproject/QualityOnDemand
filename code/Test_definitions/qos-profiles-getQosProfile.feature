@@ -1,4 +1,4 @@
-Feature: CAMARA QoS Profiles API, v0.10.0-rc.1 - Operation getQosProfile
+Feature: CAMARA QoS Profiles API, v0.11.0 - Operation getQosProfile
     # Input to be provided by the implementation to the tester
     #
     # Implementation indications:
@@ -11,7 +11,7 @@ Feature: CAMARA QoS Profiles API, v0.10.0-rc.1 - Operation getQosProfile
 
     Background: Common getQosProfile setup
         Given an environment at "apiRoot"
-        And the resource "qos-profiles/v0.11rc1/qos-profiles/{name}"
+        And the resource "qos-profiles/v0.11/qos-profiles/{name}"
         And the header "Authorization" is set to a valid access token
         And the header "x-correlator" is set to a UUID value
         And the path param "name" is set by default to a existing QoS profile name

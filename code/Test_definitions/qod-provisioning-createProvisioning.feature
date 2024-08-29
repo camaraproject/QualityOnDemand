@@ -1,4 +1,4 @@
-Feature: CAMARA QoD Provisioning API, v0.1.0-rc.1 - Operation createProvisioning
+Feature: CAMARA QoD Provisioning API, v0.1.0 - Operation createProvisioning
     # Input to be provided by the implementation to the tester
     #
     # Implementation indications:
@@ -14,7 +14,7 @@ Feature: CAMARA QoD Provisioning API, v0.1.0-rc.1 - Operation createProvisioning
 
     Background: Common createProvisioning setup
         Given an environment at "apiRoot"
-        And the resource "/qod-provisioning/v0.1rc1/device-qos"                                                              |
+        And the resource "/qod-provisioning/v0.1/device-qos"                                                              |
         And the header "Content-Type" is set to "application/json"
         And the header "Authorization" is set to a valid access token
         And the header "x-correlator" is set to a UUID value
