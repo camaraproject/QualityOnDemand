@@ -43,7 +43,7 @@ Version 0.11.0 provides the QoS Sessions endpoints from v0.10.1, adds one endpoi
 * Added the `statusInfo` as parameter to `SessionInfo`  by @maxl2287 in https://github.com/camaraproject/QualityOnDemand/pull/273
 * Added the `x-correlator` header to requests and responses by @jlurien in https://github.com/camaraproject/QualityOnDemand/pull/283
 * Added security scheme and scopes for each endpoint / method by @eric-murray in https://github.com/camaraproject/QualityOnDemand/pull/295
-
+* Added test definitions for quality-on-demand by @jlurien in https://github.com/camaraproject/QualityOnDemand/pull/349
 
 ### Changed
 * Made `+` prefix mandatory for phoneNumber by @jlurien in https://github.com/camaraproject/QualityOnDemand/pull/301
@@ -55,6 +55,7 @@ Version 0.11.0 provides the QoS Sessions endpoints from v0.10.1, adds one endpoi
   * Made device parameter optional within `createSession`
   * Aligned `Device` object and `info` object with Commonalities
   * Updated schemata for error responses according to Commonalities
+* Updated user story for Quality on Demand by @hdamker in https://github.com/camaraproject/QualityOnDemand/pull/354
 
 ### Fixed
 * Removed unresolved documentation reference within quality-on-demand.yaml by @hdamker in https://github.com/camaraproject/QualityOnDemand/pull/324
@@ -77,9 +78,10 @@ qos-profiles 0.11.0 provides the QoS Profiles endpoints from v0.10.1, changed th
 * Added the option to query QoS profiles available on a given device by @RandyLevensalor in https://github.com/camaraproject/QualityOnDemand/pull/318 and https://github.com/camaraproject/QualityOnDemand/pull/348
 * Added `x-correlator` header to requests and responses by @jlurien in https://github.com/camaraproject/QualityOnDemand/pull/283
 * Added security scheme and scopes for each endpoint / method by @eric-murray in https://github.com/camaraproject/QualityOnDemand/pull/295
+* Added test definitions for qos-profiles by @jlurien in https://github.com/camaraproject/QualityOnDemand/pull/349
 
 ### Changed
-* Changed the query for `/qos-profiles` from a GET to a POST to support the query for profiles available on a given device by @RandyLevensalor in https://github.com/camaraproject/QualityOnDemand/pull/318
+* Changed the query for `/qos-profiles` from a GET to a POST to support the query for profiles available on a given device and changed the endpoint name to `/retrieve-qos-profiles` by @RandyLevensalor in https://github.com/camaraproject/QualityOnDemand/pull/318 and 
 * Updated the description of `maxDuration` by @jlurien in https://github.com/camaraproject/QualityOnDemand/pull/296
 * Updated Authorization and Authentication text to ICM release 0.2.0 wording by @eric-murray in https://github.com/camaraproject/QualityOnDemand/pull/327
 * Aligned qos-profiles further with Commonalties 0.4.0 by @hdamker in https://github.com/camaraproject/QualityOnDemand/pull/326
@@ -103,6 +105,7 @@ qod-provisioning v0.1.0 is the first initial release of this new API. It provide
 
 ### Added
 * Initial version of QoD Provisioning mode API by @jlurien in https://github.com/camaraproject/QualityOnDemand/pull/299
+* Added test definitions for qod-provisioning by @jlurien in https://github.com/camaraproject/QualityOnDemand/pull/349
 
 ### Changed
 * n/a
