@@ -14,4 +14,5 @@ The test plan has to be enhanced and some scenarios still contains comments and 
 * 422 UNSUPPORTED_DEVICE_IDENTIFIERS is in the Commonalities guidelines (document) but it is not yet in the artifact and it not yet considered in the quality-on-demand or qos-profiles API specs, but it is in qod-provisioning API spec
 * It is not defined the expected behavior when extending the duration of a session in qosStatus REQUESTED or UNAVAILABLE  
 * For QoS Profile response validations, it is pending to check additional constraints, such as minDuration being less or equal than maxDuration, etc
+* When accessing a session or provisioning created by a different client, both 403 INVALID_TOKEN_CONTEXT and the generic 403 PERMISSION_DENIED codes could make sense.
 

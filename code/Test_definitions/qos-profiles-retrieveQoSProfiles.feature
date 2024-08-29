@@ -12,7 +12,7 @@ Feature: CAMARA QoS Profiles API, v0.11.0 - Operation retrieveQoSProfiles
     # * A device object identifying a device commercialized by the implementation for which the service is not applicable, if any
 
 
-    # References to OAS spec schemas refer to schemas specifies in qos-profiles.yaml, version 0.11.0-rc.1
+    # References to OAS spec schemas refer to schemas specifies in qos-profiles.yaml, version 0.11.0
 
     Background: Common retrieveQoSProfiles setup
         Given an environment at "apiRoot"

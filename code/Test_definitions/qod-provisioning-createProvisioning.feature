@@ -10,7 +10,7 @@ Feature: CAMARA QoD Provisioning API, v0.1.0 - Operation createProvisioning
     # * A device object applicable for QoD provisioning service
     # * A device object identifying a device commercialized by the implementation for which the service is not applicable, if any
     #
-    # References to OAS spec schemas refer to schemas specified in qod-provisioning.yaml, version 0.1.0-rc.1
+    # References to OAS spec schemas refer to schemas specified in qod-provisioning.yaml, version 0.1.0
 
     Background: Common createProvisioning setup
         Given an environment at "apiRoot"

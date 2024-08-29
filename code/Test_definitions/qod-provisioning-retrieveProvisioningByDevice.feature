@@ -11,7 +11,7 @@ Feature: CAMARA QoD Provisioning API, v0.1.0 - Operation retrieveProvisioningByD
     # * A device object with NO existing QoD provisioning associated
     # * A device object identifying a device commercialized by the implementation for which the service is not applicable, if any
     #
-    # References to OAS spec schemas refer to schemas specified in qod-provisioning.yaml, version 0.1.0-rc.1
+    # References to OAS spec schemas refer to schemas specified in qod-provisioning.yaml, version 0.1.0
 
     Background: Common retrieveProvisioningByDevice setup
         Given an environment at "apiRoot"
@@ -155,6 +155,7 @@ Feature: CAMARA QoD Provisioning API, v0.1.0 - Operation retrieveProvisioningByD
 
     # Errors 403
 
+    # TBD which code is more appropriate for this scenario
     @qod_provisioning_retrieveProvisioningByDevice_403.1_different_client_id
     Scenario: QoD provisioning not created by the API client given in the access token
         # To test this, a token have to be obtained for a different client
@@ -164,7 +165,7 @@ Feature: CAMARA QoD Provisioning API, v0.1.0 - Operation retrieveProvisioningByD
         And the response header "x-correlator" has same value as the request header "x-correlator"
         And the response header "Content-Type" is "application/json"
         And the response property "$.status" is 403
-        And the response property "$.code" is "PERMISSION_DENIED"
+        And the response property "$.code" is "PERMISSION_DENIED" or "INVALID_TOKEN_CONTEXT"
         And the response property "$.message" contains a user friendly text
 
     @qod_provisioning_retrieveProvisioningByDevice_403.2_device_token_mismatch

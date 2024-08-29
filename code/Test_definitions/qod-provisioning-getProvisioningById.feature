@@ -7,7 +7,7 @@ Feature: CAMARA QoD Provisioning API, v0.1.0 - Operation getProvisioningById
     # Testing assets:
     # * The provisioningId of an existing QoD Provisiong, and the request properties used for createProvisioning
     #
-    # References to OAS spec schemas refer to schemas specified in qod-provisioning.yaml, version 0.1.0-rc.1
+    # References to OAS spec schemas refer to schemas specified in qod-provisioning.yaml, version 0.1.0
 
     Background: Common getProvisioningById setup
         Given an environment at "apiRoot"
@@ -101,6 +101,7 @@ Feature: CAMARA QoD Provisioning API, v0.1.0 - Operation getProvisioningById
 
     # Errors 403
 
+    # TBD which code is more appropriate for this scenario
     @qod_provisioning_getProvisioningById_403.1_different_client_id
     Scenario: QoD provisioning not created by the API client given in the access token
         # To test this, a token have to be obtained by a different client
@@ -110,7 +111,7 @@ Feature: CAMARA QoD Provisioning API, v0.1.0 - Operation getProvisioningById
         And the response header "x-correlator" has same value as the request header "x-correlator"
         And the response header "Content-Type" is "application/json"
         And the response property "$.status" is 403
-        And the response property "$.code" is "PERMISSION_DENIED"
+        And the response property "$.code" is "PERMISSION_DENIED" or "INVALID_TOKEN_CONTEXT"
         And the response property "$.message" contains a user friendly text
 
     # Errors 404

@@ -8,7 +8,7 @@ Feature: CAMARA QoD Provisioning API, v0.1.0 - Operation deleteProvisioning
     # * The ProvisioningInfo of an existing QoD Provisiong
     # * The ProvisioningInfo of an existing QoD Provisiong with status "AVAILABLE", and with provided values for "sink" and "sinkCredential"
     #
-    # References to OAS spec schemas refer to schemas specified in qod-provisioning.yaml, version 0.1.0-rc.1
+    # References to OAS spec schemas refer to schemas specified in qod-provisioning.yaml, version 0.1.0
 
     Background: Common deleteProvisioning setup
         Given an environment at "apiRoot"
@@ -139,6 +139,7 @@ Feature: CAMARA QoD Provisioning API, v0.1.0 - Operation deleteProvisioning
 
     # Errors 403
 
+    # TBD which code is more appropriate for this scenario
     @qod_provisioning_deleteProvisioning_403.1_different_client_id
     Scenario: QoD provisioning not created by the API client given in the access token
         # To test this, a token have to be obtained by a different client
@@ -148,7 +149,7 @@ Feature: CAMARA QoD Provisioning API, v0.1.0 - Operation deleteProvisioning
         And the response header "x-correlator" has same value as the request header "x-correlator"
         And the response header "Content-Type" is "application/json"
         And the response property "$.status" is 403
-        And the response property "$.code" is "PERMISSION_DENIED"
+        And the response property "$.code" is "PERMISSION_DENIED" or "INVALID_TOKEN_CONTEXT"
         And the response property "$.message" contains a user friendly text
 
     # Errors 404

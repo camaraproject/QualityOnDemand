@@ -11,7 +11,7 @@ Feature: CAMARA Quality On Demand API, v0.11.0 - Operation createSession
     # * A device object applicable for Quality On Demand service.
     # * A device object identifying a device commercialized by the implementation for which the service is not applicable, if any.
     #
-    # References to OAS spec schemas refer to schemas specifies in quality-on-demand.yaml, version 0.11.0-rc.1
+    # References to OAS spec schemas refer to schemas specifies in quality-on-demand.yaml, version 0.11.0
 
     Background: Common createSession setup
         Given an environment at "apiRoot"
