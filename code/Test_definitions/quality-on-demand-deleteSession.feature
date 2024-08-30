@@ -9,7 +9,7 @@ Feature: CAMARA Quality On Demand API, v0.11.0 - Operation deleteSession
     # * The sessionId of an existing session with status "AVAILABLE", and with provided values for "sink" and "sinkCredential".
     # * The sessionId of an existing session with status "UNAVAILABLE", and with provided values for "sink" and "sinkCredential".
     #
-    # References to OAS spec schemas refer to schemas specifies in quality-on-demand.yaml, version 0.11.0-rc.1
+    # References to OAS spec schemas refer to schemas specifies in quality-on-demand.yaml, version 0.11.0
 
     Background: Common deleteSession setup
         Given an environment at "apiRoot"
