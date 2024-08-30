@@ -9,7 +9,7 @@ Feature: CAMARA Quality On Demand API, v0.11.0 - Operation deleteSession
     # * The sessionId of an existing session with status "AVAILABLE", and with provided values for "sink" and "sinkCredential".
     # * The sessionId of an existing session with status "UNAVAILABLE", and with provided values for "sink" and "sinkCredential".
     #
-    # References to OAS spec schemas refer to schemas specifies in quality-on-demand.yaml, version 0.11.0
+    # References to OAS spec schemas refer to schemas specifies in quality-on-demand.yaml, version 0.11.0-rc.1
 
     Background: Common deleteSession setup
         Given an environment at "apiRoot"
@@ -97,14 +97,13 @@ Feature: CAMARA Quality On Demand API, v0.11.0 - Operation deleteSession
         And the response property "$.code" is "UNAUTHENTICATED"
         And the response property "$.message" contains a user friendly text
 
-
     # Errors 403
 
     # TBD which code is more appropriate for this scenario
     @quality_on_demand_deleteSession_403.1_session_token_mismatch
     Scenario: QoS session not created by the API client given in the access token
         # To test this, a token have to be obtained for a different client
-        Given the header "Authorization" is set to a valid access token emitted to a client which did not created the QoS session        And the header "Authorization" is set to a valid access token emitted for a different device
+        Given the header "Authorization" is set to a valid access token emitted to a client which did not created the QoS session
         When the request "deleteSession" is sent
         Then the response status code is 403
         And the response header "x-correlator" has same value as the request header "x-correlator"

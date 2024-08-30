@@ -75,7 +75,7 @@ Feature: CAMARA QoD Provisioning API, v0.1.0 - Operation retrieveProvisioningByD
         And the response property "$.message" contains a user friendly text
 
     @qod_provisioning_retrieveProvisioningByDevice_400.4_device_empty
-    Scenario Outline: The device value is an empty object
+    Scenario: The device value is an empty object
         Given the request body property "$.device" is set to: {}
         When the request "retrieveProvisioningByDevice" is sent
         Then the response status code is 400

@@ -11,7 +11,6 @@ Feature: CAMARA QoS Profiles API, v0.11.0 - Operation retrieveQoSProfiles
     # * If some QoS Profile is restricted for some devices, provide the QoS profile name and device
     # * A device object identifying a device commercialized by the implementation for which the service is not applicable, if any
 
-
     # References to OAS spec schemas refer to schemas specifies in qos-profiles.yaml, version 0.11.0
 
     Background: Common retrieveQoSProfiles setup
@@ -97,7 +96,6 @@ Feature: CAMARA QoS Profiles API, v0.11.0 - Operation retrieveQoSProfiles
         And the response header "x-correlator" has same value as the request header "x-correlator"
         And the response body is []
 
-
     # Errors 400
 
     @qos_profiles_retrieveQoSProfiles_400.1_schema_not_compliant
@@ -178,7 +176,6 @@ Feature: CAMARA QoS Profiles API, v0.11.0 - Operation retrieveQoSProfiles
         And the response property "$.status" is 401
         And the response property "$.code" is "UNAUTHENTICATED"
         And the response property "$.message" contains a user friendly text
-
 
     # Errors 403
 

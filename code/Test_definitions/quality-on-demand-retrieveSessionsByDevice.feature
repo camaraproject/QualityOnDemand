@@ -55,7 +55,6 @@ Feature: CAMARA Quality On Demand API, v0.11.0 - Operation retrieveSessionsByDev
         And the response header "x-correlator" has same value as the request header "x-correlator"
         And the response body is []
 
-
     # Errors 400
 
     @quality_on_demand_retrieveSessionsByDevice_400.1_schema_not_compliant
@@ -68,7 +67,6 @@ Feature: CAMARA Quality On Demand API, v0.11.0 - Operation retrieveSessionsByDev
         And the response property "$.status" is 400
         And the response property "$.code" is "INVALID_ARGUMENT"
         And the response property "$.message" contains a user friendly text
-
 
     @quality_on_demand_retrieveSessionsByDevice_400.2_no_request_body
     Scenario: Missing request body
@@ -173,7 +171,6 @@ Feature: CAMARA Quality On Demand API, v0.11.0 - Operation retrieveSessionsByDev
         And the response property "$.status" is 401
         And the response property "$.code" is "UNAUTHENTICATED"
         And the response property "$.message" contains a user friendly text
-
 
     # Errors 403
 

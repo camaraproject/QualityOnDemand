@@ -103,7 +103,6 @@ Feature: CAMARA Quality On Demand API, v0.11.0 - Operation getSession
         And the response property "$.code" is "UNAUTHENTICATED"
         And the response property "$.message" contains a user friendly text
 
-
     # Errors 403
 
     # TBD which code is more appropriate for this scenario

@@ -113,7 +113,7 @@ Feature: CAMARA QoD Provisioning API, v0.1.0 - Operation createProvisioning
         And the response property "$.message" contains a user friendly text
 
     @qod_provisioning_createProvisioning_400.4_device_empty
-    Scenario Outline: The device value is an empty object
+    Scenario: The device value is an empty object
         Given the request body property "$.device" is set to: {}
         When the request "createProvisioning" is sent
         Then the response status code is 400
@@ -183,7 +183,6 @@ Feature: CAMARA QoD Provisioning API, v0.1.0 - Operation createProvisioning
         And the response property "$.status" is 400
         And the response property "$.code" is "INVALID_TOKEN" or "INVALID_ARGUMENT"
         And the response property "$.message" contains a user friendly text
-
 
     # TBD if we neeed a dedicated code
     @qod_provisioning_createProvisioning_400.9_non_existent_qos_profile
@@ -262,7 +261,6 @@ Feature: CAMARA QoD Provisioning API, v0.1.0 - Operation createProvisioning
         And the response property "$.status" is 404
         And the response property "$.code" is "DEVICE_NOT_FOUND"
         And the response property "$.message" contains a user friendly text
-
 
     # Errors 409
 

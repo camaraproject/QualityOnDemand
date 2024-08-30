@@ -99,7 +99,6 @@ Feature: CAMARA Quality On Demand API, v0.11.0 - Operation createSession
         And the response property "$.code" is "INVALID_ARGUMENT"
         And the response property "$.message" contains a user friendly text
 
-
     @quality_on_demand_createSession_400.2_no_request_body
     Scenario: Missing request body
         Given the request body is not included
@@ -274,7 +273,6 @@ Feature: CAMARA Quality On Demand API, v0.11.0 - Operation createSession
         And the response property "$.code" is "UNAUTHENTICATED"
         And the response property "$.message" contains a user friendly text
 
-
     # Errors 403
 
     @quality_on_demand_createSession_403.1_device_token_mismatch
@@ -304,7 +302,6 @@ Feature: CAMARA Quality On Demand API, v0.11.0 - Operation createSession
         And the response property "$.status" is 404
         And the response property "$.code" is "DEVICE_NOT_FOUND"
         And the response property "$.message" contains a user friendly text
-
 
     # Errors 409
 

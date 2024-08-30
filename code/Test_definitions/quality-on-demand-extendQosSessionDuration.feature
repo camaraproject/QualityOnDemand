@@ -60,7 +60,7 @@ Feature: CAMARA Quality On Demand API, v0.11.0 - Operation extendQosSessionDurat
 
     # To be discussed. Behaviour when the qosStatus of the session is REQUESTED
     @quality_on_demand_extendQosSessionDuration_03_requestedSession
-    Scenario: Response extending duration for unavailable session
+    Scenario: Response extending duration for requested session
         Given an existing QoS session created by operation createSession with qosStatus "REQUESTED"
         And the path parameter "sessionId" is set to the value for that QoS session
         And the request body is set to a valid request body
@@ -94,7 +94,7 @@ Feature: CAMARA Quality On Demand API, v0.11.0 - Operation extendQosSessionDurat
 
     # 404 NOT_FOUND is an alternative if path parameter format is not validated
     @quality_on_demand_extendQosSessionDuration_400.2_invalid_session_id
-    Scenario: Invalid Argument. Generic Syntax Exception
+    Scenario: Invalid sessionId
         Given the path parameter "sessionId" has not a UUID format
         When the request "extendQosSessionDuration" is sent
         Then the response status code is 400
@@ -164,14 +164,13 @@ Feature: CAMARA Quality On Demand API, v0.11.0 - Operation extendQosSessionDurat
         And the response property "$.code" is "UNAUTHENTICATED"
         And the response property "$.message" contains a user friendly text
 
-
     # Errors 403
 
     # TBD which code is more appropriate for this scenario
     @quality_on_demand_extendQosSessionDuration_403.1_session_token_mismatch
     Scenario: QoS session not created by the API client given in the access token
         # To test this, a token have to be obtained for a different client
-        Given the header "Authorization" is set to a valid access token emitted to a client which did not created the QoS session        And the header "Authorization" is set to a valid access token emitted for a different device
+        Given the header "Authorization" is set to a valid access token emitted to a client which did not created the QoS session
         When the request "extendQosSessionDuration" is sent
         Then the response status code is 403
         And the response header "x-correlator" has same value as the request header "x-correlator"

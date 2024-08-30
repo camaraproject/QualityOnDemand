@@ -74,7 +74,7 @@ Feature: CAMARA QoD Provisioning API, v0.1.0 - Operation deleteProvisioning
         And the path parameter "provisoningId" is set to the value for that QoD provisioning
         When the request "deleteProvisioning" is sent
         Then the response status code is 202
-        When the asynchronous deletion process is completed
+        And when the asynchronous deletion process is completed
         Then an event is received at the address of the "$.sink" provided for createProvisioning
         And the event header "Authorization" is set to "Bearer: " + the value of "$.sinkCredentials.accessToken" provided for createProvisioning
         And the event header "Content-Type" is set to "application/cloudevents+json"
@@ -164,4 +164,3 @@ Feature: CAMARA QoD Provisioning API, v0.1.0 - Operation deleteProvisioning
         And the response property "$.status" is 404
         And the response property "$.code" is "NOT_FOUND"
         And the response property "$.message" contains a user friendly text
-
