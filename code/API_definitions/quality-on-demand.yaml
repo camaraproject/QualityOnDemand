@@ -1176,7 +1176,7 @@ components:
             status: 409
             code: CONFLICT
             message: Conflict with an existing session for the same device.
-            
+
     SessionStatusConflict409:
       description: Conflict
       headers:
