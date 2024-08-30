@@ -12,7 +12,6 @@ The test plan has to be enhanced and some scenarios still contains comments and 
 * Now that QoS Profiles may be restricted to certain devices, what code to return when the provided device in createSession is not suitable for the provided qosProfile. We may reuse 422 DEVICE_NOT_APPLICABLE
 * When providing a path parameter, such sessionId or provisioningId, which is not compliant with the spec format (UUID), what code to return? Options are 400 INVALID_ARGUMENT or 404 NOT_FOUND if path parameter format is not checked previously
 * 422 UNSUPPORTED_DEVICE_IDENTIFIERS is in the Commonalities guidelines (document) but it is not yet in the artifact and it not yet considered in the quality-on-demand or qos-profiles API specs, but it is in qod-provisioning API spec
-* It is not defined the expected behavior when extending the duration of a session in qosStatus REQUESTED or UNAVAILABLE  
 * For QoS Profile response validations, it is pending to check additional constraints, such as minDuration being less or equal than maxDuration, etc
 * When accessing a session or provisioning created by a different client, both 403 INVALID_TOKEN_CONTEXT and the generic 403 PERMISSION_DENIED codes could make sense.
 

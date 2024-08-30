@@ -58,28 +58,6 @@ Feature: CAMARA Quality On Demand API, v0.11.0 - Operation extendQosSessionDurat
         And the response body complies with the OAS schema at "/components/schemas/SessionInfo"
         And the response property "$.duration" does not exceed the "maxDuration" for the QoS Profile
 
-    # To be discussed. Behaviour when the qosStatus of the session is REQUESTED
-    @quality_on_demand_extendQosSessionDuration_03_requestedSession
-    Scenario: Response extending duration for requested session
-        Given an existing QoS session created by operation createSession with qosStatus "REQUESTED"
-        And the path parameter "sessionId" is set to the value for that QoS session
-        And the request body is set to a valid request body
-        When the request "extendQosSessionDuration" is sent
-        Then the response status code is TBD
-        And the response header "x-correlator" has same value as the request header "x-correlator"
-        And the response header "Content-Type" is "application/json"
-
-    # To be discussed. Behaviour when the qosStatus of the session is UNAVAILABLE
-    @quality_on_demand_extendQosSessionDuration_04_unavailableSession
-    Scenario: Response extending duration for unavailable session
-        Given an existing QoS session created by operation createSession with qosStatus "UNAVAILABLE"
-        And the path parameter "sessionId" is set to the value for that QoS session
-        And the request body is set to a valid request body
-        When the request "extendQosSessionDuration" is sent
-        Then the response status code is TBD
-        And the response header "x-correlator" has same value as the request header "x-correlator"
-        And the response header "Content-Type" is "application/json"
-
     # Errors 400
 
     @quality_on_demand_extendQosSessionDuration_400.1_schema_not_compliant
@@ -191,4 +169,19 @@ Feature: CAMARA Quality On Demand API, v0.11.0 - Operation extendQosSessionDurat
         And the response header "Content-Type" is "application/json"
         And the response property "$.status" is 404
         And the response property "$.code" is "NOT_FOUND"
+        And the response property "$.message" contains a user friendly text
+
+    # Errors 409
+
+    @quality_on_demand_extendQosSessionDuration_409.1_session_not_available
+    Scenario: Extending duration for session with qosStatus not available
+        Given an existing QoS session with qosStatus not "AVAILABLE"
+        And the path parameter "sessionId" is set to the value for that QoS session
+        And the request body is set to a valid request body
+        When the request "extendQosSessionDuration" is sent
+        Then the response status code is 409
+        And the response header "x-correlator" has same value as the request header "x-correlator"
+        And the response header "Content-Type" is "application/json"
+        And the response property "$.status" is 409
+        And the response property "$.code" is "QUALITY_ON_DEMAND.SESSION_EXTENSION_NOT_ALLOWED"
         And the response property "$.message" contains a user friendly text
