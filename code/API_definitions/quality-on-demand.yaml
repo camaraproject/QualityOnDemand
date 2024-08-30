@@ -1186,7 +1186,7 @@ components:
         application/json:
           schema:
             $ref: "#/components/schemas/ErrorInfo"
-          example:
+          examples:
             SessionExtensionNotAllowed:
               description: Session extension is in conflict with current session status
               value:
