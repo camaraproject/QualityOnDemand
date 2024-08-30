@@ -56,6 +56,7 @@ Version 0.11.0 provides the QoS Sessions endpoints from v0.10.1, adds one endpoi
   * Aligned `Device` object and `info` object with Commonalities
   * Updated schemata for error responses according to Commonalities
 * Updated user story for Quality on Demand by @hdamker in https://github.com/camaraproject/QualityOnDemand/pull/354
+* Clarified behavior of extendQosSessionDuration if session is not in state AVAILABLE by @hdamker in https://github.com/camaraproject/QualityOnDemand/pull/356
 
 ### Fixed
 * Removed unresolved documentation reference within quality-on-demand.yaml by @hdamker in https://github.com/camaraproject/QualityOnDemand/pull/324
