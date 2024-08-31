@@ -61,3 +61,4 @@ The release r1.1 contains the following API definitions (with inline documentati
 * Mailing List
   * Subscribe / unsubscribe to the mailing list of this Sub Project <https://lists.camaraproject.org/g/sp-qod>.
   * A message to the community of this Sub Project can be sent using <sp-qod@lists.camaraproject.org>.
+
