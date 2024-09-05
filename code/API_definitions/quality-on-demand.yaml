@@ -336,7 +336,7 @@ paths:
         - QoS Sessions
       summary: "Extend the duration of an active session"
       description: |
-        Extend the overall session duration of an active QoS session.
+        Extend the overall session duration of an active QoS session (with qosStatus = AVAILABLE).
         The overall duration of the QoS session, including the additional extended duration, shall not exceed the maximum duration limit fixed for the QoS Profile. If the current duration plus the value of `requestedAdditionalDuration` exceeds the maximum limit, the new overall duration shall be capped to the maximum value allowed.
         An example: For a QoS profile limited to a `maxDuration` of 50,000 seconds, a QoD session was originally created with duration 30,000 seconds. Before the session expires, the developer requests to extend the session by another 30,000 seconds:
         - Previous duration: 30,000 seconds
@@ -385,6 +385,8 @@ paths:
           $ref: "#/components/responses/Generic403"
         "404":
           $ref: "#/components/responses/Generic404"
+        "409":
+          $ref: "#/components/responses/SessionStatusConflict409"
         "429":
           $ref: "#/components/responses/Generic429"
         "500":
@@ -1174,6 +1176,23 @@ components:
             status: 409
             code: CONFLICT
             message: Conflict with an existing session for the same device.
+
+    SessionStatusConflict409:
+      description: Conflict
+      headers:
+        x-correlator:
+          $ref: '#/components/headers/x-correlator'
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ErrorInfo"
+          examples:
+            SessionExtensionNotAllowed:
+              description: Session extension is in conflict with current session status
+              value:
+                status: 409
+                code: QUALITY_ON_DEMAND.SESSION_EXTENSION_NOT_ALLOWED
+                message: Extending the session duration is not allowed in the current state ({qosStatus}). The session must be in the AVAILABLE state.
 
     Generic410:
       description: Gone
