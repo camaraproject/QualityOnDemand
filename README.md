@@ -20,7 +20,6 @@ Repository to describe, develop, document and test the QualityOnDemand API famil
   * get notification if the network cannot fulfill  
 * Describe, develop, document and test the APIs (with 1–2 Service Providers)  
 * Started: October 2021
-* Location: virtually  
 
 ## Release Information
 
