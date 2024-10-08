@@ -56,9 +56,9 @@ info:
 
     ![QoD Management API](https://raw.githubusercontent.com/camaraproject/QualityOnDemand/main/documentation/API_documentation/resources/QoD_details.PNG)
 
-    # Authorization and Authentication
+    # Authorization and authentication
 
-    [Camara Security and Interoperability Profile](https://github.com/camaraproject/IdentityAndConsentManagement/blob/main/documentation/CAMARA-Security-Interoperability.md) provides details on how a client requests an access token.
+    The "Camara Security and Interoperability Profile" provides details on how a client requests an access token. Please refer to Identify and Consent Management (https://github.com/camaraproject/IdentityAndConsentManagement/) for the released version of the Profile.
 
     Which specific authorization flows are to be used will be determined during onboarding process, happening between the API Client and the Telco Operator exposing the API, taking into account the declared purpose for accessing the API, while also being subject to the prevailing legal framework dictated by local legislation.
 
