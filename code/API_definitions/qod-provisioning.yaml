@@ -304,6 +304,9 @@ paths:
           - If a 2-legged access token is used, the device parameter must be provided and identify a device.
         - The QoD provisioning must have been created by the same API client given in the access token.
         - If no provisioning is found for the device, an error response 404 is returned with code "NOT_FOUND".
+        - This call uses the POST method instead of GET to comply with the CAMARA Commonalities guidelines for sending sensitive or complex data in API calls. Since the device field may contain personally identifiable information, it should not be sent via GET. Additionally, this call may include complex data structures.
+          [CAMARA API Design Guidelines](https://github.com/camaraproject/Commonalities/blob/main/documentation/API-design-guidelines.md#post-or-get-for-transferring-sensitive-or-complex-data)
+
       operationId: retrieveProvisioningByDevice
       parameters:
         - $ref: "#/components/parameters/x-correlator"
