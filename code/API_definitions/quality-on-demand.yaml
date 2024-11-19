@@ -408,6 +408,9 @@ paths:
           - If a 2-legged access token is used, the device parameter must be provided and identify a device.
         - The session must have been created by the same API client given in the access token
         - If no QoS session is found for the requested device, an empty array is returned.
+        - This call uses the POST method instead of GET to comply with the CAMARA Commonalities guidelines for sending sensitive or complex data in API calls. Since the device field may contain personally identifiable information, it should not be sent via GET.
+          [CAMARA API Design Guidelines](https://github.com/camaraproject/Commonalities/blob/r0.4.0/documentation/API-design-guidelines.md#post-or-get-for-transferring-sensitive-or-complex-data)
+
       operationId: retrieveSessionsByDevice
       parameters:
         - $ref: "#/components/parameters/x-correlator"
