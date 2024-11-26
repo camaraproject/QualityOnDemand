@@ -90,7 +90,7 @@ info:
 
     # Multi-SIM scenario handling
 
-    In multi-SIM scenarions where more than one mobile device is associated with a phone number (e.g. a smartphone with an associated smartwatch), it might not be possible to uniquely identify the device to which the enhanced QoS profile should apply from that phone number. If the phone number is used as the device identifier when creating a QoS session in a multi-SIM scenario, the API may respond with an error, or may apply the enhanced QoS profile to a device other than the intended device.
+    In multi-SIM scenarios where more than one mobile device is associated with a phone number (e.g. a smartphone with an associated smartwatch), it might not be possible to uniquely identify the device to which the enhanced QoS profile should apply from that phone number. If the phone number is used as the device identifier when creating a QoS session in a multi-SIM scenario, the API may respond with an error, or may apply the enhanced QoS profile to a device other than the intended device.
 
     Possible workarounds in such a scenario include:
     - Using the authorisation code flow to obtain an access token, which will automatically identify the intended device
