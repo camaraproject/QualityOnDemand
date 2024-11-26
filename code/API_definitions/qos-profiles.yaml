@@ -48,6 +48,13 @@ info:
 
     - For scenarios which do not have a single device identifier associated to the token during the authentication flow, e.g. 2-legged access tokens, the `device` object MUST be provided in the API request. This ensures that the device identification is explicit and valid for each API call made with these tokens.
 
+    # Multi-SIM scenario handling
+
+    In multi-SIM scenarions where more than one mobile device is associated with a phone number (e.g. a smartphone with an associated smartwatch), it might not be possible to uniquely identify a single device from that phone number. When filtering QoS profiles by device in such scenarios, one of the following options should be used:
+    - Use the authorisation code flow to obtain a 3-legged access token, which will automatically identify the intended device
+    - Identify the intended device from a unique identifier for that device, such as its source IP address and port
+    - Check with the SIM provider whether a unique "secondary" phone number is already associated with each device, and use the secondary phone number to identify the intended device
+
     # Further info and support
 
     (FAQs will be added in a later version of the documentation)
