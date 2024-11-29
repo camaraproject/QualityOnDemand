@@ -60,7 +60,7 @@ info:
 
     # Multi-SIM scenario handling
 
-    In multi-SIM scenarios where more than one mobile device is associated with a phone number (e.g. a smartphone with an associated smartwatch), it might not be possible to uniquely identify the device to which the QoS provisioning should apply from that phone number. If the phone number is used as the device identifier when provisioning in a multi-SIM scenario, the API may respond with an error, apply the provisioning to all devices in the multi-SIM group, or apply the provisioning to a device in the multi-SIM group other than the intended device.
+    In multi-SIM scenarios where more than one mobile device is associated with a phone number (e.g. a smartphone with an associated smartwatch), it might not be possible to uniquely identify the device to which the QoS provisioning should apply from that phone number. If the phone number is used as the device identifier when provisioning in a multi-SIM scenario, the API may respond with an error, apply the provisioning to all devices in the multi-SIM group, or apply the provisioning to a single device in the multi-SIM group which may not be the intended device.
 
     Possible solutions in such a scenario include:
     - Using the authorisation code flow to obtain an access token, which will automatically identify the intended device
