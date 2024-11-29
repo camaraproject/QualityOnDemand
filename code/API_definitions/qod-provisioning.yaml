@@ -65,7 +65,7 @@ info:
     Possible solutions in such a scenario include:
     - Using the authorisation code flow to obtain an access token, which will automatically identify the intended device
     - Identifying the intended device from a unique identifier for that device, such as its source IP address and port
-    - Check with the SIM provider whether a unique "secondary" phone number is already associated with each device, and use the secondary phone number to identify the intended device
+    - Check with the SIM provider whether a unique "secondary" phone number is already associated with each device, and use the secondary phone number to identify the intended device if available.
 
   license:
     name: Apache 2.0
