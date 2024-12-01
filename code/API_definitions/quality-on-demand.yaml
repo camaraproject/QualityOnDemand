@@ -1051,7 +1051,7 @@ components:
                 code: OUT_OF_RANGE
                 message: Client specified an invalid range.
             DurationOutOfRangeForQoSProfile:
-              description: The requested duration is out of the allowed range for the specific QoS profile
+              description: NOTE - this error response can't be reached within the `/extend` operation and will be removed from the API definition within the next version. 
               value:
                 status: 400
                 code: QUALITY_ON_DEMAND.DURATION_OUT_OF_RANGE
