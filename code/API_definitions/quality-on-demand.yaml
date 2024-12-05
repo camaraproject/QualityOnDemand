@@ -88,6 +88,15 @@ info:
 
     - For scenarios which do not have a single device identifier associated to the token during the authentication flow, e.g. 2-legged access tokens, the `device` object MUST be provided in the API request. This ensures that the device identification is explicit and valid for each API call made with these tokens.
 
+    # Multi-SIM scenario handling
+
+    In multi-SIM scenarios where more than one mobile device is associated with a phone number (e.g. a smartphone with an associated smartwatch), it might not be possible to uniquely identify the device to which the enhanced QoS profile should apply from that phone number. If the phone number is used as the device identifier when creating a QoS session in a multi-SIM scenario, the API may respond with an error, apply the enhanced QoS profile to all devices in the multi-SIM group, or apply the enhanced QoS profile to a single device in the multi-SIM group which may not be the intended device.
+
+    Possible solutions in such a scenario include:
+    - Using the authorisation code flow to obtain an access token, which will automatically identify the intended device
+    - Identifying the intended device from a unique identifier for that device, such as its source IP address and port
+    - Check with the SIM provider whether a unique "secondary" phone number is already associated with each device, and use the secondary phone number to identify the intended device if available
+
     # Further info and support
 
     (FAQs will be added in a later version of the documentation)
@@ -95,7 +104,7 @@ info:
   license:
     name: Apache 2.0
     url: https://www.apache.org/licenses/LICENSE-2.0.html
-  version: 0.11.0
+  version: wip
   x-camara-commonalities: 0.4.0
 
 externalDocs:
@@ -103,7 +112,7 @@ externalDocs:
   url: https://github.com/camaraproject/QualityOnDemand
 
 servers:
-  - url: "{apiRoot}/quality-on-demand/v0.11"
+  - url: "{apiRoot}/quality-on-demand/vwip"
     variables:
       apiRoot:
         default: http://localhost:9091
