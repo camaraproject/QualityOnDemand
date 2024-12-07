@@ -1,6 +1,6 @@
 # API Readiness Checklist
 
-Checklist for qod-provisioning v0.1.0 in r1.2
+Checklist for qod-provisioning v0.1.1 in r1.3
 
 | Nr | API release assets  | alpha | release-candidate |  initial<br>public | stable<br> public | Status | Comments |
 |----|----------------------------------------------|:-----:|:-----------------:|:-------:|:------:|:----:|------|

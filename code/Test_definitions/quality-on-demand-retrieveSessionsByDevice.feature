@@ -1,4 +1,4 @@
-Feature: CAMARA Quality On Demand API, v0.11.0 - Operation retrieveSessionsByDevice
+Feature: CAMARA Quality On Demand API, v0.11.1 - Operation retrieveSessionsByDevice
     # Input to be provided by the implementation to the tester
     #
     # Implementation indications:
