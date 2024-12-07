@@ -26,22 +26,22 @@ Repository to describe, develop, document and test the QualityOnDemand API famil
 * Note: Please be aware that the project will have frequent updates to the main branch. There are no compatibility guarantees associated with code in any branch, including main, until a new release is created. For example, changes may be reverted before a release is created. **For best results, use the latest public release**.
 
 
-* **The latest public release is [r1.2](https://github.com/camaraproject/QualityOnDemand/tree/r1.2) with the following API definitions:**
+* **The latest public release is [r1.3](https://github.com/camaraproject/QualityOnDemand/tree/r1.3) a patch release of r1.2 with the following API definitions:**
 
-  * **quality-on-demand v0.11.0**  
-  [[YAML]](https://github.com/camaraproject/QualityOnDemand/blob/r1.2/code/API_definitions/quality-on-demand.yaml)
-  [[View it on ReDoc]](https://redocly.github.io/redoc/?url=https://raw.githubusercontent.com/camaraproject/QualityOnDemand/r1.2/code/API_definitions/quality-on-demand.yaml&nocors)
-  [[View it on Swagger Editor]](https://editor.swagger.io/?url=https://raw.githubusercontent.com/camaraproject/QualityOnDemand/r1.2/code/API_definitions/quality-on-demand.yaml)
+  * **quality-on-demand v0.11.1**  
+  [[YAML]](https://github.com/camaraproject/QualityOnDemand/blob/r1.3/code/API_definitions/quality-on-demand.yaml)
+  [[View it on ReDoc]](https://redocly.github.io/redoc/?url=https://raw.githubusercontent.com/camaraproject/QualityOnDemand/r1.3/code/API_definitions/quality-on-demand.yaml&nocors)
+  [[View it on Swagger Editor]](https://editor.swagger.io/?url=https://raw.githubusercontent.com/camaraproject/QualityOnDemand/r1.3/code/API_definitions/quality-on-demand.yaml)
   
-  * **qos-profiles v0.11.0**  
-  [[YAML]](https://github.com/camaraproject/QualityOnDemand/blob/r1.2/code/API_definitions/qos-profiles.yaml)
-  [[View it on ReDoc]](https://redocly.github.io/redoc/?url=https://raw.githubusercontent.com/camaraproject/QualityOnDemand/r1.2/code/API_definitions/qos-profiles.yaml&nocors)
-  [[View it on Swagger Editor]](https://editor.swagger.io/?url=https://raw.githubusercontent.com/camaraproject/QualityOnDemand/r1.2/code/API_definitions/qos-profiles.yaml)
+  * **qos-profiles v0.11.1**  
+  [[YAML]](https://github.com/camaraproject/QualityOnDemand/blob/r1.3/code/API_definitions/qos-profiles.yaml)
+  [[View it on ReDoc]](https://redocly.github.io/redoc/?url=https://raw.githubusercontent.com/camaraproject/QualityOnDemand/r1.3/code/API_definitions/qos-profiles.yaml&nocors)
+  [[View it on Swagger Editor]](https://editor.swagger.io/?url=https://raw.githubusercontent.com/camaraproject/QualityOnDemand/r1.3/code/API_definitions/qos-profiles.yaml)
 
-  * qod-provisioning v0.1.0 (new, first initial version)  
-  [[YAML]](https://github.com/camaraproject/QualityOnDemand/blob/r1.2/code/API_definitions/qod-provisioning.yaml)
-  [[View it on ReDoc]](https://redocly.github.io/redoc/?url=https://raw.githubusercontent.com/camaraproject/QualityOnDemand/r1.2/code/API_definitions/qod-provisioning.yaml&nocors)
-  [[View it on Swagger Editor]](https://editor.swagger.io/?url=https://raw.githubusercontent.com/camaraproject/QualityOnDemand/r1.2/code/API_definitions/qod-provisioning.yaml)
+  * qod-provisioning v0.1.1 (new, first initial version)  
+  [[YAML]](https://github.com/camaraproject/QualityOnDemand/blob/r1.3/code/API_definitions/qod-provisioning.yaml)
+  [[View it on ReDoc]](https://redocly.github.io/redoc/?url=https://raw.githubusercontent.com/camaraproject/QualityOnDemand/r1.3/code/API_definitions/qod-provisioning.yaml&nocors)
+  [[View it on Swagger Editor]](https://editor.swagger.io/?url=https://raw.githubusercontent.com/camaraproject/QualityOnDemand/r1.3/code/API_definitions/qod-provisioning.yaml)
 
 * Previous releases and pre-releases are available here: https://github.com/camaraproject/QualityOnDemand/releases
 * For changes see [CHANGELOG.md](https://github.com/camaraproject/QualityOnDemand/blob/main/CHANGELOG.md)
@@ -55,7 +55,7 @@ Repository to describe, develop, document and test the QualityOnDemand API famil
 ## Contributing
 
 * Meetings are held virtually 
-  * Schedule: bi-weekly, Friday, 2 PM CET/CEST (13:00 UTC, 12:00 UTC during European DST). For date/time of the next meeting, see previous meeting minutes
+  * Schedule: bi-weekly, Friday, 13:00 UTC (14:00 CET, 15:00 CEST). For date/time of the next meeting, see previous meeting minutes
   * [Registration / Join](https://zoom-lfx.platform.linuxfoundation.org/meeting/94112812156?password=f238d6af-c959-48d7-a862-abdb3c648e40)
   * Minutes: Access [meeting minutes](https://lf-camaraproject.atlassian.net/wiki/x/XCPe)
 * Mailing List
