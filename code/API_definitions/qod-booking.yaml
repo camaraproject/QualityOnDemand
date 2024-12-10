@@ -1,0 +1,1303 @@
+openapi: 3.0.3
+info:
+  title: QoD Booking API
+  description: |
+    The Quality-On-Demand (QoD) Booking API offers a programmable interface for developers to request the assignment of a certain QoS Profile to a certain device in advance.
+
+    This API enables the developers to book an assignment of the requested QoS profile to an specific device with some conditions such as start time, duration and location.
+
+
+    # Relevant terms and definitions
+
+    * **QoS profiles and QoS profile labels**:
+    Latency, throughput or priority requirements of the application mapped to relevant QoS profile values. The set of QoS Profiles that a network operator is offering may be retrieved via the `qos-profiles` API (cf. https://github.com/camaraproject/QualityOnDemand/) or will be agreed during the onboarding with the API service provider.
+
+    * **Identifier for the device**:
+    At least one identifier for the device (user equipment) out of four options: IPv4 address, IPv6 address, Phone number, or Network Access Identifier assigned by the network operator for the device, at the request time. After the booking request is accepted, the device may get different IP addresses, but the booking will still apply to the device that was identified during the request process. Note: Network Access Identifier is defined for future use and will not be supported with v0.1 of the API.
+
+    * **Notification URL and token**:
+    Developers may provide a callback URL (`sink`) on which notifications about all status change events (e.g. duration expiration) can be received from the service provider. This is an optional parameter. The notification will be sent as a CloudEvent compliant message. If `sink` is included, it is RECOMMENDED for the client to provide as well the `sinkCredential` property to protect the notification endpoint. In the current version,`sinkCredential.credentialType` MUST be set to `ACCESSTOKEN` if provided.
+
+    # Resources and Operations overview
+    The API defines four operations:
+
+    - An operation to setup a new QoD Booking for a given device.
+    - An operation to get the information about a specific QoD Booking, identified by its `BookingId`.
+    - An operation to get the QoD Booking for a given device.
+    - An operation to terminate a QoD Booking, identified by its `BookingId`.
+
+    # Authorization and authentication
+
+    The "Camara Security and Interoperability Profile" provides details on how a client requests an access token. Please refer to Identify and Consent Management (https://github.com/camaraproject/IdentityAndConsentManagement/) for the released version of the Profile.
+
+    Which specific authorization flows are to be used will be determined during onboarding process, happening between the API Client and the Telco Operator exposing the API, taking into account the declared purpose for accessing the API, while also being subject to the prevailing legal framework dictated by local legislation.
+
+    It is important to remark that in cases where personal user data is processed by the API, and users can exercise their rights through mechanisms such as opt-in and/or opt-out, the use of 3-legged access tokens becomes mandatory. This measure ensures that the API remains in strict compliance with user privacy preferences and regulatory obligations, upholding the principles of transparency and user-centric data control.
+
+    # Identifying a device from the access token
+
+    This specification defines the `device` object field as optional in API requests, specifically in cases where the API is accessed using a 3-legged access token, and the device can be uniquely identified by the token. This approach simplifies API usage for API consumers by relying on the device information associated with the access token used to invoke the API.
+
+    ## Handling of device information:
+
+    ### Optional device object for 3-legged tokens:
+
+    - When using a 3-legged access token, the device associated with the access token must be considered as the device for the API request. This means that the device object is not required in the request, and if included it must identify the same device, therefore **it is recommended NOT to include it in these scenarios** to simplify the API usage and avoid additional validations.
+
+    ### Validation mechanism:
+
+    - The server will extract the device identification from the access token, if available.
+    - If the API request additionally includes a `device` object when using a 3-legged access token, the API will validate that the device identifier provided matches the one associated with the access token.
+    - If there is a mismatch, the API will respond with a 403 - INVALID_TOKEN_CONTEXT error, indicating that the device information in the request does not match the token.
+
+    ### Error handling for unidentifiable devices:
+
+    - If the `device` object is not included in the request and the device information cannot be derived from the 3-legged access token, the server will return a 422 `UNIDENTIFIABLE_DEVICE` error.
+
+    ### Restrictions for tokens without an associated authenticated identifier:
+
+    - For scenarios which do not have a single device identifier associated to the token during the authentication flow, e.g. 2-legged access tokens, the `device` object MUST be provided in the API request. This ensures that the device identification is explicit and valid for each API call made with these tokens.
+  license:
+    name: Apache 2.0
+    url: https://www.apache.org/licenses/LICENSE-2.0.html
+  version: wip
+  x-camara-commonalities: 0.5.0
+
+externalDocs:
+  description: Project documentation at CAMARA
+  url: https://github.com/camaraproject/QualityOnDemand
+
+servers:
+  - url: "{apiRoot}/qod-booking/vwip"
+    variables:
+      apiRoot:
+        default: http://localhost:9091
+        description: API root, defined by the service provider, e.g. `api.example.com` or `api.example.com/somepath`
+tags:
+  - name: QoD Booking
+    description: Manage the booking of QoD
+
+paths:
+  /device-qos:
+    post:
+      tags:
+        - QoD Booking
+      summary: Sets a new booking of QoS for a device
+      description: |
+        Triggers a new booking to assign certain QoS Profile to certain device.
+
+        - If the booking is completed synchronously, the response will be 201 with `status` = `SCHEDULED`.
+        - If the booking request is accepted but not yet completed, the response will be 201 with `status` = `REQUESTED`.
+        - If the operator determines synchronously that the booking request cannot be fulfilled, the response will be 201 with `status` = `UNAVAILABLE`.
+
+        - If the request includes  the `sink` and `sinkCredential` properties, the client will receive a `status-changed` event with the outcome of the process. The event will be sent also for synchronous operations.
+
+        **NOTES:**
+        - When the booking status becomes `UNAVAILABLE`, the QoD Booking resource is not immediately released, but will get deleted automatically, at earliest 360 seconds after.
+
+        This behavior allows clients which are not receiving notification events but are polling, to get the booking status information.
+        - The access token may be either 2-legged or 3-legged.
+          - If a 3-legged access token which is associated with a device is used, it is recommended NOT to include the `device` parameter in the request (see "Handling of device information" within the API description for details).
+          - If a 2-legged access token is used, the device parameter must be provided and identify a device.
+
+      operationId: createBooking
+      parameters:
+        - $ref: "#/components/parameters/x-correlator"
+      requestBody:
+        description: Parameters to create a new booking
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateBooking"
+        required: true
+      callbacks:
+        notifications:
+          "{$request.body#/sink}":
+            post:
+              summary: Booking notifications callback
+              description: |
+                Important: this endpoint is to be implemented by the API consumer.
+                The QoD server will call this endpoint whenever any QoD Booking change related event occurs.
+                Currently only `Booking_STATUS_CHANGED` event is defined.
+              operationId: postBookingNotification
+              parameters:
+                - $ref: "#/components/parameters/x-correlator"
+              requestBody:
+                required: true
+                content:
+                  application/cloudevents+json:
+                    schema:
+                      $ref: "#/components/schemas/CloudEvent"
+                    examples:
+                      Booking_STATUS_CHANGED_EXAMPLE:
+                        $ref: "#/components/examples/Booking_STATUS_CHANGED_EXAMPLE"
+              responses:
+                "204":
+                  description: Successful notification
+                  headers:
+                    x-correlator:
+                      $ref: "#/components/headers/x-correlator"
+                "400":
+                  $ref: "#/components/responses/Generic400"
+                "401":
+                  $ref: "#/components/responses/Generic401"
+                "403":
+                  $ref: "#/components/responses/Generic403"
+                "410":
+                  $ref: "#/components/responses/Generic410"
+                "429":
+                  $ref: "#/components/responses/Generic429"
+                "500":
+                  $ref: "#/components/responses/Generic500"
+                "503":
+                  $ref: "#/components/responses/Generic503"
+              security:
+                - {}
+                - notificationsBearerAuth: []
+      responses:
+        "201":
+          description: Booking created
+          headers:
+            x-correlator:
+              $ref: "#/components/headers/x-correlator"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/BookingInfo"
+        "400":
+          $ref: "#/components/responses/CreateBooking400"
+        "401":
+          $ref: "#/components/responses/Generic401"
+        "403":
+          $ref: "#/components/responses/Generic403"
+        "404":
+          $ref: "#/components/responses/GenericDevice404"
+        "409":
+          $ref: "#/components/responses/BookingConflict409"
+        "422":
+          $ref: "#/components/responses/Generic422"
+        "429":
+          $ref: "#/components/responses/Generic429"
+        "500":
+          $ref: "#/components/responses/Generic500"
+        "503":
+          $ref: "#/components/responses/Generic503"
+      security:
+        - openId:
+            - "qod-booking:device-qos:create"
+
+  /device-qos/{bookingId}:
+    get:
+      tags:
+        - QoD Booking
+      summary: Get QoD Booking information
+      description: |
+        Querying for QoD Booking information details
+
+        **NOTES:**
+        - The access token may be either 2-legged or 3-legged.
+        - If a 3-legged access token is used, the end user (and device) associated with the QoD Booking must also be associated with the access token.
+        - The QoD Booking must have been created by the same API client given in the access token.
+      operationId: getBookingById
+      parameters:
+        - $ref: "#/components/parameters/BookingId"
+        - $ref: "#/components/parameters/x-correlator"
+      responses:
+        "200":
+          description: Returns information about certain booking
+          headers:
+            x-correlator:
+              $ref: "#/components/headers/x-correlator"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/BookingInfo"
+              examples:
+                Booking_AVAILABLE:
+                  $ref: "#/components/examples/Booking_AVAILABLE"
+                Booking_UNAVAILABLE:
+                  $ref: "#/components/examples/Booking_UNAVAILABLE"
+        "400":
+          $ref: "#/components/responses/Generic400"
+        "401":
+          $ref: "#/components/responses/Generic401"
+        "403":
+          $ref: "#/components/responses/Generic403"
+        "404":
+          $ref: "#/components/responses/Generic404"
+        "429":
+          $ref: "#/components/responses/Generic429"
+        "500":
+          $ref: "#/components/responses/Generic500"
+        "503":
+          $ref: "#/components/responses/Generic503"
+      security:
+        - openId:
+            - "qod-booking:device-qos:read"
+
+    delete:
+      tags:
+        - QoD Booking
+      summary: Deletes a QoD Booking
+      description: |
+        Terminate a QoS Booking.
+
+        If the notification callback is provided and the booking status was `SCHEDULED` or `AVAILABLE`, when the deletion is completed, the client will receive in addition to the response a `Booking_STATUS_CHANGED` event with
+        - `status` as `UNAVAILABLE` and
+        - `statusInfo` as `DELETE_REQUESTED`
+        There will be no notification event if the `status` was already `UNAVAILABLE`.
+
+        **NOTES:**
+        - The access token may be either 2-legged or 3-legged.
+        - If a 3-legged access token is used, the end user (and device) associated with the QoD Booking must also be associated with the access token.
+        - The QoD Booking must have been created by the same API client given in the access token.
+      operationId: deleteBooking
+      parameters:
+        - $ref: "#/components/parameters/BookingId"
+        - $ref: "#/components/parameters/x-correlator"
+      responses:
+        "204":
+          description: Booking deleted
+          headers:
+            x-correlator:
+              $ref: "#/components/headers/x-correlator"
+        "202":
+          description: Deletion request accepted to be processed. It applies for an async deletion process. `status` in the response will be `SCHEDULED` or `AVAILABLE` with `statusInfo` set to `DELETE_REQUESTED`.
+          headers:
+            x-correlator:
+              $ref: "#/components/headers/x-correlator"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/BookingInfo"
+        "400":
+          $ref: "#/components/responses/Generic400"
+        "401":
+          $ref: "#/components/responses/Generic401"
+        "403":
+          $ref: "#/components/responses/Generic403"
+        "404":
+          $ref: "#/components/responses/Generic404"
+        "429":
+          $ref: "#/components/responses/Generic429"
+        "500":
+          $ref: "#/components/responses/Generic500"
+        "503":
+          $ref: "#/components/responses/Generic503"
+      security:
+        - openId:
+            - "qod-booking:device-qos:delete"
+
+  /retrieve-device-qos:
+    post:
+      tags:
+        - QoD Booking
+      summary: Gets the QoD Booking for a device
+      description: |
+        Retrieves the QoD Booking for a device.
+
+        **NOTES:**
+        - The access token may be either 2-legged or 3-legged.
+          - If a 3-legged access token is used, the end user (and device) associated with the QoD Booking must also be associated with the access token. In this case it is recommended NOT to include the `device` parameter in the request (see "Handling of device information" within the API description for details).
+          - If a 2-legged access token is used, the device parameter must be provided and identify a device.
+        - The QoD Booking must have been created by the same API client given in the access token.
+        - If no Booking is found for the device, an error response 404 is returned with code "NOT_FOUND".
+        - This call uses the POST method instead of GET to comply with the [CAMARA Commonalities guidelines](https://github.com/camaraproject/Commonalities/blob/r0.4.0/documentation/API-design-guidelines.md#post-or-get-for-transferring-sensitive-or-complex-data) for sending sensitive or complex data in API calls. Since the device field may contain personally identifiable information, it should not be sent via GET.
+
+      operationId: retrieveBookingByDevice
+      parameters:
+        - $ref: "#/components/parameters/x-correlator"
+      requestBody:
+        description: Parameters to retrieve a booking by device
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/RetrieveBookingByDevice"
+        required: true
+      responses:
+        "200":
+          description: Returns information about QoS Booking for the device.
+          headers:
+            x-correlator:
+              $ref: "#/components/headers/x-correlator"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/BookingInfo"
+              examples:
+                Booking_AVAILABLE:
+                  $ref: "#/components/examples/Booking_AVAILABLE"
+                Booking_AVAILABLE_WITHOUT_DEVICE:
+                  $ref: "#/components/examples/Booking_AVAILABLE_WITHOUT_DEVICE"
+        "400":
+          $ref: "#/components/responses/Generic400"
+        "401":
+          $ref: "#/components/responses/Generic401"
+        "403":
+          $ref: "#/components/responses/Generic403"
+        "404":
+          $ref: "#/components/responses/GenericDevice404"
+        "422":
+          $ref: "#/components/responses/Generic422"
+        "429":
+          $ref: "#/components/responses/Generic429"
+        "500":
+          $ref: "#/components/responses/Generic500"
+        "503":
+          $ref: "#/components/responses/Generic503"
+      security:
+        - openId:
+            - "qod-booking:device-qos:read-by-device"
+
+components:
+  securitySchemes:
+    openId:
+      description: OpenID Connect authentication
+      type: openIdConnect
+      openIdConnectUrl: https://example.com/.well-known/openid-configuration
+    notificationsBearerAuth:
+      description: Bearer authentication for notifications
+      type: http
+      scheme: bearer
+      bearerFormat: "{$request.body#/sinkCredential.credentialType}"
+
+  parameters:
+    BookingId:
+      name: BookingId
+      in: path
+      description: Booking ID that was obtained from the createProvision operation
+      required: true
+      schema:
+        $ref: "#/components/schemas/BookingId"
+
+    x-correlator:
+      name: x-correlator
+      in: header
+      description: Correlation id for the different services
+      schema:
+        type: string
+
+  headers:
+    x-correlator:
+      description: Correlation id for the different services
+      schema:
+        type: string
+
+  schemas:
+    BookingId:
+      description: Booking Identifier in UUID format
+      type: string
+      format: uuid
+
+    BaseBookingInfo:
+      description: Common attributes of a QoD Booking
+      type: object
+      properties:
+        device:
+          $ref: "#/components/schemas/Device"
+        qosProfile:
+          $ref: "#/components/schemas/QosProfileName"
+        applicationServer:
+          $ref: "#/components/schemas/ApplicationServer"
+        devicePorts:
+          description: The ports used locally by the device for flows to which the requested QoS profile should apply. If omitted, then the qosProfile will apply to all flows between the device and the specified application server address and ports
+          allOf:
+            - $ref: "#/components/schemas/PortsSpec"
+        applicationServerPorts:
+          description: A list of single ports or port ranges on the application server
+          allOf:
+            - $ref: "#/components/schemas/PortsSpec"
+        sink:
+          type: string
+          format: url
+          description: The address to which events shall be delivered, using the HTTP protocol.
+          example: "https://endpoint.example.com/sink"
+        sinkCredential:
+          $ref: "#/components/schemas/SinkCredential"
+      required:
+        - device
+        - qosProfile
+
+    BookingInfo:
+      description: |
+        Booking related information returned in responses.
+        Optional device object only to be returned if provided in createBooking. If more than one type of device identifier was provided, only one identifier will be returned (at implementation choice and with the original value provided in createBooking).
+        Please note that IP addresses of devices can change and get reused, so the original values may no longer identify the same device. They identified the device at the time of QoD Booking creation.
+      allOf:
+        - $ref: "#/components/schemas/BaseBookingInfo"
+        - type: object
+          properties:
+            statrTime:
+              description: Date and time when the platform of the API Provider switches the QoS flow with a requested QoS Profile. Format must follow RFC 3339 and must indicate time zone (UTC or local).
+              type: string
+              format: date-time
+              example: "2024-06-01T12:00:00Z"
+            duration:
+              description: |
+                Session duration in seconds. Implementations can grant the requested session duration or set a different duration from startTime, based on network policies or conditions.
+                - When `qosStatus` is "REQUESTED" or "SCHEDULED", the value is the duration to be scheduled, granted by the implementation.
+                - When `qosStatus` is "AVAILABLE", the value is the overall duration since `startedAt.
+                - When `qosStatus` is "UNAVAILABLE", the value is the overall effective duration since `startedAt` until the session was terminated.
+              type: integer
+              format: int32
+              minimum: 1
+              example: 3600
+            serviceArea:
+              $ref: "#/components/schemas/Area"
+            BookingId:
+              $ref: "#/components/schemas/BookingId"              
+            startedAt:
+              description: Date and time when the Booking became "AVAILABLE". Not to be returned when `status` is "REQUESTED" or "SCHEDULED". Format must follow RFC 3339 and must indicate time zone (UTC or local).
+              type: string
+              format: date-time
+              example: "2024-06-01T12:00:00Z"
+            status:
+              $ref: "#/components/schemas/Status"
+            statusInfo:
+              $ref: "#/components/schemas/StatusInfo"
+          required:
+            - BookingId
+            - status
+
+    CreateBooking:
+      description: Attributes to request a new QoD Booking
+      allOf:
+        - $ref: "#/components/schemas/BaseBookingInfo"
+        - type: object
+          properties:
+            statrTime:
+              description: Date and time when the platform of the API Provider switches the QoS flow with a requested QoS Profile. Format must follow RFC 3339 and must indicate time zone (UTC or local).
+              type: string
+              format: date-time
+              example: "2024-06-01T12:00:00Z"
+            duration:
+              description:
+                Session duration in seconds. Implementations can grant the requested session duration or set a different duration from startTime, based on network policies or conditions.
+                - When `qosStatus` is "REQUESTED" or "SCHEDULED", the value is the duration to be scheduled, granted by the implementation.
+                - When `qosStatus` is "AVAILABLE", the value is the overall duration since `startedAt.
+                - When `qosStatus` is "UNAVAILABLE", the value is the overall effective duration since `startedAt` until the session was terminated.
+              type: integer
+              format: int32
+              minimum: 1
+              example: 3600
+            serviceArea:
+              $ref: "#/components/schemas/Area"
+
+    RetrieveBookingByDevice:
+      description: Attributes to look for QoD Booking
+      type: object
+      properties:
+        device:
+          $ref: "#/components/schemas/Device"
+
+    SinkCredential:
+      description: A sink credential provides authentication or authorization information necessary to enable delivery of events to a target.
+      type: object
+      properties:
+        credentialType:
+          type: string
+          enum:
+            - PLAIN
+            - ACCESSTOKEN
+            - REFRESHTOKEN
+          description: "The type of the credential."
+      discriminator:
+        propertyName: credentialType
+        mapping:
+          PLAIN: "#/components/schemas/PlainCredential"
+          ACCESSTOKEN: "#/components/schemas/AccessTokenCredential"
+          REFRESHTOKEN: "#/components/schemas/RefreshTokenCredential"
+      required:
+        - credentialType
+
+    PlainCredential:
+      type: object
+      description: A plain credential as a combination of an identifier and a secret.
+      allOf:
+        - $ref: "#/components/schemas/SinkCredential"
+        - type: object
+          required:
+            - identifier
+            - secret
+          properties:
+            identifier:
+              description: The identifier might be an account or username.
+              type: string
+            secret:
+              description: The secret might be a password or passphrase.
+              type: string
+
+    AccessTokenCredential:
+      type: object
+      description: An access token credential.
+      allOf:
+        - $ref: "#/components/schemas/SinkCredential"
+        - type: object
+          properties:
+            accessToken:
+              description: REQUIRED. An access token is a previously acquired token granting access to the target resource.
+              type: string
+            accessTokenExpiresUtc:
+              type: string
+              format: date-time
+              description: REQUIRED. An absolute UTC instant at which the token shall be considered expired.
+            accessTokenType:
+              description: REQUIRED. Type of the access token (See [OAuth 2.0](https://tools.ietf.org/html/rfc6749#section-7.1)).
+              type: string
+              enum:
+                - bearer
+          required:
+            - accessToken
+            - accessTokenExpiresUtc
+            - accessTokenType
+
+    RefreshTokenCredential:
+      type: object
+      description: An access token credential with a refresh token.
+      allOf:
+        - $ref: "#/components/schemas/SinkCredential"
+        - type: object
+          properties:
+            accessToken:
+              description: REQUIRED. An access token is a previously acquired token granting access to the target resource.
+              type: string
+            accessTokenExpiresUtc:
+              type: string
+              format: date-time
+              description: REQUIRED. An absolute UTC instant at which the token shall be considered expired.
+            accessTokenType:
+              description: REQUIRED. Type of the access token (See [OAuth 2.0](https://tools.ietf.org/html/rfc6749#section-7.1)).
+              type: string
+              enum:
+                - bearer
+            refreshToken:
+              description: REQUIRED. An refresh token credential used to acquire access tokens.
+              type: string
+            refreshTokenEndpoint:
+              type: string
+              format: uri
+              description: REQUIRED. A URL at which the refresh token can be traded for an access token.
+      required:
+        - accessToken
+        - accessTokenExpiresUtc
+        - accessTokenType
+        - refreshToken
+        - refreshTokenEndpoint
+
+    Port:
+      description: TCP or UDP port number
+      type: integer
+      minimum: 0
+      maximum: 65535
+
+    PortsSpec:
+      description: Specification of several TCP or UDP ports
+      type: object
+      minProperties: 1
+      properties:
+        ranges:
+          description: Range of TCP or UDP ports
+          type: array
+          minItems: 1
+          items:
+            type: object
+            required:
+              - from
+              - to
+            properties:
+              from:
+                $ref: "#/components/schemas/Port"
+              to:
+                $ref: "#/components/schemas/Port"
+        ports:
+          description: Array of TCP or UDP ports
+          type: array
+          minItems: 1
+          items:
+            $ref: "#/components/schemas/Port"
+      example:
+        ranges:
+          - from: 5010
+            to: 5020
+        ports:
+          - 5060
+          - 5070
+
+    QosProfileName:
+      description: |
+        A unique name for identifying a specific QoS profile.
+        This may follow different formats depending on the service providers implementation.
+        Some options addresses:
+          - A UUID style string
+          - Support for predefined profiles QOS_S, QOS_M, QOS_L, and QOS_E
+          - A searchable descriptive name
+        The set of QoS Profiles that an operator is offering can be retrieved by means of the [QoS Profile API](link TBC).
+      type: string
+      example: QCI_1_voice
+      minLength: 3
+      maxLength: 256
+      format: string
+      pattern: "^[a-zA-Z0-9_.-]+$"
+
+    CloudEvent:
+      description: Event compliant with the CloudEvents specification
+      required:
+        - id
+        - source
+        - specversion
+        - type
+        - time
+      properties:
+        id:
+          description: Identifier of this event, that must be unique in the source context.
+          type: string
+        source:
+          description: Identifies the context in which an event happened in the specific Provider Implementation.
+          type: string
+          format: uri-reference
+        type:
+          description: The type of the event.
+          type: string
+          enum:
+            - "org.camaraproject.qod-booking.v0.status-changed"
+        specversion:
+          description: Version of the specification to which this event conforms (must be 1.0 if it conforms to cloudevents 1.0.2 version)
+          type: string
+          enum:
+            - "1.0"
+        datacontenttype:
+          description: 'media-type that describes the event payload encoding, must be "application/json" for CAMARA APIs'
+          type: string
+          enum:
+            - "application/json"
+        data:
+          description: Event notification details payload, which depends on the event type
+          type: object
+        time:
+          description: |
+            Timestamp of when the occurrence happened. It must follow RFC 3339
+          type: string
+          format: date-time
+      discriminator:
+        propertyName: "type"
+        mapping:
+          org.camaraproject.qod-booking.v0.status-changed: "#/components/schemas/EventStatusChanged"
+
+    EventStatusChanged:
+      description: Event to notify a QoD Booking status change
+      allOf:
+        - $ref: "#/components/schemas/CloudEvent"
+        - type: object
+          properties:
+            data:
+              type: object
+              description: Event details depending on the event type
+              required:
+                - BookingId
+                - qosStatus
+              properties:
+                BookingId:
+                  $ref: "#/components/schemas/BookingId"
+                status:
+                  $ref: "#/components/schemas/StatusChanged"
+                statusInfo:
+                  $ref: "#/components/schemas/StatusInfo"
+          required:
+            - data
+
+    StatusInfo:
+      description: |
+        Reason for the new `status`:
+        * `NETWORK_TERMINATED` - Network terminated the QoD Booking
+        * `DELETE_REQUESTED`- User requested the deletion of the QoD Booking
+
+      type: string
+      enum:
+        - NETWORK_TERMINATED
+        - DELETE_REQUESTED
+
+    Area:
+      description: Base schema for all areas
+      type: object
+      properties:
+        areaType:
+          $ref: "#/components/schemas/AreaType"
+      required:
+        - areaType
+      discriminator:
+        propertyName: areaType
+        mapping:
+          CIRCLE: "#/components/schemas/Circle"
+          POLYGON: "#/components/schemas/Polygon"
+
+    AreaType:
+      type: string
+      description: |
+        Type of this area.
+        CIRCLE - The area is defined as a circle.
+        POLYGON - The area is defined as a polygon.
+      enum:
+        - CIRCLE
+        - POLYGON
+
+    Circle:
+      description: Circular area
+      allOf:
+        - $ref: "#/components/schemas/Area"
+        - type: object
+          required:
+            - center
+            - radius
+          properties:
+            center:
+              $ref: "#/components/schemas/Point"
+            radius:
+              type: number
+              description: Distance from the center in meters
+              minimum: 1
+
+    Polygon:
+      description: Polygonal area. The Polygon should be a simple polygon, i.e. should not intersect itself.
+      allOf:
+        - $ref: "#/components/schemas/Area"
+        - type: object
+          required:
+            - boundary
+          properties:
+            boundary:
+              $ref: "#/components/schemas/PointList"
+
+    PointList:
+      description: List of points defining a polygon
+      type: array
+      items:
+        $ref: "#/components/schemas/Point"
+      minItems: 3
+      maxItems: 15
+
+    Point:
+      type: object
+      description: Coordinates (latitude, longitude) defining a location in a map
+      required:
+        - latitude
+        - longitude
+      properties:
+        latitude:
+          $ref: "#/components/schemas/Latitude"
+        longitude:
+          $ref: "#/components/schemas/Longitude"
+      example:
+        latitude: 50.735851
+        longitude: 7.10066
+
+    Latitude:
+      description: Latitude component of a location
+      type: number
+      format: double
+      minimum: -90
+      maximum: 90
+
+    Longitude:
+      description: Longitude component of location
+      type: number
+      format: double
+      minimum: -180
+      maximum: 180
+
+    Device:
+      description: |
+        End-user equipment able to connect to the network. Examples of devices include smartphones or IoT sensors/actuators.
+
+        The developer can choose to provide the below specified device identifiers:
+
+        * `ipv4Address`
+        * `ipv6Address`
+        * `phoneNumber`
+        * `networkAccessIdentifier`
+
+        NOTE1: the network operator might support only a subset of these options. The API invoker can provide multiple identifiers to be compatible across different network operators. In this case the identifiers MUST belong to the same device.
+        NOTE2: for the Commonalities release v0.4, we are enforcing that the networkAccessIdentifier is only part of the schema for future-proofing, and CAMARA does not currently allow its use. After the CAMARA meta-release work is concluded and the relevant issues are resolved, its use will need to be explicitly documented in the guidelines.
+      type: object
+      properties:
+        phoneNumber:
+          $ref: "#/components/schemas/PhoneNumber"
+        networkAccessIdentifier:
+          $ref: "#/components/schemas/NetworkAccessIdentifier"
+        ipv4Address:
+          $ref: "#/components/schemas/DeviceIpv4Addr"
+        ipv6Address:
+          $ref: "#/components/schemas/DeviceIpv6Address"
+      minProperties: 1
+
+    ApplicationServer:
+      description: |
+        A server hosting backend applications to deliver some business logic to clients.
+
+        The developer can choose to provide the below specified device identifiers:
+
+        * `ipv4Address`
+        * `ipv6Address`
+      type: object
+      properties:
+        ipv4Address:
+          $ref: "#/components/schemas/ApplicationServerIpv4Address"
+        ipv6Address:
+          $ref: "#/components/schemas/ApplicationServerIpv6Address"
+      minProperties: 1
+
+    ApplicationServerIpv4Address:
+      type: string
+      example: "198.51.100.0/24"
+      description: |
+        IPv4 address may be specified in form <address/mask> as:
+          - address - an IPv4 number in dotted-quad form 1.2.3.4. Only this exact IP number will match the flow control rule.
+          - address/mask - an IP number as above with a mask width of the form 1.2.3.4/24.
+            In this case, all IP numbers from 1.2.3.0 to 1.2.3.255 will match. The bit width MUST be valid for the IP version.
+
+    ApplicationServerIpv6Address:
+      type: string
+      example: "2001:db8:85a3:8d3:1319:8a2e:370:7344"
+      description: |
+        IPv6 address may be specified in form <address/mask> as:
+          - address - The /128 subnet is optional for single addresses:
+            - 2001:db8:85a3:8d3:1319:8a2e:370:7344
+            - 2001:db8:85a3:8d3:1319:8a2e:370:7344/128
+          - address/mask - an IP v6 number with a mask:
+            - 2001:db8:85a3:8d3::0/64
+            - 2001:db8:85a3:8d3::/64
+
+    NetworkAccessIdentifier:
+      description: A public identifier addressing a subscription in a mobile network. In 3GPP terminology, it corresponds to the GPSI formatted with the External Identifier ({Local Identifier}@{Domain Identifier}). Unlike the telephone number, the network access identifier is not subjected to portability ruling in force, and is individually managed by each operator.
+      type: string
+      example: "123456789@domain.com"
+
+    PhoneNumber:
+      description: A public identifier addressing a telephone subscription. In mobile networks it corresponds to the MSISDN (Mobile Station International Subscriber Directory Number). In order to be globally unique it has to be formatted in international format, according to E.164 standard, prefixed with '+'.
+      type: string
+      pattern: '^\+[1-9][0-9]{4,14}$'
+      example: "+123456789"
+
+    DeviceIpv4Addr:
+      type: object
+      description: |
+        The device should be identified by either the public (observed) IP address and port as seen by the application server, or the private (local) and any public (observed) IP addresses in use by the device (this information can be obtained by various means, for example from some DNS servers).
+
+        If the allocated and observed IP addresses are the same (i.e. NAT is not in use) then  the same address should be specified for both publicAddress and privateAddress.
+
+        If NAT64 is in use, the device should be identified by its publicAddress and publicPort, or separately by its allocated IPv6 address (field ipv6Address of the Device object)
+
+        In all cases, publicAddress must be specified, along with at least one of either privateAddress or publicPort, dependent upon which is known. In general, mobile devices cannot be identified by their public IPv4 address alone.
+      properties:
+        publicAddress:
+          $ref: "#/components/schemas/SingleIpv4Addr"
+        privateAddress:
+          $ref: "#/components/schemas/SingleIpv4Addr"
+        publicPort:
+          $ref: "#/components/schemas/Port"
+      anyOf:
+        - required: [publicAddress, privateAddress]
+        - required: [publicAddress, publicPort]
+      example:
+        {
+          "publicAddress": "203.0.113.0",
+          "publicPort": 59765
+        }
+
+    SingleIpv4Addr:
+      description: A single IPv4 address with no subnet mask
+      type: string
+      format: ipv4
+      example: "203.0.113.0"
+
+    DeviceIpv6Address:
+      description: |
+        The device should be identified by the observed IPv6 address, or by any single IPv6 address from within the subnet allocated to the device (e.g. adding ::0 to the /64 prefix).
+      type: string
+      format: ipv6
+      example: 2001:db8:85a3:8d3:1319:8a2e:370:7344
+
+    Status:
+      description: |
+        The current status of the requested QoD Booking. The status can be one of the following:
+        * `REQUESTED` - QoD Booking has been requested but is still being processed.
+        * `SCHEDULED` - QoD Booking has been requested but is still before the requested start time for the requested QoS profile.
+        * `AVAILABLE` - The requested QoS profile has been provisioned to the device, and is active.
+        * `UNAVAILABLE` - The QoD Booking request has been processed but is not active. `statusInfo` may provide additional information about the reason for the unavailability.
+      enum:
+        - REQUESTED
+        - SCHEDULED
+        - AVAILABLE
+        - UNAVAILABLE
+
+    StatusChanged:
+      description: |
+        The current status of a requested, scheduled or previously available QoD Booking. Applicable values in the event are:
+        * `SCHEDULED` - QoD Booking has been requested but is still before the requested start time for the requested QoS profile.
+        *  `AVAILABLE` - The requested QoS profile has been provisioned to the device, and is active.
+        *  `UNAVAILABLE` - A requested or previously available QoD Booking is now unavailable. `statusInfo` may provide additional information about the reason for the unavailability.
+      type: string
+      enum:
+        - SCHEDULED
+        - AVAILABLE
+        - UNAVAILABLE
+
+    ErrorInfo:
+      description: Common schema for errors
+      type: object
+      properties:
+        status:
+          type: integer
+          description: HTTP status code returned along with this error response
+        code:
+          type: string
+          description: Code given to this error
+        message:
+          type: string
+          description: Detailed error description
+      required:
+        - status
+        - code
+        - message
+
+  responses:
+    Generic400:
+      description: Bad Request
+      headers:
+        x-correlator:
+          $ref: "#/components/headers/x-correlator"
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ErrorInfo"
+          examples:
+            GENERIC_400_INVALID_ARGUMENT:
+              description: Invalid Argument. Generic Syntax Exception
+              value:
+                status: 400
+                code: INVALID_ARGUMENT
+                message: Client specified an invalid argument, request body or query param.
+            GENERIC_400_OUT_OF_RANGE:
+              description: Out of Range. Specific Syntax Exception used when a given field has a pre-defined range or a invalid filter criteria combination is requested
+              value:
+                status: 400
+                code: OUT_OF_RANGE
+                message: Client specified an invalid range.
+
+    CreateBooking400:
+      description: Bad Request with additional errors for implicit notifications
+      headers:
+        x-correlator:
+          $ref: "#/components/headers/x-correlator"
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ErrorInfo"
+          examples:
+            GENERIC_400_INVALID_ARGUMENT:
+              description: Invalid Argument. Generic Syntax Exception
+              value:
+                status: 400
+                code: INVALID_ARGUMENT
+                message: Client specified an invalid argument, request body or query param.
+            GENERIC_400_OUT_OF_RANGE:
+              description: Out of Range. Specific Syntax Exception used when a given field has a pre-defined range or a invalid filter criteria combination is requested
+              value:
+                status: 400
+                code: OUT_OF_RANGE
+                message: Client specified an invalid range.
+            GENERIC_400_INVALID_CREDENTIAL:
+              value:
+                status: 400
+                code: "INVALID_CREDENTIAL"
+                message: "Only Access token is supported"
+            GENERIC_400_INVALID_TOKEN:
+              value:
+                status: 400
+                code: "INVALID_TOKEN"
+                message: "Only bearer token is supported"
+
+    Generic401:
+      description: Unauthorized
+      headers:
+        x-correlator:
+          $ref: "#/components/headers/x-correlator"
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ErrorInfo"
+          examples:
+            GENERIC_401_UNAUTHENTICATED:
+              description: Request cannot be authenticated
+              value:
+                status: 401
+                code: UNAUTHENTICATED
+                message: Request not authenticated due to missing, invalid, or expired credentials.
+            GENERIC_401_AUTHENTICATION_REQUIRED:
+              description: New authentication is needed, authentication is no longer valid
+              value:
+                status: 401
+                code: AUTHENTICATION_REQUIRED
+                message: New authentication is required.
+
+    Generic403:
+      description: Forbidden
+      headers:
+        x-correlator:
+          $ref: "#/components/headers/x-correlator"
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ErrorInfo"
+          examples:
+            GENERIC_403_PERMISSION_DENIED:
+              description: Permission denied. OAuth2 token access does not have the required scope or when the user fails operational security
+              value:
+                status: 403
+                code: PERMISSION_DENIED
+                message: Client does not have sufficient permissions to perform this action.
+            GENERIC_403_INVALID_TOKEN_CONTEXT:
+              description: Reflect some inconsistency between information in some field of the API and the related OAuth2 Token
+              value:
+                status: 403
+                code: INVALID_TOKEN_CONTEXT
+                message: "{{field}} is not consistent with access token."
+
+    Generic404:
+      description: Not found
+      headers:
+        x-correlator:
+          $ref: "#/components/headers/x-correlator"
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ErrorInfo"
+          examples:
+            GENERIC_404_NOT_FOUND:
+              description: Resource is not found
+              value:
+                status: 404
+                code: NOT_FOUND
+                message: The specified resource is not found.
+
+    GenericDevice404:
+      description: Not found
+      headers:
+        x-correlator:
+          $ref: "#/components/headers/x-correlator"
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ErrorInfo"
+          examples:
+            GENERIC_404_NOT_FOUND:
+              description: Resource is not found
+              value:
+                status: 404
+                code: NOT_FOUND
+                message: The specified resource is not found.
+            GENERIC_404_DEVICE_NOT_FOUND:
+              description: Device identifier not found
+              value:
+                status: 404
+                code: DEVICE_NOT_FOUND
+                message: Device identifier not found.
+
+    BookingConflict409:
+      description: Booking conflict
+      headers:
+        x-correlator:
+          $ref: "#/components/headers/x-correlator"
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ErrorInfo"
+          examples:
+            Booking_409_CONFLICT:
+              description: The requested Booking conflicts with an existing one
+              value:
+                status: 409
+                code: CONFLICT
+                message: "There is another existing Booking for the same device"
+
+    Generic410:
+      description: Gone
+      headers:
+        x-correlator:
+          $ref: "#/components/headers/x-correlator"
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ErrorInfo"
+          examples:
+            GENERIC_410_GONE:
+              description: Use in notifications flow to allow API Consumer to indicate that its callback is no longer available
+              value:
+                status: 410
+                code: GONE
+                message: Access to the target resource is no longer available.
+
+    Generic422:
+      description: Unprocessable entity
+      headers:
+        x-correlator:
+          $ref: "#/components/headers/x-correlator"
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ErrorInfo"
+          examples:
+            GENERIC_422_UNPROCESSABLE_ENTITY:
+              description: The request was well-formed but was unable to be processed due to semantic errors or not applicable values. This is the generic error code for 422 responses.
+              value:
+                status: 422
+                code: UNPROCESSABLE_ENTITY
+                message: "Value not acceptable: ..."
+            GENERIC_422_DEVICE_IDENTIFIERS_MISMATCH:
+              description: Inconsistency between device identifiers not pointing to the same device
+              value:
+                status: 422
+                code: DEVICE_IDENTIFIERS_MISMATCH
+                message: Provided device identifiers are not consistent.
+            GENERIC_422_DEVICE_NOT_APPLICABLE:
+              description: Service is not available for the provided device
+              value:
+                status: 422
+                code: DEVICE_NOT_APPLICABLE
+                message: The service is not available for the provided device.
+            GENERIC_422_UNSUPPORTED_DEVICE_IDENTIFIERS:
+              description: Message may list the supported device identifiers
+              value:
+                status: 422
+                code: UNSUPPORTED_DEVICE_IDENTIFIERS
+                message: "Supported device supported are: ..."
+            GENERIC_422_UNIDENTIFIABLE_DEVICE:
+              description: Service is not available for the provided device
+              value:
+                status: 422
+                code: UNIDENTIFIABLE_DEVICE
+                message: The device cannot be identified.
+
+    Generic429:
+      description: Too Many Requests
+      headers:
+        x-correlator:
+          $ref: "#/components/headers/x-correlator"
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ErrorInfo"
+          examples:
+            GENERIC_429_QUOTA_EXCEEDED:
+              description: Request is rejected due to exceeding a business quota limit
+              value:
+                status: 429
+                code: QUOTA_EXCEEDED
+                message: Either out of resource quota or reaching rate limiting.
+            GENERIC_429_TOO_MANY_REQUESTS:
+              description: API Server request limit is overpassed
+              value:
+                status: 429
+                code: TOO_MANY_REQUESTS
+                message: Either out of resource quota or reaching rate limiting.
+
+    Generic500:
+      description: Internal server error
+      headers:
+        x-correlator:
+          $ref: "#/components/headers/x-correlator"
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ErrorInfo"
+          examples:
+            GENERIC_500_INTERNAL:
+              description: Problem in Server side. Regular Server Exception
+              value:
+                status: 500
+                code: INTERNAL
+                message: Unknown server error. Typically a server bug.
+
+    Generic503:
+      description: Service unavailable
+      headers:
+        x-correlator:
+          $ref: "#/components/headers/x-correlator"
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ErrorInfo"
+          examples:
+            GENERIC_503_UNAVAILABLE:
+              description: Service is not available. Temporary situation usually related to maintenance process in the server side
+              value:
+                status: 503
+                code: UNAVAILABLE
+                message: Service Unavailable.
+
+  examples:
+    Booking_AVAILABLE:
+      summary: QoD Booking status is available
+      description: The booking has become available
+      value:
+        device:
+          phoneNumber: "+123456789"
+        qosProfile: QOS_L
+        sink: https://application-server.com/callback
+        sinkCredential:
+          credentialType: ACCESSTOKEN
+          accessToken: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c"
+          accessTokenExpiresUtc: "2024-12-01T12:00:00Z"
+          accessTokenType: bearer
+        BookingId: 3fa85f64-5717-4562-b3fc-2c963f66afa6
+        startedAt: 2024-05-12T17:32:01Z
+        status: AVAILABLE
+
+    Booking_UNAVAILABLE:
+      summary: QoD Booking status is unavailable
+      description: The booking could not be created or is not active anymore
+      value:
+        duration: 86400
+        device:
+          ipv4Address:
+            publicAddress: 203.0.113.0
+            publicPort: 59765
+        qosProfile: QOS_L
+        sink: https://application-server.com/callback
+        sinkCredential:
+          credentialType: ACCESSTOKEN
+          accessToken: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c"
+          accessTokenExpiresUtc: "2024-12-01T12:00:00Z"
+          accessTokenType: bearer
+        BookingId: 3fa85f64-5717-4562-b3fc-2c963f66afa6
+        startedAt: 2024-05-12T17:32:01Z
+        status: UNAVAILABLE
+        statusInfo: NETWORK_TERMINATED
+
+    Booking_AVAILABLE_WITHOUT_DEVICE:
+      summary: QoD Booking status is available but no device information is provided
+      description: Device is optional in responses and must not be provided if it was not provided in the request
+      value:
+        qosProfile: QOS_M
+        sink: https://application-server.com/callback
+        sinkCredential:
+          credentialType: ACCESSTOKEN
+          accessToken: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c"
+          accessTokenExpiresUtc: "2024-12-01T12:00:00Z"
+          accessTokenType: bearer
+        BookingId: 3fa85f64-5717-4562-b3fc-2c963f66afa6
+        startedAt: 2024-05-12T17:32:01Z
+        status: AVAILABLE
+
+    Booking_STATUS_CHANGED_EXAMPLE:
+      description: Booking status changed
+      summary: Cloud event example for QoD Booking status change to UNAVAILABLE due to NETWORK_TERMINATED
+      value:
+        id: 83a0d986-0866-4f38-b8c0-fc65bfcda452
+        source: https://api.example.com/qod-Booking/v0.1/device-qos/123e4567-e89b-12d3-a456-426614174000
+        specversion: "1.0"
+        type: org.camaraproject.qod-booking.v0.status-changed
+        time: 2021-12-12T00:00:00Z
+        data:
+          BookingId: 123e4567-e89b-12d3-a456-426614174000
+          status: UNAVAILABLE
+          statusInfo: NETWORK_TERMINATED
