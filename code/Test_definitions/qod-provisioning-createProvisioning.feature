@@ -1,4 +1,4 @@
-Feature: CAMARA QoD Provisioning API, v0.1.0 - Operation createProvisioning
+Feature: CAMARA QoD Provisioning API, v0.1.1 - Operation createProvisioning
     # Input to be provided by the implementation to the tester
     #
     # Implementation indications:

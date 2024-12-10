@@ -1,4 +1,4 @@
-Feature: CAMARA QoS Profiles API, v0.11.0 - Operation retrieveQoSProfiles
+Feature: CAMARA QoS Profiles API, v0.11.1 - Operation retrieveQoSProfiles
     # Input to be provided by the implementation to the tester
     #
     # Implementation indications:

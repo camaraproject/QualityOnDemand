@@ -1,4 +1,4 @@
-Feature: CAMARA Quality On Demand API, v0.11.0 - Operation getSession
+Feature: CAMARA Quality On Demand API, v0.11.1 - Operation getSession
     # Input to be provided by the implementation to the tester
     #
     # Implementation indications:
