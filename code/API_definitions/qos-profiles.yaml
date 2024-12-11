@@ -350,6 +350,9 @@ components:
           type: array
           items:
             type: integer
+            minimum: 0
+            maximum: 63
+            example: 3
           minItems: 0
           maxItems: 64
           description: A list of unique DSCP values from 0-63
