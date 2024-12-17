@@ -47,7 +47,7 @@ quality-on-demand 0.11.1 is a patch version of 0.11.0 with documentation updates
 * Updated the note for the retrieve POST calls by @RandyLevensalor in https://github.com/camaraproject/QualityOnDemand/pull/372
 
 ### Fixed
-* Documented that the error response QUALITY_ON_DEMAND.DURATION_OUT_OF_RANGE can't be returned for /extend and will be removed within next version by @hdamker in https://github.com/camaraproject/QualityOnDemand/pull/382
+* Documented that the error response QUALITY_ON_DEMAND.DURATION_OUT_OF_RANGE cannot be returned for /extend and will be removed within next version by @hdamker in https://github.com/camaraproject/QualityOnDemand/pull/382
 
 ### Removed
 * n/a
