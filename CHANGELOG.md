@@ -28,7 +28,7 @@ The API definition(s) are based on
 * Commonalities v0.4.0
 * Identity and Consent Management v0.2.1
 
-Note: this release is a patch release, containing some clarifications and updates within the documentation. The API versions are fully backward-compatible to the ones in r1.2. Please see there for the main changes compared to previews 0.10.x release.
+Note: this release is a patch release, containing some clarifications and updates within the documentation. The API versions are fully backward-compatible to the ones in r1.2. Please see there for the main changes compared to previous 0.10.x release.
 
 ## quality-on-demand v0.11.1
 
