@@ -26,7 +26,7 @@ Repository to describe, develop, document and test the QualityOnDemand API famil
 * Note: Please be aware that the project will have frequent updates to the main branch. There are no compatibility guarantees associated with code in any branch, including main, until a new release is created. For example, changes may be reverted before a release is created. **For best results, use the latest public release**.
 
 
-* **The latest public release is [r1.3](https://github.com/camaraproject/QualityOnDemand/tree/r1.3) a patch release of r1.2 with the following API definitions:**
+* **The latest public release is [r1.3](https://github.com/camaraproject/QualityOnDemand/tree/r1.3), a patch release of r1.2, with the following API definitions:**
 
   * **quality-on-demand v0.11.1**  
   [[YAML]](https://github.com/camaraproject/QualityOnDemand/blob/r1.3/code/API_definitions/quality-on-demand.yaml)
