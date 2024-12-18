@@ -1,7 +1,8 @@
 # Changelog QualityOnDemand
 
 ## Table of Contents
-- **[r1.2](#r12)**
+- **[r1.3](#r13)**
+- [r1.2](#r12)
 - [r1.1](#r11)
 - [v0.10.1](#v0101)
 - [v0.10.0](#v0100)
@@ -14,6 +15,89 @@
 - [v0.1.0 - Initial contribution](#v010---initial-contribution)
 
 **Please be aware that the project will have frequent updates to the main branch. There are no compatibility guarantees associated with code in any branch, including main, until it has been released. For example, changes may be reverted before a release is published. For the best results, use the latest published release.**
+
+# r1.3
+## Release Notes
+
+This patch release contains the definition and documentation of
+* quality-on-demand v0.11.1
+* qos-profiles v0.11.1
+* qod-provisioning v0.1.1
+
+The API definition(s) are based on
+* Commonalities v0.4.0
+* Identity and Consent Management v0.2.1
+
+Note: this release is a patch release, containing some clarifications and updates within the documentation. The API versions are fully backward-compatible to the ones in r1.2. Please see there for the main changes compared to previous 0.10.x release.
+
+## quality-on-demand v0.11.1
+
+quality-on-demand 0.11.1 is a patch version of 0.11.0 with documentation updates and clarifications. 
+
+- API definition **with inline documentation**:
+  - [View it on ReDoc](https://redocly.github.io/redoc/?url=https://raw.githubusercontent.com/camaraproject/QualityOnDemand/r1.3/code/API_definitions/quality-on-demand.yaml&nocors)
+  - [View it on Swagger Editor](https://editor.swagger.io/?url=https://raw.githubusercontent.com/camaraproject/QualityOnDemand/r1.3/code/API_definitions/quality-on-demand.yaml)
+  - OpenAPI [YAML spec file](https://github.com/camaraproject/QualityOnDemand/blob/r1.3/code/API_definitions/quality-on-demand.yaml)
+
+### Added
+* Added guidance for multi-SIM scenarios in `ìnfo.description` by @eric-murray in https://github.com/camaraproject/QualityOnDemand/pull/378
+
+### Changed
+* Authorization and authentication section in `info.description` updated with text from Identity & Consent Management text v0.2.1 by @hdamker in https://github.com/camaraproject/QualityOnDemand/pull/370
+* Updated the note for the retrieve POST calls by @RandyLevensalor in https://github.com/camaraproject/QualityOnDemand/pull/372
+
+### Fixed
+* Documented that the error response QUALITY_ON_DEMAND.DURATION_OUT_OF_RANGE cannot be returned for /extend and will be removed within next version by @hdamker in https://github.com/camaraproject/QualityOnDemand/pull/382
+
+### Removed
+* n/a
+
+## qos-profiles v0.11.1
+
+qos-profiles 0.11.1 is a patch version of 0.11.0 with documentation updates and clarifications. 
+
+- API definition **with inline documentation**:
+  - [View it on ReDoc](https://redocly.github.io/redoc/?url=https://raw.githubusercontent.com/camaraproject/QualityOnDemand/r1.3/code/API_definitions/qos-profiles.yaml&nocors)
+  - [View it on Swagger Editor](https://editor.swagger.io/?url=https://raw.githubusercontent.com/camaraproject/QualityOnDemand/r1.3/code/API_definitions/qos-profiles.yaml)
+  - OpenAPI [YAML spec file](https://github.com/camaraproject/QualityOnDemand/blob/r1.3/code/API_definitions/qos-profiles.yaml)
+
+### Added
+* Add QoS Profile User Story by @benhepworth in https://github.com/camaraproject/QualityOnDemand/pull/367
+* Added guidance for multi-SIM scenarios in `ìnfo.description` by @eric-murray in https://github.com/camaraproject/QualityOnDemand/pull/378
+
+### Changed
+* Authorization and authentication section in `info.description` updated with text from Identity & Consent Management text v0.2.1 by @hdamker in https://github.com/camaraproject/QualityOnDemand/pull/370
+* Updated the note for the retrieve POST calls by @RandyLevensalor in https://github.com/camaraproject/QualityOnDemand/pull/372
+
+### Fixed
+* n/a
+
+### Removed
+* n/a
+
+## qod-provisioning v0.1.1
+
+qod-provisioning v0.1.1 is a patch version of the first initial release of this new API.
+
+- API definition **with inline documentation**:
+  - [View it on ReDoc](https://redocly.github.io/redoc/?url=https://raw.githubusercontent.com/camaraproject/QualityOnDemand/r1.3/code/API_definitions/qod-provisioning.yaml&nocors)
+  - [View it on Swagger Editor](https://editor.swagger.io/?url=https://raw.githubusercontent.com/camaraproject/QualityOnDemand/r1.3/code/API_definitions/qod-provisioning.yaml)
+  - OpenAPI [YAML spec file](https://github.com/camaraproject/QualityOnDemand/blob/r1.3/code/API_definitions/qod-provisioning.yaml)
+
+### Added
+* Added guidance for multi-SIM scenarios in `ìnfo.description` by @eric-murray in https://github.com/camaraproject/QualityOnDemand/pull/378
+
+### Changed
+* Authorization and authentication section in `info.description` updated with text from Identity & Consent Management text v0.2.1 by @hdamker in https://github.com/camaraproject/QualityOnDemand/pull/370
+* Updated the note for the retrieve POST calls by @RandyLevensalor in https://github.com/camaraproject/QualityOnDemand/pull/372
+
+### Fixed
+* n/a
+
+### Removed
+* n/a
+
+**Full Changelog**: https://github.com/camaraproject/QualityOnDemand/compare/r1.2...r1.3
 
 # r1.2
 ## Release Notes

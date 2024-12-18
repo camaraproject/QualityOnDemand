@@ -14,7 +14,7 @@ info:
     - Discovery of all QoS profiles offered by the network operator
     - Retrieve the characteristics of a specific QoS profile by name
 
-    How QoS profiles are mapped to connectivity characteristics are subject to agreements between the communication service provider and the API invoker. Within the CAMARA project, you can find a sample for such a mapping of QoS profiles. [CAMARA QoS Profiles Mapping Table (REFERENCE DRAFT)](https://github.com/camaraproject/QualityOnDemand/blob/main/documentation/API_documentation/QoSProfile_Mapping_Table.md)
+    How QoS profiles are mapped to connectivity characteristics are subject to agreements between the communication service provider and the API invoker. Within the CAMARA project, you can find a sample for such a mapping of QoS profiles. [CAMARA QoS Profiles Mapping Table (REFERENCE DRAFT)](https://github.com/camaraproject/QualityOnDemand/blob/r1.3/documentation/API_documentation/QoSProfile_Mapping_Table.md)
 
     # Authorization and authentication
 
@@ -62,7 +62,7 @@ info:
   license:
     name: Apache 2.0
     url: https://www.apache.org/licenses/LICENSE-2.0.html
-  version: wip
+  version: 0.11.1
   x-camara-commonalities: 0.4.0
 
 
@@ -71,7 +71,7 @@ externalDocs:
   url: https://github.com/camaraproject/QualityOnDemand
 
 servers:
-  - url: "{apiRoot}/qos-profiles/vwip"
+  - url: "{apiRoot}/qos-profiles/v0.11"
     variables:
       apiRoot:
         default: http://localhost:9091
