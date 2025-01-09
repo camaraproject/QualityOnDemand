@@ -1,4 +1,4 @@
-Feature: CAMARA Quality On Demand API, v0.11.1 - Operation deleteSession
+Feature: CAMARA Quality On Demand API, vwip - Operation deleteSession
     # Input to be provided by the implementation to the tester
     #
     # Implementation indications:
@@ -9,7 +9,7 @@ Feature: CAMARA Quality On Demand API, v0.11.1 - Operation deleteSession
     # * The sessionId of an existing session with status "AVAILABLE", and with provided values for "sink" and "sinkCredential".
     # * The sessionId of an existing session with status "UNAVAILABLE", and with provided values for "sink" and "sinkCredential".
     #
-    # References to OAS spec schemas refer to schemas specifies in quality-on-demand.yaml, version 0.11.0
+    # References to OAS spec schemas refer to schemas specifies in quality-on-demand.yaml, version wip
 
     Background: Common deleteSession setup
         Given an environment at "apiRoot"
@@ -109,7 +109,7 @@ Feature: CAMARA Quality On Demand API, v0.11.1 - Operation deleteSession
         And the response header "x-correlator" has same value as the request header "x-correlator"
         And the response header "Content-Type" is "application/json"
         And the response property "$.status" is 403
-        And the response property "$.code" is "PERMISSION_DENIED" or "INVALID_TOKEN_CONTEXT"
+        And the response property "$.code" is "PERMISSION_DENIED"
         And the response property "$.message" contains a user friendly text
 
     # Errors 404
