@@ -165,20 +165,7 @@ Feature: CAMARA QoD Provisioning API, v0.1.1 - Operation retrieveProvisioningByD
         And the response header "x-correlator" has same value as the request header "x-correlator"
         And the response header "Content-Type" is "application/json"
         And the response property "$.status" is 403
-        And the response property "$.code" is "PERMISSION_DENIED" or "INVALID_TOKEN_CONTEXT"
-        And the response property "$.message" contains a user friendly text
-
-    @qod_provisioning_retrieveProvisioningByDevice_403.2_device_token_mismatch
-    Scenario: Inconsistent access token context for the device
-        # To test this, a token have to be obtained for a different device
-        Given the request body property "$.device" is set to a valid testing device
-        And the header "Authorization" is set to a valid access token emitted for a different device
-        When the request "retrieveProvisioningByDevice" is sent
-        Then the response status code is 403
-        And the response header "x-correlator" has same value as the request header "x-correlator"
-        And the response header "Content-Type" is "application/json"
-        And the response property "$.status" is 403
-        And the response property "$.code" is "INVALID_TOKEN_CONTEXT"
+        And the response property "$.code" is "PERMISSION_DENIED"
         And the response property "$.message" contains a user friendly text
 
     # Errors 404
@@ -204,7 +191,7 @@ Feature: CAMARA QoD Provisioning API, v0.1.1 - Operation retrieveProvisioningByD
         And the response header "x-correlator" has same value as the request header "x-correlator"
         And the response header "Content-Type" is "application/json"
         And the response property "$.status" is 404
-        And the response property "$.code" is "DEVICE_NOT_FOUND"
+        And the response property "$.code" is "IDENTIFIER_NOT_FOUND"
         And the response property "$.message" contains a user friendly text
 
     # Errors 422
@@ -218,7 +205,7 @@ Feature: CAMARA QoD Provisioning API, v0.1.1 - Operation retrieveProvisioningByD
         And the response header "x-correlator" has same value as the request header "x-correlator"
         And the response header "Content-Type" is "application/json"
         And the response property "$.status" is 422
-        And the response property "$.code" is "UNSUPPORTED_DEVICE_IDENTIFIERS"
+        And the response property "$.code" is "UNSUPPORTED_IDENTIFIER"
         And the response property "$.message" contains a user friendly text
 
     # This scenario is under discussion
@@ -231,7 +218,7 @@ Feature: CAMARA QoD Provisioning API, v0.1.1 - Operation retrieveProvisioningByD
         And the response header "x-correlator" has same value as the request header "x-correlator"
         And the response header "Content-Type" is "application/json"
         And the response property "$.status" is 422
-        And the response property "$.code" is "DEVICE_IDENTIFIERS_MISMATCH"
+        And the response property "$.code" is "IDENTIFIER_MISMATCH"
         And the response property "$.message" contains a user friendly text
 
     @qod_provisioning_retrieveProvisioningByDevice_422.3_device_not_supported
@@ -243,7 +230,7 @@ Feature: CAMARA QoD Provisioning API, v0.1.1 - Operation retrieveProvisioningByD
         And the response header "x-correlator" has same value as the request header "x-correlator"
         And the response header "Content-Type" is "application/json"
         And the response property "$.status" is 422
-        And the response property "$.code" is "DEVICE_NOT_APPLICABLE"
+        And the response property "$.code" is "SERVICE_NOT_APPLICABLE"
         And the response property "$.message" contains a user friendly text
 
     # Typically with a 2-legged access token
@@ -256,5 +243,32 @@ Feature: CAMARA QoD Provisioning API, v0.1.1 - Operation retrieveProvisioningByD
         And the response header "x-correlator" has same value as the request header "x-correlator"
         And the response header "Content-Type" is "application/json"
         And the response property "$.status" is 422
-        And the response property "$.code" is "UNIDENTIFIABLE_DEVICE"
+        And the response property "$.code" is "MISSING_IDENTIFIER"
         And the response property "$.message" contains a user friendly text
+
+    # Typically with a 3-legged access token
+    @qod_provisioning_createProvisioning_422.6_device_token_mismatch
+    Scenario: Inconsistent access token context for the device
+        # To test this, a token has to be obtained for a different device
+        Given the request body property "$.device" is set to a valid testing device
+        And the header "Authorization" is set to a valid access token obtained for a different device
+        When the request "createProvisioning" is sent
+        Then the response status code is 422
+        And the response header "x-correlator" has same value as the request header "x-correlator"
+        And the response header "Content-Type" is "application/json"
+        And the response property "$.status" is 422
+        And the response property "$.code" is "UNNECESSARY_IDENTIFIER"
+        And the response property "$.message" contains a user friendly text
+
+    # Typically with a 3-legged access token
+    @qod_provisioning_createProvisioning_422.7_unnecessary_device_identifier_in_request
+    Scenario: Explicit device identifier provided when device is identified by the access token
+        Given the request body property "$.device" is set to a valid testing device
+        And the header "Authorization" is set to a valid access token for that same device
+        When the request "createProvisioning" is sent
+        Then the response status code is 422
+        And the response header "x-correlator" has same value as the request header "x-correlator"
+        And the response header "Content-Type" is "application/json"
+        And the response property "$.status" is 422
+        And the response property "$.code" is "UNNECESSARY_IDENTIFIER"
+        And the response property "$.message" contains a user friendly text        
