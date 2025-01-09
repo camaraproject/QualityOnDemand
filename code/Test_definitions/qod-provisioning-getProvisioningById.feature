@@ -1,4 +1,4 @@
-Feature: CAMARA QoD Provisioning API, v0.1.1 - Operation getProvisioningById
+Feature: CAMARA QoD Provisioning API, vwip - Operation getProvisioningById
     # Input to be provided by the implementation to the tester
     #
     # Implementation indications:
