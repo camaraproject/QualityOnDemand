@@ -1,4 +1,4 @@
-Feature: CAMARA QoS Profiles API, v0.11.1 - Operation retrieveQoSProfiles
+Feature: CAMARA QoS Profiles API, vwip - Operation retrieveQoSProfiles
     # Input to be provided by the implementation to the tester
     #
     # Implementation indications:
@@ -11,7 +11,7 @@ Feature: CAMARA QoS Profiles API, v0.11.1 - Operation retrieveQoSProfiles
     # * If some QoS Profile is restricted for some devices, provide the QoS profile name and device
     # * A device object identifying a device commercialized by the implementation for which the service is not applicable, if any
 
-    # References to OAS spec schemas refer to schemas specifies in qos-profiles.yaml, version 0.11.0
+    # References to OAS spec schemas refer to schemas specifies in qos-profiles.yaml, version wip
 
     Background: Common retrieveQoSProfiles setup
         Given an environment at "apiRoot"
@@ -179,22 +179,8 @@ Feature: CAMARA QoS Profiles API, v0.11.1 - Operation retrieveQoSProfiles
 
     # Errors 403
 
-    @qos_profiles_retrieveQoSProfiles_403.1_device_token_mismatch
-    Scenario: Inconsistent access token context for the device
-        # To test this, a token have to be obtained for a different device
-        Given the request body property "$.device" is set to a valid testing device
-        And the header "Authorization" is set to a valid access token emitted for a different device
-        When the request "retrieveQoSProfiles" is sent
-        Then the response status code is 403
-        And the response header "x-correlator" has same value as the request header "x-correlator"
-        And the response header "Content-Type" is "application/json"
-        And the response property "$.status" is 403
-        And the response property "$.code" is "INVALID_TOKEN_CONTEXT"
-        And the response property "$.message" contains a user friendly text
-
     # Errors 422
 
-    # UNSUPPORTED_DEVICE_IDENTIFIERS is in the Commonalities guidelines (document) but it is not yet considered in the API spec
     @qos_profiles_retrieveQoSProfiles_422.1_device_identifiers_unsupported
     Scenario: None of the provided device identifiers is supported by the implementation
         Given that some type of device identifiers are not supported by the implementation
@@ -204,7 +190,7 @@ Feature: CAMARA QoS Profiles API, v0.11.1 - Operation retrieveQoSProfiles
         And the response header "x-correlator" has same value as the request header "x-correlator"
         And the response header "Content-Type" is "application/json"
         And the response property "$.status" is 422
-        And the response property "$.code" is "UNPROCESSABLE_ENTITY"
+        And the response property "$.code" is "UNSUPPORTED_IDENTIFIER"
         And the response property "$.message" contains a user friendly text
 
     # This scenario is under discussion
@@ -217,5 +203,45 @@ Feature: CAMARA QoS Profiles API, v0.11.1 - Operation retrieveQoSProfiles
         And the response header "x-correlator" has same value as the request header "x-correlator"
         And the response header "Content-Type" is "application/json"
         And the response property "$.status" is 422
-        And the response property "$.code" is "DEVICE_IDENTIFIERS_MISMATCH"
+        And the response property "$.code" is "IDENTIFIER_MISMATCH"
+        And the response property "$.message" contains a user friendly text
+
+    # Typically with a 2-legged access token
+    @qod_provisioning_retrieveQoSProfiles_422.3_unidentifiable_device
+    Scenario: Device not included and cannot be deducted from the access token
+        Given the header "Authorization" is set to a valid access token that does not identifiy a valid testing device
+        And the request body property "$.device" is not included
+        When the request "retrieveQoSProfiles" is sent
+        Then the response status code is 422
+        And the response header "x-correlator" has same value as the request header "x-correlator"
+        And the response header "Content-Type" is "application/json"
+        And the response property "$.status" is 422
+        And the response property "$.code" is "MISSING_IDENTIFIER"
+        And the response property "$.message" contains a user friendly text
+
+    # Typically with a 3-legged access token
+    @qod_provisioning_retrieveQoSProfiles_422.4_device_token_mismatch
+    Scenario: Inconsistent access token context for the device
+        # To test this, a token has to be obtained for a different device
+        Given the request body property "$.device" is set to a valid testing device
+        And the header "Authorization" is set to a valid access token obtained for a different device
+        When the request "retrieveQoSProfiles" is sent
+        Then the response status code is 422
+        And the response header "x-correlator" has same value as the request header "x-correlator"
+        And the response header "Content-Type" is "application/json"
+        And the response property "$.status" is 422
+        And the response property "$.code" is "UNNECESSARY_IDENTIFIER"
+        And the response property "$.message" contains a user friendly text
+
+    # Typically with a 3-legged access token
+    @qod_provisioning_retrieveQoSProfiles_422.5_unnecessary_device_identifier_in_request
+    Scenario: Explicit device identifier provided when device is identified by the access token
+        Given the request body property "$.device" is set to a valid testing device
+        And the header "Authorization" is set to a valid access token for that same device
+        When the request "retrieveQoSProfiles" is sent
+        Then the response status code is 422
+        And the response header "x-correlator" has same value as the request header "x-correlator"
+        And the response header "Content-Type" is "application/json"
+        And the response property "$.status" is 422
+        And the response property "$.code" is "UNNECESSARY_IDENTIFIER"
         And the response property "$.message" contains a user friendly text
