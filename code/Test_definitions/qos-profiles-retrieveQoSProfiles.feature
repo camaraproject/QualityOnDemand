@@ -15,7 +15,7 @@ Feature: CAMARA QoS Profiles API, vwip - Operation retrieveQoSProfiles
 
     Background: Common retrieveQoSProfiles setup
         Given an environment at "apiRoot"
-        And the resource "qos-profiles/v0.11/retrieve-qos-profiles"
+        And the resource "qos-profiles/vwip/retrieve-qos-profiles"
         And the header "Content-Type" is set to "application/json"
         And the header "Authorization" is set to a valid access token
         And the header "x-correlator" is set to a UUID value
