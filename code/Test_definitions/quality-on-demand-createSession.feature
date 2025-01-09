@@ -1,4 +1,4 @@
-Feature: CAMARA Quality On Demand API, v0.11.1 - Operation createSession
+Feature: CAMARA Quality On Demand API, vwip - Operation createSession
     # Input to be provided by the implementation to the tester
     #
     # Implementation indications:
@@ -11,11 +11,11 @@ Feature: CAMARA Quality On Demand API, v0.11.1 - Operation createSession
     # * A device object applicable for Quality On Demand service.
     # * A device object identifying a device commercialized by the implementation for which the service is not applicable, if any.
     #
-    # References to OAS spec schemas refer to schemas specifies in quality-on-demand.yaml, version 0.11.0
+    # References to OAS spec schemas refer to schemas specifies in quality-on-demand.yaml, version wip
 
     Background: Common createSession setup
         Given an environment at "apiRoot"
-        And the resource "/quality-on-demand/v0.11/sessions"
+        And the resource "/quality-on-demand/vwip/sessions"
         And the header "Content-Type" is set to "application/json"
         And the header "Authorization" is set to a valid access token
         And the header "x-correlator" is set to a UUID value
@@ -300,7 +300,7 @@ Feature: CAMARA Quality On Demand API, v0.11.1 - Operation createSession
         And the response header "x-correlator" has same value as the request header "x-correlator"
         And the response header "Content-Type" is "application/json"
         And the response property "$.status" is 404
-        And the response property "$.code" is "DEVICE_NOT_FOUND"
+        And the response property "$.code" is "IDENTIFIER_NOT_FOUND"
         And the response property "$.message" contains a user friendly text
 
     # Errors 409
@@ -319,7 +319,6 @@ Feature: CAMARA Quality On Demand API, v0.11.1 - Operation createSession
 
     # Errors 422
 
-    # UNSUPPORTED_DEVICE_IDENTIFIERS is in the Commonalities guidelines (document) but it is not yet considered in the API spec
     @quality_on_demand_createSession_422.1_device_identifiers_unsupported
     Scenario: None of the provided device identifiers is supported by the implementation
         Given that some type of device identifiers are not supported by the implementation
@@ -329,7 +328,7 @@ Feature: CAMARA Quality On Demand API, v0.11.1 - Operation createSession
         And the response header "x-correlator" has same value as the request header "x-correlator"
         And the response header "Content-Type" is "application/json"
         And the response property "$.status" is 422
-        And the response property "$.code" is "UNSUPPORTED_DEVICE_IDENTIFIERS"
+        And the response property "$.code" is "UNSUPPORTED_IDENTIFIER"
         And the response property "$.message" contains a user friendly text
 
     # This scenario is under discussion
@@ -342,7 +341,7 @@ Feature: CAMARA Quality On Demand API, v0.11.1 - Operation createSession
         And the response header "x-correlator" has same value as the request header "x-correlator"
         And the response header "Content-Type" is "application/json"
         And the response property "$.status" is 422
-        And the response property "$.code" is "DEVICE_IDENTIFIERS_MISMATCH"
+        And the response property "$.code" is "IDENTIFIER_MISMATCH"
         And the response property "$.message" contains a user friendly text
 
     @quality_on_demand_createSession_422.3_device_not_supported
@@ -354,11 +353,25 @@ Feature: CAMARA Quality On Demand API, v0.11.1 - Operation createSession
         And the response header "x-correlator" has same value as the request header "x-correlator"
         And the response header "Content-Type" is "application/json"
         And the response property "$.status" is 422
-        And the response property "$.code" is "DEVICE_NOT_APPLICABLE"
+        And the response property "$.code" is "SERVICE_NOT_APPLICABLE"
+        And the response property "$.message" contains a user friendly text
+
+    # TBD if we neeed a dedicated code
+    @quality_on_demand_createSession_422.4_qos_profile_incompatible_device
+    Scenario: QoS profile is not suitable for the device
+        Given that implementation has QoS Profiles restricted to certain devices
+        And the request body property "qosProfile" is set to a restricted QoS Profile
+        And a device not suitable for the restricted QoS Profiles is provided in the request body or identified by the access token
+        When the request "createSession" is sent
+        Then the response status code is 400
+        And the response header "x-correlator" has same value as the request header "x-correlator"
+        And the response header "Content-Type" is "application/json"
+        And the response property "$.status" is 422
+        And the response property "$.code" is "SERVICE_NOT_APPLICABLE"
         And the response property "$.message" contains a user friendly text
 
     # Typically with a 2-legged access token
-    @quality_on_demand_createSession_422.4_unidentifiable_device
+    @quality_on_demand_createSession_422.5_unidentifiable_device
     Scenario: Device not included and cannot be deducted from the access token
         Given the header "Authorization" is set to a valid access which does not identifiy a single device
         And the request body property "$.device" is not included
@@ -367,5 +380,32 @@ Feature: CAMARA Quality On Demand API, v0.11.1 - Operation createSession
         And the response header "x-correlator" has same value as the request header "x-correlator"
         And the response header "Content-Type" is "application/json"
         And the response property "$.status" is 422
-        And the response property "$.code" is "UNIDENTIFIABLE_DEVICE"
+        And the response property "$.code" is "MISSING_IDENTIFIER"
+        And the response property "$.message" contains a user friendly text
+
+    # Typically with a 3-legged access token
+    @quality_on_demand_createSession_422.6_device_token_mismatch
+    Scenario: Inconsistent access token context for the device
+        # To test this, a token has to be obtained for a different device
+        Given the request body property "$.device" is set to a valid testing device
+        And the header "Authorization" is set to a valid access token obtained for a different device
+        When the request "createSession" is sent
+        Then the response status code is 422
+        And the response header "x-correlator" has same value as the request header "x-correlator"
+        And the response header "Content-Type" is "application/json"
+        And the response property "$.status" is 422
+        And the response property "$.code" is "UNNECESSARY_IDENTIFIER"
+        And the response property "$.message" contains a user friendly text
+
+    # Typically with a 3-legged access token
+    @quality_on_demand_createSession_422.7_unnecessary_device_identifier_in_request
+    Scenario: Explicit device identifier provided when device is identified by the access token
+        Given the request body property "$.device" is set to a valid testing device
+        And the header "Authorization" is set to a valid access token for that same device
+        When the request "createSession" is sent
+        Then the response status code is 422
+        And the response header "x-correlator" has same value as the request header "x-correlator"
+        And the response header "Content-Type" is "application/json"
+        And the response property "$.status" is 422
+        And the response property "$.code" is "UNNECESSARY_IDENTIFIER"
         And the response property "$.message" contains a user friendly text
