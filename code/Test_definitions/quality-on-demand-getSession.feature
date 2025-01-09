@@ -1,4 +1,4 @@
-Feature: CAMARA Quality On Demand API, v0.11.1 - Operation getSession
+Feature: CAMARA Quality On Demand API, vwip - Operation getSession
     # Input to be provided by the implementation to the tester
     #
     # Implementation indications:
@@ -7,11 +7,11 @@ Feature: CAMARA Quality On Demand API, v0.11.1 - Operation getSession
     # Testing assets:
     # * The sessionId of an existing QoS session, and the request properties used for createSession
     #
-    # References to OAS spec schemas refer to schemas specifies in quality-on-demand.yaml, version 0.11.0
+    # References to OAS spec schemas refer to schemas specifies in quality-on-demand.yaml, version wip
 
     Background: Common getSession setup
         Given an environment at "apiRoot"
-        And the resource "/quality-on-demand/v0.11/sessions/{sessionId}"
+        And the resource "/quality-on-demand/vwip/sessions/{sessionId}"
         # Unless indicated otherwise the session must be created by the same API client given in the access token
         And the header "Authorization" is set to a valid access token
         And the header "x-correlator" is set to a UUID value
@@ -115,7 +115,7 @@ Feature: CAMARA Quality On Demand API, v0.11.1 - Operation getSession
         And the response header "x-correlator" has same value as the request header "x-correlator"
         And the response header "Content-Type" is "application/json"
         And the response property "$.status" is 403
-        And the response property "$.code" is "PERMISSION_DENIED" or "INVALID_TOKEN_CONTEXT"
+        And the response property "$.code" is "PERMISSION_DENIED"
         And the response property "$.message" contains a user friendly text
 
     # Errors 404
