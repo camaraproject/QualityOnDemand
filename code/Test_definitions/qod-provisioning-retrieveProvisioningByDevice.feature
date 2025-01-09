@@ -247,12 +247,12 @@ Feature: CAMARA QoD Provisioning API, vwip - Operation retrieveProvisioningByDev
         And the response property "$.message" contains a user friendly text
 
     # Typically with a 3-legged access token
-    @qod_provisioning_createProvisioning_422.6_device_token_mismatch
+    @qod_provisioning_retrieveProvisioningByDevice_422.5_device_token_mismatch
     Scenario: Inconsistent access token context for the device
         # To test this, a token has to be obtained for a different device
         Given the request body property "$.device" is set to a valid testing device
         And the header "Authorization" is set to a valid access token obtained for a different device
-        When the request "createProvisioning" is sent
+        When the request "retrieveProvisioningByDevice" is sent
         Then the response status code is 422
         And the response header "x-correlator" has same value as the request header "x-correlator"
         And the response header "Content-Type" is "application/json"
@@ -261,11 +261,11 @@ Feature: CAMARA QoD Provisioning API, vwip - Operation retrieveProvisioningByDev
         And the response property "$.message" contains a user friendly text
 
     # Typically with a 3-legged access token
-    @qod_provisioning_createProvisioning_422.7_unnecessary_device_identifier_in_request
+    @qod_provisioning_retrieveProvisioningByDevice_422.6_unnecessary_device_identifier_in_request
     Scenario: Explicit device identifier provided when device is identified by the access token
         Given the request body property "$.device" is set to a valid testing device
         And the header "Authorization" is set to a valid access token for that same device
-        When the request "createProvisioning" is sent
+        When the request "retrieveProvisioningByDevice" is sent
         Then the response status code is 422
         And the response header "x-correlator" has same value as the request header "x-correlator"
         And the response header "Content-Type" is "application/json"
