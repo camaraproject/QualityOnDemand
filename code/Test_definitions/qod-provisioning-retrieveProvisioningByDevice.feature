@@ -11,11 +11,11 @@ Feature: CAMARA QoD Provisioning API, vwip - Operation retrieveProvisioningByDev
     # * A device object with NO existing QoD provisioning associated
     # * A device object identifying a device commercialized by the implementation for which the service is not applicable, if any
     #
-    # References to OAS spec schemas refer to schemas specified in qod-provisioning.yaml, version 0.1.0
+    # References to OAS spec schemas refer to schemas specified in qod-provisioning.yaml, version wip
 
     Background: Common retrieveProvisioningByDevice setup
         Given an environment at "apiRoot"
-        And the resource "/qod-provisioning/v0.1/retrieve-device-qos"                                                              |
+        And the resource "/qod-provisioning/vwip/retrieve-device-qos"                                                              |
         And the header "Content-Type" is set to "application/json"
         # Unless indicated otherwise the QoD provisioning must be created by the same API client given in the access token
         And the header "Authorization" is set to a valid access token granted to the same client that created the QoD provisoning
