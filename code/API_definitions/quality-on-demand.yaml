@@ -1019,12 +1019,12 @@ components:
               value:
                 status: 400
                 code: INVALID_CREDENTIAL
-                message: "Only Access token is supported"
+                message: Only Access token is supported
             GENERIC_400_INVALID_TOKEN:
               value:
                 status: 400
                 code: INVALID_TOKEN
-                message: "Only bearer token is supported"
+                message: Only bearer token is supported
 
     GenericExtendSessionDuration400:
       description: Bad Request
