@@ -1,4 +1,4 @@
-Feature: CAMARA QoS Profiles API, v0.11.1 - Operation getQosProfile
+Feature: CAMARA QoS Profiles API, vwip - Operation getQosProfile
     # Input to be provided by the implementation to the tester
     #
     # Implementation indications:
@@ -7,7 +7,7 @@ Feature: CAMARA QoS Profiles API, v0.11.1 - Operation getQosProfile
     # Testing assets:
     # * The name of an existing QoS profile
     #
-    # References to OAS spec schemas refer to schemas specifies in qos-profiles.yaml, version 0.11.0
+    # References to OAS spec schemas refer to schemas specifies in qos-profiles.yaml, version wip
 
     Background: Common getQosProfile setup
         Given an environment at "apiRoot"
