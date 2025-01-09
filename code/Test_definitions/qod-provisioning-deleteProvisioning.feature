@@ -8,7 +8,7 @@ Feature: CAMARA QoD Provisioning API, vwip - Operation deleteProvisioning
     # * The ProvisioningInfo of an existing QoD Provisiong
     # * The ProvisioningInfo of an existing QoD Provisiong with status "AVAILABLE", and with provided values for "sink" and "sinkCredential"
     #
-    # References to OAS spec schemas refer to schemas specified in qod-provisioning.yaml, version 0.1.0
+    # References to OAS spec schemas refer to schemas specified in qod-provisioning.yaml, version wip
 
     Background: Common deleteProvisioning setup
         Given an environment at "apiRoot"
