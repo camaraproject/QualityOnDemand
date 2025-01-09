@@ -343,7 +343,7 @@ Feature: CAMARA QoD Provisioning API, vwip - Operation createProvisioning
         And the response property "$.message" contains a user friendly text
 
     # Typically with a 3-legged access token
-    @qod_provisioning_createProvisioning_422.6_unnecessary explicit device identifier
+    @qod_provisioning_createProvisioning_422.7_unnecessary_device_identifier_in_request
     Scenario: Explicit device identifier provided when device is identified by the access token
         Given the request body property "$.device" is set to a valid testing device
         And the header "Authorization" is set to a valid access token for that same device
