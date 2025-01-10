@@ -1083,7 +1083,7 @@ components:
           accessTokenExpiresUtc: "2024-12-01T12:00:00Z"
           accessTokenType: bearer
         provisioningId: 3fa85f64-5717-4562-b3fc-2c963f66afa6
-        startedAt: 2024-05-12T17:32:01Z
+        startedAt: "2024-05-12T17:32:01Z"
         status: AVAILABLE
 
     PROVISIONING_UNAVAILABLE:
@@ -1103,7 +1103,7 @@ components:
           accessTokenExpiresUtc: "2024-12-01T12:00:00Z"
           accessTokenType: bearer
         provisioningId: 3fa85f64-5717-4562-b3fc-2c963f66afa6
-        startedAt: 2024-05-12T17:32:01Z
+        startedAt: "2024-05-12T17:32:01Z"
         status: UNAVAILABLE
         statusInfo: NETWORK_TERMINATED
 
@@ -1119,7 +1119,7 @@ components:
           accessTokenExpiresUtc: "2024-12-01T12:00:00Z"
           accessTokenType: bearer
         provisioningId: 3fa85f64-5717-4562-b3fc-2c963f66afa6
-        startedAt: 2024-05-12T17:32:01Z
+        startedAt: "2024-05-12T17:32:01Z"
         status: AVAILABLE
 
     PROVISIONING_STATUS_CHANGED_EXAMPLE:
@@ -1130,7 +1130,7 @@ components:
         source: https://api.example.com/qod-provisioning/v0.1/device-qos/123e4567-e89b-12d3-a456-426614174000
         specversion: "1.0"
         type: org.camaraproject.qod-provisioning.v0.status-changed
-        time: 2021-12-12T00:00:00Z
+        time: "2021-12-12T00:00:00Z"
         data:
           provisioningId: 123e4567-e89b-12d3-a456-426614174000
           status: UNAVAILABLE
