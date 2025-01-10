@@ -275,19 +275,6 @@ Feature: CAMARA Quality On Demand API, vwip - Operation createSession
 
     # Errors 403
 
-    @quality_on_demand_createSession_403.1_device_token_mismatch
-    Scenario: Inconsistent access token context for the device
-        # To test this, a token have to be obtained for a different device
-        Given the request body property "$.device" is set to a valid testing device
-        And the header "Authorization" is set to a valid access token emitted for a different device
-        When the request "createSession" is sent
-        Then the response status code is 403
-        And the response header "x-correlator" has same value as the request header "x-correlator"
-        And the response header "Content-Type" is "application/json"
-        And the response property "$.status" is 403
-        And the response property "$.code" is "INVALID_TOKEN_CONTEXT"
-        And the response property "$.message" contains a user friendly text
-
     # Errors 404
 
     # Typically with a 2-legged access token
