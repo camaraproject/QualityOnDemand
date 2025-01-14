@@ -142,10 +142,20 @@ Feature: CAMARA Quality On Demand API, vwip - Operation extendQosSessionDuration
         And the response property "$.code" is "UNAUTHENTICATED"
         And the response property "$.message" contains a user friendly text
 
-    # Errors 403
+    # Generic 403 errors
 
-    # TBD which code is more appropriate for this scenario
-    @quality_on_demand_extendQosSessionDuration_403.1_session_token_mismatch
+    @quality_on_demand_extendQosSessionDuration_403.1_missing_access_token_scope
+    Scenario: Missing access token scope
+        Given the header "Authorization" is set to an access token that does not include scope quality-on-demand:sessions:update
+        When the request "extendQosSessionDuration" is sent
+        Then the response status code is 403
+        And the response header "x-correlator" has same value as the request header "x-correlator"
+        And the response header "Content-Type" is "application/json"
+        And the response property "$.status" is 403
+        And the response property "$.code" is "PERMISSION_DENIED"
+        And the response property "$.message" contains a user friendly text
+
+    @quality_on_demand_extendQosSessionDuration_403.2_session_token_mismatch
     Scenario: QoS session not created by the API client given in the access token
         # To test this, a token have to be obtained for a different client
         Given the header "Authorization" is set to a valid access token emitted to a client which did not created the QoS session
