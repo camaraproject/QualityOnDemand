@@ -241,8 +241,8 @@ Feature: CAMARA Quality On Demand API, vwip - Operation retrieveSessionsByDevice
 
     # Typically with a 2-legged access token
     @quality_on_demand_retrieveSessionsByDevice_422.4_unidentifiable_device
-    Scenario: Device not included and cannot be deducted from the access token
-        Given the header "Authorization" is set to a valid access which does not identifiy a single device
+    Scenario: Device not included and cannot be deduced from the access token
+        Given the header "Authorization" is set to a valid access token which does not identify a device
         And the request body property "$.device" is not included
         When the request "retrieveSessionsByDevice" is sent
         Then the response status code is 422
