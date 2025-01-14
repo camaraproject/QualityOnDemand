@@ -134,9 +134,9 @@ Feature: CAMARA QoS Profiles API, vwip - Operation retrieveQoSProfiles
         Examples:
             | device_identifier          | oas_spec_schema                             |
             | $.device.phoneNumber       | /components/schemas/PhoneNumber             |
-            | $.device.ipv4Address       | /components/schemas/NetworkAccessIdentifier |
-            | $.device.ipv6Address       | /components/schemas/DeviceIpv4Addr          |
-            | $.device.networkIdentifier | /components/schemas/DeviceIpv6Address       |
+            | $.device.ipv4Address       | /components/schemas/DeviceIpv4Addr          |
+            | $.device.ipv6Address       | /components/schemas/DeviceIpv6Address       |
+            | $.device.networkIdentifier | /components/schemas/NetworkAccessIdentifier |
 
     # Generic 401 errors
 
@@ -177,9 +177,20 @@ Feature: CAMARA QoS Profiles API, vwip - Operation retrieveQoSProfiles
         And the response property "$.code" is "UNAUTHENTICATED"
         And the response property "$.message" contains a user friendly text
 
-    # Errors 403
+    # Generic 403 errors
 
-    # Errors 422
+    @qos_profiles_retrieveQoSProfiles_403.1_missing_access_token_scope
+    Scenario: Missing access token scope
+        Given the header "Authorization" is set to an access token that does not include scope qos-profiles:read
+        When the request "retrieveQoSProfiles" is sent
+        Then the response status code is 403
+        And the response header "x-correlator" has same value as the request header "x-correlator"
+        And the response header "Content-Type" is "application/json"
+        And the response property "$.status" is 403
+        And the response property "$.code" is "PERMISSION_DENIED"
+        And the response property "$.message" contains a user friendly text
+
+    # Generic 422 errors
 
     @qos_profiles_retrieveQoSProfiles_422.1_device_identifiers_unsupported
     Scenario: None of the provided device identifiers is supported by the implementation
