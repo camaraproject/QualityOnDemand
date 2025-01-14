@@ -219,8 +219,8 @@ Feature: CAMARA QoS Profiles API, vwip - Operation retrieveQoSProfiles
 
     # Typically with a 2-legged access token
     @qod_provisioning_retrieveQoSProfiles_422.3_unidentifiable_device
-    Scenario: Device not included and cannot be deducted from the access token
-        Given the header "Authorization" is set to a valid access token that does not identifiy a valid testing device
+    Scenario: Device not included and cannot be deduced from the access token
+        Given the header "Authorization" is set to a valid access token that does not identify a device
         And the request body property "$.device" is not included
         When the request "retrieveQoSProfiles" is sent
         Then the response status code is 422
