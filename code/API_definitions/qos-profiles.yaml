@@ -355,7 +355,7 @@ components:
             example: 3
           minItems: 0
           maxItems: 64
-          description: A list of unique DSCP values from 0-63
+          description: A list of unique DSCP values from 0-63, where each decimal value is mapped to the 6 bit DSCP value. For example `0` would be `000000` and `8` would be `001000` - where 0 and 8 would map to `CS0` and `CS1` respectively as defined in the [IANA DSCP Registry](https://www.iana.org/assignments/dscp-registry/dscp-registry.xhtml). This registry defines how [RFC 2474](https://www.rfc-editor.org/rfc/rfc2474) is to be used, while [RFC4594](https://datatracker.ietf.org/doc/html/rfc4594) defines recommended DSCPs to use for different application types. It is worth noting that some operating systems limit what DSCP values can be chosen. For example, Windows defines them for developers [this way](https://learn.microsoft.com/en-us/windows/win32/api/qos2/ne-qos2-qos_traffic_type). Therefore this allows multiple numeric DSCP values to be chosen in order to cover all operating systems and platforms.
       required:
         - name
         - status
