@@ -373,7 +373,7 @@ Feature: CAMARA Quality On Demand API, vwip - Operation createSession
     # Typically with a 2-legged access token
     @quality_on_demand_createSession_422.5_unidentifiable_device
     Scenario: Device not included and cannot be deduced from the access token
-        Given the header "Authorization" is set to a valid access token which does not identifiy a device
+        Given the header "Authorization" is set to a valid access token which does not identify a device
         And the request body property "$.device" is not included
         When the request "createSession" is sent
         Then the response status code is 422
