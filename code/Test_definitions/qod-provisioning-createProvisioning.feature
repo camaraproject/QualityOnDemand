@@ -237,7 +237,7 @@ Feature: CAMARA QoD Provisioning API, vwip - Operation createProvisioning
     # Errors 403
 
     @qod_provisioning_createProvisioning_403.1_missing_access_token_scope
-    Scenario: Invalid access token
+    Scenario: Missing access token scope
         Given the header "Authorization" is set to an access token that does not include scope qod-provisioning:device-qos:create
         When the request "createProvisioning" is sent
         Then the response status code is 403
