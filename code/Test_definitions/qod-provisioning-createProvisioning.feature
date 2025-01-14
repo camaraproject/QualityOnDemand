@@ -123,9 +123,9 @@ Feature: CAMARA QoD Provisioning API, vwip - Operation createProvisioning
         And the response property "$.code" is "INVALID_ARGUMENT"
         And the response property "$.message" contains a user friendly text
 
-    # Note that device schema validation errors (if any) should be thrown even if a 3-legged access token is being used
     @qod_provisioning_createProvisioning_400.5_device_identifiers_not_schema_compliant
     # Test every type of identifier even if not supported by the implementation
+    # Note that device schema validation errors (if any) should be thrown even if a 3-legged access token is being used
     Scenario Outline: Some device identifier value does not comply with the schema
         Given the request body property "<device_identifier>" does not comply with the OAS schema at "<oas_spec_schema>"
         And a 2-legged or 3-legged access token is being used
@@ -147,7 +147,7 @@ Feature: CAMARA QoD Provisioning API, vwip - Operation createProvisioning
     # The maximum is considered in the schema so a generic schema validator may fail and generate a 400 INVALID_ARGUMENT without further distinction, and both could be accepted
     @qod_provisioning_createProvisioning_400.6_out_of_range_port
     Scenario: Out of range port
-        Given the request body property  "$.device.ipv4Address.publicPort" is set to a value not between 0 and 65535
+        Given the request body property "$.device.ipv4Address.publicPort" is set to a value not between 0 and 65535
         When the request "createProvisioning" is sent
         Then the response status code is 400
         And the response header "x-correlator" has same value as the request header "x-correlator"
