@@ -246,7 +246,7 @@ Feature: CAMARA QoD Provisioning API, vwip - Operation retrieveProvisioningByDev
     # Typically with a 2-legged access token
     @qod_provisioning_retrieveProvisioningByDevice_422.4_unidentifiable_device
     Scenario: Device not included and cannot be deduced from the access token
-        Given the header "Authorization" is set to a valid access token which does not identifiy a device
+        Given the header "Authorization" is set to a valid access token which does not identify a device
         And the request body property "$.device" is not included
         When the request "retrieveProvisioningByDevice" is sent
         Then the response status code is 422
