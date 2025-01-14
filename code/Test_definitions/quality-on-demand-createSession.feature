@@ -142,8 +142,10 @@ Feature: CAMARA Quality On Demand API, vwip - Operation createSession
 
     @quality_on_demand_createSession_400.5_device_identifiers_not_schema_compliant
     # Test every type of identifier even if not supported by the implementation
+    # Note that device schema validation errors (if any) should be thrown even if a 3-legged access token is being used
     Scenario Outline: Some device identifier value does not comply with the schema
         Given the request body property "<device_identifier>" does not comply with the OAS schema at "<oas_spec_schema>"
+        And a 2-legged or 3-legged access token is being used
         When the request "createSession" is sent
         Then the response status code is 400
         And the response header "x-correlator" has same value as the request header "x-correlator"
@@ -155,15 +157,15 @@ Feature: CAMARA Quality On Demand API, vwip - Operation createSession
         Examples:
             | device_identifier          | oas_spec_schema                             |
             | $.device.phoneNumber       | /components/schemas/PhoneNumber             |
-            | $.device.ipv4Address       | /components/schemas/NetworkAccessIdentifier |
-            | $.device.ipv6Address       | /components/schemas/DeviceIpv4Addr          |
-            | $.device.networkIdentifier | /components/schemas/DeviceIpv6Address       |
+            | $.device.ipv4Address       | /components/schemas/DeviceIpv4Addr          |
+            | $.device.ipv6Address       | /components/schemas/DeviceIpv6Address       |
+            | $.device.networkIdentifier | /components/schemas/NetworkAccessIdentifier |
 
     # The maximum is considered in the schema so a generic schema validator may fail and generate a 400 INVALID_ARGUMENT without further distinction,
     # and both could be accepted
     @quality_on_demand_createSession_400.6_out_of_range_port
     Scenario Outline: Out of range port
-        Given the request body property "<port_property>" is set to a value not between between 0 and 65536
+        Given the request body property "<port_property>" is set to a value not between between 0 and 65535
         When the request "createSession" is sent
         Then the response status code is 400
         And the response header "x-correlator" has same value as the request header "x-correlator"
