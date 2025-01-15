@@ -347,15 +347,40 @@ components:
             - mixed-queue
           description: Specifies the type of queue for L4S traffic management
         differentiatedServicesCodepoint:
-          type: array
-          items:
-            type: integer
-            minimum: 0
-            maximum: 63
-            example: 3
-          minItems: 0
-          maxItems: 64
-          description: A list of unique DSCP values from 0-63, where each decimal value is mapped to the 6 bit DSCP value. For example `0` would be `000000` and `8` would be `001000` - where 0 and 8 would map to `CS0` and `CS1` respectively as defined in the [IANA DSCP Registry](https://www.iana.org/assignments/dscp-registry/dscp-registry.xhtml). This registry defines how [RFC 2474](https://www.rfc-editor.org/rfc/rfc2474) is to be used, while [RFC4594](https://datatracker.ietf.org/doc/html/rfc4594) defines recommended DSCPs to use for different application types. It is worth noting that some operating systems limit what DSCP values can be chosen. For example, Windows defines them for developers [this way](https://learn.microsoft.com/en-us/windows/win32/api/qos2/ne-qos2-qos_traffic_type). Therefore this allows multiple numeric DSCP values to be chosen in order to cover all operating systems and platforms.
+          type: string
+          description: |
+            The name of the service class requested by the API client. It is associated with QoS behaviors optimized for a particular application type.
+
+            There are two sources of DSCP value supported:
+            1. Values that map to the [RFC4594](https://datatracker.ietf.org/doc/html/rfc4594) guidelines
+            2. Microsoft [QOS_TRAFFIC_TYPE](https://learn.microsoft.com/en-us/windows/win32/api/qos2/ne-qos2-qos_traffic_type) values for Windows developers.
+
+            The following service classes are supported:
+
+            | Service Class Name    | DSCP Name | DSCP value (decimal) | DCSP value (binary) | Microsoft Value | Application Examples                                                 |
+            |-----------------------|-----------|----------------------|---------------------|-----------------|----------------------------------------------------------------------|
+            | Microsoft Voice       |    CS7    |          56          |        111000       |       4,5       | Microsoft QOSTrafficTypeVoice and QOSTrafficTypeControl              |
+            | Microsoft Audio/Video |    CS5    |          40          |        101000       |       2,3       | Microsoft QOSTrafficTypeExcellentEffort and QOSTrafficTypeAudioVideo |
+            | Real-Time Interactive |    CS4    |          32          |        100000       |                 | Video conferencing and Interactive gaming                            |
+            | Multimedia Streaming  |    AF31   |          26          |        011010       |                 | Streaming video and audio on demand                                  |
+            | Broadcast Video       |    CS3    |          24          |        011000       |                 | Broadcast TV & live events                                           |
+            | Low-Latency Data      |    AF21   |          18          |        010010       |                 | Client/server transactions Web-based ordering                        |
+            | High-Throughput Data  |    AF11   |          10          |        001010       |                 | Store and forward applications                                       |
+            | Low-Priority Data     |    CS1    |           8          |        001000       |        1        | Any flow that has no BW assurance - also:                            |
+            |                       |           |                      |                     |                 | Microsoft QOSTrafficTypeBackground                                   |
+            | Standard              |  DF(CS0)  |           0          |        000000       |        0        | Undifferentiated applications - also:                                |
+            |                       |           |                      |                     |                 | Microsoft QOSTrafficTypeBestEffort                                   |
+          enum:
+            - microsoft_voice
+            - microsoft_audio_video
+            - real_time_interactive
+            - multimedia_streaming
+            - broadcast_video
+            - low_latency_data
+            - high_throughput_data
+            - low_priority_data
+            - standard
+          example: real_time_interactive
       required:
         - name
         - status
