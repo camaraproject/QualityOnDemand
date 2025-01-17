@@ -1,4 +1,4 @@
-Feature: CAMARA QoD Provisioning API, v0.1.1 - Operation retrieveProvisioningByDevice
+Feature: CAMARA QoD Provisioning API, vwip - Operation retrieveProvisioningByDevice
     # Input to be provided by the implementation to the tester
     #
     # Implementation indications:
@@ -11,11 +11,11 @@ Feature: CAMARA QoD Provisioning API, v0.1.1 - Operation retrieveProvisioningByD
     # * A device object with NO existing QoD provisioning associated
     # * A device object identifying a device commercialized by the implementation for which the service is not applicable, if any
     #
-    # References to OAS spec schemas refer to schemas specified in qod-provisioning.yaml, version 0.1.0
+    # References to OAS spec schemas refer to schemas specified in qod-provisioning.yaml, version wip
 
     Background: Common retrieveProvisioningByDevice setup
         Given an environment at "apiRoot"
-        And the resource "/qod-provisioning/v0.1/retrieve-device-qos"                                                              |
+        And the resource "/qod-provisioning/vwip/retrieve-device-qos"                                                              |
         And the header "Content-Type" is set to "application/json"
         # Unless indicated otherwise the QoD provisioning must be created by the same API client given in the access token
         And the header "Authorization" is set to a valid access token granted to the same client that created the QoD provisoning
@@ -155,8 +155,18 @@ Feature: CAMARA QoD Provisioning API, v0.1.1 - Operation retrieveProvisioningByD
 
     # Errors 403
 
-    # TBD which code is more appropriate for this scenario
-    @qod_provisioning_retrieveProvisioningByDevice_403.1_different_client_id
+    @qod_provisioning_retrieveProvisioningByDevice_403.1_missing_access_token_scope
+    Scenario: Missing access token scope
+        Given the header "Authorization" is set to an access token that does not include scope qod-provisioning:device-qos:read-by-device
+        When the request "retrieveProvisioningByDevice" is sent
+        Then the response status code is 403
+        And the response header "x-correlator" has same value as the request header "x-correlator"
+        And the response header "Content-Type" is "application/json"
+        And the response property "$.status" is 403
+        And the response property "$.code" is "PERMISSION_DENIED"
+        And the response property "$.message" contains a user friendly text
+
+    @qod_provisioning_retrieveProvisioningByDevice_403.2_different_client_id
     Scenario: QoD provisioning not created by the API client given in the access token
         # To test this, a token have to be obtained for a different client
         Given the header "Authorization" is set to a valid access token emitted to a client which did not created the QoD provisioning
@@ -165,20 +175,7 @@ Feature: CAMARA QoD Provisioning API, v0.1.1 - Operation retrieveProvisioningByD
         And the response header "x-correlator" has same value as the request header "x-correlator"
         And the response header "Content-Type" is "application/json"
         And the response property "$.status" is 403
-        And the response property "$.code" is "PERMISSION_DENIED" or "INVALID_TOKEN_CONTEXT"
-        And the response property "$.message" contains a user friendly text
-
-    @qod_provisioning_retrieveProvisioningByDevice_403.2_device_token_mismatch
-    Scenario: Inconsistent access token context for the device
-        # To test this, a token have to be obtained for a different device
-        Given the request body property "$.device" is set to a valid testing device
-        And the header "Authorization" is set to a valid access token emitted for a different device
-        When the request "retrieveProvisioningByDevice" is sent
-        Then the response status code is 403
-        And the response header "x-correlator" has same value as the request header "x-correlator"
-        And the response header "Content-Type" is "application/json"
-        And the response property "$.status" is 403
-        And the response property "$.code" is "INVALID_TOKEN_CONTEXT"
+        And the response property "$.code" is "PERMISSION_DENIED"
         And the response property "$.message" contains a user friendly text
 
     # Errors 404
@@ -204,7 +201,7 @@ Feature: CAMARA QoD Provisioning API, v0.1.1 - Operation retrieveProvisioningByD
         And the response header "x-correlator" has same value as the request header "x-correlator"
         And the response header "Content-Type" is "application/json"
         And the response property "$.status" is 404
-        And the response property "$.code" is "DEVICE_NOT_FOUND"
+        And the response property "$.code" is "IDENTIFIER_NOT_FOUND"
         And the response property "$.message" contains a user friendly text
 
     # Errors 422
@@ -218,7 +215,7 @@ Feature: CAMARA QoD Provisioning API, v0.1.1 - Operation retrieveProvisioningByD
         And the response header "x-correlator" has same value as the request header "x-correlator"
         And the response header "Content-Type" is "application/json"
         And the response property "$.status" is 422
-        And the response property "$.code" is "UNSUPPORTED_DEVICE_IDENTIFIERS"
+        And the response property "$.code" is "UNSUPPORTED_IDENTIFIER"
         And the response property "$.message" contains a user friendly text
 
     # This scenario is under discussion
@@ -231,7 +228,7 @@ Feature: CAMARA QoD Provisioning API, v0.1.1 - Operation retrieveProvisioningByD
         And the response header "x-correlator" has same value as the request header "x-correlator"
         And the response header "Content-Type" is "application/json"
         And the response property "$.status" is 422
-        And the response property "$.code" is "DEVICE_IDENTIFIERS_MISMATCH"
+        And the response property "$.code" is "IDENTIFIER_MISMATCH"
         And the response property "$.message" contains a user friendly text
 
     @qod_provisioning_retrieveProvisioningByDevice_422.3_device_not_supported
@@ -243,18 +240,45 @@ Feature: CAMARA QoD Provisioning API, v0.1.1 - Operation retrieveProvisioningByD
         And the response header "x-correlator" has same value as the request header "x-correlator"
         And the response header "Content-Type" is "application/json"
         And the response property "$.status" is 422
-        And the response property "$.code" is "DEVICE_NOT_APPLICABLE"
+        And the response property "$.code" is "SERVICE_NOT_APPLICABLE"
         And the response property "$.message" contains a user friendly text
 
     # Typically with a 2-legged access token
     @qod_provisioning_retrieveProvisioningByDevice_422.4_unidentifiable_device
-    Scenario: Device not included and cannot be deducted from the access token
-        Given the header "Authorization" is set to a valid access which does not identifiy a single device
+    Scenario: Device not included and cannot be deduced from the access token
+        Given the header "Authorization" is set to a valid access token which does not identify a device
         And the request body property "$.device" is not included
         When the request "retrieveProvisioningByDevice" is sent
         Then the response status code is 422
         And the response header "x-correlator" has same value as the request header "x-correlator"
         And the response header "Content-Type" is "application/json"
         And the response property "$.status" is 422
-        And the response property "$.code" is "UNIDENTIFIABLE_DEVICE"
+        And the response property "$.code" is "MISSING_IDENTIFIER"
         And the response property "$.message" contains a user friendly text
+
+    # Typically with a 3-legged access token
+    @qod_provisioning_retrieveProvisioningByDevice_422.5_device_token_mismatch
+    Scenario: Inconsistent access token context for the device
+        # To test this, a token has to be obtained for a different device
+        Given the request body property "$.device" is set to a valid testing device
+        And the header "Authorization" is set to a valid access token obtained for a different device
+        When the request "retrieveProvisioningByDevice" is sent
+        Then the response status code is 422
+        And the response header "x-correlator" has same value as the request header "x-correlator"
+        And the response header "Content-Type" is "application/json"
+        And the response property "$.status" is 422
+        And the response property "$.code" is "UNNECESSARY_IDENTIFIER"
+        And the response property "$.message" contains a user friendly text
+
+    # Typically with a 3-legged access token
+    @qod_provisioning_retrieveProvisioningByDevice_422.6_unnecessary_device_identifier_in_request
+    Scenario: Explicit device identifier provided when device is identified by the access token
+        Given the request body property "$.device" is set to a valid testing device
+        And the header "Authorization" is set to a valid access token for that same device
+        When the request "retrieveProvisioningByDevice" is sent
+        Then the response status code is 422
+        And the response header "x-correlator" has same value as the request header "x-correlator"
+        And the response header "Content-Type" is "application/json"
+        And the response property "$.status" is 422
+        And the response property "$.code" is "UNNECESSARY_IDENTIFIER"
+        And the response property "$.message" contains a user friendly text        

@@ -1,4 +1,4 @@
-Feature: CAMARA QoS Profiles API, v0.11.1 - Operation getQosProfile
+Feature: CAMARA QoS Profiles API, vwip - Operation getQosProfile
     # Input to be provided by the implementation to the tester
     #
     # Implementation indications:
@@ -7,11 +7,11 @@ Feature: CAMARA QoS Profiles API, v0.11.1 - Operation getQosProfile
     # Testing assets:
     # * The name of an existing QoS profile
     #
-    # References to OAS spec schemas refer to schemas specifies in qos-profiles.yaml, version 0.11.0
+    # References to OAS spec schemas refer to schemas specifies in qos-profiles.yaml, version wip
 
     Background: Common getQosProfile setup
         Given an environment at "apiRoot"
-        And the resource "qos-profiles/v0.11/qos-profiles/{name}"
+        And the resource "qos-profiles/vwip/qos-profiles/{name}"
         And the header "Authorization" is set to a valid access token
         And the header "x-correlator" is set to a UUID value
         And the path param "name" is set by default to a existing QoS profile name
@@ -94,7 +94,20 @@ Feature: CAMARA QoS Profiles API, v0.11.1 - Operation getQosProfile
         And the response property "$.code" is "UNAUTHENTICATED"
         And the response property "$.message" contains a user friendly text
 
-    # Errors 404
+    # Generic 403 errors
+
+    @qos_profiles_getQosProfile_403.1_missing_access_token_scope
+    Scenario: Missing access token scope
+        Given the header "Authorization" is set to an access token that does not include scope qos-profiles:read
+        When the request "getQosProfile" is sent
+        Then the response status code is 403
+        And the response header "x-correlator" has same value as the request header "x-correlator"
+        And the response header "Content-Type" is "application/json"
+        And the response property "$.status" is 403
+        And the response property "$.code" is "PERMISSION_DENIED"
+        And the response property "$.message" contains a user friendly text
+
+    # Generic 404 errors
 
     @qos_profiles_getQosProfile_404.1_not_found
     Scenario: name of a no existing QoS profile

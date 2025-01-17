@@ -1,4 +1,4 @@
-Feature: CAMARA QoD Provisioning API, v0.1.1 - Operation deleteProvisioning
+Feature: CAMARA QoD Provisioning API, vwip - Operation deleteProvisioning
     # Input to be provided by the implementation to the tester
     #
     # Implementation indications:
@@ -8,11 +8,11 @@ Feature: CAMARA QoD Provisioning API, v0.1.1 - Operation deleteProvisioning
     # * The ProvisioningInfo of an existing QoD Provisiong
     # * The ProvisioningInfo of an existing QoD Provisiong with status "AVAILABLE", and with provided values for "sink" and "sinkCredential"
     #
-    # References to OAS spec schemas refer to schemas specified in qod-provisioning.yaml, version 0.1.0
+    # References to OAS spec schemas refer to schemas specified in qod-provisioning.yaml, version wip
 
     Background: Common deleteProvisioning setup
         Given an environment at "apiRoot"
-        And the resource "/qod-provisioning/v0.1/device-qos/{provisioningId}"
+        And the resource "/qod-provisioning/vwip/device-qos/{provisioningId}"
         # Unless indicated otherwise the QoD provisioning must be created by the same API client given in the access token
         And the header "Authorization" is set to a valid access token granted to the same client that created the QoD provisoning
         And the header "x-correlator" is set to a UUID value
@@ -139,8 +139,18 @@ Feature: CAMARA QoD Provisioning API, v0.1.1 - Operation deleteProvisioning
 
     # Errors 403
 
-    # TBD which code is more appropriate for this scenario
-    @qod_provisioning_deleteProvisioning_403.1_different_client_id
+    @qod_provisioning_deleteProvisioning_403.1_missing_access_token_scope
+    Scenario: Missing access token scope
+        Given the header "Authorization" is set to an access token that does not include scope qod-provisioning:device-qos:delete
+        When the request "deleteProvisioning" is sent
+        Then the response status code is 403
+        And the response header "x-correlator" has same value as the request header "x-correlator"
+        And the response header "Content-Type" is "application/json"
+        And the response property "$.status" is 403
+        And the response property "$.code" is "PERMISSION_DENIED"
+        And the response property "$.message" contains a user friendly text
+
+    @qod_provisioning_deleteProvisioning_403.2_different_client_id
     Scenario: QoD provisioning not created by the API client given in the access token
         # To test this, a token have to be obtained by a different client
         Given the header "Authorization" is set to a valid access token emitted to a client which did not created the QoD provisioning
@@ -149,7 +159,7 @@ Feature: CAMARA QoD Provisioning API, v0.1.1 - Operation deleteProvisioning
         And the response header "x-correlator" has same value as the request header "x-correlator"
         And the response header "Content-Type" is "application/json"
         And the response property "$.status" is 403
-        And the response property "$.code" is "PERMISSION_DENIED" or "INVALID_TOKEN_CONTEXT"
+        And the response property "$.code" is "PERMISSION_DENIED"
         And the response property "$.message" contains a user friendly text
 
     # Errors 404
