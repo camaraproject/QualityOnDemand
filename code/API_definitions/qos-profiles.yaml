@@ -366,7 +366,7 @@ components:
           type: string
           description: |
 
-            The name of the service class requested by the API client. It is associated with QoS behaviors optimized for a particular application type. This aligns with the serviceClass concept used in HomeDevicesQoQ for consistent terminology.
+            The name of a Service Class, representing a QoS Profile designed to provide optimized behavior for a specific application type. While DSCP values are commonly associated with Service Classes, their use may vary across network segments and may not be applied throughout the entire end-to-end QoS session. This aligns with the serviceClass concept used in HomeDevicesQoQ for consistent terminology.
 
             Service classes define specific QoS behaviors that map to DSCP (Differentiated Services Code Point) values or Microsoft QoS traffic types.
 
