@@ -362,16 +362,19 @@ components:
           externalDocs:
             description: For more details, refer to the L4S standard.
             url: https://datatracker.ietf.org/doc/rfc9330/
-        differentiatedServicesCodepoint:
+        serviceClass:
           type: string
           description: |
-            The name of the service class requested by the API client. It is associated with QoS behaviors optimized for a particular application type.
 
-            There are two sources of DSCP value supported:
-            1. Values that map to the [RFC4594](https://datatracker.ietf.org/doc/html/rfc4594) guidelines
+            The name of the service class requested by the API client. It is associated with QoS behaviors optimized for a particular application type. This aligns with the serviceClass concept used in HomeDevicesQoQ for consistent terminology.
+
+            Service classes define specific QoS behaviors that map to DSCP (Differentiated Services Code Point) values or Microsoft QoS traffic types.
+
+            The supported mappings are:
+            1. Values aligned with the [RFC4594](https://datatracker.ietf.org/doc/html/rfc4594) guidelines for differentiated traffic classes.
             2. Microsoft [QOS_TRAFFIC_TYPE](https://learn.microsoft.com/en-us/windows/win32/api/qos2/ne-qos2-qos_traffic_type) values for Windows developers.
 
-            The following service classes are supported:
+            **Supported Service Classes**:
 
             | Service Class Name    | DSCP Name | DSCP value (decimal) | DCSP value (binary) | Microsoft Value | Application Examples                                                 |
             |-----------------------|-----------|----------------------|---------------------|-----------------|----------------------------------------------------------------------|
@@ -387,15 +390,15 @@ components:
             | Standard              |  DF(CS0)  |           0          |        000000       |        0        | Undifferentiated applications - also:                                |
             |                       |           |                      |                     |                 | Microsoft QOSTrafficTypeBestEffort                                   |
           enum:
-            - microsoft_voice
-            - microsoft_audio_video
-            - real_time_interactive
-            - multimedia_streaming
-            - broadcast_video
-            - low_latency_data
-            - high_throughput_data
-            - low_priority_data
-            - standard
+            - microsoft_voice                # Microsoft QOSTrafficTypeVoice or Control
+            - microsoft_audio_video          # Microsoft QOSTrafficTypeExcellentEffort or AudioVideo
+            - real_time_interactive          # Video conferencing and interactive gaming
+            - multimedia_streaming           # Streaming video or audio on demand
+            - broadcast_video                # Broadcast TV and live events
+            - low_latency_data               # Client/server transactions Web-based ordering
+            - high_throughput_data           # STore and forward applications
+            - low_priority_data              # Low-priority background traffic
+            - standard                       # Default traffic class
           example: real_time_interactive
       required:
         - name
