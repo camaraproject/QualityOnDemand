@@ -346,6 +346,9 @@ components:
             - l4s-queue
             - mixed-queue
           description: |
+
+            **NOTE**: l4sQueueType is experimental and could change or be removed in a future release.
+
             Specifies the type of queue for L4S (Low Latency, Low Loss, Scalable Throughput) traffic management. L4S is an advanced queue management approach designed to provide ultra-low latency and high throughput for internet traffic, particularly beneficial for interactive applications such as gaming, video conferencing, and virtual reality.
 
             **Queue Type Descriptions:**
@@ -365,6 +368,8 @@ components:
         serviceClass:
           type: string
           description: |
+
+            **NOTE**: serviceClass is experimental and could change or be removed in a future release.
 
             The name of a Service Class, representing a QoS Profile designed to provide optimized behavior for a specific application type. While DSCP values are commonly associated with Service Classes, their use may vary across network segments and may not be applied throughout the entire end-to-end QoS session. This aligns with the serviceClass concept used in HomeDevicesQoQ for consistent terminology.
 
