@@ -28,9 +28,9 @@ The below sections record the changes for each API version in each release as fo
 ## Release Notes
 
 This pre-release contains the definition and documentation of
-* quality-on-demand v1.0.0-rc.1
-* qos-profiles v1.0.0-rc.1
-* qod-provisioning v0.2.0-rc.1
+* [quality-on-demand v1.0.0-rc.1](#quality-on-demand-v100-rc1)
+* [qos-profiles v1.0.0-rc.1](#qos-profiles-v100-rc1)
+* [qod-provisioning v0.2.0-rc.1](#qod-provisioning-v020-rc1)
 
 The API definition(s) are based on
 * Commonalities v0.5.0-rc.1
@@ -40,7 +40,9 @@ The API definition(s) are based on
 
 **quality-on-demand v1.0.0-rc.1 is the first release candidate of the version 1.0.0**
 
-Version 1.0.0 provides the QoS Sessions endpoints from v0.11.1, ..., and is aligned with Commonalities 0.5 and Identity and Consent Management 0.3. **There are breaking changes compared to v0.11.1.**
+Version 1.0.0 provides the QoS Sessions endpoints from v0.11.1, and is aligned with Commonalities 0.5 and Identity and Consent Management 0.3. 
+
+**There are breaking changes compared to v0.11.1.**: the API use has been simplified for API consumers using a three-legged access token to invoke the API. In these cases the optional `device` parameter MUST NOT be provided, as the subject will be uniquely identified from the access token. In this context also some error response codes have been renamed or replaced to comply with Commonalities 0.5.
 
 - API definition **with inline documentation**:
   - [View it on ReDoc](https://redocly.github.io/redoc/?url=https://raw.githubusercontent.com/camaraproject/QualityOnDemand/r2.1/code/API_definitions/quality-on-demand.yaml&nocors)
@@ -48,23 +50,28 @@ Version 1.0.0 provides the QoS Sessions endpoints from v0.11.1, ..., and is alig
   - OpenAPI [YAML spec file](https://github.com/camaraproject/QualityOnDemand/blob/r2.1/code/API_definitions/quality-on-demand.yaml)
 
 ### Added
-* ...
-
+* Added string validation pattern to x-correlator definitions by @hdamker in https://github.com/camaraproject/QualityOnDemand/pull/406
 
 ### Changed
-* ...
+* Updated `info.description` text on device object handling by @eric-murray in https://github.com/camaraproject/QualityOnDemand/pull/391
+* Updated error responses and test cases to comply with Commonalities 0.5.0 by @eric-murray in https://github.com/camaraproject/QualityOnDemand/pull/391
+* Utilized device test scenarios as defined in artifacts of Commonalities by @jlurien in https://github.com/camaraproject/QualityOnDemand/pull/400
+
 
 ### Fixed
-* ...
+* Clarified sinkCredentials expiration by @jlurien in https://github.com/camaraproject/QualityOnDemand/pull/396
 
 ### Removed
-* ...
+* Removed the 403 INVALID_TOKEN_CONTEXT error from the OAS definitions by @eric-murray in https://github.com/camaraproject/QualityOnDemand/pull/391
+* Removed all 5XX errors as these no longer require to be explicitly documented by @eric-murray in https://github.com/camaraproject/QualityOnDemand/pull/391
 
 ## qos-profiles v1.0.0-rc.1
 
 **qos-profiles v1.0.0-rc.1 is the first release candidate of the version 1.0.0**
 
-qos-profiles 1.0.0 provides the QoS Profiles endpoints from v0.11.1, ..., and is aligned with Commonalities 0.5 and Identity and Consent Management 0.3. **There are breaking changes compared to v0.11.1.**
+qos-profiles 1.0.0 provides the QoS Profiles endpoints from v0.11.1, ..., and is aligned with Commonalities 0.5 and Identity and Consent Management 0.3. 
+
+**There are breaking changes compared to v0.11.1.**: the API use has been simplified for API consumers using a three-legged access token to invoke the API. In these cases the optional `device` parameter MUST NOT be provided, as the subject will be uniquely identified from the access token. In this context also some error response codes have been renamed or replaced to comply with Commonalities 0.5.
 
 - API definition **with inline documentation**:
   - [View it on ReDoc](https://redocly.github.io/redoc/?url=https://raw.githubusercontent.com/camaraproject/QualityOnDemand/r2.1/code/API_definitions/qos-profiles.yaml&nocors)
@@ -72,20 +79,27 @@ qos-profiles 1.0.0 provides the QoS Profiles endpoints from v0.11.1, ..., and is
   - OpenAPI [YAML spec file](https://github.com/camaraproject/QualityOnDemand/blob/r2.1/code/API_definitions/qos-profiles.yaml)
 
 ### Added
-* ...
+* Added new experimental and optional parameters `l4sQueueType`and `serviceClass` to QoSProfiles by @benhepworth in https://github.com/camaraproject/QualityOnDemand/pull/384
+* Added string validation pattern to x-correlator definitions by @hdamker in https://github.com/camaraproject/QualityOnDemand/pull/406
 
 ### Changed
-* ...
+* Updated `info.description` text on device object handling by @eric-murray in https://github.com/camaraproject/QualityOnDemand/pull/391
+* Updated error responses and test cases to comply with Commonalities 0.5.0 by @eric-murray in https://github.com/camaraproject/QualityOnDemand/pull/391
+* Utilized device test scenarios as defined in artifacts of Commonalities by @jlurien in https://github.com/camaraproject/QualityOnDemand/pull/400
+* Updated the description intro by @RandyLevensalor in https://github.com/camaraproject/QualityOnDemand/pull/395
 
 ### Fixed
-* ...
+* N/A
 
 ### Removed
-* ...
+* Removed the 403 INVALID_TOKEN_CONTEXT error from the OAS definitions by @eric-murray in https://github.com/camaraproject/QualityOnDemand/pull/391
+* Removed all 5XX errors as these no longer require to be explicitly documented by @eric-murray in https://github.com/camaraproject/QualityOnDemand/pull/391
 
 ## qod-provisioning v0.2.0-rc.1
 
 **qod-provisioning v0.2.0-rc.1 is the release candidate of the version 0.2.0 of the API**
+
+**There are breaking changes compared to v0.1.1.**: the API use has been simplified for API consumers using a three-legged access token to invoke the API. In these cases the optional `device` parameter MUST NOT be provided, as the subject will be uniquely identified from the access token. In this context also some error response codes have been renamed or replaced to comply with Commonalities 0.5.
 
 - API definition **with inline documentation**:
   - [View it on ReDoc](https://redocly.github.io/redoc/?url=https://raw.githubusercontent.com/camaraproject/QualityOnDemand/r2.1/code/API_definitions/qod-provisioning.yaml&nocors)
@@ -93,16 +107,20 @@ qos-profiles 1.0.0 provides the QoS Profiles endpoints from v0.11.1, ..., and is
   - OpenAPI [YAML spec file](https://github.com/camaraproject/QualityOnDemand/blob/r2.1/code/API_definitions/qod-provisioning.yaml)
 
 ### Added
-* ...
+* Added string validation pattern to x-correlator definitions by @hdamker in https://github.com/camaraproject/QualityOnDemand/pull/406
 
 ### Changed
-* ...
+* Updated `info.description` text on device object handling by @eric-murray in https://github.com/camaraproject/QualityOnDemand/pull/391
+* Updated error responses and test cases to comply with Commonalities 0.5.0 by @eric-murray in https://github.com/camaraproject/QualityOnDemand/pull/391
+* Utilized device test scenarios as defined in artifacts of Commonalities by @jlurien in https://github.com/camaraproject/QualityOnDemand/pull/400
 
 ### Fixed
-* ...
+* Clarified sinkCredentials expiration by @jlurien in https://github.com/camaraproject/QualityOnDemand/pull/396
+* Ensured that `date-time` examples are enclosed by quotation marks by @eric-murray in https://github.com/camaraproject/QualityOnDemand/pull/391
 
 ### Removed
-* ...
+* Removed the 403 INVALID_TOKEN_CONTEXT error from the OAS definitions by @eric-murray in https://github.com/camaraproject/QualityOnDemand/pull/391
+* Removed all 5XX errors as these no longer require to be explicitly documented by @eric-murray in https://github.com/camaraproject/QualityOnDemand/pull/391
 
 **Full Changelog**: https://github.com/camaraproject/QualityOnDemand/compare/r1.3...r2.1
 
