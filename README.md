@@ -43,6 +43,8 @@ Repository to describe, develop, document and test the QualityOnDemand API famil
   [[View it on ReDoc]](https://redocly.github.io/redoc/?url=https://raw.githubusercontent.com/camaraproject/QualityOnDemand/r1.3/code/API_definitions/qod-provisioning.yaml&nocors)
   [[View it on Swagger Editor]](https://editor.swagger.io/?url=https://raw.githubusercontent.com/camaraproject/QualityOnDemand/r1.3/code/API_definitions/qod-provisioning.yaml)
 
+* **The pre-release [r2.1](https://github.com/camaraproject/QualityOnDemand/tree/r2.1) contains the release-candidate versions for the Spring25 meta-release.**
+  
 * Previous releases and pre-releases are available here: https://github.com/camaraproject/QualityOnDemand/releases
 * For changes see [CHANGELOG.md](https://github.com/camaraproject/QualityOnDemand/blob/main/CHANGELOG.md)
 
