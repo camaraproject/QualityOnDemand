@@ -1,7 +1,8 @@
 # Changelog QualityOnDemand
 
 ## Table of Contents
-- **[r1.3](#r13)**
+- [r2.1](#r21) (pre-release for Spring25)
+- **[r1.3](#r13) (latest public release)**
 - [r1.2](#r12)
 - [r1.1](#r11)
 - [v0.10.1](#v0101)
@@ -15,6 +16,95 @@
 - [v0.1.0 - Initial contribution](#v010---initial-contribution)
 
 **Please be aware that the project will have frequent updates to the main branch. There are no compatibility guarantees associated with code in any branch, including main, until it has been released. For example, changes may be reverted before a release is published. For the best results, use the latest published release.**
+
+The below sections record the changes for each API version in each release as follows:
+
+* for an alpha release, the delta with respect to the previous release
+* for the first release-candidate, all changes since the last public release
+* for subsequent release-candidate(s), only the delta to the previous release-candidate
+* for a public release, the consolidated changes since the previous public release
+
+# r2.1
+## Release Notes
+
+This pre-release contains the definition and documentation of
+* quality-on-demand v1.0.0-rc.1
+* qos-profiles v1.0.0-rc.1
+* qod-provisioning v0.2.0-rc.1
+
+The API definition(s) are based on
+* Commonalities v0.5.0-rc.1
+* Identity and Consent Management v0.3.0-rc.1
+
+## quality-on-demand v1.0.0-rc.1
+
+**quality-on-demand v1.0.0-rc.1 is the first release candidate of the version 1.0.0**
+
+Version 1.0.0 provides the QoS Sessions endpoints from v0.11.1, ..., and is aligned with Commonalities 0.5 and Identity and Consent Management 0.3. **There are breaking changes compared to v0.11.1.**
+
+- API definition **with inline documentation**:
+  - [View it on ReDoc](https://redocly.github.io/redoc/?url=https://raw.githubusercontent.com/camaraproject/QualityOnDemand/r2.1/code/API_definitions/quality-on-demand.yaml&nocors)
+  - [View it on Swagger Editor](https://editor.swagger.io/?url=https://raw.githubusercontent.com/camaraproject/QualityOnDemand/r2.1/code/API_definitions/quality-on-demand.yaml)
+  - OpenAPI [YAML spec file](https://github.com/camaraproject/QualityOnDemand/blob/r2.1/code/API_definitions/quality-on-demand.yaml)
+
+### Added
+* ...
+
+
+### Changed
+* ...
+
+### Fixed
+* ...
+
+### Removed
+* ...
+
+## qos-profiles v1.0.0-rc.1
+
+**qos-profiles v1.0.0-rc.1 is the first release candidate of the version 1.0.0**
+
+qos-profiles 1.0.0 provides the QoS Profiles endpoints from v0.11.1, ..., and is aligned with Commonalities 0.5 and Identity and Consent Management 0.3. **There are breaking changes compared to v0.11.1.**
+
+- API definition **with inline documentation**:
+  - [View it on ReDoc](https://redocly.github.io/redoc/?url=https://raw.githubusercontent.com/camaraproject/QualityOnDemand/r2.1/code/API_definitions/qos-profiles.yaml&nocors)
+  - [View it on Swagger Editor](https://editor.swagger.io/?url=https://raw.githubusercontent.com/camaraproject/QualityOnDemand/r2.1/code/API_definitions/qos-profiles.yaml)
+  - OpenAPI [YAML spec file](https://github.com/camaraproject/QualityOnDemand/blob/r2.1/code/API_definitions/qos-profiles.yaml)
+
+### Added
+* ...
+
+### Changed
+* ...
+
+### Fixed
+* ...
+
+### Removed
+* ...
+
+## qod-provisioning v0.2.0-rc.1
+
+**qod-provisioning v0.2.0-rc.1 is the release candidate of the version 0.2.0 of the API**
+
+- API definition **with inline documentation**:
+  - [View it on ReDoc](https://redocly.github.io/redoc/?url=https://raw.githubusercontent.com/camaraproject/QualityOnDemand/r2.1/code/API_definitions/qod-provisioning.yaml&nocors)
+  - [View it on Swagger Editor](https://editor.swagger.io/?url=https://raw.githubusercontent.com/camaraproject/QualityOnDemand/r2.1/code/API_definitions/qod-provisioning.yaml)
+  - OpenAPI [YAML spec file](https://github.com/camaraproject/QualityOnDemand/blob/r2.1/code/API_definitions/qod-provisioning.yaml)
+
+### Added
+* ...
+
+### Changed
+* ...
+
+### Fixed
+* ...
+
+### Removed
+* ...
+
+**Full Changelog**: https://github.com/camaraproject/QualityOnDemand/compare/r1.3...r2.1
 
 # r1.3
 ## Release Notes
