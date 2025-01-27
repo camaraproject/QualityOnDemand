@@ -6,23 +6,24 @@ info:
 
     # Introduction
 
-    QoS Profiles are used in conjunction with other Quality-On-Demand APIs, to offer the application developers the capability to request for stable latency (reduced jitter) or throughput for some specified application data flows between application clients (within a user device) and Application Servers (backend services). The developer has a pre-defined set of Quality of Service (QoS) profiles which they could choose from depending on their latency or throughput requirements. The QoS profiles are defined by the network operator and are mapped to the connectivity characteristics of the network.
+    QoS Profiles are used in conjunction with other Quality-On-Demand APIs, to offer the API consumer the capability to request for stable latency (reduced jitter) or throughput for some specified application data flows between application clients (within a user device) and Application Servers (backend services). The API consumer has a pre-defined set of Quality of Service (QoS) profiles which they could choose from depending on their latency or throughput requirements. The QoS profiles are defined by the API provider and are mapped to the connectivity characteristics of the supported networks.
 
     # API functionality
 
     The QoS Profiles API provides the following functionality:
-    - Discovery of all QoS profiles offered by the network operator
+    - Discover all QoS profiles offered by the API provider
+    - Discover the available QoS profiles for a specific device
     - Retrieve the characteristics of a specific QoS profile by name
 
-    How QoS profiles are mapped to connectivity characteristics are subject to agreements between the communication service provider and the API invoker. Within the CAMARA project, you can find a sample for such a mapping of QoS profiles. [CAMARA QoS Profiles Mapping Table (REFERENCE DRAFT)](https://github.com/camaraproject/QualityOnDemand/blob/r1.3/documentation/API_documentation/QoSProfile_Mapping_Table.md)
+    How QoS profiles are mapped to connectivity characteristics are subject to agreements between the API provider and the API consumer. Within the CAMARA project, you can find a sample for such a mapping of QoS profiles. [CAMARA QoS Profiles Mapping Table (REFERENCE DRAFT)](https://github.com/camaraproject/QualityOnDemand/blob/r1.3/documentation/API_documentation/QoSProfile_Mapping_Table.md)
 
     # Authorization and authentication
 
-    The "Camara Security and Interoperability Profile" provides details on how a client requests an access token. Please refer to Identify and Consent Management (https://github.com/camaraproject/IdentityAndConsentManagement/) for the released version of the Profile.
+    The "Camara Security and Interoperability Profile" provides details of how an API consumer requests an access token. Please refer to Identity and Consent Management (https://github.com/camaraproject/IdentityAndConsentManagement/) for the released version of the profile.
 
-    Which specific authorization flows are to be used will be determined during onboarding process, happening between the API Client and the Telco Operator exposing the API, taking into account the declared purpose for accessing the API, while also being subject to the prevailing legal framework dictated by local legislation.
+    The specific authorization flows to be used will be agreed upon during the onboarding process, happening between the provider of the application consuming the API and the operator's API exposure platform, taking into account the declared purpose for accessing the API, whilst also being subject to the prevailing legal framework dictated by local legislation.
 
-    It is important to remark that in cases where personal user data is processed by the API, and users can exercise their rights through mechanisms such as opt-in and/or opt-out, the use of 3-legged access tokens becomes mandatory. This measure ensures that the API remains in strict compliance with user privacy preferences and regulatory obligations, upholding the principles of transparency and user-centric data control.
+    In cases where personal data is processed by the API and users can exercise their rights through mechanisms such as opt-in and/or opt-out, the use of three-legged access tokens is mandatory. This ensures that the API remains in compliance with privacy regulations, upholding the principles of transparency and user-centric privacy-by-design.
 
     # Identifying the device from the access token
 
@@ -81,7 +82,7 @@ paths:
         Returns all QoS Profiles that match the given criteria.
         **NOTES:**
         - The access token may be either a 2-legged or 3-legged access token.
-        - If the access token is 3-legged, all returned QoS Profiles will be available to all end users associated with the access token.
+        - If the access token is 3-legged, all returned QoS Profiles will be available to the subject (device) associated with the access token.
         - This call uses the POST method instead of GET to comply with the CAMARA Commonalities guidelines for sending sensitive or complex data in API calls. Since the device field may contain personally identifiable information, it should not be sent via GET. Additionally, this call may include complex data structures.
           [CAMARA API Design Guidelines](https://github.com/camaraproject/Commonalities/blob/r0.4.0/documentation/API-design-guidelines.md#post-or-get-for-transferring-sensitive-or-complex-data)
 
@@ -132,7 +133,7 @@ paths:
       description: |
         Returns a QoS Profile that matches the given name.
 
-        The access token may be either a 2-legged or 3-legged access token. If the access token is 3-legged, a QoS Profile is only returned if available to all end users associated with the access token.
+        The access token may be either a 2-legged or 3-legged access token. If the access token is 3-legged, a QoS Profile is only returned if available to all subjects associated with the access token.
 
       security:
         - openId:
@@ -422,8 +423,8 @@ components:
         * `ipv4Address`
         * `ipv6Address`
         * `phoneNumber`
-        NOTE1: the network operator might support only a subset of these options. The API invoker can provide multiple identifiers to be compatible across different operators. In this case the identifiers MUST belong to the same device
-        NOTE2: for the Commonalities release v0.4, we are enforcing that the networkAccessIdentifier is only part of the schema for future-proofing, and CAMARA does not currently allow its use. After the CAMARA meta-release work is concluded and the relevant issues are resolved, its use will need to be explicitly documented in the guidelines.
+        NOTE1: the network operator might support only a subset of these options. The API consumer can provide multiple identifiers to be compatible across different operators. In this case the identifiers MUST belong to the same device.
+        NOTE2: as for this Commonalities release, we are enforcing that the networkAccessIdentifier is only part of the schema for future-proofing, and CAMARA does not currently allow its use. After the CAMARA meta-release work is concluded and the relevant issues are resolved, its use will need to be explicitly documented in the guidelines.
 
       type: object
       properties:

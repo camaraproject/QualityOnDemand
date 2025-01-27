@@ -4,7 +4,7 @@ info:
   description: |
     The Quality-On-Demand (QoD) Provisioning API offers a programmable interface for developers to request the assignment of a certain QoS Profile to a certain device, indefinitely.
 
-    This API sets up the configuration in the network so the requested QoS profile is applied to an specified device, at any time while the provisioning is available. The device traffic will be treated with a certain QoS profile by the network whenever the device is connected to the network, until the provisioning is deleted.
+    This API sets up the configuration in the network so the requested QoS profile is applied to a specified device, at any time while the provisioning is available. The device traffic will be treated with a certain QoS profile by the network whenever the device is connected to the network, until the provisioning is deleted.
 
 
     # Relevant terms and definitions
@@ -16,7 +16,7 @@ info:
     At least one identifier for the device (user equipment) out of four options: IPv4 address, IPv6 address, Phone number, or Network Access Identifier assigned by the network operator for the device, at the request time. After the provisioning request is accepted, the device may get different IP addresses, but the provisioning will still apply to the device that was identified during the request process. Note: Network Access Identifier is defined for future use and will not be supported with v0.1 of the API.
 
     * **Notification URL and token**:
-    Developers may provide a callback URL (`sink`) on which notifications about all status change events (eg. provisioning termination) can be received from the service provider. This is an optional parameter. The notification will be sent as a CloudEvent compliant message. If `sink` is included, it is RECOMMENDED for the client to provide as well the `sinkCredential` property to protect the notification endpoint.
+    API consumers may provide a callback URL (`sink`) on which notifications about all status change events (eg. provisioning termination) can be received from the API provider. This is an optional parameter. The notification will be sent as a CloudEvent compliant message. If `sink` is included, it is RECOMMENDED for the client to provide as well the `sinkCredential` property to protect the notification endpoint.
 
     # Resources and Operations overview
     The API defines four operations:
@@ -28,11 +28,11 @@ info:
 
     # Authorization and authentication
 
-    The "Camara Security and Interoperability Profile" provides details on how a client requests an access token. Please refer to Identify and Consent Management (https://github.com/camaraproject/IdentityAndConsentManagement/) for the released version of the Profile.
+    The "Camara Security and Interoperability Profile" provides details of how an API consumer requests an access token. Please refer to Identity and Consent Management (https://github.com/camaraproject/IdentityAndConsentManagement/) for the released version of the profile.
 
-    Which specific authorization flows are to be used will be determined during onboarding process, happening between the API Client and the Telco Operator exposing the API, taking into account the declared purpose for accessing the API, while also being subject to the prevailing legal framework dictated by local legislation.
+    The specific authorization flows to be used will be agreed upon during the onboarding process, happening between the provider of the application consuming the API and the operator's API exposure platform, taking into account the declared purpose for accessing the API, whilst also being subject to the prevailing legal framework dictated by local legislation.
 
-    It is important to remark that in cases where personal user data is processed by the API, and users can exercise their rights through mechanisms such as opt-in and/or opt-out, the use of 3-legged access tokens becomes mandatory. This measure ensures that the API remains in strict compliance with user privacy preferences and regulatory obligations, upholding the principles of transparency and user-centric data control.
+    In cases where personal data is processed by the API and users can exercise their rights through mechanisms such as opt-in and/or opt-out, the use of three-legged access tokens is mandatory. This ensures that the API remains in compliance with privacy regulations, upholding the principles of transparency and user-centric privacy-by-design.
 
     # Identifying the device from the access token
 
@@ -95,10 +95,10 @@ paths:
         **NOTES:**
         - When the provisioning status becomes `UNAVAILABLE`, the QoD provisioning resource is not immediately released, but will get deleted automatically, at earliest 360 seconds after.
 
-        This behavior allows clients which are not receiving notification events but are polling, to get the provisioning status information. Before a client can attempt to create a new QoD provisioning for the same device, they must release the provisioning resources with an explicit `delete` operation if not yet automatically deleted.
-        - The access token may be either 2-legged or 3-legged.
-          - If a 3-legged access token which is associated with a device is used, it is recommended NOT to include the `device` parameter in the request (see "Handling of device information" within the API description for details).
-          - If a 2-legged access token is used, the device parameter must be provided and identify a device.
+        This behavior allows API consumers which are not receiving notification events but are polling, to get the provisioning status information. Before a client can attempt to create a new QoD provisioning for the same device, they must release the provisioning resources with an explicit `delete` operation if not yet automatically deleted.
+        - The access token may be either 2-legged or 3-legged. See "Identifying the device from the access token" for further information
+          - When the API is invoked using a two-legged access token, the subject will be identified from the optional `device` object, which therefore MUST be provided.
+          - When a three-legged access token is used however, this optional identifier MUST NOT be provided, as the subject will be uniquely identified from the access token.
 
       operationId: createProvisioning
       parameters:
@@ -188,8 +188,8 @@ paths:
 
         **NOTES:**
         - The access token may be either 2-legged or 3-legged.
-        - If a 3-legged access token is used, the end user (and device) associated with the QoD provisioning must also be associated with the access token.
-        - The QoD provisioning must have been created by the same API client given in the access token.
+        - If a 3-legged access token is used, the subject associated with the QoD provisioning must also be associated with the access token.
+        - The QoD provisioning must have been created by the same API consumer given in the access token.
       operationId: getProvisioningById
       parameters:
         - $ref: "#/components/parameters/provisioningId"
@@ -232,15 +232,15 @@ paths:
       description: |
         Release resources related to QoS provisioning.
 
-        If the notification callback is provided and the provisioning status was `AVAILABLE`, when the deletion is completed, the client will receive in addition to the response a `PROVISIONING_STATUS_CHANGED` event with
+        If the notification callback is provided and the provisioning status was `AVAILABLE`, when the deletion is completed, the API consumer will receive in addition to the response a `PROVISIONING_STATUS_CHANGED` event with
         - `status` as `UNAVAILABLE` and
         - `statusInfo` as `DELETE_REQUESTED`
         There will be no notification event if the `status` was already `UNAVAILABLE`.
 
         **NOTES:**
         - The access token may be either 2-legged or 3-legged.
-        - If a 3-legged access token is used, the end user (and device) associated with the QoD provisioning must also be associated with the access token.
-        - The QoD provisioning must have been created by the same API client given in the access token.
+        - If a 3-legged access token is used, the subject associated with the QoD provisioning must also be associated with the access token.
+        - The QoD provisioning must have been created by the same API consumer given in the access token.
       operationId: deleteProvisioning
       parameters:
         - $ref: "#/components/parameters/provisioningId"
@@ -283,10 +283,10 @@ paths:
         Retrieves the QoD provisioning for a device.
 
         **NOTES:**
-        - The access token may be either 2-legged or 3-legged.
-          - If a 3-legged access token is used, the end user (and device) associated with the QoD provisioning must also be associated with the access token. In this case it is recommended NOT to include the `device` parameter in the request (see "Handling of device information" within the API description for details).
-          - If a 2-legged access token is used, the device parameter must be provided and identify a device.
-        - The QoD provisioning must have been created by the same API client given in the access token.
+        - The access token may be either 2-legged or 3-legged. See "Identifying the device from the access token" for further information
+          - When the API is invoked using a two-legged access token, the subject will be identified from the optional `device` object, which therefore MUST be provided.
+          - When a three-legged access token is used however, this optional identifier MUST NOT be provided, as the subject will be uniquely identified from the access token.
+        - The QoD provisioning must have been created by the same API consumer given in the access token.
         - If no provisioning is found for the device, an error response 404 is returned with code "NOT_FOUND".
         - This call uses the POST method instead of GET to comply with the [CAMARA Commonalities guidelines](https://github.com/camaraproject/Commonalities/blob/r0.4.0/documentation/API-design-guidelines.md#post-or-get-for-transferring-sensitive-or-complex-data) for sending sensitive or complex data in API calls. Since the device field may contain personally identifiable information, it should not be sent via GET.
 
@@ -382,7 +382,7 @@ components:
         sink:
           type: string
           format: url
-          description: The address to which events shall be delivered, using the HTTP protocol.
+          description: The address to which events shall be delivered using the selected protocol.
           example: "https://endpoint.example.com/sink"
         sinkCredential:
           $ref: "#/components/schemas/SinkCredential"
@@ -533,7 +533,7 @@ components:
           - A UUID style string
           - Support for predefined profiles QOS_S, QOS_M, QOS_L, and QOS_E
           - A searchable descriptive name
-        The set of QoS Profiles that an operator is offering can be retrieved by means of the [QoS Profile API](link TBC).
+        The set of QoS Profiles that an API provider is offering may be retrieved by means of the QoS Profile API (qos-profile) or agreed on onboarding time.
       type: string
       example: QCI_1_voice
       minLength: 3
@@ -629,8 +629,8 @@ components:
         * `phoneNumber`
         * `networkAccessIdentifier`
 
-        NOTE1: the network operator might support only a subset of these options. The API invoker can provide multiple identifiers to be compatible across different network operators. In this case the identifiers MUST belong to the same device.
-        NOTE2: for the Commonalities release v0.4, we are enforcing that the networkAccessIdentifier is only part of the schema for future-proofing, and CAMARA does not currently allow its use. After the CAMARA meta-release work is concluded and the relevant issues are resolved, its use will need to be explicitly documented in the guidelines.
+        NOTE1: the network operator might support only a subset of these options. The API consumer can provide multiple identifiers to be compatible across different network operators. In this case the identifiers MUST belong to the same device.
+        NOTE2: for this Commonalities release, we are enforcing that the networkAccessIdentifier is only part of the schema for future-proofing, and CAMARA does not currently allow its use. After the CAMARA meta-release work is concluded and the relevant issues are resolved, its use will need to be explicitly documented in the guidelines.
       type: object
       properties:
         phoneNumber:
