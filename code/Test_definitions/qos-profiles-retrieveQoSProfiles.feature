@@ -139,7 +139,7 @@ Feature: CAMARA QoS Profiles API, vwip - Operation retrieveQoSProfiles
         And the response property "$.message" contains a user friendly text
 
 
-    @qos_profiles_retrieveQoSProfiles_C02.04_unnecessary_device
+    @qos_profiles_retrieveQoSProfiles_C01.04_unnecessary_device
     Scenario: Device not to be included when it can be deduced from the access token
         Given the header "Authorization" is set to a valid access token identifying a device
         And the request body property "$.device" is set to a valid device
