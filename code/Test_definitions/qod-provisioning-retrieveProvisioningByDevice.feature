@@ -84,7 +84,7 @@ Feature: CAMARA QoD Provisioning API, vwip - Operation retrieveProvisioningByDev
         And the response property "$.message" contains a user friendly text
 
 
-    @qod_provisioning_retrieveProvisioningByDevice_C02.04_unnecessary_device
+@qod_provisioning_retrieveProvisioningByDevice_C01.04_unnecessary_device
     Scenario: Device not to be included when it can be deduced from the access token
         Given the header "Authorization" is set to a valid access token identifying a device
         And the request body property "$.device" is set to a valid device
