@@ -2,13 +2,13 @@ openapi: 3.0.3
 info:
   title: Quality-On-Demand
   description: |
-    The Quality-On-Demand (QoD) API provides programmable interface for developers and other users (capabilities consumers) to request stable latency or throughput managed by Telco networks without the necessity to have an in-depth knowledge of the 4G/5G system or the overall complexity of the Telecom Systems.
+    The Quality-On-Demand (QoD) API provides a programmable interface for developers and other users (API consumers) to request stable latency or throughput managed by networks without the necessity to have an in-depth knowledge of the underlying network complexity (e.g. the 4G/5G system in case of a mobile network).
 
     # Introduction
 
     Industrial (IoT), VR/Gaming, live video streaming, autonomous driving and many other scenarios demand network communication quality and are sensitive to any change in transmission conditions. Being able to request a stable latency (reduced jitter) or prioritized throughput from the network can improve user experience substantially.
 
-    The QoD API offers the application developers the capability to request for stable latency (reduced jitter) or throughput for some specified application data flows between application clients (within a user device) and Application Servers (backend services). The developer has a pre-defined set of Quality of Service (QoS) profiles which they could choose from depending on their latency or throughput requirements.
+    The QoD API offers the application developers the capability to request for stable latency (reduced jitter) or throughput for some specified application data flows between application clients (within a user device) and application servers (backend services). The developer has a pre-defined set of Quality of Service (QoS) profiles which they could choose from depending on their latency or throughput requirements.
 
     ![QoD API Overview](https://raw.githubusercontent.com/camaraproject/QualityOnDemand/r2.1/documentation/API_documentation/resources/QoD_latency_overview.PNG)
 
@@ -23,7 +23,7 @@ info:
     Security access keys such as OAuth 2.0 client credentials used by client applications to invoke the QoD API.
 
     * **QoS profiles and QoS profile labels**:
-    Latency, throughput or priority requirements of the application mapped to relevant QoS profile values. The set of QoS Profiles that a network operator is offering may be retrieved via the `qos-profiles` API (cf. https://github.com/camaraproject/QualityOnDemand/) or will be agreed during the onboarding with the API service provider.
+    Latency, throughput or priority requirements of the application mapped to relevant QoS profile values. The set of QoS Profiles that an API provider is offering may be retrieved via the `qos-profiles` API (cf. https://github.com/camaraproject/QualityOnDemand/) or will be agreed during the onboarding with the API provider.
 
     * **Identifier for the device**:
     At least one identifier for the device (user equipment) out of four options: IPv4 address, IPv6 address, Phone number, or Network Access Identifier assigned by the mobile network operator for the device. Note: Network Access Identifier is defined for future use and will not be supported with v0.11.0 of the API.
@@ -32,14 +32,14 @@ info:
     IPv4 and/or IPv6 address of the application server (application backend)
 
     * **App-Flow (between the application client and application server)**:
-    The precise application data flow the developer wants to prioritize and have stable latency or throughput for. This flow is in the current API version determined by the identifiers used for the device and the application server. And it can be further elaborated with details such as ports or port-ranges. Future version of the API might allow more detailed flow identification features.
+    The precise application data flow the developer wants to prioritize and have stable latency or throughput for. This flow is in the current API version determined by the identified device and the application server. And it can be further elaborated with details such as ports or port-ranges. Future version of the API might allow more detailed flow identification features.
 
     * **Duration**:
     Duration (in seconds) for which the QoS session (between application client and application server) should be created. Limits for session duration can be set by the implementation for the QoS profile. The user may request a termination before its expiration.
 
      * **Notification URL and token**:
-    Developers may provide a callback URL (`sink`) on which notifications about all status change events (eg. provisioning termination) can be received from the service provider. This is an optional parameter. The notification will be sent as a CloudEvent compliant message.
-    If `sink` is included, it is RECOMMENDED for the client to provide as well the `sinkCredential` property to protect the notification endpoint. In the current version,`sinkCredential.credentialType` MUST be set to `ACCESSTOKEN` if provided.
+    The API consumer may provide a callback URL (`sink`) on which notifications about all status change events (eg. provisioning termination) can be received from the API provider. This is an optional parameter. The notification will be sent as a CloudEvent compliant message.
+    If `sink` is included, it is RECOMMENDED for the client to provide as well the `sinkCredential` property to protect the notification endpoint. In the current version, `sinkCredential.credentialType` MUST be set to `ACCESSTOKEN` if provided.
 
     # API functionality
 
@@ -50,7 +50,7 @@ info:
     * The prioritized App-Flow is described by providing information such as device IP address (or other device identifier) & application server IP addresses and port/port-ranges.
     * The developer specifies the duration for which they need the prioritized App-flow.
     * Stable latency or throughput is requested by selecting from the list of QoS profiles made available by the service provider (e.g. QOS_E) to map latency and throughput requirements.
-    * The developer can optionally also specify callback URL (`sink` param) on which notifications for the session can be sent. <br>
+    * The API consumer can optionally also specify callback URL (`sink` param) on which notifications for the session can be sent. <br>
 
     Following diagram shows the interaction between different components
 
@@ -58,11 +58,11 @@ info:
 
     # Authorization and authentication
 
-    The "Camara Security and Interoperability Profile" provides details on how a client requests an access token. Please refer to Identify and Consent Management (https://github.com/camaraproject/IdentityAndConsentManagement/) for the released version of the Profile.
+    The "Camara Security and Interoperability Profile" provides details of how an API consumer requests an access token. Please refer to Identity and Consent Management (https://github.com/camaraproject/IdentityAndConsentManagement/) for the released version of the profile.
 
-    Which specific authorization flows are to be used will be determined during onboarding process, happening between the API Client and the Telco Operator exposing the API, taking into account the declared purpose for accessing the API, while also being subject to the prevailing legal framework dictated by local legislation.
+    The specific authorization flows to be used will be agreed upon during the onboarding process, happening between the provider of the application consuming the API and the operator's API exposure platform, taking into account the declared purpose for accessing the API, whilst also being subject to the prevailing legal framework dictated by local legislation.
 
-    It is important to remark that in cases where personal user data is processed by the API, and users can exercise their rights through mechanisms such as opt-in and/or opt-out, the use of 3-legged access tokens becomes mandatory. This measure ensures that the API remains in strict compliance with user privacy preferences and regulatory obligations, upholding the principles of transparency and user-centric data control.
+    In cases where personal data is processed by the API and users can exercise their rights through mechanisms such as opt-in and/or opt-out, the use of three-legged access tokens is mandatory. This ensures that the API remains in compliance with privacy regulations, upholding the principles of transparency and user-centric privacy-by-design.
 
     # Identifying the device from the access token
 
@@ -121,7 +121,7 @@ paths:
       description: |
         Create QoS Session to manage latency/throughput priorities
 
-        If the qosStatus in the API response is "AVAILABLE" and a notification callback is provided the client will receive in addition to the response a
+        If the qosStatus in the API response is "AVAILABLE" and a notification callback is provided the API consumer will receive in addition to the response a
         `QOS_STATUS_CHANGED` event notification with `qosStatus` as `AVAILABLE`.
 
         If the `qosStatus` in the API response is `REQUESTED`, the client will receive either
@@ -133,10 +133,10 @@ paths:
         **NOTES:**
         - In case of a `QOS_STATUS_CHANGED` event with `qosStatus` as `UNAVAILABLE` and `statusInfo` as `NETWORK_TERMINATED` the resources of the QoS session are not directly released, but will get deleted automatically at earliest 360 seconds after the event.
 
-          This behavior allows clients which are not receiving notification events but are polling to get the session information with the `qosStatus` `UNAVAILABLE` and `statusInfo` `NETWORK_TERMINATED`. Before a client can attempt to create a new QoD session for the same device and flow period they must release the session resources with an explicit `delete` operation if not yet automatically deleted.
-        - The access token may be either 2-legged or 3-legged.
-          - If a 3-legged access token which is associated with a device is used, it is recommended NOT to include the `device` parameter in the request (see "Handling of device information" within the API description for details).
-          - If a 2-legged access token is used, the device parameter must be provided and identify a device.
+          This behavior allows API consumers which are not receiving notification events but are polling to get the session information with the `qosStatus` `UNAVAILABLE` and `statusInfo` `NETWORK_TERMINATED`. Before a API consumer can attempt to create a new QoD session for the same device and flow period they must release the session resources with an explicit `delete` operation if not yet automatically deleted.
+        - The access token may be either 2-legged or 3-legged. See "Identifying the device from the access token" for further information
+          - When the API is invoked using a two-legged access token, the subject will be identified from the optional `device` object, which therefore MUST be provided.
+          - When a three-legged access token is used however, this optional identifier MUST NOT be provided, as the subject will be uniquely identified from the access token.
 
       operationId: createSession
       security:
@@ -160,7 +160,7 @@ paths:
               summary: "Session notifications callback"
               description: |
                 Important: this endpoint is to be implemented by the API consumer.
-                The QoD server will call this endpoint whenever any QoS session change (e.g. network termination) related event occurs.
+                The API provider will call this endpoint whenever any QoS session change (e.g. network termination) related event occurs.
                 Currently only QOS_STATUS_CHANGED event is defined.
               operationId: postNotification
               parameters:
@@ -281,8 +281,8 @@ paths:
 
         **NOTES:**
         - The access token may be either 2-legged or 3-legged.
-        - If a 3-legged access token is used, the end user (and device) associated with the session must also be associated with the access token.
-        - The session must must have been created by the same API client given in the access token
+        - If a 3-legged access token is used, the subject associated with the session must also be associated with the access token.
+        - The session must must have been created by the same API consumer given in the access token
 
       operationId: deleteSession
       security:
@@ -328,8 +328,8 @@ paths:
 
         **NOTES:**
         - The access token may be either 2-legged or 3-legged.
-        - If a 3-legged access token is used, the end user (and device) associated with the session must also be associated with the access token.
-        - The session must must have been created by the same API client given in the access token
+        - If a 3-legged access token is used, the subject associated with the session must also be associated with the access token.
+        - The session must must have been created by the same API consumer given in the access token
 
       operationId: extendQosSessionDuration
       security:
@@ -383,9 +383,9 @@ paths:
 
         **NOTES:**
         - The access token may be either 2-legged or 3-legged.
-          - If a 3-legged access token is used, the end user (and device) associated with the session must also be associated with the access token. In this case it is recommended NOT to include the `device` parameter in the request (see "Handling of device information" within the API description for details).
+          - If a 3-legged access token is used, the subject associated with the session must also be associated with the access token. In this case the optional `device` parameter MUST NOT be provided in the request.
           - If a 2-legged access token is used, the device parameter must be provided and identify a device.
-        - The session must have been created by the same API client given in the access token
+        - The session must have been created by the same API consumer given in the access token
         - If no QoS session is found for the requested device, an empty array is returned.
         - This call uses the POST method instead of GET to comply with the CAMARA Commonalities guidelines for sending sensitive or complex data in API calls. Since the device field may contain personally identifiable information, it should not be sent via GET.
           [CAMARA API Design Guidelines](https://github.com/camaraproject/Commonalities/blob/r0.4.0/documentation/API-design-guidelines.md#post-or-get-for-transferring-sensitive-or-complex-data)
@@ -483,7 +483,7 @@ components:
         sink:
           type: string
           format: url
-          description: The address to which events about all status changes of the session (e.g. session termination) shall be delivered, using the HTTP protocol.
+          description: The address to which events about all status changes of the session (e.g. session termination) shall be delivered using the selected protocol.
           example: "https://endpoint.example.com/sink"
         sinkCredential:
           description: A sink credential provides authentication or authorization information necessary to enable delivery of events to a target.
@@ -546,7 +546,7 @@ components:
           properties:
             duration:
               description: |
-                Requested session duration in seconds. Value may be explicitly limited for the QoS profile, as specified in the [Qos Profile API](TBC). Implementations can grant the requested session duration or set a different duration, based on network policies or conditions.
+                Requested session duration in seconds. Value may be explicitly limited for the QoS profile, as specified in the Qos Profile (see qos-profile API). Implementations can grant the requested session duration or set a different duration, based on network policies or conditions.
               type: integer
               format: int32
               minimum: 1
@@ -642,7 +642,7 @@ components:
             accessTokenExpiresUtc:
               type: string
               format: date-time
-              description: REQUIRED. An absolute UTC instant at which the token shall be considered expired.
+              description: REQUIRED. An absolute (UTC) timestamp at which the token shall be considered expired. Token expiration should occur after the expiration of the requested session, allowing the client to be notified of any changes during the session's existence. If the token expires while the session is still active, the client will stop receiving notifications.
             accessTokenType:
               description: REQUIRED. Type of the access token (See [OAuth 2.0](https://tools.ietf.org/html/rfc6749#section-7.1)). For the current version of the API the type MUST be set to `Bearer`.
               type: string
@@ -703,12 +703,12 @@ components:
     QosProfileName:
       description: |
         A unique name for identifying a specific QoS profile.
-        This may follow different formats depending on the service providers implementation.
+        This may follow different formats depending on the API provider implementation.
         Some options addresses:
           - A UUID style string
           - Support for predefined profiles QOS_S, QOS_M, QOS_L, and QOS_E
           - A searchable descriptive name
-        The set of QoS Profiles that an operator is offering can be retrieved by means of the [QoS Profile API](link TBC).
+        The set of QoS Profiles that an API provider is offering may be retrieved by means of the QoS Profile API (qos-profile) or agreed on onboarding time.
       type: string
       example: QCI_1_voice
       minLength: 3
@@ -729,7 +729,7 @@ components:
           description: Identifier of this event, that must be unique in the source context.
           type: string
         source:
-          description: Identifies the context in which an event happened in the specific Provider Implementation.
+          description: Identifies the context in which an event happened in the specific provider implementation.
           type: string
           format: uri-reference
         type:
@@ -738,7 +738,7 @@ components:
           enum:
             - "org.camaraproject.quality-on-demand.v0.qos-status-changed"
         specversion:
-          description: Version of the specification to which this event conforms (must be 1.0 if it conforms to cloudevents 1.0.2 version)
+          description: Version of the specification to which this event conforms (must be 1.0 if it conforms to Cloudevents 1.0.2 version)
           type: string
           enum:
             - '1.0'
@@ -797,7 +797,7 @@ components:
 
     Device:
       description: |
-        End-user equipment able to connect to a mobile network. Examples of devices include smartphones or IoT sensors/actuators.
+        End-user equipment able to connect to a network. Examples of devices include smartphones or IoT sensors/actuators.
 
         The developer can choose to provide the below specified device identifiers:
 
@@ -806,8 +806,8 @@ components:
         * `phoneNumber`
         * `networkAccessIdentifier`
 
-        NOTE1: the network operator might support only a subset of these options. The API invoker can provide multiple identifiers to be compatible across different network operators. In this case the identifiers MUST belong to the same device
-        NOTE2: for the Commonalities release v0.4, we are enforcing that the networkAccessIdentifier is only part of the schema for future-proofing, and CAMARA does not currently allow its use. After the CAMARA meta-release work is concluded and the relevant issues are resolved, its use will need to be explicitly documented in the guidelines.
+        NOTE1: the network operator might support only a subset of these options. The API consumer can provide multiple identifiers to be compatible across different network operators. In this case the identifiers MUST belong to the same device.
+        NOTE2: as for this Commonalities release, we are enforcing that the networkAccessIdentifier is only part of the schema for future-proofing, and CAMARA does not currently allow its use. After the CAMARA meta-release work is concluded and the relevant issues are resolved, its use will need to be explicitly documented in the guidelines.
       type: object
       properties:
         phoneNumber:
