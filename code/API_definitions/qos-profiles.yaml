@@ -26,17 +26,17 @@ info:
 
     # Identifying the device from the access token
 
-    This API requires the API consumer to identify a device as the subject of the API as follows:
-    - When the API is invoked using a two-legged access token, the subject will be identified from the optional `device` object, which therefore MUST be provided.
+    The two operations defined by this API (`getQosProfile` and `retrieveQoSProfiles`) both allow the API consumer to use a three-legged access token to specify a target device as a query filter. When provided, only profiles available to the specified target device will be returned. Additionally, when a two-legged acccess token is used, the operation `retrieveQoSProfiles` allows the API consumer to optionally specify the target device in the request body.
 
-    - When a three-legged access token is used however, this optional identifier MUST NOT be provided, as the subject will be uniquely identified from the access token.
+    Hence, for the `retrieveQoSProfiles` operation:
+    - When invoked using a two-legged access token, the optional input device object will be used as filter if present.
+
+    - When invoked using a three-legged access token, this optional identifier in the request body MUST NOT be provided, as the device to filter will be uniquely identified from the access token.
 
     This approach simplifies API usage for API consumers using a three-legged access token to invoke the API by relying on the information that is associated with the access token and was identified during the authentication process.
 
     ## Error handling:
-    - If the subject cannot be identified from the access token and the optional `device` object is not included in the request, then the server will return an error with the `422 MISSING_IDENTIFIER` error code.
-
-    - If the subject can be identified from the access token and the optional `device` object is also included in the request, then the server will return an error with the `422 UNNECESSARY_IDENTIFIER` error code. This will be the case even if the same device is identified by these two methods, as the server is unable to make this comparison.
+    - If the device can be identified from the access token and the optional `device` object is also included in the request, then the server will return an error with the `422 UNNECESSARY_IDENTIFIER` error code. This will be the case even if the same device is identified by these two methods, as the server is unable to make this comparison.
 
     # Multi-SIM scenario handling
 
@@ -685,7 +685,6 @@ components:
                     enum:
                       - IDENTIFIER_MISMATCH
                       - SERVICE_NOT_APPLICABLE
-                      - MISSING_IDENTIFIER
                       - UNSUPPORTED_IDENTIFIER
                       - UNNECESSARY_IDENTIFIER
           examples:
@@ -701,12 +700,6 @@ components:
                 status: 422
                 code: SERVICE_NOT_APPLICABLE
                 message: The service is not available for the provided identifier.
-            GENERIC_422_MISSING_IDENTIFIER:
-              description: An identifier is not included in the request and the device or phone number identification cannot be derived from the access token
-              value:
-                status: 422
-                code: MISSING_IDENTIFIER
-                message: The device cannot be identified.
             GENERIC_422_UNSUPPORTED_IDENTIFIER:
               description: None of the provided identifiers is supported by the implementation
               value:
