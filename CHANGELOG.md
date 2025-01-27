@@ -83,7 +83,7 @@ qos-profiles 1.0.0 provides the QoS Profiles endpoints from v0.11.1, ..., and is
 * Added string validation pattern to x-correlator definitions by @hdamker in https://github.com/camaraproject/QualityOnDemand/pull/406
 
 ### Changed
-* Updated `info.description` text on device object handling by @eric-murray in https://github.com/camaraproject/QualityOnDemand/pull/391
+* Updated `info.description` text on device object handling by @eric-murray in https://github.com/camaraproject/QualityOnDemand/pull/391 and https://github.com/camaraproject/QualityOnDemand/pull/410, the latter indicating that providing both a 3-legged token and explicit device identifier is an error, but providing neither is not
 * Updated error responses and test cases to comply with Commonalities 0.5.0 by @eric-murray in https://github.com/camaraproject/QualityOnDemand/pull/391
 * Utilized device test scenarios as defined in artifacts of Commonalities by @jlurien in https://github.com/camaraproject/QualityOnDemand/pull/400
 * Updated the description intro by @RandyLevensalor in https://github.com/camaraproject/QualityOnDemand/pull/395
@@ -94,6 +94,7 @@ qos-profiles 1.0.0 provides the QoS Profiles endpoints from v0.11.1, ..., and is
 ### Removed
 * Removed the 403 INVALID_TOKEN_CONTEXT error from the OAS definitions by @eric-murray in https://github.com/camaraproject/QualityOnDemand/pull/391
 * Removed all 5XX errors as these no longer require to be explicitly documented by @eric-murray in https://github.com/camaraproject/QualityOnDemand/pull/391
+* Removed error `422 MISSING_IDENTIFIER` as this is not a valid error for either endpoint by @eric-murray in https://github.com/camaraproject/QualityOnDemand/pull/410
 
 ## qod-provisioning v0.2.0-rc.1
 
