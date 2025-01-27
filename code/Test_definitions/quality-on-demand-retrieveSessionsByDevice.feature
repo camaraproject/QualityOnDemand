@@ -98,7 +98,7 @@ Feature: CAMARA Quality On Demand API, vwip - Operation retrieveSessionsByDevice
         And the response property "$.message" contains a user friendly text
 
 
-    @quality_on_demand_retrieveSessionsByDevice_C02.04_unnecessary_device
+    @quality_on_demand_retrieveSessionsByDevice_C01.04_unnecessary_device
     Scenario: Device not to be included when it can be deduced from the access token
         Given the header "Authorization" is set to a valid access token identifying a device
         And the request body property "$.device" is set to a valid device
