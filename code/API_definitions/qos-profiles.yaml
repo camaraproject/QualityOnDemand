@@ -27,17 +27,17 @@ info:
 
     # Identifying the device from the access token
 
-    This API requires the API consumer to identify a device as the subject of the API as follows:
-    - When the API is invoked using a two-legged access token, the subject will be identified from the optional `device` object, which therefore MUST be provided.
+    The two operations defined by this API (`getQosProfile` and `retrieveQoSProfiles`) both allow the API consumer to use a three-legged access token to specify a target device as a query filter. When provided, only profiles available to the specified target device will be returned. Additionally, when a two-legged acccess token is used, the operation `retrieveQoSProfiles` allows the API consumer to optionally specify the target device in the request body.
 
-    - When a three-legged access token is used however, this optional identifier MUST NOT be provided, as the subject will be uniquely identified from the access token.
+    Hence, for the `retrieveQoSProfiles` operation:
+    - When invoked using a two-legged access token, the optional input device object will be used as filter if present.
+
+    - When invoked using a three-legged access token, this optional identifier in the request body MUST NOT be provided, as the device to filter will be uniquely identified from the access token.
 
     This approach simplifies API usage for API consumers using a three-legged access token to invoke the API by relying on the information that is associated with the access token and was identified during the authentication process.
 
     ## Error handling:
-    - If the subject cannot be identified from the access token and the optional `device` object is not included in the request, then the server will return an error with the `422 MISSING_IDENTIFIER` error code.
-
-    - If the subject can be identified from the access token and the optional `device` object is also included in the request, then the server will return an error with the `422 UNNECESSARY_IDENTIFIER` error code. This will be the case even if the same device is identified by these two methods, as the server is unable to make this comparison.
+    - If the device can be identified from the access token and the optional `device` object is also included in the request, then the server will return an error with the `422 UNNECESSARY_IDENTIFIER` error code. This will be the case even if the same device is identified by these two methods, as the server is unable to make this comparison.
 
     # Multi-SIM scenario handling
 
@@ -180,12 +180,16 @@ components:
       description: Correlation id for the different services
       schema:
         type: string
+        pattern: ^[a-zA-Z0-9-]{0,55}$
+        example: "b4333c46-49c0-4f62-80d7-f0ef930f1c46"
 
   headers:
     x-correlator:
       description: Correlation id for the different services
       schema:
         type: string
+        pattern: ^[a-zA-Z0-9-]{0,55}$
+        example: "b4333c46-49c0-4f62-80d7-f0ef930f1c46"
 
   schemas:
     QosProfile:
@@ -322,6 +326,72 @@ components:
           minimum: 1
           maximum: 10
           example: 3
+        l4sQueueType:
+          type: string
+          enum:
+            - non-l4s-queue
+            - l4s-queue
+            - mixed-queue
+          description: |
+
+            **NOTE**: l4sQueueType is experimental and could change or be removed in a future release.
+
+            Specifies the type of queue for L4S (Low Latency, Low Loss, Scalable Throughput) traffic management. L4S is an advanced queue management approach designed to provide ultra-low latency and high throughput for internet traffic, particularly beneficial for interactive applications such as gaming, video conferencing, and virtual reality.
+
+            **Queue Type Descriptions:**
+
+            - **non-l4s-queue**:
+              A traditional queue used for legacy internet traffic that does not utilize L4S enhancements. It provides standard latency and throughput levels.
+
+            - **l4s-queue**:
+              A dedicated queue optimized for L4S traffic, delivering ultra-low latency, low loss, and scalable throughput to support latency-sensitive applications.
+
+            - **mixed-queue**:
+              A shared queue that can handle both L4S and traditional traffic, offering a balance between ultra-low latency for L4S flows and compatibility with non-L4S flows.
+
+          externalDocs:
+            description: For more details, refer to the L4S standard.
+            url: https://datatracker.ietf.org/doc/rfc9330/
+        serviceClass:
+          type: string
+          description: |
+
+            **NOTE**: serviceClass is experimental and could change or be removed in a future release.
+
+            The name of a Service Class, representing a QoS Profile designed to provide optimized behavior for a specific application type. While DSCP values are commonly associated with Service Classes, their use may vary across network segments and may not be applied throughout the entire end-to-end QoS session. This aligns with the serviceClass concept used in HomeDevicesQoQ for consistent terminology.
+
+            Service classes define specific QoS behaviors that map to DSCP (Differentiated Services Code Point) values or Microsoft QoS traffic types.
+
+            The supported mappings are:
+            1. Values aligned with the [RFC4594](https://datatracker.ietf.org/doc/html/rfc4594) guidelines for differentiated traffic classes.
+            2. Microsoft [QOS_TRAFFIC_TYPE](https://learn.microsoft.com/en-us/windows/win32/api/qos2/ne-qos2-qos_traffic_type) values for Windows developers.
+
+            **Supported Service Classes**:
+
+            | Service Class Name    | DSCP Name | DSCP value (decimal) | DCSP value (binary) | Microsoft Value | Application Examples                                                 |
+            |-----------------------|-----------|----------------------|---------------------|-----------------|----------------------------------------------------------------------|
+            | Microsoft Voice       |    CS7    |          56          |        111000       |       4,5       | Microsoft QOSTrafficTypeVoice and QOSTrafficTypeControl              |
+            | Microsoft Audio/Video |    CS5    |          40          |        101000       |       2,3       | Microsoft QOSTrafficTypeExcellentEffort and QOSTrafficTypeAudioVideo |
+            | Real-Time Interactive |    CS4    |          32          |        100000       |                 | Video conferencing and Interactive gaming                            |
+            | Multimedia Streaming  |    AF31   |          26          |        011010       |                 | Streaming video and audio on demand                                  |
+            | Broadcast Video       |    CS3    |          24          |        011000       |                 | Broadcast TV & live events                                           |
+            | Low-Latency Data      |    AF21   |          18          |        010010       |                 | Client/server transactions Web-based ordering                        |
+            | High-Throughput Data  |    AF11   |          10          |        001010       |                 | Store and forward applications                                       |
+            | Low-Priority Data     |    CS1    |           8          |        001000       |        1        | Any flow that has no BW assurance - also:                            |
+            |                       |           |                      |                     |                 | Microsoft QOSTrafficTypeBackground                                   |
+            | Standard              |  DF(CS0)  |           0          |        000000       |        0        | Undifferentiated applications - also:                                |
+            |                       |           |                      |                     |                 | Microsoft QOSTrafficTypeBestEffort                                   |
+          enum:
+            - microsoft_voice                # Microsoft QOSTrafficTypeVoice or Control
+            - microsoft_audio_video          # Microsoft QOSTrafficTypeExcellentEffort or AudioVideo
+            - real_time_interactive          # Video conferencing and interactive gaming
+            - multimedia_streaming           # Streaming video or audio on demand
+            - broadcast_video                # Broadcast TV and live events
+            - low_latency_data               # Client/server transactions Web-based ordering
+            - high_throughput_data           # STore and forward applications
+            - low_priority_data              # Low-priority background traffic
+            - standard                       # Default traffic class
+          example: real_time_interactive
       required:
         - name
         - status
@@ -686,7 +756,6 @@ components:
                     enum:
                       - IDENTIFIER_MISMATCH
                       - SERVICE_NOT_APPLICABLE
-                      - MISSING_IDENTIFIER
                       - UNSUPPORTED_IDENTIFIER
                       - UNNECESSARY_IDENTIFIER
           examples:
@@ -702,12 +771,6 @@ components:
                 status: 422
                 code: SERVICE_NOT_APPLICABLE
                 message: The service is not available for the provided identifier.
-            GENERIC_422_MISSING_IDENTIFIER:
-              description: An identifier is not included in the request and the device or phone number identification cannot be derived from the access token
-              value:
-                status: 422
-                code: MISSING_IDENTIFIER
-                message: The device cannot be identified.
             GENERIC_422_UNSUPPORTED_IDENTIFIER:
               description: None of the provided identifiers is supported by the implementation
               value:
@@ -746,10 +809,10 @@ components:
               value:
                 status: 429
                 code: QUOTA_EXCEEDED
-                message: Either out of resource quota or reaching rate limiting.
+                message: Out of resource quota.
             GENERIC_429_TOO_MANY_REQUESTS:
-              description: API Server request limit is overpassed
+              description: Access to the API has been temporarily blocked due to rate or spike arrest limits being reached
               value:
                 status: 429
                 code: TOO_MANY_REQUESTS
-                message: Either out of resource quota or reaching rate limiting.
+                message: Rate limit reached.
