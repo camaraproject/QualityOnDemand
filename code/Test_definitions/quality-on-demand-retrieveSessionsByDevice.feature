@@ -55,6 +55,108 @@ Feature: CAMARA Quality On Demand API, vwip - Operation retrieveSessionsByDevice
         And the response header "x-correlator" has same value as the request header "x-correlator"
         And the response body is []
 
+    # Common error scenarios for management of input parameter device
+
+    @quality_on_demand_retrieveSessionsByDevice_C01.01_device_empty
+    Scenario: The device value is an empty object
+        Given the header "Authorization" is set to a valid access token which does not identify a single device
+        And the request body property "$.device" is set to: {}
+        When the HTTP "POST" request is sent
+        Then the response status code is 400
+        And the response property "$.status" is 400
+        And the response property "$.code" is "INVALID_ARGUMENT"
+        And the response property "$.message" contains a user friendly text
+
+
+    @quality_on_demand_retrieveSessionsByDevice_C01.02_device_identifiers_not_schema_compliant
+    Scenario Outline: Some device identifier value does not comply with the schema
+        Given the header "Authorization" is set to a valid access token which does not identify a single device
+        And the request body property "<device_identifier>" does not comply with the OAS schema at "<oas_spec_schema>"
+        When the HTTP "POST" request is sent
+        Then the response status code is 400
+        And the response property "$.status" is 400
+        And the response property "$.code" is "INVALID_ARGUMENT"
+        And the response property "$.message" contains a user friendly text
+        
+        Examples:
+            | device_identifier          | oas_spec_schema                             |
+            | $.device.phoneNumber       | /components/schemas/PhoneNumber             |
+            | $.device.ipv4Address       | /components/schemas/DeviceIpv4Addr          |
+            | $.device.ipv6Address       | /components/schemas/DeviceIpv6Address       |
+            | $.device.networkIdentifier | /components/schemas/NetworkAccessIdentifier |
+
+  
+    # This scenario may happen e.g. with 2-legged access tokens, which do not identify a single device.
+    @quality_on_demand_retrieveSessionsByDevice_C01.03_device_not_found
+    Scenario: Some identifier cannot be matched to a device
+        Given the header "Authorization" is set to a valid access token which does not identify a single device
+        And the request body property "$.device" is compliant with the schema but does not identify a valid device
+        When the HTTP "POST" request is sent
+        Then the response status code is 404
+        And the response property "$.status" is 404
+        And the response property "$.code" is "IDENTIFIER_NOT_FOUND"
+        And the response property "$.message" contains a user friendly text
+
+
+    @quality_on_demand_retrieveSessionsByDevice_C01.04_unnecessary_device
+    Scenario: Device not to be included when it can be deduced from the access token
+        Given the header "Authorization" is set to a valid access token identifying a device
+        And the request body property "$.device" is set to a valid device
+        When the HTTP "POST" request is sent
+        Then the response status code is 422
+        And the response property "$.status" is 422
+        And the response property "$.code" is "UNNECESSARY_IDENTIFIER"
+        And the response property "$.message" contains a user-friendly text
+
+
+    @quality_on_demand_retrieveSessionsByDevice_C01.05_missing_device
+    Scenario: Device not included and cannot be deduced from the access token
+        Given the header "Authorization" is set to a valid access token which does not identify a single device
+        And the request body property "$.device" is not included
+        When the HTTP "POST" request is sent
+        Then the response status code is 422
+        And the response property "$.status" is 422
+        And the response property "$.code" is "MISSING_IDENTIFIER"
+        And the response property "$.message" contains a user-friendly text
+
+
+    @quality_on_demand_retrieveSessionsByDevice_C01.06_unsupported_device
+    Scenario: None of the provided device identifiers is supported by the implementation
+        Given that some types of device identifiers are not supported by the implementation
+        And the header "Authorization" is set to a valid access token which does not identify a single device
+        And the request body property "$.device" only includes device identifiers not supported by the implementation
+        When the HTTP "POST" request is sent
+        Then the response status code is 422
+        And the response property "$.status" is 422
+        And the response property "$.code" is "UNSUPPORTED_IDENTIFIER"
+        And the response property "$.message" contains a user-friendly text
+
+
+    # When the service is only offered to certain types of devices or subscriptions, e.g. IoT, B2C, etc.
+    @quality_on_demand_retrieveSessionsByDevice_C01.07_device_not_supported
+    Scenario: Service not available for the device
+        Given that the service is not available for all devices commercialized by the operator
+        And a valid device, identified by the token or provided in the request body, for which the service is not applicable
+        When the HTTP "POST" request is sent
+        Then the response status code is 422
+        And the response property "$.status" is 422
+        And the response property "$.code" is "SERVICE_NOT_APPLICABLE"
+        And the response property "$.message" contains a user-friendly text
+
+
+    # Several identifiers provided but they do not identify the same device
+    # This scenario may happen with 2-legged access tokens, which do not identify a device
+    @quality_on_demand_retrieveSessionsByDevice_C01.08_device_identifiers_mismatch
+    Scenario: Device identifiers mismatch
+        Given the header "Authorization" is set to a valid access token which does not identify a single device
+        And at least 2 types of device identifiers are supported by the implementation
+        And the request body property "$.device" includes several identifiers, each of them identifying a valid but different device
+        When the HTTP "POST" request is sent
+        Then the response status code is 422
+        And the response property "$.status" is 422
+        And the response property "$.code" is "IDENTIFIER_MISMATCH"
+        And the response property "$.message" contains a user friendly text
+
     # Errors 400
 
     @quality_on_demand_retrieveSessionsByDevice_400.1_schema_not_compliant
@@ -88,49 +190,6 @@ Feature: CAMARA Quality On Demand API, vwip - Operation retrieveSessionsByDevice
         And the response header "Content-Type" is "application/json"
         And the response property "$.status" is 400
         And the response property "$.code" is "INVALID_ARGUMENT"
-        And the response property "$.message" contains a user friendly text
-
-    @quality_on_demand_retrieveSessionsByDevice_400.4_empty_device
-    Scenario: Error response for empty device in request body
-        Given the request body property "$.device" is set to {}
-        When the request "retrieveSessionsByDevice" is sent
-        Then the response status code is 400
-        And the response header "x-correlator" has same value as the request header "x-correlator"
-        And the response header "Content-Type" is "application/json"
-        And the response property "$.status" is 400
-        And the response property "$.code" is "INVALID_ARGUMENT"
-        And the response property "$.message" contains a user friendly text
-
-    @quality_on_demand_retrieveSessionsByDevice_400.5_device_identifiers_not_schema_compliant
-    # Test every type of identifier even if not supported by the implementation
-    Scenario Outline: Some device identifier value does not comply with the schema
-        Given the request body property "<device_identifier>" does not comply with the OAS schema at "<oas_spec_schema>"
-        When the request "retrieveSessionsByDevice" is sent
-        Then the response status code is 400
-        And the response header "x-correlator" has same value as the request header "x-correlator"
-        And the response header "Content-Type" is "application/json"
-        And the response property "$.status" is 400
-        And the response property "$.code" is "INVALID_ARGUMENT"
-        And the response property "$.message" contains a user friendly text
-
-        Examples:
-            | device_identifier          | oas_spec_schema                             |
-            | $.device.phoneNumber       | /components/schemas/PhoneNumber             |
-            | $.device.ipv4Address       | /components/schemas/DeviceIpv4Addr          |
-            | $.device.ipv6Address       | /components/schemas/DeviceIpv6Address       |
-            | $.device.networkIdentifier | /components/schemas/NetworkAccessIdentifier |
-
-    # The maximum is considered in the schema so a generic schema validator may fail and generate a 400 INVALID_ARGUMENT without further distinction,
-    # and both could be accepted
-    @quality_on_demand_retrieveSessionsByDevice_400.6_out_of_range_port
-    Scenario: Out of range port
-        Given the request body property "$.device.ipv4Address.publicPort" is set to a value not between between 0 and 65536
-        When the request "retrieveSessionsByDevice" is sent
-        Then the response status code is 400
-        And the response header "x-correlator" has same value as the request header "x-correlator"
-        And the response header "Content-Type" is "application/json"
-        And the response property "$.status" is 400
-        And the response property "$.code" is "OUT_OF_RANGE" or "INVALID_ARGUMENT"
         And the response property "$.message" contains a user friendly text
 
     # Generic 401 errors
@@ -185,96 +244,3 @@ Feature: CAMARA Quality On Demand API, vwip - Operation retrieveSessionsByDevice
         And the response property "$.code" is "PERMISSION_DENIED"
         And the response property "$.message" contains a user friendly text
 
-    # Errors 404
-
-    # Typically with a 2-legged access token
-    @quality_on_demand_retrieveSessionsByDevice_404.1_device_not_found
-    Scenario: Some identifier cannot be matched to a device
-        Given that the device cannot be identified from the access token
-        And the request body property "$.device" is compliant with the request body schema but does not identify a valid device
-        When the request "retrieveSessionsByDevice" is sent
-        Then the response status code is 404
-        And the response header "x-correlator" has same value as the request header "x-correlator"
-        And the response header "Content-Type" is "application/json"
-        And the response property "$.status" is 404
-        And the response property "$.code" is "IDENTIFIER_NOT_FOUND"
-        And the response property "$.message" contains a user friendly text
-
-    # Errors 422
-
-    @quality_on_demand_retrieveSessionsByDevice_422.1_device_identifiers_unsupported
-    Scenario: None of the provided device identifiers is supported by the implementation
-        Given that some type of device identifiers are not supported by the implementation
-        And the request body property "$.device" only includes device identifiers not supported by the implementation
-        When the request "retrieveSessionsByDevice" is sent
-        Then the response status code is 422
-        And the response header "x-correlator" has same value as the request header "x-correlator"
-        And the response header "Content-Type" is "application/json"
-        And the response property "$.status" is 422
-        And the response property "$.code" is "UNSUPPORTED_IDENTIFIER"
-        And the response property "$.message" contains a user friendly text
-
-    # This scenario is under discussion
-    @quality_on_demand_retrieveSessionsByDevice_422.2_device_identifiers_mismatch
-    Scenario: Device identifiers mismatch
-        Given that al least 2 types of device identifiers are supported by the implementation
-        And the request body property "$.device" includes several identifiers, each of them identifying a valid but different device
-        When the request "retrieveSessionsByDevice" is sent
-        Then the response status code is 422
-        And the response header "x-correlator" has same value as the request header "x-correlator"
-        And the response header "Content-Type" is "application/json"
-        And the response property "$.status" is 422
-        And the response property "$.code" is "IDENTIFIER_MISMATCH"
-        And the response property "$.message" contains a user friendly text
-
-    @quality_on_demand_retrieveSessionsByDevice_422.3_device_not_supported
-    Scenario: Service not available for the device
-        Given that service is not supported for all devices commercialized by the operator
-        And the service is not applicable for the device identified by the token or provided in the request body
-        When the request "retrieveSessionsByDevice" is sent
-        Then the response status code is 422
-        And the response header "x-correlator" has same value as the request header "x-correlator"
-        And the response header "Content-Type" is "application/json"
-        And the response property "$.status" is 422
-        And the response property "$.code" is "SERVICE_NOT_APPLICABLE"
-        And the response property "$.message" contains a user friendly text
-
-    # Typically with a 2-legged access token
-    @quality_on_demand_retrieveSessionsByDevice_422.4_unidentifiable_device
-    Scenario: Device not included and cannot be deduced from the access token
-        Given the header "Authorization" is set to a valid access token which does not identify a device
-        And the request body property "$.device" is not included
-        When the request "retrieveSessionsByDevice" is sent
-        Then the response status code is 422
-        And the response header "x-correlator" has same value as the request header "x-correlator"
-        And the response header "Content-Type" is "application/json"
-        And the response property "$.status" is 422
-        And the response property "$.code" is "MISSING_IDENTIFIER"
-        And the response property "$.message" contains a user friendly text
-
-    # Typically with a 3-legged access token
-    @quality_on_demand_retrieveSessionsByDevice_422.5_device_token_mismatch
-    Scenario: Inconsistent access token context for the device
-        # To test this, a token has to be obtained for a different device
-        Given the request body property "$.device" is set to a valid testing device
-        And the header "Authorization" is set to a valid access token obtained for a different device
-        When the request "retrieveSessionsByDevice" is sent
-        Then the response status code is 422
-        And the response header "x-correlator" has same value as the request header "x-correlator"
-        And the response header "Content-Type" is "application/json"
-        And the response property "$.status" is 422
-        And the response property "$.code" is "UNNECESSARY_IDENTIFIER"
-        And the response property "$.message" contains a user friendly text
-
-    # Typically with a 3-legged access token
-    @quality_on_demand_retrieveSessionsByDevice_422.6_unnecessary_device_identifier_in_request
-    Scenario: Explicit device identifier provided when device is identified by the access token
-        Given the request body property "$.device" is set to a valid testing device
-        And the header "Authorization" is set to a valid access token for that same device
-        When the request "retrieveSessionsByDevice" is sent
-        Then the response status code is 422
-        And the response header "x-correlator" has same value as the request header "x-correlator"
-        And the response header "Content-Type" is "application/json"
-        And the response property "$.status" is 422
-        And the response property "$.code" is "UNNECESSARY_IDENTIFIER"
-        And the response property "$.message" contains a user friendly text     
