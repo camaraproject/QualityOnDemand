@@ -56,7 +56,7 @@ Version 1.0.0 provides the QoS Sessions endpoints from v0.11.1, and is aligned w
 * Updated `info.description` text on device object handling by @eric-murray in https://github.com/camaraproject/QualityOnDemand/pull/391
 * Updated error responses and test cases to comply with Commonalities 0.5.0 by @eric-murray in https://github.com/camaraproject/QualityOnDemand/pull/391
 * Utilized device test scenarios as defined in artifacts of Commonalities by @jlurien in https://github.com/camaraproject/QualityOnDemand/pull/400
-* Updated documentation, aligned with CAMARA glossary and ICM 0.3.0 by @hdamker in https://github.com/camaraproject/QualityOnDemand/pull/409
+* Updated documentation, aligned with CAMARA glossary and ICM 0.3.0 by @hdamker in https://github.com/camaraproject/QualityOnDemand/pull/409 and https://github.com/camaraproject/QualityOnDemand/pull/407
 * Updated 429 error responses to align with Commonalities 0.5.0-rc.1 changes by @hdamker in https://github.com/camaraproject/QualityOnDemand/pull/412
 
 ### Fixed
@@ -88,7 +88,7 @@ qos-profiles 1.0.0 provides the QoS Profiles endpoints from v0.11.1, ..., and is
 * Updated error responses and test cases to comply with Commonalities 0.5.0 by @eric-murray in https://github.com/camaraproject/QualityOnDemand/pull/391
 * Utilized device test scenarios as defined in artifacts of Commonalities by @jlurien in https://github.com/camaraproject/QualityOnDemand/pull/400
 * Updated the description intro by @RandyLevensalor in https://github.com/camaraproject/QualityOnDemand/pull/395
-* Updated documentation, aligned with CAMARA glossary and ICM 0.3.0 by @hdamker in https://github.com/camaraproject/QualityOnDemand/pull/409
+* Updated documentation, aligned with CAMARA glossary and ICM 0.3.0 by @hdamker in https://github.com/camaraproject/QualityOnDemand/pull/409 and https://github.com/camaraproject/QualityOnDemand/pull/407
 * Updated 429 error responses to align with Commonalities 0.5.0-rc.1 changes by @hdamker in https://github.com/camaraproject/QualityOnDemand/pull/412
 
 ### Fixed
@@ -117,7 +117,7 @@ qos-profiles 1.0.0 provides the QoS Profiles endpoints from v0.11.1, ..., and is
 * Updated `info.description` text on device object handling by @eric-murray in https://github.com/camaraproject/QualityOnDemand/pull/391
 * Updated error responses and test cases to comply with Commonalities 0.5.0 by @eric-murray in https://github.com/camaraproject/QualityOnDemand/pull/391
 * Utilized device test scenarios as defined in artifacts of Commonalities by @jlurien in https://github.com/camaraproject/QualityOnDemand/pull/400
-* Updated documentation, aligned with CAMARA glossary and ICM 0.3.0 by @hdamker in https://github.com/camaraproject/QualityOnDemand/pull/409
+* Updated documentation, aligned with CAMARA glossary and ICM 0.3.0 by @hdamker in https://github.com/camaraproject/QualityOnDemand/pull/409 https://github.com/camaraproject/QualityOnDemand/pull/407
 * Updated 429 error responses to align with Commonalities 0.5.0-rc.1 changes by @hdamker in https://github.com/camaraproject/QualityOnDemand/pull/412
 
 ### Fixed
