@@ -444,7 +444,7 @@ components:
               example: 3600
             serviceArea:
               $ref: "#/components/schemas/Area"
-            BookingId:
+            bookingId:
               $ref: "#/components/schemas/BookingId"              
             startedAt:
               description: Date and time when the Booking became "AVAILABLE". Not to be returned when `status` is "REQUESTED" or "SCHEDULED". Format must follow RFC 3339 and must indicate time zone (UTC or local).
