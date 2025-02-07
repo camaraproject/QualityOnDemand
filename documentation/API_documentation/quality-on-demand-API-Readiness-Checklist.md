@@ -1,6 +1,6 @@
 # API Readiness Checklist
 
-Checklist for quality-on-demand v0.11.1 in r1.3
+Checklist for quality-on-demand v1.0.0-rc.1 in r2.1
 
 | Nr | API release assets  | alpha | release-candidate |  initial<br>public | stable<br> public | Status | Reference information |
 |----|----------------------------------------------|:-----:|:-----------------:|:-------:|:------:|:----:|----|
@@ -11,7 +11,7 @@ Checklist for quality-on-demand v0.11.1 in r1.3
 |  5 | API documentation                            |   M   |         M         |    M    |    M   | Y    | inline in YAML |
 |  6 | User stories                                 |   O   |         O         |    O    |    M   | Y    | [/documentation/API_documentation/QoD_User_Story.md](/documentation/API_documentation/QoD_User_Story.md) |
 |  7 | Basic API test cases & documentation         |   O   |         M         |    M    |    M   | Y    | [/code/Test_definitions](/code/Test_definitions)   |
-|  8 | Enhanced API test cases & documentation      |   O   |         O         |    O    |    M   | N    | [/code/Test_definitions](/code/Test_definitions)   |
+|  8 | Enhanced API test cases & documentation      |   O   |         O         |    O    |    M   | Y    | [/code/Test_definitions](/code/Test_definitions)   |
 |  9 | Test result statement                        |   O   |         O         |    O    |    M   | N    |      |
 | 10 | API release numbering convention applied     |   M   |         M         |    M    |    M   | Y    |      |
 | 11 | Change log updated                           |   M   |         M         |    M    |    M   | Y    | [/CHANGELOG.md](/CHANGELOG.md) |

@@ -26,7 +26,7 @@ info:
     Latency, throughput or priority requirements of the application mapped to relevant QoS profile values. The set of QoS Profiles that an API provider is offering may be retrieved via the `qos-profiles` API (cf. https://github.com/camaraproject/QualityOnDemand/) or will be agreed during the onboarding with the API provider.
 
     * **Identifier for the device**:
-    At least one identifier for the device (user equipment) out of four options: IPv4 address, IPv6 address, Phone number, or Network Access Identifier assigned by the mobile network operator for the device. Note: Network Access Identifier is defined for future use and will not be supported with v0.11.0 of the API.
+    At least one identifier for the device (user equipment) out of four options: IPv4 address, IPv6 address, Phone number, or Network Access Identifier assigned by the mobile network operator for the device. Note: Network Access Identifier is defined for future use and will not be supported with this version of the API.
 
     * **Identifier for the application server**:
     IPv4 and/or IPv6 address of the application server (application backend)
@@ -388,7 +388,7 @@ paths:
         - The session must have been created by the same API consumer given in the access token
         - If no QoS session is found for the requested device, an empty array is returned.
         - This call uses the POST method instead of GET to comply with the CAMARA Commonalities guidelines for sending sensitive or complex data in API calls. Since the device field may contain personally identifiable information, it should not be sent via GET.
-          [CAMARA API Design Guidelines](https://github.com/camaraproject/Commonalities/blob/r0.4.0/documentation/API-design-guidelines.md#post-or-get-for-transferring-sensitive-or-complex-data)
+          [CAMARA API Design Guidelines](https://github.com/camaraproject/Commonalities/blob/r2.2/documentation/API-design-guidelines.md#post-or-get-for-transferring-sensitive-or-complex-data)
 
       operationId: retrieveSessionsByDevice
       parameters:
@@ -1415,7 +1415,7 @@ components:
       description: Cloud event example for QoS status change to UNAVAILABLE due to DURATION_EXPIRED
       value:
         id: 83a0d986-0866-4f38-b8c0-fc65bfcda452
-        source: 'https://api.example.com/qod/v0/sessions/123e4567-e89b-12d3-a456-426614174000'
+        source: 'https://api.example.com/qod/v1/sessions/123e4567-e89b-12d3-a456-426614174000'
         specversion: '1.0'
         type: "org.camaraproject.quality-on-demand.v0.qos-status-changed"
         time: '2024-06-01T13:00:00Z'
