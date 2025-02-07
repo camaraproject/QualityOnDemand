@@ -8,12 +8,12 @@
 
 # QualityOnDemand
 
-Repository to describe, develop, document and test the QualityOnDemand API family
+Repository to describe, develop, document and test the QualityOnDemand APIs
 
 ## Scope
 
 * Service APIs for “Quality on Demand” (see APIBacklog.md)
-* It provides the customer with the ability to:  
+* It provides the API consumer with the ability to:  
   * set quality for a flow within an access network connections (e.g. mobile device connection or fixed access between a home gateway and the service providers gateway router)
       * Session mode, for a specific duration
       * Provision mode, indefinitely for each time the device connects to the same access network
