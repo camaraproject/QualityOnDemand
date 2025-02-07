@@ -465,7 +465,7 @@ components:
         - $ref: "#/components/schemas/BaseBookingInfo"
         - type: object
           properties:
-            statrTime:
+            startTime:
               description: Date and time when the platform of the API Provider switches the QoS flow with a requested QoS Profile. Format must follow RFC 3339 and must indicate time zone (UTC or local).
               type: string
               format: date-time
