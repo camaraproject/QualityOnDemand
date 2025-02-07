@@ -456,7 +456,7 @@ components:
             statusInfo:
               $ref: "#/components/schemas/StatusInfo"
           required:
-            - BookingId
+            - bookingId
             - status
 
     CreateBooking:
