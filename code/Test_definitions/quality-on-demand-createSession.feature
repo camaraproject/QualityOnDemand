@@ -70,7 +70,7 @@ Feature: CAMARA Quality On Demand API, v1.0.0-rc.1 - Operation createSession
         And the event body complies with the OAS schema at "/components/schemas/EventQosStatusChanged"
         # Additionally any event body has to comply with some constraints beyond the schema compliance
         And the event body property "$.id" is unique
-        And the event body property "$.type" is set to "org.camaraproject.qod.v0.qos-status-changed"
+        And the event body property "$.type" is set to "org.camaraproject.qod.v1.qos-status-changed"
         And the event body property "$.data.sessionId" has the same value as createSession response property "$.sessionId"
         And the event body property "$.data.qosStatus" is "AVAILABLE" or "UNAVAILABLE"
         And the event body property "$.data.statusInfo" exists only if "$.data.qosStatus" is "UNAVAILABLE"

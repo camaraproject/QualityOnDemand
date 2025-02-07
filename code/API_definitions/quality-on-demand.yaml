@@ -739,7 +739,7 @@ components:
           description: The type of the event.
           type: string
           enum:
-            - "org.camaraproject.quality-on-demand.v0.qos-status-changed"
+            - "org.camaraproject.quality-on-demand.v1.qos-status-changed"
         specversion:
           description: Version of the specification to which this event conforms (must be 1.0 if it conforms to Cloudevents 1.0.2 version)
           type: string
@@ -761,7 +761,7 @@ components:
       discriminator:
         propertyName: 'type'
         mapping:
-          org.camaraproject.quality-on-demand.v0.qos-status-changed: "#/components/schemas/EventQosStatusChanged"
+          org.camaraproject.quality-on-demand.v1.qos-status-changed: "#/components/schemas/EventQosStatusChanged"
 
     EventQosStatusChanged:
       description: Event to notify a QoS status change
@@ -1417,7 +1417,7 @@ components:
         id: 83a0d986-0866-4f38-b8c0-fc65bfcda452
         source: 'https://api.example.com/qod/v1/sessions/123e4567-e89b-12d3-a456-426614174000'
         specversion: '1.0'
-        type: "org.camaraproject.quality-on-demand.v0.qos-status-changed"
+        type: "org.camaraproject.quality-on-demand.v1.qos-status-changed"
         time: '2024-06-01T13:00:00Z'
         data:
           sessionId: '123e4567-e89b-12d3-a456-426614174000'

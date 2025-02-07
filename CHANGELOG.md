@@ -42,7 +42,7 @@ The API definition(s) are based on
 
 Version 1.0.0 provides the QoS Sessions endpoints from v0.11.1, and is aligned with Commonalities 0.5 and Identity and Consent Management 0.3. 
 
-**There are breaking changes compared to v0.11.1.**: the API use has been simplified for API consumers using a three-legged access token to invoke the API. In these cases the optional `device` parameter MUST NOT be provided, as the subject will be uniquely identified from the access token. In this context also some error response codes have been renamed or replaced to comply with Commonalities 0.5.
+**There are breaking changes compared to v0.11.1.**: the API use has been simplified for API consumers using a three-legged access token to invoke the API. In these cases the optional `device` parameter MUST NOT be provided, as the subject will be uniquely identified from the access token. In this context also some error response codes have been renamed or replaced to comply with Commonalities 0.5. With the change to a stable API version also the version of the event type has been changed to v1 in org.camaraproject.quality-on-demand.v1.qos-status-changed 
 
 - API definition **with inline documentation**:
   - [View it on ReDoc](https://redocly.github.io/redoc/?url=https://raw.githubusercontent.com/camaraproject/QualityOnDemand/r2.1/code/API_definitions/quality-on-demand.yaml&nocors)
@@ -58,6 +58,8 @@ Version 1.0.0 provides the QoS Sessions endpoints from v0.11.1, and is aligned w
 * Utilized device test scenarios as defined in artifacts of Commonalities by @jlurien in https://github.com/camaraproject/QualityOnDemand/pull/400
 * Updated documentation, aligned with CAMARA glossary and ICM 0.3.0 by @hdamker in https://github.com/camaraproject/QualityOnDemand/pull/409 and https://github.com/camaraproject/QualityOnDemand/pull/407
 * Updated 429 error responses to align with Commonalities 0.5.0-rc.1 changes by @hdamker in https://github.com/camaraproject/QualityOnDemand/pull/412
+* Changed the of the event type from v0 to v1 in org.camaraproject.quality-on-demand.v1.qos-status-changed by @hdamker in https://github.com/camaraproject/QualityOnDemand/pull/407
+  * Note: this change has been done to align with the stable version of the API itself, the actual event structure has not been changed
 
 ### Fixed
 * Clarified sinkCredentials expiration by @jlurien in https://github.com/camaraproject/QualityOnDemand/pull/396
