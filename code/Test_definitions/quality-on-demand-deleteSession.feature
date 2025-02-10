@@ -1,4 +1,4 @@
-Feature: CAMARA Quality On Demand API, vwip - Operation deleteSession
+Feature: CAMARA Quality On Demand API, v1.0.0-rc.1 - Operation deleteSession
     # Input to be provided by the implementation to the tester
     #
     # Implementation indications:
@@ -9,11 +9,11 @@ Feature: CAMARA Quality On Demand API, vwip - Operation deleteSession
     # * The sessionId of an existing session with status "AVAILABLE", and with provided values for "sink" and "sinkCredential".
     # * The sessionId of an existing session with status "UNAVAILABLE", and with provided values for "sink" and "sinkCredential".
     #
-    # References to OAS spec schemas refer to schemas specifies in quality-on-demand.yaml, version wip
+    # References to OAS spec schemas refer to schemas specifies in quality-on-demand.yaml, version 1.0.0-rc.1
 
     Background: Common deleteSession setup
         Given an environment at "apiRoot"
-        And the resource "/quality_on_demand/v0.11/sessions/{sessionId}"
+        And the resource "/quality_on_demand/v1rc1/sessions/{sessionId}"
         # Unless indicated otherwise the QoD provisioning must be created by the same API client given in the access token
         And the header "Authorization" is set to a valid access token
         And the header "x-correlator" is set to a UUID value
@@ -42,7 +42,7 @@ Feature: CAMARA Quality On Demand API, vwip - Operation deleteSession
         And the event body complies with the OAS schema at "/components/schemas/EventQosStatusChanged"
         # Additionally any event body has to comply with some constraints beyond the schema compliance
         And the event body property "$.id" is unique
-        And the event body property "$.type" is set to "org.camaraproject.qod.v0.qos-status-changed"
+        And the event body property "$.type" is set to "org.camaraproject.qod.v1.qos-status-changed"
         And the event body property "$.data.sessionId" as returned for createProvisioning
         And the event body property "$.data.qosStatus" is "UNAVAILABLE"
         And the event body property "$.data.statusInfo" is "DELETE_REQUESTED"

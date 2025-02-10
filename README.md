@@ -8,12 +8,12 @@
 
 # QualityOnDemand
 
-Repository to describe, develop, document and test the QualityOnDemand API family
+Repository to describe, develop, document and test the QualityOnDemand APIs
 
 ## Scope
 
 * Service APIs for “Quality on Demand” (see APIBacklog.md)
-* It provides the customer with the ability to:  
+* It provides the API consumer with the ability to:  
   * set quality for a flow within an access network connections (e.g. mobile device connection or fixed access between a home gateway and the service providers gateway router)
       * Session mode, for a specific duration
       * Provision mode, indefinitely for each time the device connects to the same access network
@@ -43,6 +43,8 @@ Repository to describe, develop, document and test the QualityOnDemand API famil
   [[View it on ReDoc]](https://redocly.github.io/redoc/?url=https://raw.githubusercontent.com/camaraproject/QualityOnDemand/r1.3/code/API_definitions/qod-provisioning.yaml&nocors)
   [[View it on Swagger Editor]](https://editor.swagger.io/?url=https://raw.githubusercontent.com/camaraproject/QualityOnDemand/r1.3/code/API_definitions/qod-provisioning.yaml)
 
+* **The pre-release [r2.1](https://github.com/camaraproject/QualityOnDemand/tree/r2.1) contains the release-candidate versions for the Spring25 meta-release.**
+  
 * Previous releases and pre-releases are available here: https://github.com/camaraproject/QualityOnDemand/releases
 * For changes see [CHANGELOG.md](https://github.com/camaraproject/QualityOnDemand/blob/main/CHANGELOG.md)
 

@@ -10,7 +10,7 @@ info:
 
     The QoD API offers the application developers the capability to request for stable latency (reduced jitter) or throughput for some specified application data flows between application clients (within a user device) and application servers (backend services). The developer has a pre-defined set of Quality of Service (QoS) profiles which they could choose from depending on their latency or throughput requirements.
 
-    ![QoD API Overview](https://raw.githubusercontent.com/camaraproject/QualityOnDemand/r1.3/documentation/API_documentation/resources/QoD_latency_overview.PNG)
+    ![QoD API Overview](https://raw.githubusercontent.com/camaraproject/QualityOnDemand/r2.1/documentation/API_documentation/resources/QoD_latency_overview.PNG)
 
     The usage of the API is based on QoS session resources, which can be created (based on available QoS profiles), queried and deleted. The deletion of a requested session can be triggered by the API consumer or can be triggered automatically once the QoS session has reached its limit.
 
@@ -26,7 +26,7 @@ info:
     Latency, throughput or priority requirements of the application mapped to relevant QoS profile values. The set of QoS Profiles that an API provider is offering may be retrieved via the `qos-profiles` API (cf. https://github.com/camaraproject/QualityOnDemand/) or will be agreed during the onboarding with the API provider.
 
     * **Identifier for the device**:
-    At least one identifier for the device (user equipment) out of four options: IPv4 address, IPv6 address, Phone number, or Network Access Identifier assigned by the mobile network operator for the device. Note: Network Access Identifier is defined for future use and will not be supported with v0.11.0 of the API.
+    At least one identifier for the device (user equipment) out of four options: IPv4 address, IPv6 address, Phone number, or Network Access Identifier assigned by the mobile network operator for the device. Note: Network Access Identifier is defined for future use and will not be supported with this version of the API.
 
     * **Identifier for the application server**:
     IPv4 and/or IPv6 address of the application server (application backend)
@@ -54,13 +54,13 @@ info:
 
     Following diagram shows the interaction between different components
 
-    ![QoD Management API](https://raw.githubusercontent.com/camaraproject/QualityOnDemand/r1.3/documentation/API_documentation/resources/QoD_details.PNG)
+    ![QoD Management API](https://raw.githubusercontent.com/camaraproject/QualityOnDemand/r2.1/documentation/API_documentation/resources/QoD_details.PNG)
 
     # Authorization and authentication
 
     The "Camara Security and Interoperability Profile" provides details of how an API consumer requests an access token. Please refer to Identity and Consent Management (https://github.com/camaraproject/IdentityAndConsentManagement/) for the released version of the profile.
 
-    The specific authorization flows to be used will be agreed upon during the onboarding process, happening between the provider of the application consuming the API and the operator's API exposure platform, taking into account the declared purpose for accessing the API, whilst also being subject to the prevailing legal framework dictated by local legislation.
+    The specific authorization flows to be used will be agreed upon during the onboarding process, happening between the API consumer and the API provider, taking into account the declared purpose for accessing the API, whilst also being subject to the prevailing legal framework dictated by local legislation.
 
     In cases where personal data is processed by the API and users can exercise their rights through mechanisms such as opt-in and/or opt-out, the use of three-legged access tokens is mandatory. This ensures that the API remains in compliance with privacy regulations, upholding the principles of transparency and user-centric privacy-by-design.
 
@@ -94,7 +94,7 @@ info:
   license:
     name: Apache 2.0
     url: https://www.apache.org/licenses/LICENSE-2.0.html
-  version: wip
+  version: 1.0.0-rc.1
   x-camara-commonalities: 0.5
 
 externalDocs:
@@ -102,7 +102,7 @@ externalDocs:
   url: https://github.com/camaraproject/QualityOnDemand
 
 servers:
-  - url: "{apiRoot}/quality-on-demand/vwip"
+  - url: "{apiRoot}/quality-on-demand/v1rc1"
     variables:
       apiRoot:
         default: http://localhost:9091
@@ -388,7 +388,7 @@ paths:
         - The session must have been created by the same API consumer given in the access token
         - If no QoS session is found for the requested device, an empty array is returned.
         - This call uses the POST method instead of GET to comply with the CAMARA Commonalities guidelines for sending sensitive or complex data in API calls. Since the device field may contain personally identifiable information, it should not be sent via GET.
-          [CAMARA API Design Guidelines](https://github.com/camaraproject/Commonalities/blob/r0.4.0/documentation/API-design-guidelines.md#post-or-get-for-transferring-sensitive-or-complex-data)
+          [CAMARA API Design Guidelines](https://github.com/camaraproject/Commonalities/blob/r2.2/documentation/API-design-guidelines.md#post-or-get-for-transferring-sensitive-or-complex-data)
 
       operationId: retrieveSessionsByDevice
       parameters:
@@ -739,7 +739,7 @@ components:
           description: The type of the event.
           type: string
           enum:
-            - "org.camaraproject.quality-on-demand.v0.qos-status-changed"
+            - "org.camaraproject.quality-on-demand.v1.qos-status-changed"
         specversion:
           description: Version of the specification to which this event conforms (must be 1.0 if it conforms to Cloudevents 1.0.2 version)
           type: string
@@ -761,7 +761,7 @@ components:
       discriminator:
         propertyName: 'type'
         mapping:
-          org.camaraproject.quality-on-demand.v0.qos-status-changed: "#/components/schemas/EventQosStatusChanged"
+          org.camaraproject.quality-on-demand.v1.qos-status-changed: "#/components/schemas/EventQosStatusChanged"
 
     EventQosStatusChanged:
       description: Event to notify a QoS status change
@@ -1415,9 +1415,9 @@ components:
       description: Cloud event example for QoS status change to UNAVAILABLE due to DURATION_EXPIRED
       value:
         id: 83a0d986-0866-4f38-b8c0-fc65bfcda452
-        source: 'https://api.example.com/qod/v0/sessions/123e4567-e89b-12d3-a456-426614174000'
+        source: 'https://api.example.com/qod/v1/sessions/123e4567-e89b-12d3-a456-426614174000'
         specversion: '1.0'
-        type: "org.camaraproject.quality-on-demand.v0.qos-status-changed"
+        type: "org.camaraproject.quality-on-demand.v1.qos-status-changed"
         time: '2024-06-01T13:00:00Z'
         data:
           sessionId: '123e4567-e89b-12d3-a456-426614174000'
