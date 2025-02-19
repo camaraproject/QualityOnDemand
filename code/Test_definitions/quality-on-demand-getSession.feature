@@ -1,4 +1,4 @@
-Feature: CAMARA Quality On Demand API, v1.0.0-rc.1 - Operation getSession
+Feature: CAMARA Quality On Demand API, vwip - Operation getSession
     # Input to be provided by the implementation to the tester
     #
     # Implementation indications:
@@ -7,11 +7,11 @@ Feature: CAMARA Quality On Demand API, v1.0.0-rc.1 - Operation getSession
     # Testing assets:
     # * The sessionId of an existing QoS session, and the request properties used for createSession
     #
-    # References to OAS spec schemas refer to schemas specifies in quality-on-demand.yaml, version 1.0.0-rc.1
+    # References to OAS spec schemas refer to schemas specifies in quality-on-demand.yaml, version wip
 
     Background: Common getSession setup
         Given an environment at "apiRoot"
-        And the resource "/quality-on-demand/v1rc1/sessions/{sessionId}"
+        And the resource "/quality-on-demand/vwip/sessions/{sessionId}"
         # Unless indicated otherwise the session must be created by the same API client given in the access token
         And the header "Authorization" is set to a valid access token
         And the header "x-correlator" is set to a UUID value
