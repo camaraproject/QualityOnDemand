@@ -11,7 +11,7 @@ Feature: CAMARA Quality On Demand API, vwip - Operation retrieveSessionsByDevice
     # * A device object applicable for Quality On Demand service with NO QoS Sessions associated
     # * A device object identifying a device commercialized by the implementation for which the service is not applicable, if any.
     #
-    # References to OAS spec schemas refer to schemas specifies in quality-on-demand.yaml, version wip
+    # References to OAS spec schemas refer to schemas specifies in quality-on-demand.yaml
 
     Background: Common retrieveSessionsByDevice setup
         Given an environment at "apiRoot"
