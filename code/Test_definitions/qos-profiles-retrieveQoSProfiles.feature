@@ -11,7 +11,7 @@ Feature: CAMARA QoS Profiles API, vwip - Operation retrieveQoSProfiles
     # * If some QoS Profile is restricted for some devices, provide the QoS profile name and device
     # * A device object identifying a device commercialized by the implementation for which the service is not applicable, if any
 
-    # References to OAS spec schemas refer to schemas specifies in qos-profiles.yaml, version wip
+    # References to OAS spec schemas refer to schemas specifies in qos-profiles.yaml
 
     Background: Common retrieveQoSProfiles setup
         Given an environment at "apiRoot"
