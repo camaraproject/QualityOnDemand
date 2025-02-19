@@ -8,7 +8,7 @@ Feature: CAMARA Quality On Demand API, vwip - Operation extendQosSessionDuration
     # * The sessionId of an existing session with qosStatus "AVAILABLE"
     # * The sessionId of an existing session with qosStatus "UNAVAILABLE"
     #
-    # References to OAS spec schemas refer to schemas specifies in quality-on-demand.yaml, version wip
+    # References to OAS spec schemas refer to schemas specifies in quality-on-demand.yaml
 
     Background: Common extendQosSessionDuration setup
         Given an environment at "apiRoot"
