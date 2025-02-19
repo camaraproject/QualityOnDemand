@@ -1,4 +1,4 @@
-Feature: CAMARA Quality On Demand API, v1.0.0-rc.1 - Operation deleteSession
+Feature: CAMARA Quality On Demand API, vwip - Operation deleteSession
     # Input to be provided by the implementation to the tester
     #
     # Implementation indications:
@@ -9,11 +9,11 @@ Feature: CAMARA Quality On Demand API, v1.0.0-rc.1 - Operation deleteSession
     # * The sessionId of an existing session with status "AVAILABLE", and with provided values for "sink" and "sinkCredential".
     # * The sessionId of an existing session with status "UNAVAILABLE", and with provided values for "sink" and "sinkCredential".
     #
-    # References to OAS spec schemas refer to schemas specifies in quality-on-demand.yaml, version 1.0.0-rc.1
+    # References to OAS spec schemas refer to schemas specifies in quality-on-demand.yaml, version wip
 
     Background: Common deleteSession setup
         Given an environment at "apiRoot"
-        And the resource "/quality_on_demand/v1rc1/sessions/{sessionId}"
+        And the resource "/quality_on_demand/vwip/sessions/{sessionId}"
         # Unless indicated otherwise the QoD provisioning must be created by the same API client given in the access token
         And the header "Authorization" is set to a valid access token
         And the header "x-correlator" is set to a UUID value
