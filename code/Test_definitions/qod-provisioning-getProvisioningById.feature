@@ -7,7 +7,8 @@ Feature: CAMARA QoD Provisioning API, vwip - Operation getProvisioningById
     # Testing assets:
     # * The provisioningId of an existing QoD Provisiong, and the request properties used for createProvisioning
     #
-    # References to OAS spec schemas refer to schemas specified in qod-provisioning.yaml, version wip
+    # References to OAS spec schemas refer to schemas specified in qod-provisioning.yaml
+
 
     Background: Common getProvisioningById setup
         Given an environment at "apiRoot"
