@@ -1,4 +1,4 @@
-Feature: CAMARA QoD Provisioning API, v0.2.0-rc.1 - Operation createProvisioning
+Feature: CAMARA QoD Provisioning API, vwip - Operation createProvisioning
     # Input to be provided by the implementation to the tester
     #
     # Implementation indications:
@@ -10,11 +10,12 @@ Feature: CAMARA QoD Provisioning API, v0.2.0-rc.1 - Operation createProvisioning
     # * A device object applicable for QoD provisioning service
     # * A device object identifying a device commercialized by the implementation for which the service is not applicable, if any
     #
-    # References to OAS spec schemas refer to schemas specified in qod-provisioning.yaml, version 0.2.0-rc.1
+    # References to OAS spec schemas refer to schemas specified in qod-provisioning.yaml
+
 
     Background: Common createProvisioning setup
         Given an environment at "apiRoot"
-        And the resource "/qod-provisioning/v0.2rc1/device-qos"                                                              |
+        And the resource "/qod-provisioning/vwip/device-qos"                                                              |
         And the header "Content-Type" is set to "application/json"
         And the header "Authorization" is set to a valid access token
         And the header "x-correlator" is set to a UUID value

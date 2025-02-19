@@ -1,4 +1,4 @@
-Feature: CAMARA QoS Profiles API, v1.0.0-rc.1 - Operation getQosProfile
+Feature: CAMARA QoS Profiles API, vwip - Operation getQosProfile
     # Input to be provided by the implementation to the tester
     #
     # Implementation indications:
@@ -7,11 +7,11 @@ Feature: CAMARA QoS Profiles API, v1.0.0-rc.1 - Operation getQosProfile
     # Testing assets:
     # * The name of an existing QoS profile
     #
-    # References to OAS spec schemas refer to schemas specifies in qos-profiles.yaml, version 1.0.0-rc.1
+    # References to OAS spec schemas refer to schemas specifies in qos-profiles.yaml
 
     Background: Common getQosProfile setup
         Given an environment at "apiRoot"
-        And the resource "qos-profiles/v1rc1/qos-profiles/{name}"
+        And the resource "qos-profiles/vwip/qos-profiles/{name}"
         And the header "Authorization" is set to a valid access token
         And the header "x-correlator" is set to a UUID value
         And the path param "name" is set by default to a existing QoS profile name

@@ -1,4 +1,4 @@
-Feature: CAMARA QoD Provisioning API, v0.2.0-rc.1 - Operation getProvisioningById
+Feature: CAMARA QoD Provisioning API, vwip - Operation getProvisioningById
     # Input to be provided by the implementation to the tester
     #
     # Implementation indications:
@@ -7,11 +7,12 @@ Feature: CAMARA QoD Provisioning API, v0.2.0-rc.1 - Operation getProvisioningByI
     # Testing assets:
     # * The provisioningId of an existing QoD Provisiong, and the request properties used for createProvisioning
     #
-    # References to OAS spec schemas refer to schemas specified in qod-provisioning.yaml, version 0.2.0-rc.1
+    # References to OAS spec schemas refer to schemas specified in qod-provisioning.yaml
+
 
     Background: Common getProvisioningById setup
         Given an environment at "apiRoot"
-        And the resource "/qod-provisioning/v0.2rc1/device-qos/{provisioningId}"                                                              |
+        And the resource "/qod-provisioning/vwip/device-qos/{provisioningId}"                                                              |
         # Unless indicated otherwise the QoD provisioning must be created by the same API client given in the access token
         And the header "Authorization" is set to a valid access token granted to the same client that created the QoD provisoning
         And the header "x-correlator" is set to a UUID value

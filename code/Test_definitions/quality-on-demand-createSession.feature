@@ -1,4 +1,4 @@
-Feature: CAMARA Quality On Demand API, v1.0.0-rc.1 - Operation createSession
+Feature: CAMARA Quality On Demand API, vwip - Operation createSession
     # Input to be provided by the implementation to the tester
     #
     # Implementation indications:
@@ -12,11 +12,11 @@ Feature: CAMARA Quality On Demand API, v1.0.0-rc.1 - Operation createSession
     # * A device object identifying a device commercialized by the implementation for which the service is not applicable, if any.
     #
 
-    # References to OAS spec schemas refer to schemas specifies in quality-on-demand.yaml, version 1.0.0-rc.1
+    # References to OAS spec schemas refer to schemas specifies in quality-on-demand.yaml
 
     Background: Common createSession setup
         Given an environment at "apiRoot"
-        And the resource "/quality-on-demand/v1rc1/sessions"
+        And the resource "/quality-on-demand/vwip/sessions"
         And the header "Content-Type" is set to "application/json"
         And the header "Authorization" is set to a valid access token
         And the header "x-correlator" is set to a UUID value

@@ -1,4 +1,4 @@
-Feature: CAMARA Quality On Demand API, v1.0.0-rc.1 - Operation extendQosSessionDuration
+Feature: CAMARA Quality On Demand API, vwip - Operation extendQosSessionDuration
     # Input to be provided by the implementation to the tester
     #
     # Implementation indications:
@@ -8,11 +8,11 @@ Feature: CAMARA Quality On Demand API, v1.0.0-rc.1 - Operation extendQosSessionD
     # * The sessionId of an existing session with qosStatus "AVAILABLE"
     # * The sessionId of an existing session with qosStatus "UNAVAILABLE"
     #
-    # References to OAS spec schemas refer to schemas specifies in quality-on-demand.yaml, version 1.0.0-rc.1
+    # References to OAS spec schemas refer to schemas specifies in quality-on-demand.yaml
 
     Background: Common extendQosSessionDuration setup
         Given an environment at "apiRoot"
-        And the resource "/quality-on-demand/v1rc1/sessions/{sessionId}/extend"
+        And the resource "/quality-on-demand/vwip/sessions/{sessionId}/extend"
         And the header "Content-Type" is set to "application/json"
         And the header "Authorization" is set to a valid access token
         And the header "x-correlator" is set to a UUID value
