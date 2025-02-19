@@ -1,4 +1,4 @@
-Feature: CAMARA QoD Provisioning API, v0.2.0-rc.1 - Operation deleteProvisioning
+Feature: CAMARA QoD Provisioning API, vwip - Operation deleteProvisioning
     # Input to be provided by the implementation to the tester
     #
     # Implementation indications:
@@ -8,11 +8,11 @@ Feature: CAMARA QoD Provisioning API, v0.2.0-rc.1 - Operation deleteProvisioning
     # * The ProvisioningInfo of an existing QoD Provisiong
     # * The ProvisioningInfo of an existing QoD Provisiong with status "AVAILABLE", and with provided values for "sink" and "sinkCredential"
     #
-    # References to OAS spec schemas refer to schemas specified in qod-provisioning.yaml, version 0.2.0-rc.1
+    # References to OAS spec schemas refer to schemas specified in qod-provisioning.yaml, version wip
 
     Background: Common deleteProvisioning setup
         Given an environment at "apiRoot"
-        And the resource "/qod-provisioning/v0.2rc1/device-qos/{provisioningId}"
+        And the resource "/qod-provisioning/vwip/device-qos/{provisioningId}"
         # Unless indicated otherwise the QoD provisioning must be created by the same API client given in the access token
         And the header "Authorization" is set to a valid access token granted to the same client that created the QoD provisoning
         And the header "x-correlator" is set to a UUID value
