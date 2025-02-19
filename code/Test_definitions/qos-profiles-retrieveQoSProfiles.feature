@@ -1,4 +1,4 @@
-Feature: CAMARA QoS Profiles API, v1.0.0-rc.1 - Operation retrieveQoSProfiles
+Feature: CAMARA QoS Profiles API, vwip - Operation retrieveQoSProfiles
     # Input to be provided by the implementation to the tester
     #
     # Implementation indications:
@@ -11,11 +11,11 @@ Feature: CAMARA QoS Profiles API, v1.0.0-rc.1 - Operation retrieveQoSProfiles
     # * If some QoS Profile is restricted for some devices, provide the QoS profile name and device
     # * A device object identifying a device commercialized by the implementation for which the service is not applicable, if any
 
-    # References to OAS spec schemas refer to schemas specifies in qos-profiles.yaml, version 1.0.0-rc.1
+    # References to OAS spec schemas refer to schemas specifies in qos-profiles.yaml, version wip
 
     Background: Common retrieveQoSProfiles setup
         Given an environment at "apiRoot"
-        And the resource "qos-profiles/v1rc1/retrieve-qos-profiles"
+        And the resource "qos-profiles/vwip/retrieve-qos-profiles"
         And the header "Content-Type" is set to "application/json"
         And the header "Authorization" is set to a valid access token
         And the header "x-correlator" is set to a UUID value
