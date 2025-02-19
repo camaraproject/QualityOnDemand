@@ -12,7 +12,7 @@ Feature: CAMARA Quality On Demand API, vwip - Operation createSession
     # * A device object identifying a device commercialized by the implementation for which the service is not applicable, if any.
     #
 
-    # References to OAS spec schemas refer to schemas specifies in quality-on-demand.yaml, version wip
+    # References to OAS spec schemas refer to schemas specifies in quality-on-demand.yaml
 
     Background: Common createSession setup
         Given an environment at "apiRoot"
