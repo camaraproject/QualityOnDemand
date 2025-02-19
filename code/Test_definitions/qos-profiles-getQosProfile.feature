@@ -7,7 +7,7 @@ Feature: CAMARA QoS Profiles API, vwip - Operation getQosProfile
     # Testing assets:
     # * The name of an existing QoS profile
     #
-    # References to OAS spec schemas refer to schemas specifies in qos-profiles.yaml, version wip
+    # References to OAS spec schemas refer to schemas specifies in qos-profiles.yaml
 
     Background: Common getQosProfile setup
         Given an environment at "apiRoot"
