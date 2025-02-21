@@ -208,18 +208,10 @@ components:
           $ref: "#/components/schemas/QosProfileStatusEnum"
         targetMinUpstreamRate:
           description: |
-            This is the target minimum upstream rate for the QoS profile.
-            For 5G networks 3GPP Guaranteed Bit Rate (GBR) refers to a dedicated, fixed data rate assigned to
-            specific services, ensuring a minimum performance level. As per 3GPP TS 23.203,
-            GBR is a QoS parameter used to manage traffic classes in mobile networks. It
-            provides a stable data rate for latency-sensitive applications, such as voice calls or
-            video streaming, helping maintain a consistent user experience. When this attribute is set
-            this could imply that a GBR QCI is used, though mechanisms on the network can be used to
-            ensure a minimum performance level without using a GBR QCI.
-            The committed data rate allocated to specific services, ensuring a consistent level of
-            performance. For DOCSIS networks, the "Minimum Reserved Traffic Rate" is defined in the
-            DOCSIS 3.1 - MAC and Upper Layer Protocols Interface Specification"
-            and it ensures a consistent level of performance for specific services within the network.
+            This is the target minimum upload speed for the QoS profile.
+            It represents the minimum rate that the network attempts to deliver.
+            Please note that this is a target value—the network might not always be able to provide this rate under all conditions.
+            It helps ensure that applications like video calls or live streaming perform consistently.
           allOf:
             - $ref: "#/components/schemas/Rate"
         maxUpstreamRate:
@@ -235,18 +227,10 @@ components:
             - $ref: "#/components/schemas/Rate"
         targetMinDownstreamRate:
           description: |
-            This is the target minimum downstream rate for the QoS profile.
-            For 5G networks 3GPP Guaranteed Bit Rate (GBR) refers to a dedicated, fixed data rate assigned to
-            specific services, ensuring a minimum performance level. As per 3GPP TS 23.203,
-            GBR is a QoS parameter used to manage traffic classes in mobile networks. It
-            provides a stable data rate for latency-sensitive applications, such as voice calls or
-            video streaming, helping maintain a consistent user experience.  When this attribute is set
-            this could imply that a GBR QCI is used, though mechanisms on the network can be used to
-            ensure a minimum performance level without using a GBR QCI.
-            The committed data rate allocated to specific services, ensuring a consistent level of
-            performance. DOCSIS networks, the "Minimum Reserved Traffic Rate" is defined in the
-            DOCSIS 3.1 - MAC and Upper Layer Protocols Interface Specification"
-            and it ensures a consistent level of performance for specific services within the network.
+            This is the target maximum upload speed for the QoS profile.
+            It represents the maximum rate that the network attempts to deliver.
+            Please note that this is a target value—the network might not always be able to provide this rate under all conditions.
+            It helps ensure that applications like video calls or live streaming perform consistently.
           allOf:
             - $ref: "#/components/schemas/Rate"
         maxDownstreamRate:
@@ -310,18 +294,11 @@ components:
         packetErrorLossRate:
           type: integer
           description: |
-            The exponential power of the allowable error loss rate 10^(-N).
-            For instance 3 would be an error loss rate of 10 to the power of -3 (0.001)
-
-            For 5G network the 3GPP specification TS 23.203 defines the packet error loss rate QCI attribute. It
-            describes the Quality of Service (QoS) Class Identifier (QCI) parameters used to
-            differentiate traffic classes in mobile networks, ensuring appropriate resource
-            allocation and performance for various services.
-
-            The packet error loss rate is one of the QCI attributes, providing information on the
-            acceptable packet loss rate for a specific traffic class. This attribute helps maintain
-            the desired performance level for services like voice calls, video streaming, or data
-            transfers within the 3GPP mobile network.
+            This field specifies the acceptable level of data loss during transmission.
+            The value is an exponent of 10, so a value of 3 means that up to 10⁻³, or 0.1%, of the
+            data packets may be lost. This setting is part of a broader system that categorizes
+            different types of network traffic (like phone calls, video streams, or data transfers)
+            to ensure they perform reliably on modern mobile networks.
           format: int32
           minimum: 1
           maximum: 10
@@ -405,7 +382,7 @@ components:
           - Support for predefined profiles QOS_S, QOS_M, QOS_L, and QOS_E
           - A searchable descriptive name
       type: string
-      example: QCI_1_voice
+      example: voice
       minLength: 3
       maxLength: 256
       format: string
@@ -510,12 +487,21 @@ components:
       maxProperties: 4
 
     NetworkAccessIdentifier:
-      description: A public identifier addressing a subscription in a mobile network. In 3GPP terminology, it corresponds to the GPSI formatted with the External Identifier ({Local Identifier}@{Domain Identifier}). Unlike the telephone number, the network access identifier is not subjected to portability ruling in force, and is individually managed by each operator.
+      description: |
+        A public identifier for a mobile network subscription. In simple
+        terms, it follows the format "Local Identifier@Domain Identifier".
+        Unlike a telephone number, this identifier is fixed to one operator
+        and cannot be transferred between providers.
       type: string
       example: "123456789@domain.com"
 
     PhoneNumber:
-      description: A public identifier addressing a telephone subscription. In mobile networks it corresponds to the MSISDN (Mobile Station International Subscriber Directory Number). In order to be globally unique it has to be formatted in international format, according to E.164 standard, prefixed with '+'.
+      description: |
+        This field represents a telephone number that uniquely identifies a mobile subscription.
+        It corresponds to the MSISDN (Mobile Station International Subscriber Directory Number)
+        used in mobile networks. The number must be provided in international format, starting
+        with a '+' followed by the country code and the subscriber number, in accordance with
+        the E.164 standard.
       type: string
       pattern: '^\+[1-9][0-9]{4,14}$'
       example: "+123456789"
