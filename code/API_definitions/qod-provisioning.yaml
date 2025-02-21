@@ -4,7 +4,7 @@ info:
   description: |
     The Quality-On-Demand (QoD) Provisioning API offers a programmable interface for developers to request the assignment of a certain QoS Profile to a certain device, indefinitely.
 
-    This API sets up the configuration in the network so the requested QoS profile is applied to a specified device, at any time while the provisioning is available. The device traffic will be treated with a certain QoS profile by the network whenever the device is connected to the network, until the provisioning is deleted.
+    This API sets up the configuration in the network so the requested QoS profile is applied to a specified device, at any time while the association is available. The device traffic will be treated with a certain QoS profile by the network whenever the device is connected to the network, until the provisioning is revoked.
 
 
     # Relevant terms and definitions
@@ -24,7 +24,7 @@ info:
     - An operation to setup a new QoD provisioning for a given device.
     - An operation to get the information about a specific QoD provisioning, identified by its `provisioningId`.
     - An operation to get the QoD provisioning for a given device.
-    - An operation to terminate a QoD provisioning, identified by its `provisioningId`.
+    - An operation to revoke a QoD provisioning, identified by its `provisioningId`.
 
     # Authorization and authentication
 
@@ -50,7 +50,7 @@ info:
 
     # Multi-SIM scenario handling
 
-    In multi-SIM scenarios where more than one mobile device is associated with a phone number (e.g. a smartphone with an associated smartwatch), it might not be possible to uniquely identify the device to which the QoS provisioning should apply from that phone number. If the phone number is used as the device identifier when provisioning in a multi-SIM scenario, the API may respond with an error, apply the provisioning to all devices in the multi-SIM group, or apply the provisioning to a single device in the multi-SIM group which may not be the intended device.
+    In multi-SIM scenarios where more than one mobile device is associated with a phone number (e.g. a smartphone with an associated smartwatch), it might not be possible to uniquely identify the device to which the QoD provisioning should apply from that phone number. If the phone number is used as the device identifier when provisioning in a multi-SIM scenario, the API may respond with an error, apply the provisioning to all devices in the multi-SIM group, or apply the provisioning to a single device in the multi-SIM group which may not be the intended device.
 
     Possible solutions in such a scenario include:
     - Using the authorisation code flow to obtain an access token, which will automatically identify the intended device
@@ -82,7 +82,7 @@ paths:
     post:
       tags:
         - QoD Provisioning
-      summary: Sets a new provisioning of QoS for a device
+      summary: Triggers a new provisioning of QoS for a device
       description: |
         Triggers a new provisioning in the operator to assign certain QoS Profile to certain device.
 
@@ -100,15 +100,15 @@ paths:
           - When the API is invoked using a two-legged access token, the subject will be identified from the optional `device` object, which therefore MUST be provided.
           - When a three-legged access token is used however, this optional identifier MUST NOT be provided, as the subject will be uniquely identified from the access token.
 
-      operationId: createProvisioning
+      operationId: triggerProvisioning
       parameters:
         - $ref: "#/components/parameters/x-correlator"
       requestBody:
-        description: Parameters to create a new provisioning
+        description: Parameters to trigger a new provisioning
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/CreateProvisioning"
+              $ref: "#/components/schemas/TriggerProvisioning"
         required: true
       callbacks:
         notifications:
@@ -161,7 +161,7 @@ paths:
               schema:
                 $ref: "#/components/schemas/ProvisioningInfo"
         "400":
-          $ref: "#/components/responses/CreateProvisioning400"
+          $ref: "#/components/responses/TriggerProvisioning400"
         "401":
           $ref: "#/components/responses/Generic401"
         "403":
@@ -228,11 +228,11 @@ paths:
     delete:
       tags:
         - QoD Provisioning
-      summary: Deletes a QoD provisioning
+      summary: Reverts a QoD provisioning
       description: |
-        Release resources related to QoS provisioning.
+        Revokes the assignment of a QoS profile to a device performed by a former provisioning.
 
-        If the notification callback is provided and the provisioning status was `AVAILABLE`, when the deletion is completed, the API consumer will receive in addition to the response a `PROVISIONING_STATUS_CHANGED` event with
+        If the notification callback is provided and the provisioning status was `AVAILABLE`, when the process is completed, the API consumer will receive in addition to the response a `PROVISIONING_STATUS_CHANGED` event with
         - `status` as `UNAVAILABLE` and
         - `statusInfo` as `DELETE_REQUESTED`
         There will be no notification event if the `status` was already `UNAVAILABLE`.
@@ -241,13 +241,13 @@ paths:
         - The access token may be either 2-legged or 3-legged.
         - If a 3-legged access token is used, the subject associated with the QoD provisioning must also be associated with the access token.
         - The QoD provisioning must have been created by the same API consumer given in the access token.
-      operationId: deleteProvisioning
+      operationId: revertProvisioning
       parameters:
         - $ref: "#/components/parameters/provisioningId"
         - $ref: "#/components/parameters/x-correlator"
       responses:
         "204":
-          description: Provisioning deleted
+          description: Provisioning reverted
           headers:
             x-correlator:
               $ref: "#/components/headers/x-correlator"
@@ -302,7 +302,7 @@ paths:
         required: true
       responses:
         "200":
-          description: Returns information about QoS provisioning for the device.
+          description: Returns information about QoD provisioning for the device.
           headers:
             x-correlator:
               $ref: "#/components/headers/x-correlator"
@@ -396,7 +396,7 @@ components:
     ProvisioningInfo:
       description: |
         Provisioning related information returned in responses.
-        Optional device object only to be returned if provided in createProvisioning. If more than one type of device identifier was provided, only one identifier will be returned (at implementation choice and with the original value provided in createProvisioning).
+        Optional device object only to be returned if provided in triggerProvisioning. If more than one type of device identifier was provided, only one identifier will be returned (at implementation choice and with the original value provided in triggerProvisioning).
         Please note that IP addresses of devices can change and get reused, so the original values may no longer identify the same device. They identified the device at the time of QoD provisioning creation.
       allOf:
         - $ref: "#/components/schemas/BaseProvisioningInfo"
@@ -417,7 +417,7 @@ components:
             - provisioningId
             - status
 
-    CreateProvisioning:
+    TriggerProvisioning:
       description: Attributes to request a new QoD provisioning
       allOf:
         - $ref: "#/components/schemas/BaseProvisioningInfo"
@@ -770,7 +770,7 @@ components:
                 code: OUT_OF_RANGE
                 message: Client specified an invalid range.
 
-    CreateProvisioning400:
+    TriggerProvisioning400:
       description: Bad Request with additional errors for implicit notifications
       headers:
         x-correlator:
