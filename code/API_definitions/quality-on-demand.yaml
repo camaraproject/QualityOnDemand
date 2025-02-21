@@ -485,7 +485,7 @@ components:
           $ref: "#/components/schemas/QosProfileName"
         sink:
           type: string
-          format: url
+          format: uri
           description: The address to which events about all status changes of the session (e.g. session termination) shall be delivered using the selected protocol.
           example: "https://endpoint.example.com/sink"
         sinkCredential:
