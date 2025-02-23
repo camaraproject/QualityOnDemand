@@ -379,7 +379,7 @@ components:
         This may follow different formats depending on the service providers implementation.
         Some options addresses:
           - A UUID style string
-          - Support for predefined profiles QOS_S, QOS_M, QOS_L, and QOS_E
+          - Support for predefined profile names like `QOS_E`, `QOS_S`, `QOS_M`, and `QOS_L`
           - A searchable descriptive name
       type: string
       example: voice
