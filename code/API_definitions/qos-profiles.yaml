@@ -487,21 +487,12 @@ components:
       maxProperties: 4
 
     NetworkAccessIdentifier:
-      description: |
-        A public identifier for a mobile network subscription. In simple
-        terms, it follows the format "Local Identifier@Domain Identifier".
-        Unlike a telephone number, this identifier is fixed to one operator
-        and cannot be transferred between providers.
+      description: A public identifier addressing a subscription in a mobile network. In 3GPP terminology, it corresponds to the GPSI formatted with the External Identifier ({Local Identifier}@{Domain Identifier}). Unlike the telephone number, the network access identifier is not subjected to portability ruling in force, and is individually managed by each operator.
       type: string
       example: "123456789@domain.com"
 
     PhoneNumber:
-      description: |
-        This field represents a telephone number that uniquely identifies a mobile subscription.
-        It corresponds to the MSISDN (Mobile Station International Subscriber Directory Number)
-        used in mobile networks. The number must be provided in international format, starting
-        with a '+' followed by the country code and the subscriber number, in accordance with
-        the E.164 standard.
+      description: A public identifier addressing a telephone subscription. In mobile networks it corresponds to the MSISDN (Mobile Station International Subscriber Directory Number). In order to be globally unique it has to be formatted in international format, according to E.164 standard, prefixed with '+'.
       type: string
       pattern: '^\+[1-9][0-9]{4,14}$'
       example: "+123456789"
