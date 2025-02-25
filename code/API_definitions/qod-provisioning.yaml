@@ -307,7 +307,8 @@ paths:
         required: true
       responses:
         "200":
-          description: Returns information about QoD provisioning for the device.
+          description: Returns information about the QoD provisioning for the device.
+
           headers:
             x-correlator:
               $ref: "#/components/headers/x-correlator"
