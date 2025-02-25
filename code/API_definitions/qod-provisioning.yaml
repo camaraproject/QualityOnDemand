@@ -2,13 +2,11 @@ openapi: 3.0.3
 info:
   title: QoD Provisioning API
   description: |
-The Quality-on-Demand (QoD) Provisioning API offers a programmable interface for developers to request the association of a certain QoS profile with a certain device, indefinitely.
+    The Quality-on-Demand (QoD) Provisioning API offers a programmable interface for developers to request the association of a certain QoS profile with a certain device, indefinitely.
 
-The association resulting from the QoD provisioning request is represented by a QoD provisioning record (or QoD provisioning for short) that includes information about the date of provisioning, the QoS profile, the provisioning status, etc., as well as a provisioningId uniquely identifying this record for later usage.
+    The association resulting from the QoD provisioning request is represented by a QoD provisioning record (or QoD provisioning for short) that includes information about the date of provisioning, the QoS profile, the provisioning status, etc., as well as a provisioningId uniquely identifying this record for later usage.
 
-In addition, this API sets up the configuration in the network such that the requested QoS profile is applied to a specified device, at any time while the association is available. The device traffic will be treated with the provisioned QoS profile by the network whenever the device is connected to the network, until the provisioning is revoked.
-
-
+    In addition, this API sets up the configuration in the network such that the requested QoS profile is applied to a specified device, at any time while the association is available. The device traffic will be treated with the provisioned QoS profile by the network whenever the device is connected to the network, until the provisioning is revoked.
 
     # Relevant terms and definitions
 
@@ -16,7 +14,7 @@ In addition, this API sets up the configuration in the network such that the req
     Latency, throughput or priority requirements of the application mapped to relevant QoS profile values. The set of QoS Profiles that a network operator is offering may be retrieved via the `qos-profiles` API (cf. https://github.com/camaraproject/QualityOnDemand/) or will be agreed during the onboarding with the API service provider.
 
     * **Identifier for the device**:
-    At least one identifier for the device (user equipment) out of four options: IPv4 address, IPv6 address, Phone number, or Network Access Identifier assigned by the network operator for the device, at the request time. After the provisioning request is accepted, the device may get different IP addresses, but the provisioning will still apply to the device that was identified during the request process. Note: Network Access Identifier is defined for future use and will not be supported with this version of the API.
+    At least one identifier for the device out of four options: IPv4 address, IPv6 address, Phone number, or Network Access Identifier assigned by the network operator for the device, at the request time. After the provisioning request is accepted, the device may get different IP addresses, but the provisioning will still apply to the device that was identified during the request process. Note: Network Access Identifier is defined for future use and will not be supported with this version of the API.
 
     * **Notification URL and token**:
     API consumers may provide a callback URL (`sink`) on which notifications about all status change events (eg. provisioning termination) can be received from the API provider. This is an optional parameter. The notification will be sent as a CloudEvent compliant message. If `sink` is included, it is RECOMMENDED for the client to provide as well the `sinkCredential` property to protect the notification endpoint.
@@ -232,7 +230,7 @@ paths:
     delete:
       tags:
         - QoD Provisioning
-      summary: Reverts a QoD provisioning
+      summary: Revokes a QoD provisioning
       description: |
         Revokes the association of a QoS profile with the device performed by a previous provisioning.
 
@@ -246,13 +244,13 @@ paths:
         - The access token may be either 2-legged or 3-legged.
         - If a 3-legged access token is used, the subject associated with the QoD provisioning must also be associated with the access token.
         - The QoD provisioning must have been created by the same API consumer given in the access token.
-      operationId: revertProvisioning
+      operationId: revokeProvisioning
       parameters:
         - $ref: "#/components/parameters/provisioningId"
         - $ref: "#/components/parameters/x-correlator"
       responses:
         "204":
-          description: Provisioning reverted
+          description: Provisioning revoked
           headers:
             x-correlator:
               $ref: "#/components/headers/x-correlator"
