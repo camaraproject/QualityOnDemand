@@ -234,7 +234,8 @@ paths:
         - QoD Provisioning
       summary: Reverts a QoD provisioning
       description: |
-        Revokes the assignment of a QoS profile to a device performed by a former provisioning.
+        Revokes the association of a QoS profile with the device performed by a previous provisioning.
+
 
         If the notification callback is provided and the provisioning status was `AVAILABLE`, when the process is completed, the API consumer will receive in addition to the response a `PROVISIONING_STATUS_CHANGED` event with
         - `status` as `UNAVAILABLE` and
