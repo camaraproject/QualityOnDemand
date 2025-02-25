@@ -2,7 +2,9 @@ openapi: 3.0.3
 info:
   title: QoD Provisioning API
   description: |
-    The Quality-On-Demand (QoD) Provisioning API offers a programmable interface for developers to request the assignment of a certain QoS Profile to a certain device, indefinitely.
+The Quality-on-Demand (QoD) Provisioning API offers a programmable interface for developers to request the association of a certain QoS profile with a certain device, indefinitely.
+
+The association resulting from the QoD provisioning request is represented by a QoD provisioning record (or QoD provisioning for short) that includes information about the date of provisioning, the QoS profile, the provisioning status, etc., as well as a provisioningId uniquely identifying this record for later usage.
 
     This API sets up the configuration in the network so the requested QoS profile is applied to a specified device, at any time while the association is available. The device traffic will be treated with a certain QoS profile by the network whenever the device is connected to the network, until the provisioning is revoked.
 
