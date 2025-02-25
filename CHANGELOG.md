@@ -1,8 +1,9 @@
 # Changelog QualityOnDemand
 
 ## Table of Contents
-- [r2.1](#r21) (pre-release for Spring25)
-- **[r1.3](#r13) (latest public release)**
+- **[r2.2](#r22) (Spring25 public release)**
+- [r2.1](#r21)
+- **[r1.3](#r13) (Fall24 public release)**
 - [r1.2](#r12)
 - [r1.1](#r11)
 - [v0.10.1](#v0101)
@@ -23,6 +24,119 @@ The below sections record the changes for each API version in each release as fo
 * for the first release-candidate, all changes since the last public release
 * for subsequent release-candidate(s), only the delta to the previous release-candidate
 * for a public release, the consolidated changes since the previous public release
+
+# r2.2
+## Release Notes
+
+This pre-release contains the definition and documentation of
+* [quality-on-demand v1.0.0](#quality-on-demand-v100)
+* [qos-profiles v1.0.0](#qos-profiles-v100)
+* [qod-provisioning v0.2.0](#qod-provisioning-v020)
+
+The API definition(s) are based on
+* Commonalities v0.5.0
+* Identity and Consent Management v0.3.0
+
+## quality-on-demand v1.0.0
+
+**quality-on-demand v1.0.0 is the public release of the first stable version 1.0.0 of the API**
+
+Version 1.0.0 provides the QoS Sessions endpoints from v0.11.1, and is aligned with Commonalities 0.5 and Identity and Consent Management 0.3. 
+
+**There are breaking changes compared to v0.11.1.**: the API use has been simplified for API consumers using a three-legged access token to invoke the API. In these cases the optional `device` parameter MUST NOT be provided, as the subject will be uniquely identified from the access token. In this context also some error response codes have been renamed or replaced to comply with Commonalities 0.5. With the change to a stable API version also the version of the event type has been changed to v1 in org.camaraproject.quality-on-demand.v1.qos-status-changed 
+
+- API definition **with inline documentation**:
+  - [View it on ReDoc](https://redocly.github.io/redoc/?url=https://raw.githubusercontent.com/camaraproject/QualityOnDemand/r2.2/code/API_definitions/quality-on-demand.yaml&nocors)
+  - [View it on Swagger Editor](https://editor.swagger.io/?url=https://raw.githubusercontent.com/camaraproject/QualityOnDemand/r2.2/code/API_definitions/quality-on-demand.yaml)
+  - OpenAPI [YAML spec file](https://github.com/camaraproject/QualityOnDemand/blob/r2.2/code/API_definitions/quality-on-demand.yaml)
+
+### Added
+* Added string validation pattern to x-correlator definitions by @hdamker in https://github.com/camaraproject/QualityOnDemand/pull/406
+
+### Changed
+* Updated `info.description` text on device object handling by @eric-murray in https://github.com/camaraproject/QualityOnDemand/pull/391
+* Updated error responses and test cases to comply with Commonalities 0.5.0 by @eric-murray in https://github.com/camaraproject/QualityOnDemand/pull/391
+* Utilized device test scenarios as defined in artifacts of Commonalities by @jlurien in https://github.com/camaraproject/QualityOnDemand/pull/400
+* Updated documentation, aligned with CAMARA glossary and ICM 0.3.0 by @hdamker in https://github.com/camaraproject/QualityOnDemand/pull/409 and https://github.com/camaraproject/QualityOnDemand/pull/407
+* Updated 429 error responses to align with Commonalities 0.5.0-rc.1 changes by @hdamker in https://github.com/camaraproject/QualityOnDemand/pull/412
+* Changed the of the event type from v0 to v1 in org.camaraproject.quality-on-demand.v1.qos-status-changed by @hdamker in https://github.com/camaraproject/QualityOnDemand/pull/407
+  * Note: this change has been done to align with the stable version of the API itself, the actual event structure has not been changed
+* Changed notification sink format from `url` to `uri` by @eric-murray in https://github.com/camaraproject/QualityOnDemand/pull/420
+
+### Fixed
+* Clarified sinkCredentials expiration by @jlurien in https://github.com/camaraproject/QualityOnDemand/pull/396
+
+### Removed
+* Removed the 403 INVALID_TOKEN_CONTEXT error from the OAS definitions by @eric-murray in https://github.com/camaraproject/QualityOnDemand/pull/391
+* Removed all 5XX errors as these no longer require to be explicitly documented by @eric-murray in https://github.com/camaraproject/QualityOnDemand/pull/391
+
+## qos-profiles v1.0.0
+
+**qos-profiles v1.0.0 is the public release of the first stable version 1.0.0 of the API**
+
+qos-profiles 1.0.0 provides the QoS Profiles endpoints from v0.11.1, and is aligned with Commonalities 0.5 and Identity and Consent Management 0.3. 
+
+**There are breaking changes compared to v0.11.1.**: the API use has been simplified for API consumers using a three-legged access token to invoke the API. In these cases the optional `device` parameter MUST NOT be provided, as the subject will be uniquely identified from the access token. In this context also some error response codes have been renamed or replaced to comply with Commonalities 0.5.
+
+- API definition **with inline documentation**:
+  - [View it on ReDoc](https://redocly.github.io/redoc/?url=https://raw.githubusercontent.com/camaraproject/QualityOnDemand/r2.2/code/API_definitions/qos-profiles.yaml&nocors)
+  - [View it on Swagger Editor](https://editor.swagger.io/?url=https://raw.githubusercontent.com/camaraproject/QualityOnDemand/r2.2/code/API_definitions/qos-profiles.yaml)
+  - OpenAPI [YAML spec file](https://github.com/camaraproject/QualityOnDemand/blob/r2.2/code/API_definitions/qos-profiles.yaml)
+
+### Added
+* Added new experimental and optional parameters `l4sQueueType`and `serviceClass` to QoSProfiles by @benhepworth in https://github.com/camaraproject/QualityOnDemand/pull/384
+* Added string validation pattern to x-correlator definitions by @hdamker in https://github.com/camaraproject/QualityOnDemand/pull/406
+
+### Changed
+* Updated `info.description` text on device object handling by @eric-murray in https://github.com/camaraproject/QualityOnDemand/pull/391 and https://github.com/camaraproject/QualityOnDemand/pull/410, the latter indicating that providing both a 3-legged token and explicit device identifier is an error, but providing neither is not
+* Updated error responses and test cases to comply with Commonalities 0.5.0 by @eric-murray in https://github.com/camaraproject/QualityOnDemand/pull/391
+* Utilized device test scenarios as defined in artifacts of Commonalities by @jlurien in https://github.com/camaraproject/QualityOnDemand/pull/400
+* Updated the description intro by @RandyLevensalor in https://github.com/camaraproject/QualityOnDemand/pull/395
+* Updated documentation, aligned with CAMARA glossary and ICM 0.3.0 by @hdamker in https://github.com/camaraproject/QualityOnDemand/pull/409 and https://github.com/camaraproject/QualityOnDemand/pull/407
+* Updated 429 error responses to align with Commonalities 0.5.0-rc.1 changes by @hdamker in https://github.com/camaraproject/QualityOnDemand/pull/412
+* Removed some telco specific terms and updated some language within the descriptions by @RandyLevensalor in https://github.com/camaraproject/QualityOnDemand/pull/424
+
+### Fixed
+* N/A
+
+### Removed
+* Removed the 403 INVALID_TOKEN_CONTEXT error from the OAS definitions by @eric-murray in https://github.com/camaraproject/QualityOnDemand/pull/391
+* Removed all 5XX errors as these no longer require to be explicitly documented by @eric-murray in https://github.com/camaraproject/QualityOnDemand/pull/391
+* Removed error `422 MISSING_IDENTIFIER` as this is not a valid error for either endpoint by @eric-murray in https://github.com/camaraproject/QualityOnDemand/pull/410
+
+## qod-provisioning v0.2.0
+
+**qod-provisioning v0.2.0 is the public release of the version 0.2.0 of the API**
+
+**There are breaking changes compared to v0.1.1.**: the API use has been simplified for API consumers using a three-legged access token to invoke the API. In these cases the optional `device` parameter MUST NOT be provided, as the subject will be uniquely identified from the access token. In this context also some error response codes have been renamed or replaced to comply with Commonalities 0.5.
+
+- API definition **with inline documentation**:
+  - [View it on ReDoc](https://redocly.github.io/redoc/?url=https://raw.githubusercontent.com/camaraproject/QualityOnDemand/r2.2/code/API_definitions/qod-provisioning.yaml&nocors)
+  - [View it on Swagger Editor](https://editor.swagger.io/?url=https://raw.githubusercontent.com/camaraproject/QualityOnDemand/r2.2/code/API_definitions/qod-provisioning.yaml)
+  - OpenAPI [YAML spec file](https://github.com/camaraproject/QualityOnDemand/blob/r2.2/code/API_definitions/qod-provisioning.yaml)
+
+### Added
+* Added string validation pattern to x-correlator definitions by @hdamker in https://github.com/camaraproject/QualityOnDemand/pull/406
+
+### Changed
+* Updated `info.description` text on device object handling by @eric-murray in https://github.com/camaraproject/QualityOnDemand/pull/391
+* Updated error responses and test cases to comply with Commonalities 0.5.0 by @eric-murray in https://github.com/camaraproject/QualityOnDemand/pull/391
+* Utilized device test scenarios as defined in artifacts of Commonalities by @jlurien in https://github.com/camaraproject/QualityOnDemand/pull/400
+* Updated documentation, aligned with CAMARA glossary and ICM 0.3.0 by @hdamker in https://github.com/camaraproject/QualityOnDemand/pull/409 https://github.com/camaraproject/QualityOnDemand/pull/407
+* Updated 429 error responses to align with Commonalities 0.5.0-rc.1 changes by @hdamker in https://github.com/camaraproject/QualityOnDemand/pull/412
+* Changed notification sink format from `url` to `uri` by @eric-murray in https://github.com/camaraproject/QualityOnDemand/pull/420
+* OperationIds renamed and some descriptions changed by @jlurien in https://github.com/camaraproject/QualityOnDemand/pull/423 (further changes are to be expected in a later version, see https://github.com/camaraproject/QualityOnDemand/issues/415)
+
+### Fixed
+* Clarified sinkCredentials expiration by @jlurien in https://github.com/camaraproject/QualityOnDemand/pull/396
+* Ensured that `date-time` examples are enclosed by quotation marks by @eric-murray in https://github.com/camaraproject/QualityOnDemand/pull/391
+
+### Removed
+* Removed the 403 INVALID_TOKEN_CONTEXT error from the OAS definitions by @eric-murray in https://github.com/camaraproject/QualityOnDemand/pull/391
+* Removed all 5XX errors as these no longer require to be explicitly documented by @eric-murray in https://github.com/camaraproject/QualityOnDemand/pull/391
+
+**Full Changelog**: https://github.com/camaraproject/QualityOnDemand/compare/r1.3...r2.2
+
 
 # r2.1
 ## Release Notes
