@@ -401,7 +401,7 @@ components:
       description: |
         Provisioning related information returned in responses.
         Optional device object only to be returned if provided in triggerProvisioning. If more than one type of device identifier was provided, only one identifier will be returned (at implementation choice and with the original value provided in triggerProvisioning).
-        Please note that IP addresses of devices can change and get reused, so the original values may no longer identify the same device. They identified the device at the time of QoD provisioning.
+        Please note that IP addresses of devices can change and get reused, so the original values may no longer identify the same device. They identified the device at the time the QoD provisioning was triggered.
 
       allOf:
         - $ref: "#/components/schemas/BaseProvisioningInfo"
