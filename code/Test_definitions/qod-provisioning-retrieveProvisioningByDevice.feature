@@ -19,7 +19,7 @@ Feature: CAMARA QoD Provisioning API, vwip - Operation retrieveProvisioningByDev
         And the resource "/qod-provisioning/vwip/retrieve-device-qos"                                                              |
         And the header "Content-Type" is set to "application/json"
         # Unless indicated otherwise the QoD provisioning must be created by the same API client given in the access token
-        And the header "Authorization" is set to a valid access token granted to the same client that created the QoD provisoning
+        And the header "Authorization" is set to a valid access token granted to the same client that created the QoD provisioning
         And the header "x-correlator" is set to a UUID value
 
     # Success scenarios
@@ -37,7 +37,7 @@ Feature: CAMARA QoD Provisioning API, vwip - Operation retrieveProvisioningByDev
         And the response property "$.device" exists only if provided for createProvisioning and with the same value
         And the response property "$.qosProfile" has the value provided for createProvisioning
         And the response property "$.sink" exists only if provided for createProvisioning and with the same value
-        # sinkCredentials not explicitly mentioned to be returned if present, as this is debatible for security concerns
+        # sinkCredentials not explicitly mentioned to be returned if present, as this is debatable for security concerns
         And the response property "$.startedAt" exists only if "$.status" is "AVAILABLE" and the value is in the past
         And the response property "$.statusInfo" exists only if "$.status" is "UNAVAILABLE"
 
