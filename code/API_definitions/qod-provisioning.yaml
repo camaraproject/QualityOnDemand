@@ -22,7 +22,7 @@ info:
     # Resources and Operations overview
     The API defines four operations:
 
-    - An operation to setup a new QoD provisioning for a given device.
+    - An operation to set up a new QoD provisioning for a given device.
     - An operation to get the information about a specific QoD provisioning, identified by its `provisioningId`.
     - An operation to get the QoD provisioning for a given device.
     - An operation to revoke a QoD provisioning, identified by its `provisioningId`.
