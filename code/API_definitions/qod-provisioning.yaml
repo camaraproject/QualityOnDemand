@@ -85,7 +85,7 @@ paths:
         - QoD Provisioning
       summary: Triggers a new provisioning of QoS for a device
       description: |
-        Triggers the provisioning in the operator's environment of the association of a given QoS profile with a given device.
+        Triggers the provisioning in the operator's environment to associate a given QoS profile with a given device.
 
 
         - If the provisioning is completed synchronously, the response will be 201 with `status` = `AVAILABLE`.
