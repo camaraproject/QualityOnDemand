@@ -6,7 +6,7 @@ info:
 
     The association resulting from the QoD provisioning request is represented by a QoD provisioning record (or QoD provisioning for short) that includes information about the date of provisioning, the QoS profile, the provisioning status, etc., as well as a provisioningId that uniquely identifies this record for later use.
 
-    In addition, this API sets up the configuration in the network such that the requested QoS profile is applied to a specified device, at any time while the association is available. The device traffic will be treated with the provisioned QoS profile by the network whenever the device is connected to the network, until the provisioning is revoked.
+    Additionally, this API configures the network to apply the requested QoS profile to a specified device whenever the device is connected to the network, until the provisioning is revoked.
 
     # Relevant terms and definitions
 
