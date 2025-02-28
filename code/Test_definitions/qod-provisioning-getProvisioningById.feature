@@ -5,7 +5,7 @@ Feature: CAMARA QoD Provisioning API, v0.2.0 - Operation getProvisioningById
     # * apiRoot: API root of the server URL
     #
     # Testing assets:
-    # * The provisioningId of an existing QoD Provisiong, and the request properties used for createProvisioning
+    # * The provisioningId of an existing QoD Provisioning, and the request properties used for createProvisioning
     #
     # References to OAS spec schemas refer to schemas specified in qod-provisioning.yaml
 
@@ -14,16 +14,16 @@ Feature: CAMARA QoD Provisioning API, v0.2.0 - Operation getProvisioningById
         Given an environment at "apiRoot"
         And the resource "/qod-provisioning/v0.2/device-qos/{provisioningId}"                                                              |
         # Unless indicated otherwise the QoD provisioning must be created by the same API client given in the access token
-        And the header "Authorization" is set to a valid access token granted to the same client that created the QoD provisoning
+        And the header "Authorization" is set to a valid access token granted to the same client that created the QoD provisioning
         And the header "x-correlator" is set to a UUID value
-        And the path parameter "provisoningId" is set by default to an existing QoD provisioning ID
+        And the path parameter "provisioningId" is set by default to an existing QoD provisioning ID
 
     # Success scenarios
 
     @qod_provisioning_getProvisioningById_01_get_existing_qod_provisioning
     Scenario: Get an existing QoD Provisioning by provisioningId
         Given an existing QoD provisioning created by operation createProvisioning
-        And the path parameter "provisoningId" is set to the value for that QoD provisioning
+        And the path parameter "provisioningId" is set to the value for that QoD provisioning
         When the request "getProvisioningById" is sent
         Then the response status code is 200
         And the response header "x-correlator" has same value as the request header "x-correlator"
@@ -34,14 +34,14 @@ Feature: CAMARA QoD Provisioning API, v0.2.0 - Operation getProvisioningById
         And the response property "$.device" exists only if provided for createProvisioning and with the same value
         And the response property "$.qosProfile" has the value provided for createProvisioning
         And the response property "$.sink" exists only if provided for createProvisioning and with the same value
-        # sinkCredentials not explicitly mentioned to be returned if present, as this is debatible for security concerns
+        # sinkCredentials not explicitly mentioned to be returned if present, as this is debatable for security concerns
         And the response property "$.startedAt" exists only if "$.status" is not "REQUESTED" and the value is in the past
         And the response property "$.statusInfo" exists only if "$.status" is "UNAVAILABLE"
 
-    @qod_provisioning_getProvisioningById_02_get_recent_unvailable
+    @qod_provisioning_getProvisioningById_02_get_recent_unavailable
     Scenario: Provisioning becoming "UNAVAILABLE" is not released for at least 360 seconds
         Given an existing QoD provisioning deleted in the last 360 seconds
-        And the path parameter "provisoningId" is set to the value for that QoD provisioning
+        And the path parameter "provisioningId" is set to the value for that QoD provisioning
         When the request "getProvisioningById" is sent
         Then the response status code is 200
         And the response header "x-correlator" has same value as the request header "x-correlator"
@@ -129,7 +129,7 @@ Feature: CAMARA QoD Provisioning API, v0.2.0 - Operation getProvisioningById
 
     @qod_provisioning_getProvisioningById_404.1_not_found
     Scenario: provisioningId of a no existing QoD provisioning
-        Given the path parameter "provisoningId" is set to a random UUID
+        Given the path parameter "provisioningId" is set to a random UUID
         When the request "getProvisioningById" is sent
         Then the response status code is 404
         And the response header "x-correlator" has same value as the request header "x-correlator"

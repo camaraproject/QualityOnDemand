@@ -1,4 +1,4 @@
-Feature: CAMARA QoD Provisioning API, v0.2.0 - Operation createProvisioning
+Feature: CAMARA QoD Provisioning API, v0.2.0 - Operation triggerProvisioning
     # Input to be provided by the implementation to the tester
     #
     # Implementation indications:
@@ -13,23 +13,23 @@ Feature: CAMARA QoD Provisioning API, v0.2.0 - Operation createProvisioning
     # References to OAS spec schemas refer to schemas specified in qod-provisioning.yaml
 
 
-    Background: Common createProvisioning setup
+    Background: Common triggerProvisioning setup
         Given an environment at "apiRoot"
         And the resource "/qod-provisioning/v0.2/device-qos"                                                              |
         And the header "Content-Type" is set to "application/json"
         And the header "Authorization" is set to a valid access token
         And the header "x-correlator" is set to a UUID value
-        # Properties not explicitly overwitten in the Scenarios can take any values compliant with the schema
-        And the request body is set by default to a request body compliant with the schema at "/components/schemas/CreateProvisioning"
+        # Properties not explicitly overwritten in the Scenarios can take any values compliant with the schema
+        And the request body is set by default to a request body compliant with the schema at "/components/schemas/triggerProvisioning"
 
     # Success scenarios
 
-    @qod_provisioning_createProvisioning_01_generic_success_scenario
-    Scenario: Common validations for any sucess scenario
+    @qod_provisioning_triggerProvisioning_01_generic_success_scenario
+    Scenario: Common validations for any success scenario
         # Valid testing device and default request body compliant with the schema
         Given a valid testing device supported by the service, identified by the token or provided in the request body
         And the request property "$.qosProfile" is set to a valid QoS Profile as returned by QoS Profiles API
-        When the request "createProvisioning" is sent
+        When the request "triggerProvisioning" is sent
         Then the response status code is 201
         And the response header "x-correlator" has same value as the request header "x-correlator"
         And the response header "Content-Type" is "application/json"
@@ -39,11 +39,11 @@ Feature: CAMARA QoD Provisioning API, v0.2.0 - Operation createProvisioning
         And the response property "$.device" exists only if provided in the request body and with the same value
         And the response property "$.qosProfile" has the same value as in the request body
         And the response property "$.sink" exists only if provided in the request body and with the same value
-        # sinkCredentials not explicitly mentioned to be returned if present, as this is debatible for security concerns
+        # sinkCredentials not explicitly mentioned to be returned if present, as this is debatable for security concerns
         And the response property "$.startedAt" exists only if "$.status" is "AVAILABLE" and the value is in the past
         And the response property "$.statusInfo" exists only if "$.status" is "UNAVAILABLE"
 
-    @qod_provisioning_createProvisioning_02_event_notification
+    @qod_provisioning_triggerProvisioning_02_event_notification
     Scenario: Events for the outcome of provisioning creation if sink is provided
         Given a valid testing device supported by the service, identified by the token or provided in the request body
         And the request property "$.qosProfile" is set to a valid QoS Profile as returned by QoS Profiles API
@@ -52,7 +52,7 @@ Feature: CAMARA QoD Provisioning API, v0.2.0 - Operation createProvisioning
         And the request property "$.sinkCredentials.accessTokenType" is set to "bearer"
         And the request property "$.sinkCredentials.accessToken" is set to a valid access token accepted by the events receiver
         And the request property "$.sinkCredentials.accessTokenExpiresUtc" is set to a value long enough in the future
-        And the request "createProvisioning" is sent
+        And the request "triggerProvisioning" is sent
         And the response status code is 201
         # There is no specific limit defined for the process to end
         When the provisioning outcome is known
@@ -63,15 +63,15 @@ Feature: CAMARA QoD Provisioning API, v0.2.0 - Operation createProvisioning
         # Additionally any event body has to comply with some constraints beyond the schema compliance
         And the event body property "$.id" is unique
         And the event body property "$.type" is set to "org.camaraproject.qod-provisioning.v0.status-changed"
-        And the event body property "$.data.provisioningId" has the same value as createProvisioning response property "$.provisioningId"
+        And the event body property "$.data.provisioningId" has the same value as triggerProvisioning response property "$.provisioningId"
         And the event body property "$.data.status" is "AVAILABLE" or "UNAVAILABLE"
         And the event body property "$.data.statusInfo" exists only if "$.data.status" is "UNAVAILABLE"
 
-    @qod_provisioning_createProvisioning_03_3_legged_missing_device
+    @qod_provisioning_triggerProvisioning_03_3_legged_missing_device
     Scenario: Device is not returned if not included in the creation request
         Given the header "Authorization" is set to a valid 3-legged access token associated to a valid testing device supported by the service
         And the request property "$.device" is not included
-        When the request "createProvisioning" is sent
+        When the request "triggerProvisioning" is sent
         Then the response status code is 201
         And the response header "x-correlator" has same value as the request header "x-correlator"
         And the response header "Content-Type" is "application/json"
@@ -80,7 +80,7 @@ Feature: CAMARA QoD Provisioning API, v0.2.0 - Operation createProvisioning
 
     # Common error scenarios for management of input parameter device
 
-    @qod_provisioning_createProvisioning_C01.01_device_empty
+    @qod_provisioning_triggerProvisioning_C01.01_device_empty
     Scenario: The device value is an empty object
         Given the header "Authorization" is set to a valid access token which does not identify a single device
         And the request body property "$.device" is set to: {}
@@ -91,7 +91,7 @@ Feature: CAMARA QoD Provisioning API, v0.2.0 - Operation createProvisioning
         And the response property "$.message" contains a user friendly text
 
 
-    @qod_provisioning_createProvisioning_C01.02_device_identifiers_not_schema_compliant
+    @qod_provisioning_triggerProvisioning_C01.02_device_identifiers_not_schema_compliant
     Scenario Outline: Some device identifier value does not comply with the schema
         Given the header "Authorization" is set to a valid access token which does not identify a single device
         And the request body property "<device_identifier>" does not comply with the OAS schema at "<oas_spec_schema>"
@@ -110,7 +110,7 @@ Feature: CAMARA QoD Provisioning API, v0.2.0 - Operation createProvisioning
 
   
     # This scenario may happen e.g. with 2-legged access tokens, which do not identify a single device.
-    @qod_provisioning_createProvisioning_C01.03_device_not_found
+    @qod_provisioning_triggerProvisioning_C01.03_device_not_found
     Scenario: Some identifier cannot be matched to a device
         Given the header "Authorization" is set to a valid access token which does not identify a single device
         And the request body property "$.device" is compliant with the schema but does not identify a valid device
@@ -121,7 +121,7 @@ Feature: CAMARA QoD Provisioning API, v0.2.0 - Operation createProvisioning
         And the response property "$.message" contains a user friendly text
 
 
-    @qod_provisioning_createProvisioning_C01.04_unnecessary_device
+    @qod_provisioning_triggerProvisioning_C01.04_unnecessary_device
     Scenario: Device not to be included when it can be deduced from the access token
         Given the header "Authorization" is set to a valid access token identifying a device
         And the request body property "$.device" is set to a valid device
@@ -132,7 +132,7 @@ Feature: CAMARA QoD Provisioning API, v0.2.0 - Operation createProvisioning
         And the response property "$.message" contains a user-friendly text
 
 
-    @qod_provisioning_createProvisioning_C01.05_missing_device
+    @qod_provisioning_triggerProvisioning_C01.05_missing_device
     Scenario: Device not included and cannot be deduced from the access token
         Given the header "Authorization" is set to a valid access token which does not identify a single device
         And the request body property "$.device" is not included
@@ -143,7 +143,7 @@ Feature: CAMARA QoD Provisioning API, v0.2.0 - Operation createProvisioning
         And the response property "$.message" contains a user-friendly text
 
 
-    @qod_provisioning_createProvisioning_C01.06_unsupported_device
+    @qod_provisioning_triggerProvisioning_C01.06_unsupported_device
     Scenario: None of the provided device identifiers is supported by the implementation
         Given that some types of device identifiers are not supported by the implementation
         And the header "Authorization" is set to a valid access token which does not identify a single device
@@ -156,7 +156,7 @@ Feature: CAMARA QoD Provisioning API, v0.2.0 - Operation createProvisioning
 
 
     # When the service is only offered to certain types of devices or subscriptions, e.g. IoT, B2C, etc.
-    @qod_provisioning_createProvisioning_C01.07_device_not_supported
+    @qod_provisioning_triggerProvisioning_C01.07_device_not_supported
     Scenario: Service not available for the device
         Given that the service is not available for all devices commercialized by the operator
         And a valid device, identified by the token or provided in the request body, for which the service is not applicable
@@ -169,7 +169,7 @@ Feature: CAMARA QoD Provisioning API, v0.2.0 - Operation createProvisioning
 
     # Several identifiers provided but they do not identify the same device
     # This scenario may happen with 2-legged access tokens, which do not identify a device
-    @qod_provisioning_createProvisioning_C01.08_device_identifiers_mismatch
+    @qod_provisioning_triggerProvisioning_C01.08_device_identifiers_mismatch
     Scenario: Device identifiers mismatch
         Given the header "Authorization" is set to a valid access token which does not identify a single device
         And at least 2 types of device identifiers are supported by the implementation
@@ -182,10 +182,10 @@ Feature: CAMARA QoD Provisioning API, v0.2.0 - Operation createProvisioning
 
     # Errors 400
 
-    @qod_provisioning_createProvisioning_400.1_schema_not_compliant
+    @qod_provisioning_triggerProvisioning_400.1_schema_not_compliant
     Scenario: Invalid Argument. Generic Syntax Exception
-        Given the request body is set to any value which is not compliant with the schema at "/components/schemas/CreateProvisioning"
-        When the request "createProvisioning" is sent
+        Given the request body is set to any value which is not compliant with the schema at "/components/schemas/triggerProvisioning"
+        When the request "triggerProvisioning" is sent
         Then the response status code is 400
         And the response header "x-correlator" has same value as the request header "x-correlator"
         And the response header "Content-Type" is "application/json"
@@ -193,10 +193,10 @@ Feature: CAMARA QoD Provisioning API, v0.2.0 - Operation createProvisioning
         And the response property "$.code" is "INVALID_ARGUMENT"
         And the response property "$.message" contains a user friendly text
 
-    @qod_provisioning_createProvisioning_400.2_no_request_body
+    @qod_provisioning_triggerProvisioning_400.2_no_request_body
     Scenario: Missing request body
         Given the request body is not included
-        When the request "createProvisioning" is sent
+        When the request "triggerProvisioning" is sent
         Then the response status code is 400
         And the response header "x-correlator" has same value as the request header "x-correlator"
         And the response header "Content-Type" is "application/json"
@@ -204,10 +204,10 @@ Feature: CAMARA QoD Provisioning API, v0.2.0 - Operation createProvisioning
         And the response property "$.code" is "INVALID_ARGUMENT"
         And the response property "$.message" contains a user friendly text
 
-    @qod_provisioning_createProvisioning_400.3_empty_request_body
+    @qod_provisioning_triggerProvisioning_400.3_empty_request_body
     Scenario: Empty object as request body
         Given the request body is set to {}
-        When the request "createProvisioning" is sent
+        When the request "triggerProvisioning" is sent
         Then the response status code is 400
         And the response header "x-correlator" has same value as the request header "x-correlator"
         And the response header "Content-Type" is "application/json"
@@ -216,10 +216,10 @@ Feature: CAMARA QoD Provisioning API, v0.2.0 - Operation createProvisioning
         And the response property "$.message" contains a user friendly text
 
     # PLAIN and REFRESHTOKEN are considered in the schema so INVALID_ARGUMENT is not expected
-    @qod_provisioning_createProvisioning_400.7_invalid_sink_credential
+    @qod_provisioning_triggerProvisioning_400.7_invalid_sink_credential
     Scenario Outline: Invalid credential
         Given the request body property  "$.sinkCredential.credentialType" is set to "<unsupported_credential_type>"
-        When the request "createProvisioning" is sent
+        When the request "triggerProvisioning" is sent
         Then the response status code is 400
         And the response header "x-correlator" has same value as the request header "x-correlator"
         And the response header "Content-Type" is "application/json"
@@ -234,10 +234,10 @@ Feature: CAMARA QoD Provisioning API, v0.2.0 - Operation createProvisioning
 
     # Only "bearer" is considered in the schema so a generic schema validator may fail and generate a 400 INVALID_ARGUMENT without further distinction,
     # and both could be accepted
-    @qod_provisioning_createProvisioning_400.8_sink_credential_invalid_token
+    @qod_provisioning_triggerProvisioning_400.8_sink_credential_invalid_token
     Scenario: Invalid token
         Given the request body property  "$.sinkCredential.accessTokenType" is set to a value other than "bearer"
-        When the request "createProvisioning" is sent
+        When the request "triggerProvisioning" is sent
         Then the response status code is 400
         And the response header "x-correlator" has same value as the request header "x-correlator"
         And the response header "Content-Type" is "application/json"
@@ -246,10 +246,10 @@ Feature: CAMARA QoD Provisioning API, v0.2.0 - Operation createProvisioning
         And the response property "$.message" contains a user friendly text
 
     # TBD if we neeed a dedicated code
-    @qod_provisioning_createProvisioning_400.9_non_existent_qos_profile
+    @qod_provisioning_triggerProvisioning_400.9_non_existent_qos_profile
     Scenario: Non existent QoS profile
         Given the request body property "qosProfile" is set to a non-existent QoS Profile
-        When the request "createProvisioning" is sent
+        When the request "triggerProvisioning" is sent
         Then the response status code is 400
         And the response header "x-correlator" has same value as the request header "x-correlator"
         And the response header "Content-Type" is "application/json"
@@ -259,10 +259,10 @@ Feature: CAMARA QoD Provisioning API, v0.2.0 - Operation createProvisioning
 
     # Generic 401 errors
 
-    @qod_provisioning_createProvisioning_401.1_no_authorization_header
+    @qod_provisioning_triggerProvisioning_401.1_no_authorization_header
     Scenario: No Authorization header
         Given the header "Authorization" is removed
-        When the request "createProvisioning" is sent
+        When the request "triggerProvisioning" is sent
         Then the response status code is 401
         And the response header "x-correlator" has same value as the request header "x-correlator"
         And the response header "Content-Type" is "application/json"
@@ -271,10 +271,10 @@ Feature: CAMARA QoD Provisioning API, v0.2.0 - Operation createProvisioning
         And the response property "$.message" contains a user friendly text
 
     # In this case both codes could make sense depending on whether the access token can be refreshed or not
-    @qod_provisioning_createProvisioning_401.2_expired_access_token
+    @qod_provisioning_triggerProvisioning_401.2_expired_access_token
     Scenario: Expired access token
         Given the header "Authorization" is set to an expired access token
-        When the request "createProvisioning" is sent
+        When the request "triggerProvisioning" is sent
         Then the response status code is 401
         And the response header "x-correlator" has same value as the request header "x-correlator"
         And the response header "Content-Type" is "application/json"
@@ -282,10 +282,10 @@ Feature: CAMARA QoD Provisioning API, v0.2.0 - Operation createProvisioning
         And the response property "$.code" is "UNAUTHENTICATED" or "AUTHENTICATION_REQUIRED"
         And the response property "$.message" contains a user friendly text
 
-    @qod_provisioning_createProvisioning_401.3_invalid_access_token
+    @qod_provisioning_triggerProvisioning_401.3_invalid_access_token
     Scenario: Invalid access token
         Given the header "Authorization" is set to an invalid access token
-        When the request "createProvisioning" is sent
+        When the request "triggerProvisioning" is sent
         Then the response status code is 401
         And the response header "x-correlator" has same value as the request header "x-correlator"
         And the response header "Content-Type" is "application/json"
@@ -295,10 +295,10 @@ Feature: CAMARA QoD Provisioning API, v0.2.0 - Operation createProvisioning
 
     # Errors 403
 
-    @qod_provisioning_createProvisioning_403.1_missing_access_token_scope
+    @qod_provisioning_triggerProvisioning_403.1_missing_access_token_scope
     Scenario: Missing access token scope
         Given the header "Authorization" is set to an access token that does not include scope qod-provisioning:device-qos:create
-        When the request "createProvisioning" is sent
+        When the request "triggerProvisioning" is sent
         Then the response status code is 403
         And the response header "x-correlator" has same value as the request header "x-correlator"
         And the response header "Content-Type" is "application/json"
@@ -308,11 +308,11 @@ Feature: CAMARA QoD Provisioning API, v0.2.0 - Operation createProvisioning
 
     # Errors 409
 
-    @qod_provisioning_createProvisioning_409.1_provisioning_conflict
+    @qod_provisioning_triggerProvisioning_409.1_provisioning_conflict
     Scenario: Provisioning conflict
         Given a valid testing device supported by the service, identified by the token or provided in the request body
         And a QoD provisioning already exists for that device
-        When the request "createProvisioning" is sent
+        When the request "triggerProvisioning" is sent
         And the response header "x-correlator" has same value as the request header "x-correlator"
         And the response header "Content-Type" is "application/json"
         And the response property "$.status" is 409
