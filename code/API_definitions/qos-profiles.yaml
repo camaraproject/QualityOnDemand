@@ -15,7 +15,7 @@ info:
     - Discover the available QoS profiles for a specific device
     - Retrieve the characteristics of a specific QoS profile by name
 
-    How QoS profiles are mapped to connectivity characteristics are subject to agreements between the API provider and the API consumer. Within the CAMARA project, you can find a sample for such a mapping of QoS profiles. [CAMARA QoS Profiles Mapping Table (REFERENCE DRAFT)](https://github.com/camaraproject/QualityOnDemand/blob/r2.2/documentation/API_documentation/QoSProfile_Mapping_Table.md)
+    How QoS profiles are mapped to connectivity characteristics are subject to agreements between the API provider and the API consumer. Within the CAMARA project, you can find a sample for such a mapping of QoS profiles. [CAMARA QoS Profiles Mapping Table (REFERENCE DRAFT)](https://github.com/camaraproject/QualityOnDemand/blob/r2.3/documentation/API_documentation/QoSProfile_Mapping_Table.md)
 
     # Authorization and authentication
 
