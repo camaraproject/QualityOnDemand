@@ -125,7 +125,7 @@ qos-profiles 1.0.0 provides the QoS Profiles endpoints from v0.11.1, and is alig
 * Updated documentation, aligned with CAMARA glossary and ICM 0.3.0 by @hdamker in https://github.com/camaraproject/QualityOnDemand/pull/409 https://github.com/camaraproject/QualityOnDemand/pull/407
 * Updated 429 error responses to align with Commonalities 0.5.0-rc.1 changes by @hdamker in https://github.com/camaraproject/QualityOnDemand/pull/412
 * Changed notification sink format from `url` to `uri` by @eric-murray in https://github.com/camaraproject/QualityOnDemand/pull/420
-* OperationIds renamed and some descriptions changed by @jlurien in https://github.com/camaraproject/QualityOnDemand/pull/423 (further changes are to be expected in a later version, see https://github.com/camaraproject/QualityOnDemand/issues/415)
+* OperationIds renamed, some descriptions changed, and .feature files renamed accordingly by @jlurien in https://github.com/camaraproject/QualityOnDemand/pull/423 (further changes are to be expected in a later version, see https://github.com/camaraproject/QualityOnDemand/issues/415)
 
 ### Fixed
 * Clarified sinkCredentials expiration by @jlurien in https://github.com/camaraproject/QualityOnDemand/pull/396
