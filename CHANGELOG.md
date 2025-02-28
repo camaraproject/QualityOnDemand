@@ -28,7 +28,7 @@ The below sections record the changes for each API version in each release as fo
 # r2.2
 ## Release Notes
 
-This pre-release contains the definition and documentation of
+This public release contains the definition and documentation of
 * [quality-on-demand v1.0.0](#quality-on-demand-v100)
 * [qos-profiles v1.0.0](#qos-profiles-v100)
 * [qod-provisioning v0.2.0](#qod-provisioning-v020)
