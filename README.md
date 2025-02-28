@@ -9,7 +9,6 @@
 
 # QualityOnDemand
 
-Repository to describe, develop, document and test the QualityOnDemand APIs
 Incubating API Repository to evolve and maintain the definitions and documentation of QualityOnDemand Service API(s) within the Sub Project [Quality On Demand](https://lf-camaraproject.atlassian.net/wiki/x/hAClB)
 
 ## Scope
