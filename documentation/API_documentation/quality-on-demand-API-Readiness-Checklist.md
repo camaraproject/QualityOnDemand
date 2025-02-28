@@ -17,7 +17,7 @@ Checklist for quality-on-demand v1.0.0 in r2.2
 | 11 | Change log updated                           |   M   |         M         |    M    |    M   | Y    | [/CHANGELOG.md](/CHANGELOG.md) |
 | 12 | Previous public release was certified        |   O   |         O         |    O    |    M   | Y    |   see (1)   |
 
-(1) GSMA certified implementation of previous version by China Unicom, multiple implementation by other operators  (source: https://www.open-gateway.com/operators-map as of 2025-02-25) 
+(1) GSMA certified implementation of previous version by China Unicom, multiple implementations by other operators  (source: https://www.open-gateway.com/operators-map as of 2025-02-25) 
 
 To fill the checklist:
 - in the line above the table, replace the api-name, api-version and the rx.y by their actual values for the current API version and release.
