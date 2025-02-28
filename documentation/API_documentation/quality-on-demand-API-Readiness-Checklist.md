@@ -1,23 +1,23 @@
 # API Readiness Checklist
 
-Checklist for quality-on-demand v1.0.0-rc.1 in r2.1
+Checklist for quality-on-demand v1.0.0 in r2.2
 
 | Nr | API release assets  | alpha | release-candidate |  initial<br>public | stable<br> public | Status | Reference information |
 |----|----------------------------------------------|:-----:|:-----------------:|:-------:|:------:|:----:|----|
 |  1 | API definition                               |   M   |         M         |    M    |    M   | Y    | [/code/API_definitions/quality-on-demand.yaml](/code/API_definitions/quality-on-demand.yaml) |
-|  2 | Design guidelines from Commonalities applied |   O   |         M         |    M    |    M   | Y    | r2.2     |
-|  3 | Guidelines from ICM applied                  |   O   |         M         |    M    |    M   | Y    | r2.2     |
+|  2 | Design guidelines from Commonalities applied |   O   |         M         |    M    |    M   | Y    | [r2.3](https://github.com/camaraproject/Commonalities/releases/tag/r2.3)     |
+|  3 | Guidelines from ICM applied                  |   O   |         M         |    M    |    M   | Y    | [r2.3](https://github.com/camaraproject/IdentityAndConsentManagement/releases/tag/r2.3)     |
 |  4 | API versioning convention applied            |   M   |         M         |    M    |    M   | Y    |      |
 |  5 | API documentation                            |   M   |         M         |    M    |    M   | Y    | inline in YAML |
 |  6 | User stories                                 |   O   |         O         |    O    |    M   | Y    | [/documentation/API_documentation/QoD_User_Story.md](/documentation/API_documentation/QoD_User_Story.md) |
 |  7 | Basic API test cases & documentation         |   O   |         M         |    M    |    M   | Y    | [/code/Test_definitions](/code/Test_definitions)   |
 |  8 | Enhanced API test cases & documentation      |   O   |         O         |    O    |    M   | Y    | [/code/Test_definitions](/code/Test_definitions)   |
-|  9 | Test result statement                        |   O   |         O         |    O    |    M   | N    |      |
+|  9 | Test result statement                        |   O   |         O         |    O    |    M   | Y    |  see [issue #418](https://github.com/camaraproject/QualityOnDemand/issues/418)    |
 | 10 | API release numbering convention applied     |   M   |         M         |    M    |    M   | Y    |      |
 | 11 | Change log updated                           |   M   |         M         |    M    |    M   | Y    | [/CHANGELOG.md](/CHANGELOG.md) |
 | 12 | Previous public release was certified        |   O   |         O         |    O    |    M   | Y    |   see (1)   |
 
-(1) GSMA certified implementation of previous version by China Unicom, multiple implementation by other operators  (source: https://www.open-gateway.com/operators-map as of 2024-08-16) 
+(1) GSMA certified implementation of previous version by China Unicom, multiple implementations by other operators  (source: https://www.open-gateway.com/operators-map as of 2025-02-25) 
 
 To fill the checklist:
 - in the line above the table, replace the api-name, api-version and the rx.y by their actual values for the current API version and release.

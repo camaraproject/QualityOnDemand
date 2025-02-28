@@ -53,7 +53,7 @@ info:
   license:
     name: Apache 2.0
     url: https://www.apache.org/licenses/LICENSE-2.0.html
-  version: wip
+  version: 1.0.0
   x-camara-commonalities: 0.5
 
 
@@ -62,7 +62,7 @@ externalDocs:
   url: https://github.com/camaraproject/QualityOnDemand
 
 servers:
-  - url: "{apiRoot}/qos-profiles/vwip"
+  - url: "{apiRoot}/qos-profiles/v1"
     variables:
       apiRoot:
         default: http://localhost:9091
@@ -84,7 +84,7 @@ paths:
         - The access token may be either a 2-legged or 3-legged access token.
         - If the access token is 3-legged, all returned QoS Profiles will be available to the subject (device) associated with the access token.
         - This call uses the POST method instead of GET to comply with the CAMARA Commonalities guidelines for sending sensitive or complex data in API calls. Since the device field may contain personally identifiable information, it should not be sent via GET. Additionally, this call may include complex data structures.
-          [CAMARA API Design Guidelines](https://github.com/camaraproject/Commonalities/blob/r2.2/documentation/API-design-guidelines.md#post-or-get-for-transferring-sensitive-or-complex-data)
+          [CAMARA API Design Guidelines](https://github.com/camaraproject/Commonalities/blob/r2.3/documentation/API-design-guidelines.md#post-or-get-for-transferring-sensitive-or-complex-data)
 
       security:
         - openId:

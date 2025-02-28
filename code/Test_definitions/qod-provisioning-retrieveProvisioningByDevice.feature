@@ -1,4 +1,4 @@
-Feature: CAMARA QoD Provisioning API, vwip - Operation retrieveProvisioningByDevice
+Feature: CAMARA QoD Provisioning API, v0.2.0 - Operation retrieveProvisioningByDevice
     # Input to be provided by the implementation to the tester
     #
     # Implementation indications:
@@ -16,7 +16,7 @@ Feature: CAMARA QoD Provisioning API, vwip - Operation retrieveProvisioningByDev
 
     Background: Common retrieveProvisioningByDevice setup
         Given an environment at "apiRoot"
-        And the resource "/qod-provisioning/vwip/retrieve-device-qos"                                                              |
+        And the resource "/qod-provisioning/v0.2/retrieve-device-qos"                                                              |
         And the header "Content-Type" is set to "application/json"
         # Unless indicated otherwise the QoD provisioning must be created by the same API client given in the access token
         And the header "Authorization" is set to a valid access token granted to the same client that created the QoD provisioning
