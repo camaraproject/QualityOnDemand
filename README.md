@@ -34,7 +34,7 @@ Incubating API Repository to evolve and maintain the definitions and documentati
   [[View it on ReDoc]](https://redocly.github.io/redoc/?url=https://raw.githubusercontent.com/camaraproject/QualityOnDemand/r2.2/code/API_definitions/quality-on-demand.yaml&nocors)
   [[View it on Swagger Editor]](https://editor.swagger.io/?url=https://raw.githubusercontent.com/camaraproject/QualityOnDemand/r2.2/code/API_definitions/quality-on-demand.yaml)
   
-  * **qos-profiles v1.0.0 (first stable version**  
+  * **qos-profiles v1.0.0 (first stable version)**  
   [[YAML]](https://github.com/camaraproject/QualityOnDemand/blob/r2.2/code/API_definitions/qos-profiles.yaml)
   [[View it on ReDoc]](https://redocly.github.io/redoc/?url=https://raw.githubusercontent.com/camaraproject/QualityOnDemand/r2.2/code/API_definitions/qos-profiles.yaml&nocors)
   [[View it on Swagger Editor]](https://editor.swagger.io/?url=https://raw.githubusercontent.com/camaraproject/QualityOnDemand/r2.2/code/API_definitions/qos-profiles.yaml)
