@@ -14,11 +14,12 @@ Incubating API Repository to evolve and maintain the definitions and documentati
 ## Scope
 
 * Service APIs for “Quality on Demand” (see APIBacklog.md)
-* The Service APIs provide the API consumer with the ability to:  
-  * set quality for a flow within an access network connections (e.g. mobile device connection or fixed access between a home gateway and the service providers gateway router)
-    * Session mode, for a specific duration
-    * Provision mode, indefinitely for each time the device connects to the same access network
-  * get notification if the network cannot fulfill  
+* The Service APIs provide the API consumer with the ability to:
+  * retrieve the possible quality options (profiles) from the network (qos-profiles)
+  * set the quality for a connection of a mobile device or a home device within the access network
+    * dynamically, for a selected session of a specific duration (quality-on-demand)
+    * provisioned, applying the same quality each time the device connects to the network (qod-provisioning)
+  * get a notification if the network cannot fulfill the requested quality profile (quality-on-demand, qod-provisioning)
 * Describe, develop, document and test the APIs (with 1–2 Service Providers)  
 * Started: October 2021
 * Incubating stage since: February 2025
