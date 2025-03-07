@@ -444,7 +444,9 @@ components:
             - PLAIN
             - ACCESSTOKEN
             - REFRESHTOKEN
-          description: "The type of the credential."
+          description: |
+            The type of the credential. 
+            Note: Type of the credential - MUST be set to ACCESSTOKEN for now.
       discriminator:
         propertyName: credentialType
         mapping:
