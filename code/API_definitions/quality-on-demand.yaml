@@ -619,7 +619,7 @@ components:
 
     PlainCredential:
       type: object
-      description: A plain credential as a combination of an identifier and a secret.
+      description: A plain credential as a combination of an identifier and a secret. MUST not be used in this API version.
       allOf:
         - $ref: "#/components/schemas/SinkCredential"
         - type: object
@@ -647,7 +647,14 @@ components:
             accessTokenExpiresUtc:
               type: string
               format: date-time
-              description: REQUIRED. An absolute (UTC) timestamp at which the token shall be considered expired. Token expiration should occur after the expiration of the requested session, allowing the client to be notified of any changes during the session's existence. If the token expires while the session is still active, the client will stop receiving notifications.
+              description: | 
+                REQUIRED. An absolute (UTC) timestamp at which the token shall be considered expired. Token expiration should occur 
+                after the termination of the requested session, allowing the client to be notified of any changes during the 
+                sessions's existence. If the token expires while the session is still active, the client will stop receiving notifications.
+                If the access token is a JWT and registered "exp" (Expiration Time) claim is present, the two expiry times should match.
+                It must follow [RFC 3339](https://datatracker.ietf.org/doc/html/rfc3339#section-5.6) and must have time zone. 
+                Recommended format is yyyy-MM-dd'T'HH:mm:ss.SSSZ (i.e. which allows 2023-07-03T14:27:08.312+02:00 or 2023-07-03T12:27:08.312Z)
+              example: "2023-07-03T12:27:08.312Z"            
             accessTokenType:
               description: REQUIRED. Type of the access token (See [OAuth 2.0](https://tools.ietf.org/html/rfc6749#section-7.1)). For the current version of the API the type MUST be set to `Bearer`.
               type: string
@@ -660,7 +667,7 @@ components:
 
     RefreshTokenCredential:
       type: object
-      description: An access token credential with a refresh token.
+      description: An access token credential with a refresh token. MUST not be used in this API version.
       allOf:
         - $ref: "#/components/schemas/SinkCredential"
         - type: object
