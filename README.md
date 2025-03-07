@@ -27,7 +27,6 @@ Incubating API Repository to evolve and maintain the definitions and documentati
 
 * Note: Please be aware that the project will have frequent updates to the main branch. There are no compatibility guarantees associated with code in any branch, including main, until a new release is created. For example, changes may be reverted before a release is created. **For best results, use the latest public release**.
 
-
 * **The latest public release is [r2.2](https://github.com/camaraproject/QualityOnDemand/releases/tag/r2.2), with the following API versions:**
 
   * **quality-on-demand v1.0.0 (first stable version)**  
@@ -56,7 +55,7 @@ Incubating API Repository to evolve and maintain the definitions and documentati
 
 ## Contributing
 
-* Meetings are held virtually 
+* Meetings are held virtually
   * Schedule: bi-weekly, Friday, 13:00 UTC (14:00 CET, 15:00 CEST). For date/time of the next meeting, see previous meeting minutes
   * [Registration / Join](https://zoom-lfx.platform.linuxfoundation.org/meeting/94112812156?password=f238d6af-c959-48d7-a862-abdb3c648e40)
   * Minutes: Access [meeting minutes](https://lf-camaraproject.atlassian.net/wiki/x/XCPe)
