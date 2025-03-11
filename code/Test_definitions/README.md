@@ -1,5 +1,7 @@
-This directory contains the `.feature` files with test definitions for the 3 repository API(s).
-There is a separate Feature file per API operation.
+# Notes regarding the test definition files
+
+This directory contains the `.feature` files with test definitions for the 3 APIs in the repository.
+There are separate test definition files per API operation.
 
 The test plan has to be enhanced and some scenarios still contains comments and questions to be resolved:
 
@@ -10,5 +12,3 @@ The test plan has to be enhanced and some scenarios still contains comments and 
 * Now that QoS Profiles may be restricted to certain devices, what code to return when the provided device in createSession is not suitable for the provided qosProfile. We may reuse 422 SERVICE_NOT_APPLICABLE
 * When providing a path parameter, such sessionId or provisioningId, which is not compliant with the spec format (UUID), what code to return? Options are 400 INVALID_ARGUMENT or 404 NOT_FOUND if path parameter format is not checked previously
 * For QoS Profile response validations, it is pending to check additional constraints, such as minDuration being less or equal than maxDuration, etc
-
-

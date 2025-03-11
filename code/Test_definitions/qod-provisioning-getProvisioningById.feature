@@ -1,4 +1,4 @@
-Feature: CAMARA QoD Provisioning API, vwip - Operation getProvisioningById
+Feature: CAMARA QoD Provisioning API, v0.2.0 - Operation getProvisioningById
     # Input to be provided by the implementation to the tester
     #
     # Implementation indications:
@@ -12,7 +12,7 @@ Feature: CAMARA QoD Provisioning API, vwip - Operation getProvisioningById
 
     Background: Common getProvisioningById setup
         Given an environment at "apiRoot"
-        And the resource "/qod-provisioning/vwip/device-qos/{provisioningId}"                                                              |
+        And the resource "/qod-provisioning/v0.2/device-qos/{provisioningId}"                                                              |
         # Unless indicated otherwise the QoD provisioning must be created by the same API client given in the access token
         And the header "Authorization" is set to a valid access token granted to the same client that created the QoD provisioning
         And the header "x-correlator" is set to a UUID value

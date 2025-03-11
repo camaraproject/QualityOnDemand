@@ -61,7 +61,7 @@ info:
   license:
     name: Apache 2.0
     url: https://www.apache.org/licenses/LICENSE-2.0.html
-  version: wip
+  version: 0.2.0
   x-camara-commonalities: 0.5
 
 externalDocs:
@@ -69,7 +69,7 @@ externalDocs:
   url: https://github.com/camaraproject/QualityOnDemand
 
 servers:
-  - url: "{apiRoot}/qod-provisioning/vwip"
+  - url: "{apiRoot}/qod-provisioning/v0.2"
     variables:
       apiRoot:
         default: http://localhost:9091
@@ -291,7 +291,7 @@ paths:
           - When a three-legged access token is used however, this optional identifier MUST NOT be provided, as the subject will be uniquely identified from the access token.
         - The QoD provisioning must have been created by the same API consumer given in the access token.
         - If no provisioning is found for the device, an error response 404 is returned with code "NOT_FOUND".
-        - This call uses the POST method instead of GET to comply with the [CAMARA Commonalities guidelines](https://github.com/camaraproject/Commonalities/blob/r2.2/documentation/API-design-guidelines.md#post-or-get-for-transferring-sensitive-or-complex-data) for sending sensitive or complex data in API calls. Since the device field may contain personally identifiable information, it should not be sent via GET.
+        - This call uses the POST method instead of GET to comply with the [CAMARA Commonalities guidelines](https://github.com/camaraproject/Commonalities/blob/r2.3/documentation/API-design-guidelines.md#post-or-get-for-transferring-sensitive-or-complex-data) for sending sensitive or complex data in API calls. Since the device field may contain personally identifiable information, it should not be sent via GET.
 
       operationId: retrieveProvisioningByDevice
       parameters:
@@ -444,7 +444,9 @@ components:
             - PLAIN
             - ACCESSTOKEN
             - REFRESHTOKEN
-          description: "The type of the credential."
+          description: |
+            The type of the credential.
+            Note: Type of the credential - MUST be set to ACCESSTOKEN for now.
       discriminator:
         propertyName: credentialType
         mapping:
@@ -456,7 +458,7 @@ components:
 
     PlainCredential:
       type: object
-      description: A plain credential as a combination of an identifier and a secret.
+      description: A plain credential as a combination of an identifier and a secret. MUST not be used in this API version.
       allOf:
         - $ref: "#/components/schemas/SinkCredential"
         - type: object
@@ -484,7 +486,14 @@ components:
             accessTokenExpiresUtc:
               type: string
               format: date-time
-              description: REQUIRED. An absolute (UTC) timestamp at which the token shall be considered expired. Token expiration should occur after the termination of the requested provisioning, allowing the client to be notified of any changes during the provisioning's existence. If the token expires while the provisioning is still active, the client will stop receiving notifications.
+              description: |
+                REQUIRED. An absolute (UTC) timestamp at which the token shall be considered expired. Token expiration should occur
+                after the termination of the requested provisioning, allowing the client to be notified of any changes during the
+                provisioning's existence. If the token expires while the provisioning is still active, the client will stop receiving notifications.
+                If the access token is a JWT and registered "exp" (Expiration Time) claim is present, the two expiry times should match.
+                It must follow [RFC 3339](https://datatracker.ietf.org/doc/html/rfc3339#section-5.6) and must have time zone.
+                Recommended format is yyyy-MM-dd'T'HH:mm:ss.SSSZ (i.e. which allows 2023-07-03T14:27:08.312+02:00 or 2023-07-03T12:27:08.312Z)
+              example: "2023-07-03T12:27:08.312Z"
             accessTokenType:
               description: REQUIRED. Type of the access token (See [OAuth 2.0](https://tools.ietf.org/html/rfc6749#section-7.1)).
               type: string
@@ -497,7 +506,7 @@ components:
 
     RefreshTokenCredential:
       type: object
-      description: An access token credential with a refresh token.
+      description: An access token credential with a refresh token. MUST not be used in this API version.
       allOf:
         - $ref: "#/components/schemas/SinkCredential"
         - type: object

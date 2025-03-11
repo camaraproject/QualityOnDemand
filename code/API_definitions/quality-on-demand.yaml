@@ -10,7 +10,7 @@ info:
 
     The QoD API offers the application developers the capability to request for stable latency (reduced jitter) or throughput for some specified application data flows between application clients (within a user device) and application servers (backend services). The developer has a pre-defined set of Quality of Service (QoS) profiles which they could choose from depending on their latency or throughput requirements.
 
-    ![QoD API Overview](https://raw.githubusercontent.com/camaraproject/QualityOnDemand/main/documentation/API_documentation/resources/QoD_latency_overview.PNG)
+    ![QoD API Overview](https://raw.githubusercontent.com/camaraproject/QualityOnDemand/r2.2/documentation/API_documentation/resources/QoD_latency_overview.PNG)
 
     The usage of the API is based on QoS session resources, which can be created (based on available QoS profiles), queried and deleted. The deletion of a requested session can be triggered by the API consumer or can be triggered automatically once the QoS session has reached its limit.
 
@@ -22,7 +22,7 @@ info:
     * **Authentication**:
     Security access keys such as OAuth 2.0 client credentials used by client applications to invoke the QoD API.
 
-    * **QoS profiles and QoS profile labels**:
+    * **QoS profiles**:
     Latency, throughput or priority requirements of the application mapped to relevant QoS profile values. The set of QoS Profiles that an API provider is offering may be retrieved via the `qos-profiles` API (cf. https://github.com/camaraproject/QualityOnDemand/) or will be agreed during the onboarding with the API provider.
 
     * **Identifier for the device**:
@@ -54,7 +54,7 @@ info:
 
     Following diagram shows the interaction between different components
 
-    ![QoD Management API](https://raw.githubusercontent.com/camaraproject/QualityOnDemand/main/documentation/API_documentation/resources/QoD_details.PNG)
+    ![QoD Management API](https://raw.githubusercontent.com/camaraproject/QualityOnDemand/r2.2/documentation/API_documentation/resources/QoD_details.PNG)
 
     # Authorization and authentication
 
@@ -94,7 +94,7 @@ info:
   license:
     name: Apache 2.0
     url: https://www.apache.org/licenses/LICENSE-2.0.html
-  version: wip
+  version: 1.0.0
   x-camara-commonalities: 0.5
 
 externalDocs:
@@ -102,7 +102,7 @@ externalDocs:
   url: https://github.com/camaraproject/QualityOnDemand
 
 servers:
-  - url: "{apiRoot}/quality-on-demand/vwip"
+  - url: "{apiRoot}/quality-on-demand/v1"
     variables:
       apiRoot:
         default: http://localhost:9091
@@ -388,7 +388,7 @@ paths:
         - The session must have been created by the same API consumer given in the access token
         - If no QoS session is found for the requested device, an empty array is returned.
         - This call uses the POST method instead of GET to comply with the CAMARA Commonalities guidelines for sending sensitive or complex data in API calls. Since the device field may contain personally identifiable information, it should not be sent via GET.
-          [CAMARA API Design Guidelines](https://github.com/camaraproject/Commonalities/blob/r2.2/documentation/API-design-guidelines.md#post-or-get-for-transferring-sensitive-or-complex-data)
+          [CAMARA API Design Guidelines](https://github.com/camaraproject/Commonalities/blob/r2.3/documentation/API-design-guidelines.md#post-or-get-for-transferring-sensitive-or-complex-data)
 
       operationId: retrieveSessionsByDevice
       parameters:
@@ -605,7 +605,9 @@ components:
             - PLAIN
             - ACCESSTOKEN
             - REFRESHTOKEN
-          description: "The type of the credential. With the current API version the type MUST be set to `ACCESSTOKEN`"
+          description: |
+            The type of the credential.
+            Note: Type of the credential - MUST be set to ACCESSTOKEN for now
       discriminator:
         propertyName: credentialType
         mapping:
@@ -617,7 +619,7 @@ components:
 
     PlainCredential:
       type: object
-      description: A plain credential as a combination of an identifier and a secret.
+      description: A plain credential as a combination of an identifier and a secret. MUST not be used in this API version.
       allOf:
         - $ref: "#/components/schemas/SinkCredential"
         - type: object
@@ -645,7 +647,14 @@ components:
             accessTokenExpiresUtc:
               type: string
               format: date-time
-              description: REQUIRED. An absolute (UTC) timestamp at which the token shall be considered expired. Token expiration should occur after the expiration of the requested session, allowing the client to be notified of any changes during the session's existence. If the token expires while the session is still active, the client will stop receiving notifications.
+              description: |
+                REQUIRED. An absolute (UTC) timestamp at which the token shall be considered expired. Token expiration should occur
+                after the termination of the requested session, allowing the client to be notified of any changes during the
+                sessions's existence. If the token expires while the session is still active, the client will stop receiving notifications.
+                If the access token is a JWT and registered "exp" (Expiration Time) claim is present, the two expiry times should match.
+                It must follow [RFC 3339](https://datatracker.ietf.org/doc/html/rfc3339#section-5.6) and must have time zone.
+                Recommended format is yyyy-MM-dd'T'HH:mm:ss.SSSZ (i.e. which allows 2023-07-03T14:27:08.312+02:00 or 2023-07-03T12:27:08.312Z)
+              example: "2023-07-03T12:27:08.312Z"
             accessTokenType:
               description: REQUIRED. Type of the access token (See [OAuth 2.0](https://tools.ietf.org/html/rfc6749#section-7.1)). For the current version of the API the type MUST be set to `Bearer`.
               type: string
@@ -658,7 +667,7 @@ components:
 
     RefreshTokenCredential:
       type: object
-      description: An access token credential with a refresh token.
+      description: An access token credential with a refresh token. MUST not be used in this API version.
       allOf:
         - $ref: "#/components/schemas/SinkCredential"
         - type: object
@@ -713,7 +722,7 @@ components:
           - A searchable descriptive name
         The set of QoS Profiles that an API provider is offering may be retrieved by means of the QoS Profile API (qos-profile) or agreed on onboarding time.
       type: string
-      example: QCI_1_voice
+      example: voice
       minLength: 3
       maxLength: 256
       format: string
