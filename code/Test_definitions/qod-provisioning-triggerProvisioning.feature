@@ -1,4 +1,4 @@
-Feature: CAMARA QoD Provisioning API, v0.2.0 - Operation triggerProvisioning
+Feature: CAMARA QoD Provisioning API, vwip - Operation triggerProvisioning
     # Input to be provided by the implementation to the tester
     #
     # Implementation indications:
@@ -15,7 +15,7 @@ Feature: CAMARA QoD Provisioning API, v0.2.0 - Operation triggerProvisioning
 
     Background: Common triggerProvisioning setup
         Given an environment at "apiRoot"
-        And the resource "/qod-provisioning/v0.2/device-qos"
+        And the resource "/qod-provisioning/vwip/device-qos"
         And the header "Content-Type" is set to "application/json"
         And the header "Authorization" is set to a valid access token
         And the header "x-correlator" is set to a UUID value
