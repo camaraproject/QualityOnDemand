@@ -15,7 +15,7 @@ info:
     - Discover the available QoS profiles for a specific device
     - Retrieve the characteristics of a specific QoS profile by name
 
-    How QoS profiles are mapped to connectivity characteristics are subject to agreements between the API provider and the API consumer. Within the CAMARA project, you can find a sample for such a mapping of QoS profiles. [CAMARA QoS Profiles Mapping Table (REFERENCE DRAFT)](https://github.com/camaraproject/QualityOnDemand/blob/r2.2/documentation/API_documentation/QoSProfile_Mapping_Table.md)
+    How QoS profiles are mapped to connectivity characteristics are subject to agreements between the API provider and the API consumer. Within the CAMARA project, you can find a sample for such a mapping of QoS profiles. [CAMARA QoS Profiles Mapping Table (REFERENCE DRAFT)](https://github.com/camaraproject/QualityOnDemand/blob/main/documentation/API_documentation/QoSProfile_Mapping_Table.md)
 
     # Authorization and authentication
 
@@ -27,7 +27,7 @@ info:
 
     # Identifying the device from the access token
 
-    The two operations defined by this API (`getQosProfile` and `retrieveQoSProfiles`) both allow the API consumer to use a three-legged access token to specify a target device as a query filter. When provided, only profiles available to the specified target device will be returned. Additionally, when a two-legged acccess token is used, the operation `retrieveQoSProfiles` allows the API consumer to optionally specify the target device in the request body.
+    The two operations defined by this API (`getQosProfile` and `retrieveQoSProfiles`) both allow the API consumer to use a three-legged access token to specify a target device as a query filter. When provided, only profiles available to the specified target device will be returned. Additionally, when a two-legged access token is used, the operation `retrieveQoSProfiles` allows the API consumer to optionally specify the target device in the request body.
 
     Hence, for the `retrieveQoSProfiles` operation:
     - When invoked using a two-legged access token, the optional input device object will be used as filter if present.
@@ -53,7 +53,7 @@ info:
   license:
     name: Apache 2.0
     url: https://www.apache.org/licenses/LICENSE-2.0.html
-  version: 1.0.0
+  version: wip
   x-camara-commonalities: 0.5
 
 
@@ -62,7 +62,7 @@ externalDocs:
   url: https://github.com/camaraproject/QualityOnDemand
 
 servers:
-  - url: "{apiRoot}/qos-profiles/v1"
+  - url: "{apiRoot}/qos-profiles/wip"
     variables:
       apiRoot:
         default: http://localhost:9091
