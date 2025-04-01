@@ -78,6 +78,8 @@ info:
 
     - If the subject can be identified from the access token and the optional `device` object is also included in the request, then the server will return an error with the `422 UNNECESSARY_IDENTIFIER` error code. This will be the case even if the same device is identified by these two methods, as the server is unable to make this comparison.
 
+    - If the requested qosProfile exists but is currently not available for creating a session (e.g., its status is INACTIVE or DEPRECATED), then the server will return an error with the `422 QUALITY_ON_DEMAND.QOS_PROFILE_NOT_APPLICABLE` error code.
+
     # Multi-SIM scenario handling
 
     In multi-SIM scenarios where more than one mobile device is associated with a phone number (e.g. a smartphone with an associated smartwatch), it might not be possible to uniquely identify the device to which the enhanced QoS profile should apply from that phone number. If the phone number is used as the device identifier when creating a QoS session in a multi-SIM scenario, the API may respond with an error, apply the enhanced QoS profile to all devices in the multi-SIM group, or apply the enhanced QoS profile to a single device in the multi-SIM group which may not be the intended device.
@@ -188,6 +190,8 @@ paths:
                   $ref: "#/components/responses/Generic403"
                 "410":
                   $ref: "#/components/responses/Generic410"
+                "422":
+                  $ref: "#/components/responses/CreateSessionUnprocessableEntity422"
               security:
                 - {}
                 - notificationsBearerAuth: []
@@ -1347,6 +1351,31 @@ components:
                 status: 422
                 code: UNNECESSARY_IDENTIFIER
                 message: The device is already identified by the access token.
+    CreateSessionUnprocessableEntity422:
+      description: Unprocessable Content
+      headers:
+        x-correlator:
+          $ref: "#/components/headers/x-correlator"
+      content:
+        application/json:
+          schema:
+            allOf:
+              - $ref: "#/components/schemas/ErrorInfo"
+              - type: object
+                properties:
+                  status:
+                    enum:
+                      - 422
+                  code:
+                    enum:
+                      - QUALITY_ON_DEMAND.QOS_PROFILE_NOT_APPLICABLE
+          examples:
+            QUALITY_ON_DEMAND_422_QOS_PROFILE_NOT_APPLICABLE:
+              description: The requested QoS Profile exists but cannot be used to create a session.
+              value:
+                status: 422
+                code: QUALITY_ON_DEMAND.QOS_PROFILE_NOT_APPLICABLE
+                message: The requested QoS Profile is currently not available for session creation.
 
     Generic429:
       description: Too Many Requests
