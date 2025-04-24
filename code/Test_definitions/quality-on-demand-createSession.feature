@@ -382,3 +382,17 @@ Feature: CAMARA Quality On Demand API, vwip - Operation createSession
         And the response property "$.status" is 409
         And the response property "$.code" is "CONFLICT"
         And the response property "$.message" contains a user friendly text
+
+    # Errors 422
+
+    @quality_on_demand_createSession_422.1_session_qos_profile_not_applicable
+    Scenario: QoS Profile not applicable for session creation
+        Given a valid testing device supported by the service, identified by the token or provided in the request body
+        And the requested QoS Profile exists but is not applicable for the session
+        When the request "createSession" is sent
+        Then the response status code is 422
+        And the response header "x-correlator" has same value as the request header "x-correlator"
+        And the response header "Content-Type" is "application/json"
+        And the response property "$.status" is 422
+        And the response property "$.code" is "QUALITY_ON_DEMAND.QOS_PROFILE_NOT_APPLICABLE"
+        And the response property "$.message" contains a user friendly text
