@@ -262,3 +262,85 @@ Feature: CAMARA QoS Profiles API, vwip - Operation retrieveQoSProfiles
         And the response property "$.code" is "PERMISSION_DENIED"
         And the response property "$.message" contains a user friendly text
 
+    @qos_profiles_retrieveQoSProfiles_07_filter_by_rate_attributes
+    Scenario Outline: Filter QoS profiles by rate attributes
+        Given the request body property "<rate_attribute>" is set to a valid Rate object
+        When the request "retrieveQoSProfiles" is sent
+        Then the response status code is 200
+        And the response header "Content-Type" is "application/json"
+        And the response header "x-correlator" has same value as the request header "x-correlator"
+        And each item of the response array, if any, has "<rate_attribute>" greater than or equal to the requested value
+
+        Examples:
+            | rate_attribute           |
+            | targetMinUpstreamRate    |
+            | maxUpstreamRate         |
+            | maxUpstreamBurstRate    |
+            | targetMinDownstreamRate  |
+            | maxDownstreamRate       |
+            | maxDownstreamBurstRate  |
+
+    @qos_profiles_retrieveQoSProfiles_08_filter_by_duration_attributes
+    Scenario Outline: Filter QoS profiles by duration attributes
+        Given the request body property "<duration_attribute>" is set to a valid Duration object
+        When the request "retrieveQoSProfiles" is sent
+        Then the response status code is 200
+        And the response header "Content-Type" is "application/json"
+        And the response header "x-correlator" has same value as the request header "x-correlator"
+        And each item of the response array, if any, has "<duration_attribute>" <comparison> the requested value
+
+        Examples:
+            | duration_attribute  | comparison              |
+            | minDuration        | less than or equal to    |
+            | maxDuration        | greater than or equal to |
+
+    @qos_profiles_retrieveQoSProfiles_09_filter_by_latency_attributes
+    Scenario Outline: Filter QoS profiles by latency attributes
+        Given the request body property "<latency_attribute>" is set to a valid Duration object
+        When the request "retrieveQoSProfiles" is sent
+        Then the response status code is 200
+        And the response header "Content-Type" is "application/json"
+        And the response header "x-correlator" has same value as the request header "x-correlator"
+        And each item of the response array, if any, has "<latency_attribute>" less than or equal to the requested value
+
+        Examples:
+            | latency_attribute  |
+            | packetDelayBudget |
+            | jitter           |
+
+    @qos_profiles_retrieveQoSProfiles_10_filter_by_priority
+    Scenario: Filter QoS profiles by priority
+        Given the request body property "priority" is set to a valid priority value
+        When the request "retrieveQoSProfiles" is sent
+        Then the response status code is 200
+        And the response header "Content-Type" is "application/json"
+        And the response header "x-correlator" has same value as the request header "x-correlator"
+        And each item of the response array, if any, has priority less than or equal to the requested value
+
+    @qos_profiles_retrieveQoSProfiles_11_filter_by_packet_error_loss_rate
+    Scenario: Filter QoS profiles by packet error loss rate
+        Given the request body property "packetErrorLossRate" is set to a valid value
+        When the request "retrieveQoSProfiles" is sent
+        Then the response status code is 200
+        And the response header "Content-Type" is "application/json"
+        And the response header "x-correlator" has same value as the request header "x-correlator"
+        And each item of the response array, if any, has packetErrorLossRate less than or equal to the requested value
+
+    @qos_profiles_retrieveQoSProfiles_12_filter_by_l4s_queue_type
+    Scenario: Filter QoS profiles by L4S queue type
+        Given the request body property "l4sQueueType" is set to a valid queue type
+        When the request "retrieveQoSProfiles" is sent
+        Then the response status code is 200
+        And the response header "Content-Type" is "application/json"
+        And the response header "x-correlator" has same value as the request header "x-correlator"
+        And each item of the response array, if any, has l4sQueueType equal to the requested value
+
+    @qos_profiles_retrieveQoSProfiles_13_filter_by_service_class
+    Scenario: Filter QoS profiles by service class
+        Given the request body property "serviceClass" is set to a valid service class
+        When the request "retrieveQoSProfiles" is sent
+        Then the response status code is 200
+        And the response header "Content-Type" is "application/json"
+        And the response header "x-correlator" has same value as the request header "x-correlator"
+        And each item of the response array, if any, has serviceClass equal to the requested value
+
