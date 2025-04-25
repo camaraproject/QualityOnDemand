@@ -218,7 +218,7 @@ components:
             description: The two letter ISO 3166-2 country code for the country in which the QoS profile is available
             pattern: '^[A-Z]{2}$'
             example: "GB"
-          example: '[ "GB", "DE", "FR", "IT", "ES" ]'
+          example: [ "GB", "DE", "FR", "IT", "ES" ]
         targetMinUpstreamRate:
           description: |
             This is the target minimum upload speed for the QoS profile.
