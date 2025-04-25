@@ -479,7 +479,7 @@ components:
       items:
         type: object
         required:
-        - country
+          - country
         properties:
           country:
             description: The two letter ISO 3166-2 country code for the country in which the QoS profile is available in at least one network
@@ -495,7 +495,7 @@ components:
               example: "23591"
             example: ["23591", "23415"]
         example: {"country": "GB", "networks": ["23591", "23415"]}
-      example: [ {"country": "GB", "networks": ["23591", "23415"]}, {"country": "DE", "networks": ["26202"]} ]
+      example: [{"country": "GB", "networks": ["23591", "23415"]}, {"country": "DE", "networks": ["26202"]}]
 
     Device:
       description: |
