@@ -474,6 +474,29 @@ components:
         status:
           $ref: '#/components/schemas/QosProfileStatusEnum'
 
+    Availability:
+      type: array
+      items:
+        type: object
+        required:
+        - country
+        properties:
+          country:
+            description: The two letter ISO 3166-2 country code for the country in which the QoS profile is available in at least one network
+            type: string
+            pattern: ^[A-Z]{2}$
+            example: "GB"
+          networks:
+            description: A list of networks within the country for which the QoS profile is available from the API provider
+            type: array
+            items:
+              description: The network identifier. For mobile networks, this is the PLMN ID, which is a 5 or 6 digit integer.
+              type: string
+              example: "23591"
+            example: ["23591", "23415"]
+        example: {"country": "GB", "networks": ["23591", "23415"]}
+      example: [ {"country": "GB", "networks": ["23591", "23415"]}, {"country": "DE", "networks": ["26202"]} ]
+
     Device:
       description: |
         End-user equipment able to connect to a mobile network. Examples of devices include smartphones or IoT sensors/actuators.
