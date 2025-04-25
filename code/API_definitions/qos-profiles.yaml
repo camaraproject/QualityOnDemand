@@ -204,6 +204,8 @@ components:
             A description of the QoS profile.
           type: string
           example: "QoS profile for video streaming"
+        status:
+          $ref: "#/components/schemas/QosProfileStatusEnum"
         countryAvailablility:
           description: A list of countries in which the API provider makes the profile available.
                        - When profiles are filtered for a specific device (i.e. using a 3-legged access token or an explicit device filter parameter), the profile can be used by that device in any of these countries when connected to the API provider's network.
@@ -216,8 +218,6 @@ components:
             pattern: '^[A-Z]{2}$'
             example: "GB"
           example: '[ "GB", "DE", "FR", "IT", "ES" ]'
-        status:
-          $ref: "#/components/schemas/QosProfileStatusEnum"
         targetMinUpstreamRate:
           description: |
             This is the target minimum upload speed for the QoS profile.
