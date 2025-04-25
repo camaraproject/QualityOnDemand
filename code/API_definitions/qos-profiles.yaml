@@ -204,6 +204,18 @@ components:
             A description of the QoS profile.
           type: string
           example: "QoS profile for video streaming"
+        countryAvailablility:
+          description: A list of countries in which the API provider makes the profile available.
+                       - When profiles are filtered for a specific device (i.e. using a 3-legged access token or an explicit device filter parameter), the profile can be used by that device in any of these countries when connected to the API provider's network.
+                       - When there is no device filter, availability in a given country means that the profile will be available to some devices connected to the API provider's network, but not necessarily to all devices.
+                       - If this field is not present in the QoS profile, no assumption can be made about the availability of the profile in any given country
+          type: array
+            items:
+              type: string
+              description: The two letter ISO 3166-2 country code for the country in which the QoS profile is available
+              pattern: '^[A-Z]{2}$'
+              example: "GB"
+            example: "[ "GB", "DE", "FR", "IT", "ES" ]"
         status:
           $ref: "#/components/schemas/QosProfileStatusEnum"
         targetMinUpstreamRate:
