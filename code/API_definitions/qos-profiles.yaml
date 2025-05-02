@@ -208,17 +208,12 @@ components:
           $ref: "#/components/schemas/QosProfileStatusEnum"
         countryAvailablility:
           description: |
-            A list of countries in which the API provider makes the profile available.
-            - When profiles are filtered for a specific device (i.e. using a 3-legged access token or an explicit device filter parameter), the profile can be used by that device in any of these countries when connected to the API provider's network
-            - When there is no device filter, availability in a given country means that the profile will be available to some devices connected to the API provider's network in that country, but not necessarily to all devices, and not necessarily to the same device in all available countries
-            - If this field is not present in the QoS profile, no assumption can be made about the availability of the profile in any given country
-          type: array
-          items:
-            type: string
-            description: The two letter ISO 3166-2 country code for the country in which the QoS profile is available
-            pattern: '^[A-Z]{2}$'
-            example: "GB"
-          example: ["GB", "DE", "FR", "IT", "ES"]
+            A list of countries, and optionally networks, for which the API provider makes the profile available.
+            - When profiles are filtered for a specific device (i.e. using a 3-legged access token or an explicit device filter parameter), the profile can be used by that device in any of these countries when connected to any of the listed networks, or the API provider's network if none are listed
+            - When there is no device filter, availability for a given country means that the profile will be available to some devices connected to the networks listed for that country (or the API provider's network if none are listed), but not necessarily available to all devices, and not necessarily available to the same device for all listed countries and networks
+            - If this field is not present in the QoS profile, no assumption can be made about the availability of the profile in any given country or for any given network
+          allOf:
+            - $ref: "#/components/schemas/Availability"
         targetMinUpstreamRate:
           description: |
             This is the target minimum upload speed for the QoS profile.
@@ -475,6 +470,7 @@ components:
           $ref: '#/components/schemas/QosProfileStatusEnum'
 
     Availability:
+      description: A list of countries, and optionally networks, for which the API provider makes the profile available
       type: array
       items:
         type: object
