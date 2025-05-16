@@ -68,7 +68,7 @@
     ]
   }],
   "required-tags": ["on", {
-  "tags": ["^@.*$"], // Allow any tag starting with '@'
-  "ignoreUntagged": false // Enforce tagging
+  "tags": ["^@.*$"],
+  "ignoreUntagged": false
 }]
 }
