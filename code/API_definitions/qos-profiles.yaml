@@ -206,7 +206,7 @@ components:
           example: "QoS profile for video streaming"
         status:
           $ref: "#/components/schemas/QosProfileStatusEnum"
-        countryAvailablility:
+        countryAvailability:
           description: |
             A list of countries, and optionally networks, for which the API provider makes the profile available.
             - When profiles are filtered for a specific device (i.e. using a 3-legged access token or an explicit device filter parameter), the profile can be used by that device in any of these countries when connected to any of the listed networks, or the API provider's network if none are listed
