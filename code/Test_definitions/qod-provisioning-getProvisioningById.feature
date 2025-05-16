@@ -9,7 +9,6 @@ Feature: CAMARA QoD Provisioning API, vwip - Operation getProvisioningById
     #
     # References to OAS spec schemas refer to schemas specified in qod-provisioning.yaml
 
-
   Background: Common getProvisioningById setup
     Given an environment at "apiRoot"
     And the resource "/qod-provisioning/vwip/device-qos/{provisioningId}"                                                              |

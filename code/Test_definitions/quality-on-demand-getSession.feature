@@ -41,7 +41,7 @@ Feature: CAMARA Quality On Demand API, vwip - Operation getSession
     And the response property "$.expiresAt" exists only if "$.qosStatus" is not "REQUESTED" and the value is later than "$.startedAt"
     And the response property "$.statusInfo" exists only if "$.qosStatus" is "UNAVAILABLE"
 
-  @quality_on_demand_getSession_02_get_recent_unvailable
+  @quality_on_demand_getSession_02_get_recent_unavailable
   Scenario: QOS Session becoming "UNAVAILABLE" is not released for at least 360 seconds
     Given an existing QoS session deleted in the last 360 seconds
     And the path parameter "sessionId" is set to the value for that QoS session

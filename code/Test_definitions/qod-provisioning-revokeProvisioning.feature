@@ -10,7 +10,6 @@ Feature: CAMARA QoD Provisioning API, vwip - Operation revokeProvisioning
     #
     # References to OAS spec schemas refer to schemas specified in qod-provisioning.yaml
 
-
   Background: Common revokeProvisioning setup
     Given an environment at "apiRoot"
     And the resource "/qod-provisioning/vwip/device-qos/{provisioningId}"
@@ -76,7 +75,7 @@ Feature: CAMARA QoD Provisioning API, vwip - Operation revokeProvisioning
     When the request "revokeProvisioning" is sent
     Then the response status code is 202
     And when the asynchronous deletion process is completed
-    Then an event is received at the address of the "$.sink" provided for createProvisioning
+    And an event is received at the address of the "$.sink" provided for createProvisioning
     And the event header "Authorization" is set to "Bearer: " + the value of "$.sinkCredentials.accessToken" provided for createProvisioning
     And the event header "Content-Type" is set to "application/cloudevents+json"
     And the event body complies with the OAS schema at "/components/schemas/EventStatusChanged"
