@@ -25,9 +25,9 @@ Feature: CAMARA Quality On Demand API, vwip - Operation createSession
 
     # Success scenarios
 
-  @quality_on_demand_createSession_01_generic_success_scenario
-  Scenario: Common validations for any success scenario
+  @quality_on_demand_createSession_01.1_generic_success_scenario
         # Valid testing device and default request body compliant with the schema
+  Scenario: Basic request and response metadata validation
     Given a valid testing device supported by the service, identified by the token or provided in the request body
     And the request body property "$.applicationServer" is set to a valid application server
     And the request property "$.qosProfile" is set to a valid QoS Profile as returned by QoS Profiles API
@@ -39,7 +39,11 @@ Feature: CAMARA Quality On Demand API, vwip - Operation createSession
         # The response has to comply with the generic response schema which is part of the spec
     And the response body complies with the OAS schema at "/components/schemas/SessionInfo"
         # Additionally, any success response has to comply with some constraints beyond the schema compliance
-    And the response property "$.device" exists only if provided in the request body and with the same value
+
+  @quality_on_demand_createSession_01.2_generic_success_scenario
+  Scenario: Validation of content fields in response body
+    Given a valid request was sent and a 201 response received
+    Then the response property "$.device" exists only if provided in the request body and with the same value
     And the response property "$.applicationServer" has the same value as in the request body
     And the response property "$.qosProfile" has the same value as in the request body
     And the response property "$.devicePorts" exists only if provided in the request body and with the same value
@@ -50,9 +54,8 @@ Feature: CAMARA Quality On Demand API, vwip - Operation createSession
     And the response property "$.expiresAt" exists only if "$.qosStatus" is not "REQUESTED" and the value is later than "$.startedAt"
     And the response property "$.statusInfo" exists only if "$.qosStatus" is "UNAVAILABLE"
 
-  @quality_on_demand_createSession_02_event_notification
-  Scenario: Events are received after a QoS session change if sink is provided
-        # Valid testing device and default request body compliant with the schema
+  @quality_on_demand_createSession_02.1_event_notification
+  Scenario: Valid session creation request with sink and basic event reception
     Given a valid testing device supported by the service, identified by the token or provided in the request body
     And the request body property "$.applicationServer" is set to a valid application server
     And the request property "$.qosProfile" is set to a valid QoS Profile as returned by QoS Profiles API
@@ -63,12 +66,14 @@ Feature: CAMARA Quality On Demand API, vwip - Operation createSession
     And the request property "$.sinkCredentials.accessToken" is set to a valid access token accepted by the events receiver
     When the request "createSession" is sent
     Then the response status code is 201
-        # There is no specific limit defined for the process to end
-    And an event is received at the address of the request property "$.sink"
     And the event header "Authorization" is set to "Bearer: " + the value of the request property "$.sinkCredentials.accessToken"
+    And an event is received at the address of the request property "$.sink"
+
+  @quality_on_demand_createSession_02.2_event_notification
+  Scenario: Validation of event received after session creation
+    Given an event was received after a successful session creation
     And the event header "Content-Type" is set to "application/cloudevents+json"
     And the event body complies with the OAS schema at "/components/schemas/EventQosStatusChanged"
-        # Additionally any event body has to comply with some constraints beyond the schema compliance
     And the event body property "$.id" is unique
     And the event body property "$.type" is set to "org.camaraproject.qod.v1.qos-status-changed"
     And the event body property "$.data.sessionId" has the same value as createSession response property "$.sessionId"

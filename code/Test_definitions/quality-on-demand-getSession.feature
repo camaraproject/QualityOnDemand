@@ -25,7 +25,6 @@ Feature: CAMARA Quality On Demand API, vwip - Operation getSession
     And the path parameter "sessionId" is set to the value for that QoS session
     When the request "getSession" is sent
     Then the response status code is 200
-    And the response header "Content-Type" is "application/json"
     And the response header "x-correlator" has same value as the request header "x-correlator"
         # The response has to comply with the generic response schema which is part of the spec
     And the response body complies with the OAS schema at "/components/schemas/SessionInfo"

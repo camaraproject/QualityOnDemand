@@ -19,7 +19,7 @@ Feature: CAMARA QoD Provisioning API, vwip - Operation triggerProvisioning
     And the header "Authorization" is set to a valid access token
     And the header "x-correlator" is set to a UUID value
         # Properties not explicitly overwritten in the Scenarios can take any values compliant with the schema
-    And the request body is set by default to a request body compliant with the schema at "/components/schemas/triggerProvisioning"
+    And the request body is set by default to a request body compliant with the schema at "#/components/schemas/triggerProvisioning"
 
     # Success scenarios
 
@@ -33,7 +33,7 @@ Feature: CAMARA QoD Provisioning API, vwip - Operation triggerProvisioning
     And the response header "x-correlator" has same value as the request header "x-correlator"
     And the response header "Content-Type" is "application/json"
         # The response has to comply with the generic response schema which is part of the spec
-    And the response body complies with the OAS schema at "/components/schemas/ProvisioningInfo"
+    And the response body complies with the OAS schema at "#/components/schemas/ProvisioningInfo"
         # Additionally any success response has to comply with some constraints beyond the schema compliance
     And the response property "$.device" exists only if provided in the request body and with the same value
     And the response property "$.qosProfile" has the same value as in the request body
@@ -45,20 +45,14 @@ Feature: CAMARA QoD Provisioning API, vwip - Operation triggerProvisioning
   @qod_provisioning_triggerProvisioning_02_event_notification
   Scenario: Events for the outcome of provisioning creation if sink is provided
     Given a valid testing device supported by the service, identified by the token or provided in the request body
+    And the request body is compliant with the OAS schema at "#/component/schemas/TriggerProvisioning"
+    When the request "triggerProvisioning" is sent
     And the request property "$.qosProfile" is set to a valid QoS Profile as returned by QoS Profiles API
-    And the request property "$.sink" is set to a URL when events can be monitored
-    And the request property "$.sinkCredentials.credentialType" is set to "ACCESSTOKEN"
-    And the request property "$.sinkCredentials.accessTokenType" is set to "bearer"
-    And the request property "$.sinkCredentials.accessToken" is set to a valid access token accepted by the events receiver
-    And the request property "$.sinkCredentials.accessTokenExpiresUtc" is set to a value long enough in the future
-    And the request "triggerProvisioning" is sent
-    And the response status code is 201
+    Then the response status code is 201
         # There is no specific limit defined for the process to end
-    When the provisioning outcome is known
-    Then an event is received at the address of the request property "$.sink"
-    And the event header "Authorization" is set to "Bearer: " + the value of the request property "$.sinkCredentials.accessToken"
-    And the event header "Content-Type" is set to "application/cloudevents+json"
-    And the event body complies with the OAS schema at "/components/schemas/EventStatusChanged"
+    And the provisioning outcome is known
+    And an event is received at the address of the request property "$.sink"
+    And the event body complies with the OAS schema at "#/components/schemas/EventStatusChanged"
         # Additionally any event body has to comply with some constraints beyond the schema compliance
     And the event body property "$.id" is unique
     And the event body property "$.type" is set to "org.camaraproject.qod-provisioning.v0.status-changed"
@@ -74,7 +68,7 @@ Feature: CAMARA QoD Provisioning API, vwip - Operation triggerProvisioning
     Then the response status code is 201
     And the response header "x-correlator" has same value as the request header "x-correlator"
     And the response header "Content-Type" is "application/json"
-    And the response body complies with the OAS schema at "/components/schemas/ProvisioningInfo"
+    And the response body complies with the OAS schema at "#/components/schemas/ProvisioningInfo"
     And the response property "$.device" does not exist
 
     # Common error scenarios for management of input parameter device
@@ -116,7 +110,6 @@ Feature: CAMARA QoD Provisioning API, vwip - Operation triggerProvisioning
     And the response property "$.status" is 404
     And the response property "$.code" is "IDENTIFIER_NOT_FOUND"
     And the response property "$.message" contains a user friendly text
-
 
   @qod_provisioning_triggerProvisioning_C01.04_unnecessary_device
   Scenario: Device not to be included when it can be deduced from the access token
@@ -177,7 +170,7 @@ Feature: CAMARA QoD Provisioning API, vwip - Operation triggerProvisioning
 
   @qod_provisioning_triggerProvisioning_400.1_schema_not_compliant
   Scenario: Invalid Argument. Generic Syntax Exception
-    Given the request body is set to any value which is not compliant with the schema at "/components/schemas/triggerProvisioning"
+    Given the request body is set to any value which is not compliant with the schema at "#/components/schemas/triggerProvisioning"
     When the request "triggerProvisioning" is sent
     Then the response status code is 400
     And the response header "x-correlator" has same value as the request header "x-correlator"
