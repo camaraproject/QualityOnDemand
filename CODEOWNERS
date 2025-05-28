@@ -10,3 +10,7 @@
 # Owners of the CODEOWNER and Maintainer.md files are the admins of CAMARA (to allow them to keep the teams within the CAMARA organization in sync in case of changes)
 /CODEOWNERS @camaraproject/admins
 /MAINTAINERS.MD @camaraproject/admins
+
+# The following line ensures that the release-management_reviewers team will automatically added as reviewers
+# if a pull requests is changing the CHANGELOG.MD (aka "release PR") and that such PRs can only be merged with an approval from a team member.
+/CHANGELOG.MD @camaraproject/release-management_reviewers
