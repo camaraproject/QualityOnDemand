@@ -83,7 +83,7 @@ Feature: CAMARA Quality On Demand API, vwip - Operation deleteSession
         And the response header "x-correlator" has same value as the request header "x-correlator"
         And the response header "Content-Type" is "application/json"
         And the response property "$.status" is 401
-        And the response property "$.code" is "UNAUTHENTICATED" or "AUTHENTICATION_REQUIRED"
+        And the response property "$.code" is "UNAUTHENTICATED"
         And the response property "$.message" contains a user friendly text
 
     @quality_on_demand_deleteSession_401.3_invalid_access_token
