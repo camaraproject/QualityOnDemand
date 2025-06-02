@@ -23,6 +23,7 @@
     }
   ],
   "no-trailing-spaces": "on",
+  "new-line-at-eof": ["off", "no"],
   "no-multiple-empty-lines": "on",
   "no-empty-file": "on",
   "no-scenario-outlines-without-examples": "on",
