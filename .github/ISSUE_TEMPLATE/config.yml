@@ -4,5 +4,5 @@ contact_links:
     url: https://github.com/camaraproject/QualityOnDemand/discussions
     about: Please ask and answer questions here.
   - name: 📖 CAMARA API Design Guidelines
-    url: https://github.com/camaraproject/WorkingGroups/blob/main/Commonalities/documentation/API-design-guidelines.md
+    url: https://github.com/camaraproject/Commonalities/blob/main/documentation/CAMARA-API-Design-Guide.md
     about: Please refer to the design guidelines.
