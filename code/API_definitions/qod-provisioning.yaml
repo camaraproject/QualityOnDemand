@@ -185,7 +185,7 @@ paths:
         - QoS Provisioning
       summary: Get the QoS profile assignment information identified by a provisioning record ID
       description: |
-        Querying for details about the QoS profile assignment 
+        Querying for details about the QoS profile assignment
 
         **NOTES:**
         - The access token may be either 2-legged or 3-legged.
