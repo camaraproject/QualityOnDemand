@@ -1,12 +1,12 @@
 openapi: 3.0.3
 info:
-  title: QoD Provisioning API
+  title: QoS Provisioning API
   description: |
-    The Quality-on-Demand (QoD) Provisioning API provides a programmable interface for developers to request the association of a specific QoS profile with a device, indefinitely.
+    The Quality of Service (QoS) Provisioning API provides a programmable interface for developers to request the assignment of a specific QoS profile with a device, indefinitely.
 
-    The association resulting from the QoD provisioning request is represented by a QoD provisioning record (or QoD provisioning for short) that includes information about the date of provisioning, the QoS profile, the provisioning status, etc., as well as a provisioningId that uniquely identifies this record for later use.
+    The association resulting from the QoS provisioning request is represented by a QoS provisioning record (or QoS provisioning for short) that includes information about the date of provisioning, the QoS profile assigned to a device, the provisioning status, etc., as well as a `provisioningId` that uniquely identifies this record for later use.
 
-    Additionally, this API configures the network to apply the requested QoS profile to a specified device whenever the device is connected to the network, until the provisioning is revoked.
+    Additionally, this API configures the network to apply the requested QoS profile to a specified device whenever the device is connected to the network, until the assignment is revoked.
 
     # Relevant terms and definitions
 
@@ -14,7 +14,7 @@ info:
     Latency, throughput or priority requirements of the application mapped to relevant QoS profile values. The set of QoS Profiles that a network operator is offering may be retrieved via the `qos-profiles` API (cf. https://github.com/camaraproject/QualityOnDemand/) or will be agreed during the onboarding with the API service provider.
 
     * **Identifier for the device**:
-    At least one identifier for the device out of four options: IPv4 address, IPv6 address, Phone number, or Network Access Identifier assigned by the network operator for the device, at the request time. After the provisioning request is accepted, the device may get different IP addresses, but the provisioning will still apply to the device that was identified during the request process. Note: Network Access Identifier is defined for future use and will not be supported with this version of the API.
+    At least one identifier for the device out of four options: IPv4 address, IPv6 address, Phone number, or Network Access Identifier assigned by the network operator for the device, at the request time. After the QoS provisioning request is accepted, the device may get different IP addresses, but the assignment will still apply to the device that was identified during the request process. Note: Network Access Identifier is defined for future use and will not be supported with this version of the API.
 
     * **Notification URL and token**:
     API consumers may provide a callback URL (`sink`) on which notifications about all status change events (eg. provisioning termination) can be received from the API provider. This is an optional parameter. The notification will be sent as a CloudEvent compliant message. If `sink` is included, it is RECOMMENDED for the client to provide as well the `sinkCredential` property to protect the notification endpoint.
@@ -22,10 +22,10 @@ info:
     # Resources and Operations overview
     The API defines four operations:
 
-    - An operation to set up a new QoD provisioning for a given device.
-    - An operation to get the information about a specific QoD provisioning, identified by its `provisioningId`.
-    - An operation to get the QoD provisioning for a given device.
-    - An operation to revoke a QoD provisioning, identified by its `provisioningId`.
+    - An operation to assign a QoS profile for a given device indefinitely.
+    - An operation to get the information about a specific QoS provisioning record, identified by its `provisioningId`.
+    - An operation to get the details of a QoS provisioning record for a given device.
+    - An operation to revoke the assignment of a QoS profile to a given device, identified by the `provisioningId`.
 
     # Authorization and authentication
 
@@ -51,7 +51,7 @@ info:
 
     # Multi-SIM scenario handling
 
-    In multi-SIM scenarios where more than one mobile device is associated with a phone number (e.g. a smartphone with an associated smartwatch), it might not be possible to uniquely identify the device to which the QoD provisioning should apply from that phone number. If the phone number is used as the device identifier when provisioning in a multi-SIM scenario, the API may respond with an error, apply the provisioning to all devices in the multi-SIM group, or apply the provisioning to a single device in the multi-SIM group which may not be the intended device.
+    In multi-SIM scenarios where more than one mobile device is associated with a phone number (e.g. a smartphone with an associated smartwatch), it might not be possible to uniquely identify the device to which the QoS profile should apply from that phone number. If the phone number is used as the device identifier when provisioning a QoS profile in a multi-SIM scenario, the API may respond with an error, apply the QoS profile to all devices in the multi-SIM group, or apply the QoS profile to a single device in the multi-SIM group which may not be the intended device.
 
     Possible solutions in such a scenario include:
     - Using the authorisation code flow to obtain an access token, which will automatically identify the intended device
@@ -69,44 +69,43 @@ externalDocs:
   url: https://github.com/camaraproject/QualityOnDemand
 
 servers:
-  - url: "{apiRoot}/qod-provisioning/vwip"
+  - url: "{apiRoot}/qos-provisioning/vwip"
     variables:
       apiRoot:
         default: http://localhost:9091
         description: API root, defined by the service provider, e.g. `api.example.com` or `api.example.com/somepath`
 tags:
-  - name: QoD Provisioning
-    description: Manage the permanent provisioning of QoD
+  - name: QoS Provisioning
+    description: Manage the permanent assignment of a QoS profile to a device
 
 paths:
-  /device-qos:
+  /qos-assignments:
     post:
       tags:
-        - QoD Provisioning
-      summary: Triggers a new provisioning of QoS for a device
+        - QoS Provisioning
+      summary: Triggers the provisioning process for the assignment of a QoS profile to a device
       description: |
-        Triggers the provisioning in the operator's environment to associate a given QoS profile with a given device.
+        Initiates the assignment of a specific QoS profile to a given device in the operator's environment.
 
+        - If the QoS profile assignment is completed synchronously, the response will be 201 with `status` = `AVAILABLE`.
+        - If the QoS profile assignment request is accepted but not yet completed, the response will be 201 with `status` = `REQUESTED`.
+        - If the operator determines synchronously that the QoS profile assignment request cannot be fulfilled, the response will be 201 with `status` = `UNAVAILABLE`.
 
-        - If the provisioning is completed synchronously, the response will be 201 with `status` = `AVAILABLE`.
-        - If the provisioning request is accepted but not yet completed, the response will be 201 with `status` = `REQUESTED`.
-        - If the operator determines synchronously that the provisioning request cannot be fulfilled, the response will be 201 with `status` = `UNAVAILABLE`.
-
-        - If the request includes  the `sink` and `sinkCredential` properties, the client will receive a `status-changed` event with the outcome of the process. The event will be sent also for synchronous operations.
+        - If the request includes the `sink` and `sinkCredential` properties, the client will receive a `status-changed` event with the outcome of the process. The event will be sent also for synchronous operations.
 
         **NOTES:**
-        - When the provisioning status becomes `UNAVAILABLE`, the QoD provisioning resource is not immediately released, but will get deleted automatically, at earliest 360 seconds after.
+        - When the provisioning status becomes `UNAVAILABLE`, the QoS profile assignment is not immediately released, but will get deleted automatically, at earliest 360 seconds after.
 
-        This behavior allows API consumers which are not receiving notification events but are polling, to get the provisioning status information. Before a client can attempt to create a new QoD provisioning for the same device, they must release the provisioning resources with an explicit `delete` operation if not yet automatically deleted.
+        This behavior allows API consumers which are not receiving notification events but are polling, to get the QoS profile assignment status information. Before a client can attempt to create a new QoS profile assignment for the same device, they must release the previous provisioning resources with an explicit `delete` operation if not yet automatically deleted.
         - The access token may be either 2-legged or 3-legged. See "Identifying the device from the access token" for further information
           - When the API is invoked using a two-legged access token, the subject will be identified from the optional `device` object, which therefore MUST be provided.
           - When a three-legged access token is used however, this optional identifier MUST NOT be provided, as the subject will be uniquely identified from the access token.
 
-      operationId: triggerProvisioning
+      operationId: triggerQosProvisioning
       parameters:
         - $ref: "#/components/parameters/x-correlator"
       requestBody:
-        description: Parameters to trigger a new provisioning
+        description: Parameters to assign a QoS profile to a device
         content:
           application/json:
             schema:
@@ -119,7 +118,7 @@ paths:
               summary: Provisioning notifications callback
               description: |
                 Important: this endpoint is to be implemented by the API consumer.
-                The QoD server will call this endpoint whenever any QoD provisioning change related event occurs.
+                The QoS server will call this endpoint whenever any QoS provisioning change related event occurs.
                 Currently only `PROVISIONING_STATUS_CHANGED` event is defined.
               operationId: postProvisioningNotification
               parameters:
@@ -178,21 +177,21 @@ paths:
           $ref: "#/components/responses/Generic429"
       security:
         - openId:
-            - "qod-provisioning:device-qos:create"
+            - "qos-provisioning:device-qos:create"
 
-  /device-qos/{provisioningId}:
+  /qos-assignments/{provisioningId}:
     get:
       tags:
-        - QoD Provisioning
-      summary: Get QoD provisioning information
+        - QoS Provisioning
+      summary: Get the QoS profile assignment information identified by a provisioning record ID
       description: |
-        Querying for QoD provisioning resource information details
+        Querying for details about the QoS profile assignment 
 
         **NOTES:**
         - The access token may be either 2-legged or 3-legged.
-        - If a 3-legged access token is used, the subject associated with the QoD provisioning must also be associated with the access token.
-        - The QoD provisioning must have been created by the same API consumer given in the access token.
-      operationId: getProvisioningById
+        - If a 3-legged access token is used, the subject associated with the QoS profile assignment must also be associated with the access token.
+        - The QoS profile assignment must have been created by the same API consumer given in the access token.
+      operationId: getQosProvisioningById
       parameters:
         - $ref: "#/components/parameters/provisioningId"
         - $ref: "#/components/parameters/x-correlator"
@@ -225,15 +224,14 @@ paths:
           $ref: "#/components/responses/Generic429"
       security:
         - openId:
-            - "qod-provisioning:device-qos:read"
+            - "qos-provisioning:device-qos:read"
 
     delete:
       tags:
-        - QoD Provisioning
-      summary: Revokes a QoD provisioning
+        - QoS Provisioning
+      summary: Revokes a QoS profile assignment identified by a provisioning record ID
       description: |
-        Revokes the association of a QoS profile with the device performed by a previous provisioning.
-
+        Revokes the assignment of a QoS profile to a device performed by a previous provisioning operation.
 
         If the notification callback is provided and the provisioning status was `AVAILABLE`, when the process is completed, the API consumer will receive in addition to the response a `PROVISIONING_STATUS_CHANGED` event with
         - `status` as `UNAVAILABLE` and
@@ -242,9 +240,9 @@ paths:
 
         **NOTES:**
         - The access token may be either 2-legged or 3-legged.
-        - If a 3-legged access token is used, the subject associated with the QoD provisioning must also be associated with the access token.
-        - The QoD provisioning must have been created by the same API consumer given in the access token.
-      operationId: revokeProvisioning
+        - If a 3-legged access token is used, the subject associated with the QoS profile assignment must also be associated with the access token.
+        - The QoS profile assignment must have been created by the same API consumer given in the access token.
+      operationId: revokeQosProvisioning
       parameters:
         - $ref: "#/components/parameters/provisioningId"
         - $ref: "#/components/parameters/x-correlator"
@@ -275,29 +273,29 @@ paths:
           $ref: "#/components/responses/Generic429"
       security:
         - openId:
-            - "qod-provisioning:device-qos:delete"
+            - "qos-provisioning:device-qos:delete"
 
-  /retrieve-device-qos:
+  /retrieve-qos-assignment:
     post:
       tags:
-        - QoD Provisioning
-      summary: Gets the QoD provisioning for a device
+        - QoS Provisioning
+      summary: Returns the provisioning record details of the QoS profile assignment for a device
       description: |
-        Retrieves the QoD provisioning for a device.
+        Returns the details of the provisioning record for the assignment of a QoS profile to a device, if any.
 
         **NOTES:**
         - The access token may be either 2-legged or 3-legged. See "Identifying the device from the access token" for further information
           - When the API is invoked using a two-legged access token, the subject will be identified from the optional `device` object, which therefore MUST be provided.
           - When a three-legged access token is used however, this optional identifier MUST NOT be provided, as the subject will be uniquely identified from the access token.
-        - The QoD provisioning must have been created by the same API consumer given in the access token.
-        - If no provisioning is found for the device, an error response 404 is returned with code "NOT_FOUND".
+        - The QoS profile assignment must have been created by the same API consumer given in the access token.
+        - If no QoS profile assignment is found for the device, an error response 404 is returned with code "NOT_FOUND".
         - This call uses the POST method instead of GET to comply with the [CAMARA Commonalities guidelines](https://github.com/camaraproject/Commonalities/blob/r2.3/documentation/API-design-guidelines.md#post-or-get-for-transferring-sensitive-or-complex-data) for sending sensitive or complex data in API calls. Since the device field may contain personally identifiable information, it should not be sent via GET.
 
-      operationId: retrieveProvisioningByDevice
+      operationId: getQosProvisioningByDevice
       parameters:
         - $ref: "#/components/parameters/x-correlator"
       requestBody:
-        description: Parameters to retrieve a provisioning by device
+        description: Parameters to retrieve a provisioning record by device
         content:
           application/json:
             schema:
@@ -305,7 +303,7 @@ paths:
         required: true
       responses:
         "200":
-          description: Returns information about the QoD provisioning for the device.
+          description: Returns information about the QoS profile assignment for the device.
 
           headers:
             x-correlator:
@@ -333,7 +331,7 @@ paths:
           $ref: "#/components/responses/Generic429"
       security:
         - openId:
-            - "qod-provisioning:device-qos:read-by-device"
+            - "qos-provisioning:device-qos:read-by-device"
 
 components:
   securitySchemes:
@@ -351,7 +349,7 @@ components:
     provisioningId:
       name: provisioningId
       in: path
-      description: Provisioning ID that was obtained from the createProvision operation
+      description: Identifier of the provisioning record for the QoS profile assignment, that was created by the `triggerQosProvisioning` operation
       required: true
       schema:
         $ref: "#/components/schemas/ProvisioningId"
@@ -375,12 +373,12 @@ components:
 
   schemas:
     ProvisioningId:
-      description: Provisioning Identifier in UUID format
+      description: Identifier of the provisioning record for the QoS profile assignment, that was created by the `triggerQosProvisioning` operation
       type: string
       format: uuid
 
     BaseProvisioningInfo:
-      description: Common attributes of a QoD provisioning
+      description: Common attributes of the provisioning record for a QoS profile assignment
       type: object
       properties:
         device:
@@ -399,9 +397,9 @@ components:
 
     ProvisioningInfo:
       description: |
-        Provisioning related information returned in responses.
-        Optional device object only to be returned if provided in triggerProvisioning. If more than one type of device identifier was provided, only one identifier will be returned (at implementation choice and with the original value provided in triggerProvisioning).
-        Please note that IP addresses of devices can change and get reused, so the original values may no longer identify the same device. They identified the device at the time the QoD provisioning was triggered.
+        Information about a QoS profile assignment returned in responses.
+        Optional device object only to be returned if provided in `triggerQosProvisioning`. If more than one type of device identifier was provided, only one identifier will be returned (at implementation choice and with the original value provided in assignQosProfile).
+        Please note that IP addresses of devices can change and get reused, so the original values may no longer identify the same device. They identified the device at the time the QoS profile assignment was triggered.
 
       allOf:
         - $ref: "#/components/schemas/BaseProvisioningInfo"
@@ -410,7 +408,7 @@ components:
             provisioningId:
               $ref: "#/components/schemas/ProvisioningId"
             startedAt:
-              description: Date and time when the provisioning became "AVAILABLE". Not to be returned when `status` is "REQUESTED". Format must follow RFC 3339 and must indicate time zone (UTC or local).
+              description: Date and time when the QoS profile assignment became "AVAILABLE". Not to be returned when `status` is "REQUESTED". Format must follow RFC 3339 and must indicate time zone (UTC or local).
               type: string
               format: date-time
               example: "2024-06-01T12:00:00Z"
@@ -423,12 +421,12 @@ components:
             - status
 
     TriggerProvisioning:
-      description: Attributes to request a new QoD provisioning
+      description: Attributes to request a new QoS profile assignment
       allOf:
         - $ref: "#/components/schemas/BaseProvisioningInfo"
 
     RetrieveProvisioningByDevice:
-      description: Attributes to look for QoD provisioning
+      description: Attributes to look for a QoS profile assignment
       type: object
       properties:
         device:
@@ -579,7 +577,7 @@ components:
           description: The type of the event.
           type: string
           enum:
-            - "org.camaraproject.qod-provisioning.v0.status-changed"
+            - "org.camaraproject.qos-provisioning.v0.status-changed"
         specversion:
           description: Version of the specification to which this event conforms (must be 1.0 if it conforms to cloudevents 1.0.2 version)
           type: string
@@ -601,10 +599,10 @@ components:
       discriminator:
         propertyName: "type"
         mapping:
-          org.camaraproject.qod-provisioning.v0.status-changed: "#/components/schemas/EventStatusChanged"
+          org.camaraproject.qos-provisioning.v0.status-changed: "#/components/schemas/EventStatusChanged"
 
     EventStatusChanged:
-      description: Event to notify a QoD provisioning status change
+      description: Event to notify a QoS provisioning status change
       allOf:
         - $ref: "#/components/schemas/CloudEvent"
         - type: object
@@ -628,8 +626,8 @@ components:
     StatusInfo:
       description: |
         Reason for the new `status`:
-        * `NETWORK_TERMINATED` - Network terminated the QoD provisioning
-        * `DELETE_REQUESTED`- User requested the deletion of the QoD provisioning
+        * `NETWORK_TERMINATED` - Network terminated the QoS profile assignment
+        * `DELETE_REQUESTED`- User requested the deletion of the QoS profile assignment
 
       type: string
       enum:
@@ -713,10 +711,10 @@ components:
 
     Status:
       description: |
-        The current status of the requested QoD provisioning. The status can be one of the following:
-        * `REQUESTED` - QoD provisioning has been requested but is still being processed.
-        * `AVAILABLE` - The requested QoS profile has been provisioned to the device, and is active.
-        * `UNAVAILABLE` - The QoD provisioning request has been processed but is not active. `statusInfo` may provide additional information about the reason for the unavailability.
+        The current status of the requested QoS profile assignment. The status can be one of the following:
+        * `REQUESTED` - QoS profile assignment has been requested but is still being processed.
+        * `AVAILABLE` - The requested QoS profile has been assigned to the device, and is active.
+        * `UNAVAILABLE` - The QoS profile assignment request has been processed but is not active. `statusInfo` may provide additional information about the reason for the unavailability.
       enum:
         - REQUESTED
         - AVAILABLE
@@ -724,9 +722,9 @@ components:
 
     StatusChanged:
       description: |
-        The current status of a requested or previously available QoD provisioning. Applicable values in the event are:
-        *  `AVAILABLE` - The requested QoS profile has been provisioned to the device, and is active.
-        *  `UNAVAILABLE` - A requested or previously available QoD provisioning is now unavailable. `statusInfo` may provide additional information about the reason for the unavailability.
+        The current status of a requested or previously available QoS profile assignment. Applicable values in the event are:
+        *  `AVAILABLE` - The requested QoS profile has been assigned to the device, and is active.
+        *  `UNAVAILABLE` - A requested or previously available QoS profile assignment is now unavailable. `statusInfo` may provide additional information about the reason for the unavailability.
       type: string
       enum:
         - AVAILABLE
@@ -960,7 +958,7 @@ components:
                       - CONFLICT
           examples:
             PROVISIONING_409_CONFLICT:
-              description: The requested provisioning conflicts with an existing one
+              description: The requested provisioning process conflicts with an existing one
               value:
                 status: 409
                 code: CONFLICT
@@ -1081,8 +1079,8 @@ components:
 
   examples:
     PROVISIONING_AVAILABLE:
-      summary: QoD provisioning status is available
-      description: The provisioning has become available
+      summary: QoS provisioning status is available
+      description: The QoS profile assignment has become available
       value:
         device:
           phoneNumber: "+123456789"
@@ -1098,8 +1096,8 @@ components:
         status: AVAILABLE
 
     PROVISIONING_UNAVAILABLE:
-      summary: QoD provisioning status is unavailable
-      description: The provisioning could not be created or is not active anymore
+      summary: QoS provisioning status is unavailable
+      description: The QoS profile assignment could not be created or is not active anymore
       value:
         duration: 86400
         device:
@@ -1119,7 +1117,7 @@ components:
         statusInfo: NETWORK_TERMINATED
 
     PROVISIONING_AVAILABLE_WITHOUT_DEVICE:
-      summary: QoD provisioning status is available but no device information is provided
+      summary: QoS provisioning status is available but no device information is provided
       description: Device is optional in responses and must not be provided if it was not provided in the request
       value:
         qosProfile: QOS_M
@@ -1135,12 +1133,12 @@ components:
 
     PROVISIONING_STATUS_CHANGED_EXAMPLE:
       description: Provisioning status changed
-      summary: Cloud event example for QoD provisioning status change to UNAVAILABLE due to NETWORK_TERMINATED
+      summary: Cloud event example for QoS provisioning status change to UNAVAILABLE due to NETWORK_TERMINATED
       value:
         id: 83a0d986-0866-4f38-b8c0-fc65bfcda452
-        source: https://api.example.com/qod-provisioning/v0.2/device-qos/123e4567-e89b-12d3-a456-426614174000
+        source: https://api.example.com/qos-provisioning/v0.2/device-qos/123e4567-e89b-12d3-a456-426614174000
         specversion: "1.0"
-        type: org.camaraproject.qod-provisioning.v0.status-changed
+        type: org.camaraproject.qos-provisioning.v0.status-changed
         time: "2021-12-12T00:00:00Z"
         data:
           provisioningId: 123e4567-e89b-12d3-a456-426614174000
