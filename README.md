@@ -11,6 +11,8 @@
 
 Incubating API Repository to evolve and maintain the definitions and documentation of QualityOnDemand Service API(s) within the Sub Project [Quality On Demand](https://lf-camaraproject.atlassian.net/wiki/x/hAClB)
 
+* API Repository [wiki page](https://lf-camaraproject.atlassian.net/wiki/x/XCPe)
+
 ## Scope
 
 * Service APIs for “Quality on Demand” (see APIBacklog.md)
