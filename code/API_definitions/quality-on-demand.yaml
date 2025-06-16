@@ -502,11 +502,13 @@ components:
         Note that the device object is defined as optional and will only to be returned if provided in createSession. If more than one type of device identifier was provided, only one identifier will be returned (at implementation choice and with the original value provided in createSession).
         Please note that IP addresses of devices can change and get reused, so the original values may no longer identify the same device. They identified the device at the time of session creation.
       allOf:
-        - $ref: "#/components/schemas/BaseSessionInfo"
         - type: object
           properties:
             device:
               $ref: "#/components/schemas/DeviceResponse"
+        - $ref: "#/components/schemas/BaseSessionInfo"
+        - type: object
+          properties:
             sessionId:
               $ref: "#/components/schemas/SessionId"
             duration:
@@ -546,11 +548,13 @@ components:
     CreateSession:
       description: Attributes required to create a session
       allOf:
-        - $ref: "#/components/schemas/BaseSessionInfo"
         - type: object
           properties:
             device:
               $ref: "#/components/schemas/Device"
+        - $ref: "#/components/schemas/BaseSessionInfo"
+        - type: object
+          properties:
             duration:
               description: |
                 Requested session duration in seconds. Value may be explicitly limited for the QoS profile, as specified in the Qos Profile (see qos-profile API). Implementations can grant the requested session duration or set a different duration, based on network policies or conditions.
