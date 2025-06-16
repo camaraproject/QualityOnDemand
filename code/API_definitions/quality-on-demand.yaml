@@ -1464,8 +1464,6 @@ components:
         sink: https://application-server.com/notifications
         sessionId: 3fa85f64-5717-4562-b3fc-2c963f66afa6
         duration: 3600
-        startedAt: "2024-06-01T12:00:00Z"
-        expiresAt: "2024-06-01T13:00:00Z"
         qosStatus: REQUESTED
 
     SESSION_CREATION_EXAMPLE_WITH_DEVICE_DISAMBIGUATION:
@@ -1480,8 +1478,6 @@ components:
         sink: https://application-server.com/notifications
         sessionId: 3fa85f64-5717-4562-b3fc-2c963f66afa6
         duration: 3600
-        startedAt: "2024-06-01T12:00:00Z"
-        expiresAt: "2024-06-01T13:00:00Z"
         qosStatus: REQUESTED
 
     SESSION_AVAILABLE_EXAMPLE:
