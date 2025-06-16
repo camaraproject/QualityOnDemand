@@ -1455,7 +1455,7 @@ components:
 
   examples:
     SESSION_CREATION_EXAMPLE:
-      summary: QoS session has been created 
+      summary: Successful QoS session creation using a 3-legged access token or single device identifier
       description: Example response after a new QoS session has been created using a 3-legged access token or single device identifier
       value:
         applicationServer:
@@ -1469,7 +1469,7 @@ components:
         qosStatus: REQUESTED
 
     SESSION_CREATION_EXAMPLE_WITH_DEVICE_DISAMBIGUATION:
-      summary: QoS session has been created
+      summary: Successful QoS session creation using multiple device identifiers
       description: Example response after a new QoS session has been created using multiple device identifiers
       value:
         device:
