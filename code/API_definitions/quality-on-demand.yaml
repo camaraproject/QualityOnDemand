@@ -203,6 +203,9 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/SessionInfo"
+              examples:
+                Successful Session Creation:
+                  $ref: "#/components/examples/SESSION_CREATION_EXAMPLE"
         "400":
           $ref: "#/components/responses/CreateSessionBadRequest400"
         "401":
@@ -1449,6 +1452,22 @@ components:
                 message: Rate limit reached.
 
   examples:
+    SESSION_CREATION_EXAMPLE:
+      summary: QoS session has been created
+      description: Example response after a new QoS session has been created
+      value:
+        device:
+          phoneNumber: "+123456789"
+        applicationServer:
+          ipv4Address: 198.51.100.0/24
+        qosProfile: QOS_L
+        sink: https://application-server.com/notifications
+        sessionId: 3fa85f64-5717-4562-b3fc-2c963f66afa6
+        duration: 3600
+        startedAt: "2024-06-01T12:00:00Z"
+        expiresAt: "2024-06-01T13:00:00Z"
+        qosStatus: REQUESTED
+
     SESSION_AVAILABLE_EXAMPLE:
       summary: QoS session status is available
       description: QoS session info when status is available
