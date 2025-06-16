@@ -471,8 +471,6 @@ components:
       description: Common attributes of a QoD session
       type: object
       properties:
-        device:
-          $ref: "#/components/schemas/Device"
         applicationServer:
           $ref: "#/components/schemas/ApplicationServer"
         devicePorts:
@@ -507,6 +505,8 @@ components:
         - $ref: "#/components/schemas/BaseSessionInfo"
         - type: object
           properties:
+            device:
+              $ref: "#/components/schemas/DeviceResponse"
             sessionId:
               $ref: "#/components/schemas/SessionId"
             duration:
@@ -549,6 +549,8 @@ components:
         - $ref: "#/components/schemas/BaseSessionInfo"
         - type: object
           properties:
+            device:
+              $ref: "#/components/schemas/Device"
             duration:
               description: |
                 Requested session duration in seconds. Value may be explicitly limited for the QoS profile, as specified in the Qos Profile (see qos-profile API). Implementations can grant the requested session duration or set a different duration, based on network policies or conditions.
@@ -833,6 +835,16 @@ components:
         ipv6Address:
           $ref: "#/components/schemas/DeviceIpv6Address"
       minProperties: 1
+
+    DeviceResponse:
+      description: |
+        An identifier for the end-user equipment able to connect to the network that the response refers to. This parameter is only returned when the API consumer includes the `device` parameter in their request (i.e. they are using a two-legged access token), and is relevant when more than one device identifier is specified, as only one of those device identifiers is allowed in the response.
+
+        If the API consumer provides more than one device identifier in their request, the API provider must return a single identifier which is the one they are using to fulfil the request, even if the identifiers do not match the same device. API provider does not perform any logic to validate/correlate that the indicated device identifiers match the same device. No error should be returned if the identifiers are otherwise valid to prevent API consumers correlating different identifiers with a given end user.
+
+      allOf:
+        - $ref: "#/components/schemas/Device"
+        - maxProperties: 1
 
     ApplicationServer:
       description: |
@@ -1306,18 +1318,11 @@ components:
                       - 422
                   code:
                     enum:
-                      - IDENTIFIER_MISMATCH
                       - SERVICE_NOT_APPLICABLE
                       - MISSING_IDENTIFIER
                       - UNSUPPORTED_IDENTIFIER
                       - UNNECESSARY_IDENTIFIER
           examples:
-            GENERIC_422_IDENTIFIER_MISMATCH:
-              description: Inconsistency between identifiers not pointing to the same device
-              value:
-                status: 422
-                code: IDENTIFIER_MISMATCH
-                message: Provided identifiers are not consistent.
             GENERIC_422_SERVICE_NOT_APPLICABLE:
               description: Service not applicable for the provided identifier
               value:
