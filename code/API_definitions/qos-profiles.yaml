@@ -472,7 +472,7 @@ components:
               allOf:
                 - $ref: "#/components/schemas/DeviceResponse"
                 - example: {"phoneNumber": "+123456789"}
-        - $ref: "#/components/schemas/QosProfile
+        - $ref: "#/components/schemas/QosProfile"
 
     Device:
       description: |
