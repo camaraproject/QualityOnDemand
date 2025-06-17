@@ -823,11 +823,11 @@ components:
           description: "QoS profile for video streaming"
           status: "ACTIVE"
           targetMinUpstreamRate:
-           value: 100
-           unit: "kbps"
-         targetMinDownstreamRate:
-           value: 100,
-           unit: "kbps"
+            value: 100
+            unit: "kbps"
+          targetMinDownstreamRate:
+            value: 100,
+            unit: "kbps"
           minDuration:
             value: 1
             unit: "Days"
@@ -853,11 +853,11 @@ components:
           description: "QoS profile for video streaming"
           status: "ACTIVE"
           targetMinUpstreamRate:
-           value: 100
-           unit: "kbps"
-         targetMinDownstreamRate:
-           value: 100,
-           unit: "kbps"
+            value: 100
+            unit: "kbps"
+          targetMinDownstreamRate:
+            value: 100,
+            unit: "kbps"
           minDuration:
             value: 1
             unit: "Days"
