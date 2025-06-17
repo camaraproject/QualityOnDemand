@@ -1482,10 +1482,6 @@ components:
       description: QoS session info when status is available
       value:
         duration: 3600
-        device:
-          ipv4Address:
-            publicAddress: 203.0.113.0
-            publicPort: 59765
         applicationServer:
           ipv4Address: 198.51.100.0/24
         qosProfile: QOS_L
@@ -1500,10 +1496,6 @@ components:
       description: QoS session info when status is unavailable due to network termination
       value:
         duration: 2428
-        device:
-          ipv4Address:
-            publicAddress: 203.0.113.0
-            publicPort: 59765
         applicationServer:
           ipv4Address: 198.51.100.0/24
         qosProfile: QOS_L
