@@ -214,8 +214,6 @@ paths:
               schema:
                 $ref: "#/components/schemas/ProvisioningInfo"
               examples:
-                PROVISIONING_AVAILABLE:
-                  $ref: "#/components/examples/PROVISIONING_AVAILABLE"
                 PROVISIONING_UNAVAILABLE:
                   $ref: "#/components/examples/PROVISIONING_UNAVAILABLE"
                 PROVISIONING_AVAILABLE_WITHOUT_DEVICE:
@@ -324,6 +322,8 @@ paths:
               examples:
                 PROVISIONING_AVAILABLE:
                   $ref: "#/components/examples/PROVISIONING_AVAILABLE"
+                PROVISIONING_UNAVAILABLE:
+                  $ref: "#/components/examples/PROVISIONING_UNAVAILABLE"
                 PROVISIONING_AVAILABLE_WITHOUT_DEVICE:
                   $ref: "#/components/examples/PROVISIONING_AVAILABLE_WITHOUT_DEVICE"
         "400":
@@ -1120,7 +1120,7 @@ components:
 
     PROVISIONING_AVAILABLE:
       summary: QoD provisioning status is available
-      description: The provisioning has become available
+      description: The provisioning has become available and device disambiguation is required
       value:
         device:
           phoneNumber: "+123456789"
@@ -1152,7 +1152,7 @@ components:
         statusInfo: NETWORK_TERMINATED
 
     PROVISIONING_AVAILABLE_WITHOUT_DEVICE:
-      summary: QoD provisioning status is available but no device information is provided
+      summary: QoD provisioning status is available
       description: Device is optional in responses and must not be provided if it was not provided in the request
       value:
         qosProfile: QOS_M
