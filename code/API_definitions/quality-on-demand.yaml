@@ -422,6 +422,8 @@ paths:
               examples:
                 RETRIEVE_SESSIONS_ONE_ITEM:
                   $ref: "#/components/examples/RETRIEVE_SESSIONS_EXAMPLE"
+                RETRIEVE_SESSIONS_ONE_ITEM_WITH_DEVICE_DISAMBIGUATION_REQUIRED:
+                  $ref: "#/components/examples/RETRIEVE_SESSIONS_EXAMPLE_WITH_DEVICE_DISAMBIGUATION"
                 RETRIEVE_SESSIONS_NO_ITEMS:
                   $ref: "#/components/examples/RETRIEVE_SESSIONS_EMPTY_EXAMPLE"
         "400":
@@ -1457,7 +1459,7 @@ components:
 
   examples:
     SESSION_CREATION_EXAMPLE:
-      summary: Successful Session Creation
+      summary: Successful session creation
       description: Example response after a new QoS session has been created using a 3-legged access token or single device identifier
       value:
         applicationServer:
@@ -1469,7 +1471,7 @@ components:
         qosStatus: REQUESTED
 
     SESSION_CREATION_EXAMPLE_WITH_DEVICE_DISAMBIGUATION:
-      summary: Successful Session Creation With Device Disambiguation
+      summary: Successful session creation with device disambiguation
       description: Example response after a new QoS session has been created using multiple device identifiers
       value:
         device:
@@ -1534,17 +1536,31 @@ components:
           statusInfo: 'DURATION_EXPIRED'
 
     RETRIEVE_SESSIONS_EXAMPLE:
-      summary: List of QoS sessions for the device
+      summary: List of QoS sessions for a specified device
       description: A single QoS session for the device is available
       value:
-        - duration: 3600
-          device:
+        - applicationServer:
+            ipv4Address: 0.0.0.0/0
+          qosProfile: QOS_L
+          sink: https://application-server.com/notifications
+          sessionId: 3fa85f64-5717-4562-b3fc-2c963f66afa6
+          duration: 3600
+          startedAt: "2024-06-01T12:00:00Z"
+          expiresAt: "2024-06-01T13:00:00Z"
+          qosStatus: AVAILABLE
+
+    RETRIEVE_SESSIONS_EXAMPLE_WITH_DEVICE_DISAMBIGUATION:
+      summary: List of QoS sessions with device disambiguation
+      description: A single QoS session for the device is available but the device was specified using multiple device identifiers, and hence disambiguation is required
+      value:
+        - device:
             phoneNumber: "+123456789"
           applicationServer:
             ipv4Address: 0.0.0.0/0
           qosProfile: QOS_L
           sink: https://application-server.com/notifications
           sessionId: 3fa85f64-5717-4562-b3fc-2c963f66afa6
+          duration: 3600
           startedAt: "2024-06-01T12:00:00Z"
           expiresAt: "2024-06-01T13:00:00Z"
           qosStatus: AVAILABLE
