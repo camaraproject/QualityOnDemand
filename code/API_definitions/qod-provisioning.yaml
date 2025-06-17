@@ -1107,7 +1107,7 @@ components:
         qosProfile: QOS_L
         sink: https://application-server.com/callback
         provisioningId: 3fa85f64-5717-4562-b3fc-2c963f66afa6
-        qosStatus: REQUESTED
+        status: REQUESTED
 
     PROVISIONING_CREATION_EXAMPLE_WITH_DEVICE_DISAMBIGUATION:
       summary: Successful provisioning creation with device disambiguation
@@ -1118,7 +1118,7 @@ components:
         qosProfile: QOS_L
         sink: https://application-server.com/callback
         provisioningId: 3fa85f64-5717-4562-b3fc-2c963f66afa6
-        qosStatus: REQUESTED
+        status: REQUESTED
 
     PROVISIONING_AVAILABLE:
       summary: QoD provisioning status is available with device disambiguation
