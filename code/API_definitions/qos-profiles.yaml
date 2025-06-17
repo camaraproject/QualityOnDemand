@@ -111,6 +111,11 @@ paths:
                 type: array
                 items:
                   $ref: "#/components/schemas/QosProfileDeviceResponse"
+              examples:
+                List of QoS Profiles:
+                  $ref: "#/components/examples/LIST_OF_QOS_PROFILES"
+                List of QoS Profiles With Device Disambiguation:
+                  $ref: "#/components/examples/LIST_OF_QOS_PROFILES_WITH_DEVICE_DISAMBIGUATION"
         "400":
           $ref: "#/components/responses/Generic400"
         "401":
@@ -808,3 +813,63 @@ components:
                 status: 429
                 code: TOO_MANY_REQUESTS
                 message: Rate limit reached.
+
+  examples:
+    LIST_OF_QOS_PROFILES:
+      summary: A list of QoS profiles with a single entry
+      description: Example response when requesting a list of QoS profiles
+      value:
+        - name: "voice"
+          description: "QoS profile for video streaming"
+          status: "ACTIVE"
+          targetMinUpstreamRate:
+           value: 100
+           unit: "kbps"
+         targetMinDownstreamRate:
+           value: 100,
+           unit: "kbps"
+          minDuration:
+            value: 1
+            unit: "Days"
+          maxDuration:
+            value: 10
+            unit: "Days"
+          priority: 10
+          packetDelayBudget:
+            value: 50
+            unit: "Milliseconds"
+          jitter:
+            value: 5
+            unit: "Milliseconds"
+          packetErrorLossRate: 3
+          l4sQueueType: "non-l4s-queue"
+
+    LIST_OF_QOS_PROFILES_WITH_DEVICE_DISAMBIGUATION:
+      summary: A list of QoS profiles with a single entry and device disambiguation
+      description: Example response when requesting a list of QoS profiles with multiple device identifiers provided in the request
+      value:
+        - device:
+            phoneNumber: "+123456789"
+          description: "QoS profile for video streaming"
+          status: "ACTIVE"
+          targetMinUpstreamRate:
+           value: 100
+           unit: "kbps"
+         targetMinDownstreamRate:
+           value: 100,
+           unit: "kbps"
+          minDuration:
+            value: 1
+            unit: "Days"
+          maxDuration:
+            value: 10
+            unit: "Days"
+          priority: 10
+          packetDelayBudget:
+            value: 50
+            unit: "Milliseconds"
+          jitter:
+            value: 5
+            unit: "Milliseconds"
+          packetErrorLossRate: 3
+          l4sQueueType: "non-l4s-queue"
