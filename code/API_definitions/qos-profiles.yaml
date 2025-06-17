@@ -820,7 +820,7 @@ components:
       description: Example response when requesting a list of QoS profiles
       value:
         - name: "voice"
-          description: "QoS profile for video streaming"
+          description: "QoS profile for high-quality interactive voice"
           status: "ACTIVE"
           targetMinUpstreamRate:
             value: 100
@@ -850,7 +850,8 @@ components:
       value:
         - device:
             phoneNumber: "+123456789"
-          description: "QoS profile for video streaming"
+          name: "voice"
+          description: "QoS profile for high-quality interactive voice"
           status: "ACTIVE"
           targetMinUpstreamRate:
             value: 100
