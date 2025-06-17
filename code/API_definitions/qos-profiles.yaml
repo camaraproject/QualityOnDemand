@@ -819,7 +819,7 @@ components:
             value: 100
             unit: "kbps"
           targetMinDownstreamRate:
-            value: 100,
+            value: 100
             unit: "kbps"
           minDuration:
             value: 1
@@ -850,7 +850,7 @@ components:
             value: 100
             unit: "kbps"
           targetMinDownstreamRate:
-            value: 100,
+            value: 100
             unit: "kbps"
           minDuration:
             value: 1
