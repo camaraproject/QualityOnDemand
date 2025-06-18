@@ -16,6 +16,7 @@ Checklist for quality-on-demand v1.0.0 in r2.2
 | 10 | API release numbering convention applied     |   M   |         M         |    M    |    M   | Y    |      |
 | 11 | Change log updated                           |   M   |         M         |    M    |    M   | Y    | [/CHANGELOG.md](/CHANGELOG.md) |
 | 12 | Previous public release was certified        |   O   |         O         |    O    |    M   | Y    |   see (1)   |
+| 13 | API description (for marketing)              |   O   |         O         |    M    |    M   |      | [wiki link](https://lf-camaraproject.atlassian.net/wiki/xxx) |
 
 (1) GSMA certified implementation of previous version by China Unicom, multiple implementations by other operators  (source: https://www.open-gateway.com/operators-map as of 2025-02-25) 
 
