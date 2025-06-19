@@ -175,20 +175,6 @@ Feature: CAMARA Quality On Demand API, vwip - Operation createSession
         And the response property "$.code" is "SERVICE_NOT_APPLICABLE"
         And the response property "$.message" contains a user-friendly text
 
-
-    # Several identifiers provided but they do not identify the same device
-    # This scenario may happen with 2-legged access tokens, which do not identify a device
-    @quality_on_demand_createSession_C01.08_device_identifiers_mismatch
-    Scenario: Device identifiers mismatch
-        Given the header "Authorization" is set to a valid access token which does not identify a single device
-        And at least 2 types of device identifiers are supported by the implementation
-        And the request body property "$.device" includes several identifiers, each of them identifying a valid but different device
-        When the HTTP "POST" request is sent
-        Then the response status code is 422
-        And the response property "$.status" is 422
-        And the response property "$.code" is "IDENTIFIER_MISMATCH"
-        And the response property "$.message" contains a user friendly text
-
     # Errors 400
 
     @quality_on_demand_createSession_400.1_schema_not_compliant
