@@ -1,6 +1,11 @@
 # CAMARA Project - linting ruleset - documentation avaialable here:
 # https://github.com/camaraproject/Commonalities/blob/main/documentation/Linting-rules.md
-# 31.01.2024 - initial version
+# Changelog:
+# - 31.01.2024: Initial version
+# - 19.03.2024: Corrected camara-http-methods rule
+# - 03.12.2024: Corrected camara-path-param-id and camara-discriminator-use to handle null values error in example fields
+# - 09.01.2025: Updated info-contact rule
+
 
 extends: "spectral:oas"
 functions:
@@ -13,7 +18,7 @@ rules:
   #  The severity keyword is optional in rule definition and can be error, warn, info, hint, or off. The default value is warn.
   contact-properties: false
   duplicated-entry-in-enum: true
-  info-contact: true
+  info-contact: false
   info-description: true
   info-license: true
   license-url: true
@@ -81,16 +86,16 @@ rules:
     description: |
       This rule ensures consistent and descriptive naming for path parameters in your OpenAPI specification.
       Please use 'resource_id' instead of just 'id' for your path parameters.
-    given: "$..parameters[?(@.in == 'path')]"
+    given: "$.paths[*][*].parameters[?(@.in == 'path')].name"
     then:
       field: name
       function: pattern
       functionOptions:
-        notMatch: \b(id|Id|ID|iD)\b
+        match: "^(?!.*\\b(id|Id|ID|iD)\\b).*$"
     recommended: true  # Set to true/false to enable/disable this rule
 
   camara-security-no-secrets-in-path-or-query-parameters:
-    message: "Sensitive data found in path: {{error}} Consider avoiding the use of Sesentive data "
+    message: "Sensitive data found in path: {{error}} Consider avoiding the use of sensitive data "
     severity: warn
     description: |
       This rule checks for sensitive data ('MSISDN' and 'IMSI') in API paths and suggests avoiding their use.
@@ -108,7 +113,7 @@ rules:
     then:
       function: pattern
       functionOptions:
-        match: "^(get|put|post|delete|patch|options)$"
+        match: "^(get|put|post|delete|patch|options|parameters)$"
     recommended: true  # Set to true/false to enable/disable this rule
 
   camara-get-no-request-body:
@@ -143,8 +148,8 @@ rules:
     message: "Functionality method description Warning: Each method should have description."
     severity: warn
     description: |
-            This rule checks if each operation (POST, GET, DELETE, PUT, PATCH, OPTIONS) in your API specification has a description.
-            Ensure that you have added a 'summary' field for each operation in your OpenAPI specification.
+      This rule checks if each operation (POST, GET, DELETE, PUT, PATCH, OPTIONS) in your API specification has a description.
+      Ensure that you have added a 'summary' field for each operation in your OpenAPI specification.
     given:
       - "$.paths.*.post"
       - "$.paths.*.get"
@@ -156,7 +161,7 @@ rules:
       field: description
       function: truthy
     recommended: true  # Set to true/false to enable/disable this rule
-    
+
   camara-parameters-descriptions:
     message: "Parameter description is missing or empty: {{error}}"
     severity: warn
@@ -168,7 +173,7 @@ rules:
       field: description
       function: truthy
     recommended: true  # Set to true/false to enable/disable this rule
-    
+
   camara-response-descriptions:
     message: "Parameter description is missing or empty: {{error}}"
     severity: warn
@@ -193,13 +198,13 @@ rules:
       field: description
       function: truthy
     recommended: true  # Set to true/false to enable/disable this rule
-    
+
   camara-operation-summary:
     message: "Operation Summary Warning: Each operation should include a short summary for better understanding."
     severity: warn
     description: |
-            This rule checks if each operation (POST, GET, DELETE, PUT, PATCH, OPTIONS) in your API specification has a meaningful summary.
-            Ensure that you have added a 'summary' field for each operation in your OpenAPI specification.
+      This rule checks if each operation (POST, GET, DELETE, PUT, PATCH, OPTIONS) in your API specification has a meaningful summary.
+      Ensure that you have added a 'summary' field for each operation in your OpenAPI specification.
     given:
       - "$.paths.*.post"
       - "$.paths.*.get"
@@ -216,18 +221,24 @@ rules:
     description: |
       Ensure that API definition YAML files with oneOf or anyOf sections include a discriminator object for serialization, deserialization, and validation.
     severity: hint
-    given: "$..[?(@.oneOf || @.anyOf)]"
+    given: "$.components.schemas[*]"
     then:
-      field: discriminator
-      function: truthy
-      description: "Discriminator object is required when using oneOf or anyOf."
+      - field: oneOf
+        function: truthy
+        message: "Schemas with 'oneOf' should include a 'discriminator' for type identification."
+      - field: anyOf
+        function: truthy
+        message: "Schemas with 'anyOf' should include a 'discriminator' for type identification."
+      - field: discriminator
+        function: truthy
+        message: "A 'discriminator' object is required when using 'oneOf' or 'anyOf'."
     recommended: true  # Set to true/false to enable/disable this rule
 
   camara-operationid-casing-convention:
     message: Operation Id must be in Camel case "{{error}}"
     severity: hint
     description: |
-        This rule checks Operation ids should follow a specific case convention: camel case.
+      This rule checks Operation ids should follow a specific case convention: camel case.
     given: "$.paths.*.*.operationId"
     then:
       function: casing
