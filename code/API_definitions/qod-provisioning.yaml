@@ -374,6 +374,17 @@ components:
         example: "b4333c46-49c0-4f62-80d7-f0ef930f1c46"
 
   schemas:
+  
+  # This is an optional schema item, and is experimental and could be changed or removed in the future
+    BookingId:
+      description: | 
+        ** Note** bookingId is optional and experimental and could be changed or removed in the future.
+        If booking ID is present, provisioning of the device will happen against the booking done via QoSBooking API.
+        If booking ID is present, requested qosProfile must match the qosProfile in the booking.
+        Booking Identifier in UUID format.
+      type: string
+      format: uuid
+
     ProvisioningId:
       description: Provisioning Identifier in UUID format
       type: string
@@ -387,6 +398,8 @@ components:
           $ref: "#/components/schemas/Device"
         qosProfile:
           $ref: "#/components/schemas/QosProfileName"
+        bookingId:
+          $ref: "#/components/schemas/BookingId"    
         sink:
           type: string
           format: uri
