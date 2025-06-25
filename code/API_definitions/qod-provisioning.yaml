@@ -2,7 +2,7 @@ openapi: 3.0.3
 info:
   title: QoS Provisioning API
   description: |
-    The Quality of Service (QoS) Provisioning API provides a programmable interface for developers to request the assignment of a specific QoS profile with a device, indefinitely.
+    The Quality of Service (QoS) Provisioning API provides a programmable interface for developers to request the indefinite assignment of a specified QoS profile to all traffic being sent or received by a specified device.
 
     The association resulting from the QoS provisioning request is represented by a QoS provisioning record (or QoS provisioning for short) that includes information about the date of provisioning, the QoS profile assigned to a device, the provisioning status, etc., as well as a `provisioningId` that uniquely identifies this record for later use.
 
