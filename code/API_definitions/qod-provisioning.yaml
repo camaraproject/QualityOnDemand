@@ -85,7 +85,7 @@ paths:
         - QoS Provisioning
       summary: Triggers the provisioning process for the assignment of a QoS profile to a device
       description: |
-        Initiates the assignment of a specific QoS profile to a given device in the operator's environment.
+        Initiates the assignment of a specific QoS profile to a given device when connected to the operator's network.
 
         - If the QoS profile assignment is completed synchronously, the response will be 201 with `status` = `AVAILABLE`.
         - If the QoS profile assignment request is accepted but not yet completed, the response will be 201 with `status` = `REQUESTED`.
