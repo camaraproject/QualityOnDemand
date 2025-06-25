@@ -627,7 +627,7 @@ components:
       description: |
         Reason for the new `status`:
         * `NETWORK_TERMINATED` - Network terminated the QoS profile assignment
-        * `DELETE_REQUESTED`- User requested the deletion of the QoS profile assignment
+        * `DELETE_REQUESTED` - User requested the deletion of the QoS profile assignment
 
       type: string
       enum:
