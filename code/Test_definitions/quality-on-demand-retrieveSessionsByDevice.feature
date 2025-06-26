@@ -40,7 +40,7 @@ Feature: CAMARA Quality On Demand API, vwip - Operation retrieveSessionsByDevice
         And the response property "$.devicePorts" exists only if provided for createSession and with the same value
         And the response property "$.applicationServerPorts" exists only if provided for createSession and with the same value
         And the response property "$.sink" exists only if provided for createSession and with the same value
-        # sinkCredentials not explicitly mentioned to be returned if present, as this is debatible for security concerns
+        # sinkCredential not explicitly mentioned to be returned if present, as this is debatible for security concerns
         And the response property "$.startedAt" exists only if "$.qosStatus" is "AVAILABLE" and the value is in the past
         And the response property "$.expiresAt" exists only if "$.qosStatus" is not "REQUESTED" and the value is later than "$.startedAt"
         And the response property "$.statusInfo" exists only if "$.qosStatus" is "UNAVAILABLE"
@@ -79,11 +79,11 @@ Feature: CAMARA Quality On Demand API, vwip - Operation retrieveSessionsByDevice
         And the response property "$.message" contains a user friendly text
         
         Examples:
-            | device_identifier          | oas_spec_schema                             |
-            | $.device.phoneNumber       | /components/schemas/PhoneNumber             |
-            | $.device.ipv4Address       | /components/schemas/DeviceIpv4Addr          |
-            | $.device.ipv6Address       | /components/schemas/DeviceIpv6Address       |
-            | $.device.networkIdentifier | /components/schemas/NetworkAccessIdentifier |
+            | device_identifier                | oas_spec_schema                             |
+            | $.device.phoneNumber             | /components/schemas/PhoneNumber             |
+            | $.device.ipv4Address             | /components/schemas/DeviceIpv4Addr          |
+            | $.device.ipv6Address             | /components/schemas/DeviceIpv6Address       |
+            | $.device.networkAccessIdentifier | /components/schemas/NetworkAccessIdentifier |
 
   
     # This scenario may happen e.g. with 2-legged access tokens, which do not identify a single device.
