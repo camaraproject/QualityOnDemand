@@ -20,7 +20,7 @@ Feature: CAMARA QoS Provisioning API, vwip - Operation createQosAssignment
         And the header "Authorization" is set to a valid access token
         And the header "x-correlator" is set to a UUID value
         # Properties not explicitly overwritten in the Scenarios can take any values compliant with the schema
-        And the request body is set by default to a request body compliant with the schema at "/components/schemas/CreateQosAssignment"
+        And the request body is set by default to a request body compliant with the schema at "/components/schemas/CreateAssignment"
 
     # Success scenarios
 
@@ -39,7 +39,7 @@ Feature: CAMARA QoS Provisioning API, vwip - Operation createQosAssignment
         And the response property "$.device" exists only if provided in the request body and with the same value
         And the response property "$.qosProfile" has the same value as in the request body
         And the response property "$.sink" exists only if provided in the request body and with the same value
-        # sinkCredentials not explicitly mentioned to be returned if present, as this is debatable for security concerns
+        # sinkCredential not explicitly mentioned to be returned if present, as this is debatable for security concerns
         And the response property "$.startedAt" exists only if "$.status" is "AVAILABLE" and the value is in the past
         And the response property "$.statusInfo" exists only if "$.status" is "UNAVAILABLE"
 
@@ -48,16 +48,16 @@ Feature: CAMARA QoS Provisioning API, vwip - Operation createQosAssignment
         Given a valid testing device supported by the service, identified by the token or provided in the request body
         And the request property "$.qosProfile" is set to a valid QoS Profile as returned by QoS Profiles API
         And the request property "$.sink" is set to a URL when events can be monitored
-        And the request property "$.sinkCredentials.credentialType" is set to "ACCESSTOKEN"
-        And the request property "$.sinkCredentials.accessTokenType" is set to "bearer"
-        And the request property "$.sinkCredentials.accessToken" is set to a valid access token accepted by the events receiver
-        And the request property "$.sinkCredentials.accessTokenExpiresUtc" is set to a value long enough in the future
+        And the request property "$.sinkCredential.credentialType" is set to "ACCESSTOKEN"
+        And the request property "$.sinkCredential.accessTokenType" is set to "bearer"
+        And the request property "$.sinkCredential.accessToken" is set to a valid access token accepted by the events receiver
+        And the request property "$.sinkCredential.accessTokenExpiresUtc" is set to a value long enough in the future
         And the request "createQosAssignment" is sent
         And the response status code is 201
         # There is no specific limit defined for the process to end
         When the QoS assignment outcome is known
         Then an event is received at the address of the request property "$.sink"
-        And the event header "Authorization" is set to "Bearer: " + the value of the request property "$.sinkCredentials.accessToken"
+        And the event header "Authorization" is set to "Bearer: " + the value of the request property "$.sinkCredential.accessToken"
         And the event header "Content-Type" is set to "application/cloudevents+json"
         And the event body complies with the OAS schema at "/components/schemas/EventStatusChanged"
         # Additionally any event body has to comply with some constraints beyond the schema compliance
@@ -102,11 +102,11 @@ Feature: CAMARA QoS Provisioning API, vwip - Operation createQosAssignment
         And the response property "$.message" contains a user friendly text
         
         Examples:
-            | device_identifier          | oas_spec_schema                             |
-            | $.device.phoneNumber       | /components/schemas/PhoneNumber             |
-            | $.device.ipv4Address       | /components/schemas/DeviceIpv4Addr          |
-            | $.device.ipv6Address       | /components/schemas/DeviceIpv6Address       |
-            | $.device.networkIdentifier | /components/schemas/NetworkAccessIdentifier |
+            | device_identifier                | oas_spec_schema                             |
+            | $.device.phoneNumber             | /components/schemas/PhoneNumber             |
+            | $.device.ipv4Address             | /components/schemas/DeviceIpv4Addr          |
+            | $.device.ipv6Address             | /components/schemas/DeviceIpv6Address       |
+            | $.device.networkAccessIdentifier | /components/schemas/NetworkAccessIdentifier |
 
   
     # This scenario may happen e.g. with 2-legged access tokens, which do not identify a single device.
@@ -184,7 +184,7 @@ Feature: CAMARA QoS Provisioning API, vwip - Operation createQosAssignment
 
     @qos_provisioning_createQosAssignment_400.1_schema_not_compliant
     Scenario: Invalid Argument. Generic Syntax Exception
-        Given the request body is set to any value which is not compliant with the schema at "/components/schemas/createQosAssignment"
+        Given the request body is set to any value which is not compliant with the schema at "/components/schemas/CreateAssignment"
         When the request "createQosAssignment" is sent
         Then the response status code is 400
         And the response header "x-correlator" has same value as the request header "x-correlator"

@@ -16,7 +16,7 @@ Feature: CAMARA QoS Provisioning API, vwip - Operation getQosAssignmentByDevice
 
     Background: Common getQosAssignmentByDevice setup
         Given an environment at "apiRoot"
-        And the resource "/qos-provisioning/vwip/retrieve-qos-assignments"                                                              |
+        And the resource "/qos-provisioning/vwip/retrieve-qos-assignment"                                                              |
         And the header "Content-Type" is set to "application/json"
         # Unless indicated otherwise the QoS assignment must be created by the same API client given in the access token
         And the header "Authorization" is set to a valid access token granted to the same client that created the QoS assignment
@@ -37,7 +37,7 @@ Feature: CAMARA QoS Provisioning API, vwip - Operation getQosAssignmentByDevice
         And the response property "$.device" exists only if provided for createQosAssignment and with the same value
         And the response property "$.qosProfile" has the value provided for createQosAssignment
         And the response property "$.sink" exists only if provided for createQosAssignment and with the same value
-        # sinkCredentials not explicitly mentioned to be returned if present, as this is debatable for security concerns
+        # sinkCredential not explicitly mentioned to be returned if present, as this is debatable for security concerns
         And the response property "$.startedAt" exists only if "$.status" is "AVAILABLE" and the value is in the past
         And the response property "$.statusInfo" exists only if "$.status" is "UNAVAILABLE"
 
@@ -66,11 +66,11 @@ Feature: CAMARA QoS Provisioning API, vwip - Operation getQosAssignmentByDevice
         And the response property "$.message" contains a user friendly text
         
         Examples:
-            | device_identifier          | oas_spec_schema                             |
-            | $.device.phoneNumber       | /components/schemas/PhoneNumber             |
-            | $.device.ipv4Address       | /components/schemas/DeviceIpv4Addr          |
-            | $.device.ipv6Address       | /components/schemas/DeviceIpv6Address       |
-            | $.device.networkIdentifier | /components/schemas/NetworkAccessIdentifier |
+            | device_identifier                | oas_spec_schema                             |
+            | $.device.phoneNumber             | /components/schemas/PhoneNumber             |
+            | $.device.ipv4Address             | /components/schemas/DeviceIpv4Addr          |
+            | $.device.ipv6Address             | /components/schemas/DeviceIpv6Address       |
+            | $.device.networkAccessIdentifier | /components/schemas/NetworkAccessIdentifier |
 
   
     # This scenario may happen e.g. with 2-legged access tokens, which do not identify a single device.
@@ -148,7 +148,7 @@ Feature: CAMARA QoS Provisioning API, vwip - Operation getQosAssignmentByDevice
 
     @qos_provisioning_getQosAssignmentByDevice_400.1_schema_not_compliant
     Scenario: Invalid Argument. Generic Syntax Exception
-        Given the request body is set to any value which is not compliant with the schema at "/components/schemas/getQosAssignmentByDevice"
+        Given the request body is set to any value which is not compliant with the schema at "/components/schemas/RetrieveAssignmentByDevice"
         When the request "getQosAssignmentByDevice" is sent
         And the response header "x-correlator" has same value as the request header "x-correlator"
         And the response header "Content-Type" is "application/json"

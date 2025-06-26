@@ -2,7 +2,7 @@ openapi: 3.0.3
 info:
   title: QoS Provisioning
   description: |
-    The Quality of Service (QoS) Provisioning API provides a programmable interface for developers to request the indefinite assignment of a specified QoS profile to all traffic being sent or received by a specified device, indefinitely.
+    The Quality of Service (QoS) Provisioning API provides a programmable interface for developers to request the indefinite assignment of a specified QoS profile to all traffic being sent or received by a specified device.
 
     The association resulting from the QoS provisioning request is represented by a QoS assignment record (or QoS assignment for short) that includes information about the date of assignment, the QoS profile assigned to a device, the assignment status, etc., as well as an `assignmentId` that uniquely identifies this record for later use.
 
@@ -177,13 +177,13 @@ paths:
           $ref: "#/components/responses/Generic429"
       security:
         - openId:
-            - "qos-assignment:qos-assignments:create"
+            - "qos-provisioning:qos-assignments:create"
 
   /qos-assignments/{assignmentId}:
     get:
       tags:
         - QoS Provisioning
-      summary: Get the QoS profile assignment information identified by a assignment record ID
+      summary: Get the QoS profile assignment information identified by an assignment record ID
       description: |
         Querying for details about the QoS profile assignment
 
@@ -295,7 +295,7 @@ paths:
       parameters:
         - $ref: "#/components/parameters/x-correlator"
       requestBody:
-        description: Parameters to retrieve a assignment record by device
+        description: Parameters to retrieve an assignment record by device
         content:
           application/json:
             schema:

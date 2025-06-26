@@ -34,7 +34,7 @@ Feature: CAMARA QoD Provisioning API, vwip - Operation getQosAssignmentById
         And the response property "$.device" exists only if provided for createQosAssignment and with the same value
         And the response property "$.qosProfile" has the value provided for createQosAssignment
         And the response property "$.sink" exists only if provided for createQosAssignment and with the same value
-        # sinkCredentials not explicitly mentioned to be returned if present, as this is debatable for security concerns
+        # sinkCredential not explicitly mentioned to be returned if present, as this is debatable for security concerns
         And the response property "$.startedAt" exists only if "$.status" is not "REQUESTED" and the value is in the past
         And the response property "$.statusInfo" exists only if "$.status" is "UNAVAILABLE"
 

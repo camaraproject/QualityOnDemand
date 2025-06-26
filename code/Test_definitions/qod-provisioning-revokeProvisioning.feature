@@ -47,7 +47,7 @@ Feature: CAMARA QoD Provisioning API, vwip - Operation revokeQosAssignment
         And the response property "$.status" is "AVAILABLE"
         And the response property "$.statusInfo" is "DELETE_REQUESTED"
         And the response property "$.sink" exists only if provided for createQosAssignment and with the same value
-        # sinkCredentials not explicitly mentioned to be returned if present, as this is debatable for security concerns
+        # sinkCredential not explicitly mentioned to be returned if present, as this is debatable for security concerns
         And the response property "$.startedAt" exists and the value is in the past
 
     @qos_provisioning_revokeQosAssignment_03_event_notification_sync
@@ -58,7 +58,7 @@ Feature: CAMARA QoD Provisioning API, vwip - Operation revokeQosAssignment
         When the request "revokeQosAssignment" is sent
         Then the response status code is 204
         And an event is received at the address of the "$.sink" provided for createQosAssignment
-        And the event header "Authorization" is set to "Bearer: " + the value of "$.sinkCredentials.accessToken" provided for createQosAssignment
+        And the event header "Authorization" is set to "Bearer: " + the value of "$.sinkCredential.accessToken" provided for createQosAssignment
         And the event header "Content-Type" is set to "application/cloudevents+json"
         And the event body complies with the OAS schema at "/components/schemas/EventStatusChanged"
         # Additionally any event body has to comply with some constraints beyond the schema compliance
@@ -77,7 +77,7 @@ Feature: CAMARA QoD Provisioning API, vwip - Operation revokeQosAssignment
         Then the response status code is 202
         And when the asynchronous deletion process is completed
         Then an event is received at the address of the "$.sink" provided for createQosAssignment
-        And the event header "Authorization" is set to "Bearer: " + the value of "$.sinkCredentials.accessToken" provided for createQosAssignment
+        And the event header "Authorization" is set to "Bearer: " + the value of "$.sinkCredential.accessToken" provided for createQosAssignment
         And the event header "Content-Type" is set to "application/cloudevents+json"
         And the event body complies with the OAS schema at "/components/schemas/EventStatusChanged"
         # Additionally any event body has to comply with some constraints beyond the schema compliance
