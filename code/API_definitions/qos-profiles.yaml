@@ -110,12 +110,10 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: "#/components/schemas/QosProfileDeviceResponse"
+                  $ref: "#/components/schemas/QosProfile"
               examples:
                 List of QoS Profiles:
                   $ref: "#/components/examples/LIST_OF_QOS_PROFILES"
-                List of QoS Profiles With Device Disambiguation:
-                  $ref: "#/components/examples/LIST_OF_QOS_PROFILES_WITH_DEVICE_DISAMBIGUATION"
         "400":
           $ref: "#/components/responses/Generic400"
         "401":
@@ -466,19 +464,6 @@ components:
         status:
           $ref: '#/components/schemas/QosProfileStatusEnum'
 
-    QosProfileDeviceResponse:
-      description: |
-        Response object for QoS Profiles for a given device. A device identifier is provided for disambiguation when multiple device identifiers were provided in the request.
-      allOf:
-        - type: object
-          properties:
-            device:
-              description: Disambiguates the device to which the session applies when multiple device identifiers were provided
-              allOf:
-                - $ref: "#/components/schemas/DeviceResponse"
-                - example: {"phoneNumber": "+123456789"}
-        - $ref: "#/components/schemas/QosProfile"
-
     Device:
       description: |
         End-user equipment able to connect to a mobile network. Examples of devices include smartphones or IoT sensors/actuators.
@@ -502,16 +487,6 @@ components:
         ipv6Address:
           $ref: "#/components/schemas/DeviceIpv6Address"
       minProperties: 1
-
-    DeviceResponse:
-      description: |
-        An identifier for the end-user equipment able to connect to the network that the response refers to. This parameter is only returned when the API consumer includes the `device` parameter in their request (i.e. they are using a two-legged access token), and is relevant when more than one device identifier is specified, as only one of those device identifiers is allowed in the response.
-
-        If the API consumer provides more than one device identifier in their request, the API provider must return a single identifier which is the one they are using to fulfil the request, even if the identifiers do not match the same device. API provider does not perform any logic to validate/correlate that the indicated device identifiers match the same device. No error should be returned if the identifiers are otherwise valid to prevent API consumers correlating different identifiers with a given end user.
-
-      allOf:
-        - $ref: "#/components/schemas/Device"
-        - maxProperties: 1
 
     NetworkAccessIdentifier:
       description: A public identifier addressing a subscription in a mobile network. In 3GPP terminology, it corresponds to the GPSI formatted with the External Identifier ({Local Identifier}@{Domain Identifier}). Unlike the telephone number, the network access identifier is not subjected to portability ruling in force, and is individually managed by each operator.
@@ -813,37 +788,6 @@ components:
       description: Example response when requesting a list of QoS profiles
       value:
         - name: "voice"
-          description: "QoS profile for high-quality interactive voice"
-          status: "ACTIVE"
-          targetMinUpstreamRate:
-            value: 100
-            unit: "kbps"
-          targetMinDownstreamRate:
-            value: 100
-            unit: "kbps"
-          minDuration:
-            value: 1
-            unit: "Days"
-          maxDuration:
-            value: 10
-            unit: "Days"
-          priority: 10
-          packetDelayBudget:
-            value: 50
-            unit: "Milliseconds"
-          jitter:
-            value: 5
-            unit: "Milliseconds"
-          packetErrorLossRate: 3
-          l4sQueueType: "non-l4s-queue"
-
-    LIST_OF_QOS_PROFILES_WITH_DEVICE_DISAMBIGUATION:
-      summary: A list of QoS profiles with a single entry and device disambiguation
-      description: Example response when requesting a list of QoS profiles with multiple device identifiers provided in the request
-      value:
-        - device:
-            phoneNumber: "+123456789"
-          name: "voice"
           description: "QoS profile for high-quality interactive voice"
           status: "ACTIVE"
           targetMinUpstreamRate:
