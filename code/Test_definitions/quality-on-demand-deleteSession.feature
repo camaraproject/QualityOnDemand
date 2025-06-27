@@ -16,7 +16,7 @@ Feature: CAMARA Quality On Demand API, vwip - Operation deleteSession
         And the resource "/quality_on_demand/vwip/sessions/{sessionId}"
         # Unless indicated otherwise the QoD provisioning must be created by the same API client given in the access token
         And the header "Authorization" is set to a valid access token
-        And the header "x-correlator" is set to a UUID value
+        And the header "x-correlator" complies with the schema at "#/components/schemas/XCorrelator"
         And the path parameter "sessionId" is set by default to a existing QoS session sessionId
 
     # Success scenarios

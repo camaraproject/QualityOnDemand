@@ -18,7 +18,7 @@ Feature: CAMARA QoD Provisioning API, vwip - Operation triggerProvisioning
         And the resource "/qod-provisioning/vwip/device-qos"
         And the header "Content-Type" is set to "application/json"
         And the header "Authorization" is set to a valid access token
-        And the header "x-correlator" is set to a UUID value
+        And the header "x-correlator" complies with the schema at "#/components/schemas/XCorrelator"
         # Properties not explicitly overwritten in the Scenarios can take any values compliant with the schema
         And the request body is set by default to a request body compliant with the schema at "/components/schemas/triggerProvisioning"
 
