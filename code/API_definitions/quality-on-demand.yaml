@@ -1521,8 +1521,8 @@ components:
           statusInfo: 'DURATION_EXPIRED'
 
     RETRIEVE_SESSIONS_EXAMPLE:
-      summary: List of QoS sessions for a specified device
-      description: A single QoS session for the device is available
+      summary: List of QoS sessions for the specified device
+      description: A single QoS session for the specified device is available
       value:
         - applicationServer:
             ipv4Address: 0.0.0.0/0
@@ -1535,8 +1535,8 @@ components:
           qosStatus: AVAILABLE
 
     RETRIEVE_SESSIONS_EXAMPLE_WITH_DEVICE_RESPONSE:
-      summary: List of QoS sessions with device in the response
-      description: A single QoS session for the device is available and the device to which the sessions apply is listed in the response
+      summary: List of QoS sessions for a specified device with the device in the response
+      description: A single QoS session for the device is available and the device to which the session applies is included in the response
       value:
         - device:
             phoneNumber: "+123456789"
