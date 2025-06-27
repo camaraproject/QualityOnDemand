@@ -1,4 +1,4 @@
-Feature: CAMARA QoS Profiles API, vwip - Operation getQosProfile
+Feature: CAMARA QoS Profiles API, v1.1.0-rc.2 - Operation getQosProfile
     # Input to be provided by the implementation to the tester
     #
     # Implementation indications:
