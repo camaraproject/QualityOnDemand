@@ -26,7 +26,7 @@ info:
     Latency, throughput or priority requirements of the application mapped to relevant QoS profile values. The set of QoS Profiles that an API provider is offering may be retrieved via the `qos-profiles` API (cf. https://github.com/camaraproject/QualityOnDemand/) or will be agreed during the onboarding with the API provider.
 
     * **Identifier for the device**:
-    At least one identifier for the device (user equipment) out of four options: IPv4 address, IPv6 address, Phone number, or Network Access Identifier assigned by the mobile network operator for the device. Where more than one device identifier is provided, only one identifier will be selected by the implementation and this choice indicated to the API consumer in the session creation response.
+    At least one identifier for the device (user equipment) out of four options: IPv4 address, IPv6 address, Phone Number, or Network Access Identifier assigned by the mobile network operator for the device. Where more than one device identifier is provided, only one identifier will be selected by the implementation and this choice indicated to the API consumer in the session details. If only a single device identifier is provided, the implementation may or may not include the device identifier in the session details.
 
       Note: Network Access Identifier is defined for future use and will not be supported with this version of the API.
 
@@ -209,7 +209,7 @@ paths:
                 Successful Session Creation:
                   $ref: "#/components/examples/SESSION_CREATION_EXAMPLE"
                 Successful Session Creation With Device Disambiguation:
-                  $ref: "#/components/examples/SESSION_CREATION_EXAMPLE_WITH_DEVICE_DISAMBIGUATION"
+                  $ref: "#/components/examples/SESSION_CREATION_EXAMPLE_WITH_DEVICE_RESPONSE"
         "400":
           $ref: "#/components/responses/CreateSessionBadRequest400"
         "401":
@@ -423,7 +423,7 @@ paths:
                 RETRIEVE_SESSIONS_ONE_ITEM:
                   $ref: "#/components/examples/RETRIEVE_SESSIONS_EXAMPLE"
                 RETRIEVE_SESSIONS_ONE_ITEM_WITH_DEVICE_DISAMBIGUATION_REQUIRED:
-                  $ref: "#/components/examples/RETRIEVE_SESSIONS_EXAMPLE_WITH_DEVICE_DISAMBIGUATION"
+                  $ref: "#/components/examples/RETRIEVE_SESSIONS_EXAMPLE_WITH_DEVICE_RESPONSE"
                 RETRIEVE_SESSIONS_NO_ITEMS:
                   $ref: "#/components/examples/RETRIEVE_SESSIONS_EMPTY_EXAMPLE"
         "400":
@@ -1452,8 +1452,8 @@ components:
 
   examples:
     SESSION_CREATION_EXAMPLE:
-      summary: Successful session creation
-      description: Example response after a new QoS session has been created using a 3-legged access token or single device identifier
+      summary: Successful session creation with device not included in response
+      description: Example response after a new QoS session has been created using a 3-legged access token, or possibly a single device identifier
       value:
         applicationServer:
           ipv4Address: 198.51.100.0/24
@@ -1463,9 +1463,9 @@ components:
         duration: 3600
         qosStatus: REQUESTED
 
-    SESSION_CREATION_EXAMPLE_WITH_DEVICE_DISAMBIGUATION:
-      summary: Successful session creation with device disambiguation
-      description: Example response after a new QoS session has been created using multiple device identifiers
+    SESSION_CREATION_EXAMPLE_WITH_DEVICE_RESPONSE:
+      summary: Successful session creation with device included in response
+      description: Example response after a new QoS session has been created using a 2-legged access token with multiple device identifiers, or possibly only a single device identifier
       value:
         device:
           phoneNumber: "+123456789"
@@ -1534,9 +1534,9 @@ components:
           expiresAt: "2024-06-01T13:00:00Z"
           qosStatus: AVAILABLE
 
-    RETRIEVE_SESSIONS_EXAMPLE_WITH_DEVICE_DISAMBIGUATION:
-      summary: List of QoS sessions with device disambiguation
-      description: A single QoS session for the device is available but the device was specified using multiple device identifiers, and hence disambiguation is required
+    RETRIEVE_SESSIONS_EXAMPLE_WITH_DEVICE_RESPONSE:
+      summary: List of QoS sessions with device in the response
+      description: A single QoS session for the device is available and the device to which the sessions apply is listed in the response
       value:
         - device:
             phoneNumber: "+123456789"
