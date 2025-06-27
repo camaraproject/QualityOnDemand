@@ -14,7 +14,7 @@ info:
     Latency, throughput or priority requirements of the application mapped to relevant QoS profile values. The set of QoS Profiles that a network operator is offering may be retrieved via the `qos-profiles` API (cf. https://github.com/camaraproject/QualityOnDemand/) or will be agreed during the onboarding with the API service provider.
 
     * **Identifier for the device**:
-    At least one identifier for the device (user equipment) out of four options: IPv4 address, IPv6 address, Phone Number, or Network Access Identifier assigned by the mobile network operator for the device. Where more than one device identifier is provided, only one identifier will be selected by the implementation and this choice indicated to the API consumer in the session details. If only a single device identifier is provided, the implementation may or may not include the device identifier in the session details.
+    At least one identifier for the device (user equipment) out of four options: IPv4 address, IPv6 address, Phone Number, or Network Access Identifier assigned by the mobile network operator for the device. Where more than one device identifier is provided, only one identifier will be selected by the implementation and this choice indicated to the API consumer in the provisioning details. If only a single device identifier is provided, the implementation may or may not include the device identifier in the provisioning details.
 
       Note: Network Access Identifier is defined for future use and will not be supported with this version of the API.
 
@@ -1101,7 +1101,7 @@ components:
 
   examples:
     PROVISIONING_CREATION_EXAMPLE:
-      summary: Successful provisioning creation
+      summary: Successful provisioning creation without device in the provisioning details
       description: Example response after a new QoS provisioning has been created using a 3-legged access token, or possibly a single device identifier
       value:
         qosProfile: QOS_L
@@ -1110,7 +1110,7 @@ components:
         status: REQUESTED
 
     PROVISIONING_CREATION_EXAMPLE_WITH_DEVICE_RESPONSE:
-      summary: Successful provisioning creation with device disambiguation
+      summary: Successful provisioning creation with device in the provisioning details
       description: Example response after a new QoS provisioning has been created using a 2-legged access token with multiple device identifiers, or possibly only a single device identifier
       value:
         device:
@@ -1121,8 +1121,8 @@ components:
         status: REQUESTED
 
     PROVISIONING_AVAILABLE:
-      summary: QoD provisioning status is available with device disambiguation
-      description: The provisioning has become available, but multiple device identifiers were provided and hence device disambiguation is required
+      summary: QoD provisioning status is available with device in the provisioning details
+      description: The provisioning has become available, and the device to which the provisioning applies is included in the provisioning details
       value:
         device:
           phoneNumber: "+123456789"
