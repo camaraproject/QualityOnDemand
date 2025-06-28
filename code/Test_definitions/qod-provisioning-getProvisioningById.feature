@@ -15,7 +15,7 @@ Feature: CAMARA QoD Provisioning API, vwip - Operation getQosAssignmentById
         And the resource "/qos-provisioning/vwip/qos-assignments/{assignmentId}"                                                              |
         # Unless indicated otherwise the QoS assignment must be created by the same API client given in the access token
         And the header "Authorization" is set to a valid access token granted to the same client that created the QoS assignment
-        And the header "x-correlator" is set to a UUID value
+        And the header "x-correlator" complies with the schema at "#/components/schemas/XCorrelator"
         And the path parameter "assignmentId" is set by default to an existing QoS assignment ID
 
     # Success scenarios

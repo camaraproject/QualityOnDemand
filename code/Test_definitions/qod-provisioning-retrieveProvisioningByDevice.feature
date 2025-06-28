@@ -20,7 +20,7 @@ Feature: CAMARA QoS Provisioning API, vwip - Operation getQosAssignmentByDevice
         And the header "Content-Type" is set to "application/json"
         # Unless indicated otherwise the QoS assignment must be created by the same API client given in the access token
         And the header "Authorization" is set to a valid access token granted to the same client that created the QoS assignment
-        And the header "x-correlator" is set to a UUID value
+        And the header "x-correlator" complies with the schema at "#/components/schemas/XCorrelator"
 
     # Success scenarios
 
