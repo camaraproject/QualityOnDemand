@@ -18,7 +18,7 @@ Feature: CAMARA QoS Profiles API, vwip - Operation retrieveQoSProfiles
         And the resource "qos-profiles/vwip/retrieve-qos-profiles"
         And the header "Content-Type" is set to "application/json"
         And the header "Authorization" is set to a valid access token
-        And the header "x-correlator" is set to a UUID value
+        And the header "x-correlator" complies with the schema at "#/components/schemas/XCorrelator"
         # Properties not explicitly overwitten in the Scenarios can take any values compliant with the schema
         And the request body is set by default to a request body compliant with the schema at "/components/schemas/QosProfileDeviceRequest"
 
