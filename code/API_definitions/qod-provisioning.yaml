@@ -372,7 +372,7 @@ components:
       description: Value for the x-correlator
       type: string
       pattern: ^[a-zA-Z0-9-_:;.\/<>{}]{0,256}$
-      example: "b4333c46-49c0-4f62-80d7-f0ef930f1c46"<<<<<<< qod-provisioning-review-terminology
+      example: "b4333c46-49c0-4f62-80d7-f0ef930f1c46"
 
     AssignmentId:
       description: Identifier of the assignment record for the QoS profile assignment, that was created by the `createQosAssignment` operation
