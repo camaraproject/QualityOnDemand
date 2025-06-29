@@ -1,4 +1,4 @@
-Feature: CAMARA Quality On Demand API, vwip - Operation extendQosSessionDuration
+Feature: CAMARA Quality On Demand API, v1.1.0-rc.2 - Operation extendQosSessionDuration
     # Input to be provided by the implementation to the tester
     #
     # Implementation indications:
