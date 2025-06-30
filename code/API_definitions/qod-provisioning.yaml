@@ -166,10 +166,10 @@ paths:
               schema:
                 $ref: "#/components/schemas/ProvisioningInfo"
               examples:
-                Successful Provisioning Creation:
-                  $ref: "#/components/examples/PROVISIONING_CREATION_EXAMPLE"
-                Successful Provisioning Creation with Device in the Response:
-                  $ref: "#/components/examples/PROVISIONING_CREATION_EXAMPLE_WITH_DEVICE_RESPONSE"
+                Successful QoS Profile Assignment Creation:
+                  $ref: "#/components/examples/ASSIGNMENT_CREATION_EXAMPLE"
+                Successful QoS Profile Assignment Creation with Device in the response:
+                  $ref: "#/components/examples/ASSIGNMENT_CREATION_EXAMPLE_WITH_DEVICE_RESPONSE"
         "400":
           $ref: "#/components/responses/TriggerProvisioning400"
         "401":
