@@ -1155,7 +1155,8 @@ components:
         statusInfo: NETWORK_TERMINATED
 
     PROVISIONING_AVAILABLE_WITHOUT_DEVICE:
-      summary: QoD provisioning status is available
+      summary: QoS provisioning status is available
+
       description: Device is optional in responses and must not be provided if it was not provided in the request
       value:
         qosProfile: QOS_M
