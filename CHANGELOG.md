@@ -52,19 +52,22 @@ qos-profiles v1.1.0 will be a minor update of the API, and is backward compatibl
 
 ### Added
 
-* ...
+* Added HTTP-422 error response when qos profile is not applicable during session creation by @maxl2287 in https://github.com/camaraproject/QualityOnDemand/pull/433
+* Added error response documentation in `info.description` by @hdamker in https://github.com/camaraproject/QualityOnDemand/pull/467
 
 ### Changed
 
-* ...
+* Adjusted x-correlator pattern as defined in CAMARA Commonalities by @jlurien in https://github.com/camaraproject/QualityOnDemand/pull/465
+* Updated documentation regarding device identifiers in responses and added DeviceResponse object to limit device identifiers in responses to exactly one by @eric-murray in https://github.com/camaraproject/QualityOnDemand/pull/453
 
 ### Fixed
 
-* ...
+* Resolved mismatch between test and API definition for networkAccessIdentifier and sinkCredential by @jlurien in https://github.com/camaraproject/QualityOnDemand/pull/462
 
 ### Removed
 
-* ...
+* Removed AUTHENTICATION_REQUIRED error by @eric-murray in https://github.com/camaraproject/QualityOnDemand/pull/436
+* Removed the IDENTIFIER_MISMATCH error code option from 422 responses and associated test cases by @eric-murray in https://github.com/camaraproject/QualityOnDemand/pull/453
 
 ## qos-profiles v1.1.0-rc.2
 
@@ -79,26 +82,31 @@ qos-profiles v1.1.0 will be a minor update of the API, and is backward compatibl
 
 ### Added
 
-* ...
+* Added an optional countryAvailability field to the QoS profile to allow an API provider to indicate in which countries (and networks) the profile is available by @eric-murray in https://github.com/camaraproject/QualityOnDemand/pull/435
+* Added error response documentation in `info.description` by @hdamker in https://github.com/camaraproject/QualityOnDemand/pull/467
 
 ### Changed
 
-* ...
+* Adjusted x-correlator pattern as defined in CAMARA Commonalities by @jlurien in https://github.com/camaraproject/QualityOnDemand/pull/465
+* Updated documentation regarding device identifiers in responses and added DeviceResponse object to limit device identifiers in responses to exactly one by @eric-murray in https://github.com/camaraproject/QualityOnDemand/pull/453
 
 ### Fixed
 
-* ...
+* Resolved mismatch between test and API definition for networkAccessIdentifier and sinkCredential by @jlurien in https://github.com/camaraproject/QualityOnDemand/pull/462
 
 ### Removed
-* Removed the 403 INVALID_TOKEN_CONTEXT error from the OAS definitions by @eric-murray in https://github.com/camaraproject/QualityOnDemand/pull/391
-* Removed all 5XX errors as these no longer require to be explicitly documented by @eric-murray in https://github.com/camaraproject/QualityOnDemand/pull/391
-* Removed error `422 MISSING_IDENTIFIER` as this is not a valid error for either endpoint by @eric-murray in https://github.com/camaraproject/QualityOnDemand/pull/410
+
+* Removed AUTHENTICATION_REQUIRED error by @eric-murray in https://github.com/camaraproject/QualityOnDemand/pull/436
+* Removed the IDENTIFIER_MISMATCH error code option from 422 responses and associated test cases by @eric-murray in https://github.com/camaraproject/QualityOnDemand/pull/453
 
 ## qos-provisioning v0.3.0-rc.1
 
 **qos-provisioning v0.3.0-rc.1 is the release candidate of the version 0.3.0 of the API**
 
-**There are breaking changes compared to v0.2.0 of qod-provisioning**: ...
+**There are multiple breaking changes compared to v0.2.0 of qod-provisioning**, e.g.:
+* The API got renamed to QoS Provisioning (from QoD Provisioning)
+* The resource path is renamed to `qos-assignments` (from `qos-device`)
+* Properties, operationIds, schemata etc are aligned with with "qos-assignments", e.g. `provisioningId` was changed to `assignmentId`
 
 - API definition **with inline documentation**:
   - [View it on ReDoc](https://redocly.github.io/redoc/?url=https://raw.githubusercontent.com/camaraproject/QualityOnDemand/r3.1/code/API_definitions/qos-provisioning.yaml&nocors)
@@ -107,19 +115,23 @@ qos-profiles v1.1.0 will be a minor update of the API, and is backward compatibl
 
 ### Added
 
-* ...
+* Added error response documentation in `info.description` by @hdamker in https://github.com/camaraproject/QualityOnDemand/pull/467
 
 ### Changed
 
-* ...
+* Refined the terminology throughout the API by @jlurien in https://github.com/camaraproject/QualityOnDemand/pull/447
+  * URL, paths, properties, operationIs and schemata etc are changed, see breaking changes above
+* Adjusted x-correlator pattern as defined in CAMARA Commonalities by @jlurien in https://github.com/camaraproject/QualityOnDemand/pull/465
+* Updated documentation regarding device identifiers in responses and added DeviceResponse object to limit device identifiers in responses to exactly one by @eric-murray in https://github.com/camaraproject/QualityOnDemand/pull/453
 
 ### Fixed
 
-* ...
+* Resolved mismatch between test and API definition for networkAccessIdentifier and sinkCredential by @jlurien in https://github.com/camaraproject/QualityOnDemand/pull/447
 
 ### Removed
 
-* ...
+* Removed AUTHENTICATION_REQUIRED error by @eric-murray in https://github.com/camaraproject/QualityOnDemand/pull/436
+* Removed the IDENTIFIER_MISMATCH error code option from 422 responses and associated test cases by @eric-murray in https://github.com/camaraproject/QualityOnDemand/pull/453
 
 **Full Changelog**: https://github.com/camaraproject/QualityOnDemand/compare/r2.2...r3.1
 
