@@ -1101,24 +1101,24 @@ components:
                 message: Rate limit reached.
 
   examples:
-    PROVISIONING_CREATION_EXAMPLE:
-      summary: Successful provisioning creation without device in the provisioning details
-      description: Example response after a new QoS provisioning has been created using a 3-legged access token, or possibly a single device identifier
+    ASSIGNMENT_CREATION_EXAMPLE:
+      summary: Successful assignment creation without device in the assignment details
+      description: Example response after a new QoS profile assignment has been created using a 3-legged access token, or possibly a single device identifier
       value:
         qosProfile: QOS_L
         sink: https://application-server.com/callback
-        provisioningId: 3fa85f64-5717-4562-b3fc-2c963f66afa6
+        assignmentId: 3fa85f64-5717-4562-b3fc-2c963f66afa6
         status: REQUESTED
 
-    PROVISIONING_CREATION_EXAMPLE_WITH_DEVICE_RESPONSE:
-      summary: Successful provisioning creation with device in the provisioning details
-      description: Example response after a new QoS provisioning has been created using a 2-legged access token with multiple device identifiers, or possibly only a single device identifier
+    ASSIGNMENT_CREATION_EXAMPLE_WITH_DEVICE_RESPONSE:
+      summary: Successful assignment creation with device in the assignment details
+      description: Example response after a new QoS profile assignment has been created using a 2-legged access token with multiple device identifiers, or possibly only a single device identifier
       value:
         device:
           phoneNumber: "+123456789"
         qosProfile: QOS_L
         sink: https://application-server.com/callback
-        provisioningId: 3fa85f64-5717-4562-b3fc-2c963f66afa6
+        assignmentId: 3fa85f64-5717-4562-b3fc-2c963f66afa6
         status: REQUESTED
 
     PROVISIONING_AVAILABLE:
