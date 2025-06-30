@@ -1107,7 +1107,7 @@ components:
       value:
         qosProfile: QOS_L
         sink: https://application-server.com/callback
-        assignmentId: 3fa85f64-5717-4562-b3fc-2c963f66afa6
+        provisioningId: 3fa85f64-5717-4562-b3fc-2c963f66afa6
         status: REQUESTED
 
     ASSIGNMENT_CREATION_EXAMPLE_WITH_DEVICE_RESPONSE:
@@ -1118,7 +1118,7 @@ components:
           phoneNumber: "+123456789"
         qosProfile: QOS_L
         sink: https://application-server.com/callback
-        assignmentId: 3fa85f64-5717-4562-b3fc-2c963f66afa6
+        provisioningId: 3fa85f64-5717-4562-b3fc-2c963f66afa6
         status: REQUESTED
 
     ASSIGNMENT_AVAILABLE:
@@ -1134,7 +1134,7 @@ components:
           accessToken: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c"
           accessTokenExpiresUtc: "2024-12-01T12:00:00Z"
           accessTokenType: bearer
-        assignmentId: 3fa85f64-5717-4562-b3fc-2c963f66afa6
+        provisioningId: 3fa85f64-5717-4562-b3fc-2c963f66afa6
         startedAt: "2024-05-12T17:32:01Z"
         status: AVAILABLE
 
@@ -1149,7 +1149,7 @@ components:
           accessToken: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c"
           accessTokenExpiresUtc: "2024-12-01T12:00:00Z"
           accessTokenType: bearer
-        assignmentId: 3fa85f64-5717-4562-b3fc-2c963f66afa6
+        provisioningId: 3fa85f64-5717-4562-b3fc-2c963f66afa6
         startedAt: "2024-05-12T17:32:01Z"
         status: UNAVAILABLE
         statusInfo: NETWORK_TERMINATED
@@ -1165,7 +1165,7 @@ components:
           accessToken: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c"
           accessTokenExpiresUtc: "2024-12-01T12:00:00Z"
           accessTokenType: bearer
-        assignmentId: 3fa85f64-5717-4562-b3fc-2c963f66afa6
+        provisioningId: 3fa85f64-5717-4562-b3fc-2c963f66afa6
         startedAt: "2024-05-12T17:32:01Z"
         status: AVAILABLE
 
@@ -1179,6 +1179,6 @@ components:
         type: org.camaraproject.qod-provisioning.v0.status-changed
         time: "2021-12-12T00:00:00Z"
         data:
-          assignmentId: 123e4567-e89b-12d3-a456-426614174000
+          provisioningId: 123e4567-e89b-12d3-a456-426614174000
           status: UNAVAILABLE
           statusInfo: NETWORK_TERMINATED
