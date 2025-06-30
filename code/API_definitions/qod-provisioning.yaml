@@ -1121,8 +1121,8 @@ components:
         assignmentId: 3fa85f64-5717-4562-b3fc-2c963f66afa6
         status: REQUESTED
 
-    PROVISIONING_AVAILABLE:
-      summary: QoS provisioning status is available with device in the assignment details
+    ASSIGNMENT_AVAILABLE:
+      summary: QoS assignment status is available with device in the assignment details
       description: The QoS profile assignment has become available, and the device to which the assignment applies is included in the assignment details
       value:
         device:
@@ -1134,13 +1134,13 @@ components:
           accessToken: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c"
           accessTokenExpiresUtc: "2024-12-01T12:00:00Z"
           accessTokenType: bearer
-        provisioningId: 3fa85f64-5717-4562-b3fc-2c963f66afa6
+        assignmentId: 3fa85f64-5717-4562-b3fc-2c963f66afa6
         startedAt: "2024-05-12T17:32:01Z"
         status: AVAILABLE
 
-    PROVISIONING_UNAVAILABLE:
+    ASSIGNMENT_UNAVAILABLE:
       summary: QoD provisioning status is unavailable
-      description: The provisioning could not be created or is not active anymore
+      description: The sssignment could not be created or is not active anymore
       value:
         qosProfile: QOS_L
         sink: https://application-server.com/callback
@@ -1149,14 +1149,13 @@ components:
           accessToken: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c"
           accessTokenExpiresUtc: "2024-12-01T12:00:00Z"
           accessTokenType: bearer
-        provisioningId: 3fa85f64-5717-4562-b3fc-2c963f66afa6
+        assignmentId: 3fa85f64-5717-4562-b3fc-2c963f66afa6
         startedAt: "2024-05-12T17:32:01Z"
         status: UNAVAILABLE
         statusInfo: NETWORK_TERMINATED
 
-    PROVISIONING_AVAILABLE_WITHOUT_DEVICE:
-      summary: QoS provisioning status is available
-
+    ASSIGNMENT_AVAILABLE_WITHOUT_DEVICE:
+      summary: QoS sssignment status is available
       description: Device is optional in responses and must not be provided if it was not provided in the request
       value:
         qosProfile: QOS_M
@@ -1166,13 +1165,13 @@ components:
           accessToken: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c"
           accessTokenExpiresUtc: "2024-12-01T12:00:00Z"
           accessTokenType: bearer
-        provisioningId: 3fa85f64-5717-4562-b3fc-2c963f66afa6
+        assignmentId: 3fa85f64-5717-4562-b3fc-2c963f66afa6
         startedAt: "2024-05-12T17:32:01Z"
         status: AVAILABLE
 
-    PROVISIONING_STATUS_CHANGED_EXAMPLE:
-      description: Provisioning status changed
-      summary: Cloud event example for QoD provisioning status change to UNAVAILABLE due to NETWORK_TERMINATED
+    ASSIGNMENT_STATUS_CHANGED_EXAMPLE:
+      description: Assignment status changed
+      summary: Cloud event example for QoD assignment status change to UNAVAILABLE due to NETWORK_TERMINATED
       value:
         id: 83a0d986-0866-4f38-b8c0-fc65bfcda452
         source: https://api.example.com/qod-provisioning/v0.2/device-qos/123e4567-e89b-12d3-a456-426614174000
@@ -1180,6 +1179,6 @@ components:
         type: org.camaraproject.qod-provisioning.v0.status-changed
         time: "2021-12-12T00:00:00Z"
         data:
-          provisioningId: 123e4567-e89b-12d3-a456-426614174000
+          assignmentId: 123e4567-e89b-12d3-a456-426614174000
           status: UNAVAILABLE
           statusInfo: NETWORK_TERMINATED
