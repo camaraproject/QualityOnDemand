@@ -134,8 +134,8 @@ paths:
                     schema:
                       $ref: "#/components/schemas/CloudEvent"
                     examples:
-                      PROVISIONING_STATUS_CHANGED_EXAMPLE:
-                        $ref: "#/components/examples/PROVISIONING_STATUS_CHANGED_EXAMPLE"
+                      ASSIGNMENT_STATUS_CHANGED_EXAMPLE:
+                        $ref: "#/components/examples/ASSIGNMENT_STATUS_CHANGED_EXAMPLE"
               responses:
                 "204":
                   description: Successful notification
