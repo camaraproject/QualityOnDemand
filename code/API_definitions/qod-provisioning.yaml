@@ -1122,8 +1122,8 @@ components:
         status: REQUESTED
 
     PROVISIONING_AVAILABLE:
-      summary: QoD provisioning status is available with device in the provisioning details
-      description: The provisioning has become available, and the device to which the provisioning applies is included in the provisioning details
+      summary: QoS provisioning status is available with device in the assignment details
+      description: The QoS profile assignment has become available, and the device to which the assignment applies is included in the assignment details
       value:
         device:
           phoneNumber: "+123456789"
