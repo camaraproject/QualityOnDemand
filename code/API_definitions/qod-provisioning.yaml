@@ -325,8 +325,8 @@ paths:
               examples:
                 PROVISIONING_AVAILABLE:
                   $ref: "#/components/examples/PROVISIONING_AVAILABLE"
-                PROVISIONING_UNAVAILABLE:
-                  $ref: "#/components/examples/PROVISIONING_UNAVAILABLE"
+                ASSIGNMENT_UNAVAILABLE:
+                  $ref: "#/components/examples/ASSIGNMENT_UNAVAILABLE"
                 PROVISIONING_AVAILABLE_WITHOUT_DEVICE:
                   $ref: "#/components/examples/PROVISIONING_AVAILABLE_WITHOUT_DEVICE"
         "400":
