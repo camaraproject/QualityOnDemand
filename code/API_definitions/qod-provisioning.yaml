@@ -107,7 +107,7 @@ paths:
         **NOTES:**
         - When the assignment status becomes `UNAVAILABLE`, the QoS profile assignment is not immediately released, but will get deleted automatically, at earliest 360 seconds after.
 
-        This behavior allows API consumers which are not receiving notification events but are polling, to get the QoS profile assignment status information. Before a client can attempt to create a new QoS profile assignment for the same device, they must release the previous assignment resources with an explicit `delete` operation if not yet automatically deleted.
+        This behavior allows API consumers that are not receiving notification events but are polling, to get the QoS profile assignment status information. Before a client can attempt to create a new QoS profile assignment for the same device, they must release the previous assignment resources with an explicit `delete` operation if not yet automatically deleted.
         - The access token may be either 2-legged or 3-legged. See "Identifying the device from the access token" for further information
           - When the API is invoked using a two-legged access token, the subject will be identified from the optional `device` object, which therefore MUST be provided.
           - When a three-legged access token is used however, this optional identifier MUST NOT be provided, as the subject will be uniquely identified from the access token.
