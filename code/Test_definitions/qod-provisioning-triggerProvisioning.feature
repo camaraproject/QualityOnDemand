@@ -18,7 +18,7 @@ Feature: CAMARA QoD Provisioning API, vwip - Operation triggerProvisioning
         And the resource "/qod-provisioning/vwip/device-qos"
         And the header "Content-Type" is set to "application/json"
         And the header "Authorization" is set to a valid access token
-        And the header "x-correlator" is set to a UUID value
+        And the header "x-correlator" complies with the schema at "#/components/schemas/XCorrelator"
         # Properties not explicitly overwritten in the Scenarios can take any values compliant with the schema
         And the request body is set by default to a request body compliant with the schema at "/components/schemas/triggerProvisioning"
 
@@ -166,19 +166,6 @@ Feature: CAMARA QoD Provisioning API, vwip - Operation triggerProvisioning
         And the response property "$.code" is "SERVICE_NOT_APPLICABLE"
         And the response property "$.message" contains a user-friendly text
 
-
-    # Several identifiers provided but they do not identify the same device
-    # This scenario may happen with 2-legged access tokens, which do not identify a device
-    @qod_provisioning_triggerProvisioning_C01.08_device_identifiers_mismatch
-    Scenario: Device identifiers mismatch
-        Given the header "Authorization" is set to a valid access token which does not identify a single device
-        And at least 2 types of device identifiers are supported by the implementation
-        And the request body property "$.device" includes several identifiers, each of them identifying a valid but different device
-        When the HTTP "POST" request is sent
-        Then the response status code is 422
-        And the response property "$.status" is 422
-        And the response property "$.code" is "IDENTIFIER_MISMATCH"
-        And the response property "$.message" contains a user friendly text
 
     # Errors 400
 

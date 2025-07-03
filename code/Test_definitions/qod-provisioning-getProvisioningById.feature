@@ -15,7 +15,7 @@ Feature: CAMARA QoD Provisioning API, vwip - Operation getProvisioningById
         And the resource "/qod-provisioning/vwip/device-qos/{provisioningId}"                                                              |
         # Unless indicated otherwise the QoD provisioning must be created by the same API client given in the access token
         And the header "Authorization" is set to a valid access token granted to the same client that created the QoD provisioning
-        And the header "x-correlator" is set to a UUID value
+        And the header "x-correlator" complies with the schema at "#/components/schemas/XCorrelator"
         And the path parameter "provisioningId" is set by default to an existing QoD provisioning ID
 
     # Success scenarios

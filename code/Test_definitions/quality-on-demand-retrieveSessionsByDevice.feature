@@ -18,7 +18,7 @@ Feature: CAMARA Quality On Demand API, v1.1.0-rc.2 - Operation retrieveSessionsB
         And the resource "/quality-on-demand/vwip/retrieve-sessions"
         And the header "Content-Type" is set to "application/json"
         And the header "Authorization" is set to a valid access token
-        And the header "x-correlator" is set to a UUID value
+        And the header "x-correlator" complies with the schema at "#/components/schemas/XCorrelator"
         # Properties not explicitly overwitten in the Scenarios can take any values compliant with the schema
         And the request body is set by default to a request body compliant with the schema at "/components/schemas/RetrieveSessionsInput"
 
@@ -40,7 +40,7 @@ Feature: CAMARA Quality On Demand API, v1.1.0-rc.2 - Operation retrieveSessionsB
         And the response property "$.devicePorts" exists only if provided for createSession and with the same value
         And the response property "$.applicationServerPorts" exists only if provided for createSession and with the same value
         And the response property "$.sink" exists only if provided for createSession and with the same value
-        # sinkCredentials not explicitly mentioned to be returned if present, as this is debatible for security concerns
+        # sinkCredential not explicitly mentioned to be returned if present, as this is debatible for security concerns
         And the response property "$.startedAt" exists only if "$.qosStatus" is "AVAILABLE" and the value is in the past
         And the response property "$.expiresAt" exists only if "$.qosStatus" is not "REQUESTED" and the value is later than "$.startedAt"
         And the response property "$.statusInfo" exists only if "$.qosStatus" is "UNAVAILABLE"
@@ -79,11 +79,11 @@ Feature: CAMARA Quality On Demand API, v1.1.0-rc.2 - Operation retrieveSessionsB
         And the response property "$.message" contains a user friendly text
         
         Examples:
-            | device_identifier          | oas_spec_schema                             |
-            | $.device.phoneNumber       | /components/schemas/PhoneNumber             |
-            | $.device.ipv4Address       | /components/schemas/DeviceIpv4Addr          |
-            | $.device.ipv6Address       | /components/schemas/DeviceIpv6Address       |
-            | $.device.networkIdentifier | /components/schemas/NetworkAccessIdentifier |
+            | device_identifier                | oas_spec_schema                             |
+            | $.device.phoneNumber             | /components/schemas/PhoneNumber             |
+            | $.device.ipv4Address             | /components/schemas/DeviceIpv4Addr          |
+            | $.device.ipv6Address             | /components/schemas/DeviceIpv6Address       |
+            | $.device.networkAccessIdentifier | /components/schemas/NetworkAccessIdentifier |
 
   
     # This scenario may happen e.g. with 2-legged access tokens, which do not identify a single device.
@@ -143,19 +143,6 @@ Feature: CAMARA Quality On Demand API, v1.1.0-rc.2 - Operation retrieveSessionsB
         And the response property "$.code" is "SERVICE_NOT_APPLICABLE"
         And the response property "$.message" contains a user-friendly text
 
-
-    # Several identifiers provided but they do not identify the same device
-    # This scenario may happen with 2-legged access tokens, which do not identify a device
-    @quality_on_demand_retrieveSessionsByDevice_C01.08_device_identifiers_mismatch
-    Scenario: Device identifiers mismatch
-        Given the header "Authorization" is set to a valid access token which does not identify a single device
-        And at least 2 types of device identifiers are supported by the implementation
-        And the request body property "$.device" includes several identifiers, each of them identifying a valid but different device
-        When the HTTP "POST" request is sent
-        Then the response status code is 422
-        And the response property "$.status" is 422
-        And the response property "$.code" is "IDENTIFIER_MISMATCH"
-        And the response property "$.message" contains a user friendly text
 
     # Errors 400
 

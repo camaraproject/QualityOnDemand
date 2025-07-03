@@ -16,7 +16,7 @@ Feature: CAMARA Quality On Demand API, v1.1.0-rc.2 - Operation deleteSession
         And the resource "/quality_on_demand/vwip/sessions/{sessionId}"
         # Unless indicated otherwise the QoD provisioning must be created by the same API client given in the access token
         And the header "Authorization" is set to a valid access token
-        And the header "x-correlator" is set to a UUID value
+        And the header "x-correlator" complies with the schema at "#/components/schemas/XCorrelator"
         And the path parameter "sessionId" is set by default to a existing QoS session sessionId
 
     # Success scenarios
@@ -37,7 +37,7 @@ Feature: CAMARA Quality On Demand API, v1.1.0-rc.2 - Operation deleteSession
         When the request "deleteSession" is sent
         Then the response status code is 204
         And an event is received at the address of the "$.sink" provided for createSession
-        And the event header "Authorization" is set to "Bearer: " + the value of the property "$.sinkCredentials.accessToken" provided for createSession
+        And the event header "Authorization" is set to "Bearer: " + the value of the property "$.sinkCredential.accessToken" provided for createSession
         And the event header "Content-Type" is set to "application/cloudevents+json"
         And the event body complies with the OAS schema at "/components/schemas/EventQosStatusChanged"
         # Additionally any event body has to comply with some constraints beyond the schema compliance

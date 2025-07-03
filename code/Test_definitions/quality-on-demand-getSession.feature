@@ -14,7 +14,7 @@ Feature: CAMARA Quality On Demand API, v1.1.0-rc.2 - Operation getSession
         And the resource "/quality-on-demand/vwip/sessions/{sessionId}"
         # Unless indicated otherwise the session must be created by the same API client given in the access token
         And the header "Authorization" is set to a valid access token
-        And the header "x-correlator" is set to a UUID value
+        And the header "x-correlator" complies with the schema at "#/components/schemas/XCorrelator"
         And the path parameter "sessionId" is set by default to a existing QoS session sessionId
 
     # Success scenarios
@@ -36,7 +36,7 @@ Feature: CAMARA Quality On Demand API, v1.1.0-rc.2 - Operation getSession
         And the response property "$.devicePorts" exists only if provided for createSession and with the same value
         And the response property "$.applicationServerPorts" exists only if provided for createSession and with the same value
         And the response property "$.sink" exists only if provided for createSession and with the same value
-        # sinkCredentials not explicitly mentioned to be returned if present, as this is debatible for security concerns
+        # sinkCredential not explicitly mentioned to be returned if present, as this is debatible for security concerns
         And the response property "$.startedAt" exists only if "$.qosStatus" is "AVAILABLE" and the value is in the past
         And the response property "$.expiresAt" exists only if "$.qosStatus" is not "REQUESTED" and the value is later than "$.startedAt"
         And the response property "$.statusInfo" exists only if "$.qosStatus" is "UNAVAILABLE"
