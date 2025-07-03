@@ -93,7 +93,7 @@ paths:
   /qos-assignments:
     post:
       tags:
-        - QoS Provisioning
+        - QoS Assignment
       summary: Triggers the provisioning process for the assignment of a QoS profile to a device
       description: |
         Initiates the assignment of a specific QoS profile to a given device when connected to the operator's network.
