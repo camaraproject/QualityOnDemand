@@ -86,7 +86,7 @@ servers:
         default: http://localhost:9091
         description: API root, defined by the service provider, e.g. `api.example.com` or `api.example.com/somepath`
 tags:
-  - name: QoS Provisioning
+  - name: QoS Assignment
     description: Manage the permanent assignment of a QoS profile to a device
 
 paths:
