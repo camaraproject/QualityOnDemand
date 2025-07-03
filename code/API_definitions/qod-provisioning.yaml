@@ -198,7 +198,7 @@ paths:
   /qos-assignments/{assignmentId}:
     get:
       tags:
-        - QoS Provisioning
+        - QoS Assignment
       summary: Get the QoS profile assignment information identified by an assignment record ID
       description: |
         Querying for details about the QoS profile assignment
