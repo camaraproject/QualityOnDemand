@@ -294,7 +294,7 @@ paths:
   /retrieve-qos-assignment:
     post:
       tags:
-        - QoS Provisioning
+        - QoS Assignment
       summary: Returns the assignment record details of the QoS profile assignment for a device
       description: |
         Returns the details of the record for the assignment of a QoS profile to a device, if any.
