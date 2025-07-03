@@ -244,7 +244,7 @@ paths:
 
     delete:
       tags:
-        - QoS Provisioning
+        - QoS Assignment
       summary: Revokes a QoS profile assignment identified by an assignment record ID
       description: |
         Revokes the assignment of a QoS profile to a device performed by a previous assignment operation.
