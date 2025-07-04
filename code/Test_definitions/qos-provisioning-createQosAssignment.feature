@@ -1,4 +1,4 @@
-Feature: CAMARA QoS Provisioning API, vwip - Operation createQosAssignment
+Feature: CAMARA QoS Provisioning API, v0.3.0-rc.1 - Operation createQosAssignment
     # Input to be provided by the implementation to the tester
     #
     # Implementation indications:
@@ -15,7 +15,7 @@ Feature: CAMARA QoS Provisioning API, vwip - Operation createQosAssignment
 
     Background: Common createQosAssignment setup
         Given an environment at "apiRoot"
-        And the resource "/qos-provisioning/vwip/qos-assignments"
+        And the resource "/qos-provisioning/v0.3rc1/qos-assignments"
         And the header "Content-Type" is set to "application/json"
         And the header "Authorization" is set to a valid access token
         And the header "x-correlator" complies with the schema at "#/components/schemas/XCorrelator"
