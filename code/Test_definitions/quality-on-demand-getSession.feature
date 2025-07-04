@@ -1,4 +1,4 @@
-Feature: CAMARA Quality On Demand API, vwip - Operation getSession
+Feature: CAMARA Quality On Demand API, v1.1.0-rc.2 - Operation getSession
     # Input to be provided by the implementation to the tester
     #
     # Implementation indications:
@@ -11,7 +11,7 @@ Feature: CAMARA Quality On Demand API, vwip - Operation getSession
 
     Background: Common getSession setup
         Given an environment at "apiRoot"
-        And the resource "/quality-on-demand/vwip/sessions/{sessionId}"
+        And the resource "/quality-on-demand/v1rc2/sessions/{sessionId}"
         # Unless indicated otherwise the session must be created by the same API client given in the access token
         And the header "Authorization" is set to a valid access token
         And the header "x-correlator" complies with the schema at "#/components/schemas/XCorrelator"

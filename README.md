@@ -30,6 +30,8 @@ Incubating API Repository to evolve and maintain the definitions and documentati
 
 * Note: Please be aware that the project will have frequent updates to the main branch. There are no compatibility guarantees associated with code in any branch, including main, until a new release is created. For example, changes may be reverted before a release is created. **For best results, use the latest public release**.
 
+* **NEW**: Pre-release [r3.1](https://github.com/camaraproject/QualityOnDemand/releases/tag/r3.1) with quality-on-demand v1.1.0-rc.2, qos-profiles v1.1.0-rc.2 and qos-provisioning v0.3.0-rc.1 is available.
+
 * **The latest public release is [r2.2](https://github.com/camaraproject/QualityOnDemand/releases/tag/r2.2), with the following API versions:**
 
   * **quality-on-demand v1.0.0 (first stable version)**  
