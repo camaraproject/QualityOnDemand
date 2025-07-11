@@ -222,7 +222,7 @@ Feature: CAMARA Quality On Demand API, vwip - Operation retrieveSessionsByDevice
 
     @quality_on_demand_retrieveSessionsByDevice_403.1_missing_access_token_scope
     Scenario: Missing access token scope
-        Given the header "Authorization" is set to an access token that does not include scope qod-provisioning:device-qos:retrieve-by-device
+        Given the header "Authorization" is set to an access token that does not include scope quality-on-demand:sessions:retrieve-by-device
         When the request "retrieveSessionsByDevice" is sent
         Then the response status code is 403
         And the response header "x-correlator" has same value as the request header "x-correlator"
