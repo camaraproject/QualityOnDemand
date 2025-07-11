@@ -36,7 +36,7 @@ Feature: CAMARA Quality On Demand API, v1.1.0-rc.2 - Operation getSession
         And the response property "$.devicePorts" exists only if provided for createSession and with the same value
         And the response property "$.applicationServerPorts" exists only if provided for createSession and with the same value
         And the response property "$.sink" exists only if provided for createSession and with the same value
-        # sinkCredential not explicitly mentioned to be returned if present, as this is debatible for security concerns
+        # sinkCredential not explicitly mentioned to be returned if present, as this is debatable for security concerns
         And the response property "$.startedAt" exists only if "$.qosStatus" is "AVAILABLE" and the value is in the past
         And the response property "$.expiresAt" exists only if "$.qosStatus" is not "REQUESTED" and the value is later than "$.startedAt"
         And the response property "$.statusInfo" exists only if "$.qosStatus" is "UNAVAILABLE"

@@ -13,7 +13,7 @@ Feature: CAMARA Quality On Demand API, v1.1.0-rc.2 - Operation deleteSession
 
     Background: Common deleteSession setup
         Given an environment at "apiRoot"
-        And the resource "/quality_on_demand/v1rc2/sessions/{sessionId}"
+        And the resource "/quality-on-demand/v1rc2/sessions/{sessionId}"
         # Unless indicated otherwise the QoD provisioning must be created by the same API client given in the access token
         And the header "Authorization" is set to a valid access token
         And the header "x-correlator" complies with the schema at "#/components/schemas/XCorrelator"
@@ -32,7 +32,7 @@ Feature: CAMARA Quality On Demand API, v1.1.0-rc.2 - Operation deleteSession
 
     @quality_on_demand_deleteSession_02_event_notification
     Scenario: Event is received if the session was AVAILABLE and sink was provided
-        Given an existing QoS session created by operation createProvisioning with provided values for "sink" and "sinkCredential", and with status "AVAILABLE"
+        Given an existing QoS session created by operation createSession with provided values for "sink" and "sinkCredential", and with status "AVAILABLE"
         And the path parameter "sessionId" is set to the value for that QoS session
         When the request "deleteSession" is sent
         Then the response status code is 204
@@ -43,7 +43,7 @@ Feature: CAMARA Quality On Demand API, v1.1.0-rc.2 - Operation deleteSession
         # Additionally any event body has to comply with some constraints beyond the schema compliance
         And the event body property "$.id" is unique
         And the event body property "$.type" is set to "org.camaraproject.qod.v1.qos-status-changed"
-        And the event body property "$.data.sessionId" as returned for createProvisioning
+        And the event body property "$.data.sessionId" as returned for createSession
         And the event body property "$.data.qosStatus" is "UNAVAILABLE"
         And the event body property "$.data.statusInfo" is "DELETE_REQUESTED"
 
