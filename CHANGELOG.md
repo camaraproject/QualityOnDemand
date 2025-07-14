@@ -43,7 +43,7 @@ The API definition(s) are based on
 
 **quality-on-demand v1.1.0-rc.2 is the first release candidate of the version 1.1.0**
 
-qos-profiles v1.1.0 will be a minor update of the API, and is backward compatible with v1.0.0.
+quality-on-demand v1.1.0 will be a minor update of the API, and is backward compatible with v1.0.0.
 
 - API definition **with inline documentation**:
   - [View it on ReDoc](https://redocly.github.io/redoc/?url=https://raw.githubusercontent.com/camaraproject/QualityOnDemand/r3.1/code/API_definitions/quality-on-demand.yaml&nocors)
