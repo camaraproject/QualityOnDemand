@@ -88,7 +88,7 @@ qos-profiles v1.1.0 will be a minor update of the API, and is backward compatibl
 ### Changed
 
 * Adjusted x-correlator pattern as defined in CAMARA Commonalities by @jlurien in https://github.com/camaraproject/QualityOnDemand/pull/465
-* Updated documentation regarding device identifiers in responses and added DeviceResponse object to limit device identifiers in responses to exactly one by @eric-murray in https://github.com/camaraproject/QualityOnDemand/pull/453
+* Updated documentation regarding multiple device identifiers in requests and the expected behavior of implementations by @eric-murray in https://github.com/camaraproject/QualityOnDemand/pull/453
 
 ### Fixed
 
