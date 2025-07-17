@@ -10,7 +10,7 @@ info:
 
     The QoD API offers the application developers the capability to request for stable latency (reduced jitter) or throughput for some specified application data flows between application clients (within a user device) and application servers (backend services). The developer has a pre-defined set of Quality of Service (QoS) profiles which they could choose from depending on their latency or throughput requirements.
 
-    ![QoD API Overview](https://raw.githubusercontent.com/camaraproject/QualityOnDemand/main/documentation/API_documentation/resources/QoD_latency_overview.PNG)
+    ![QoD API Overview](https://raw.githubusercontent.com/camaraproject/QualityOnDemand/r3.1/documentation/API_documentation/resources/QoD_latency_overview.PNG)
 
     The usage of the API is based on QoS session resources, which can be created (based on available QoS profiles), queried and deleted. The deletion of a requested session can be triggered by the API consumer or can be triggered automatically once the QoS session has reached its limit.
 
@@ -56,7 +56,7 @@ info:
 
     Following diagram shows the interaction between different components
 
-    ![QoD Management API](https://raw.githubusercontent.com/camaraproject/QualityOnDemand/main/documentation/API_documentation/resources/QoD_details.PNG)
+    ![QoD Management API](https://raw.githubusercontent.com/camaraproject/QualityOnDemand/r3.1/documentation/API_documentation/resources/QoD_details.PNG)
 
     # Authorization and authentication
 
@@ -102,15 +102,15 @@ info:
   license:
     name: Apache 2.0
     url: https://www.apache.org/licenses/LICENSE-2.0.html
-  version: wip
-  x-camara-commonalities: 0.5
+  version: 1.1.0-rc.2
+  x-camara-commonalities: 0.6
 
 externalDocs:
-  description: Project documentation at Camara
+  description: Product documentation at CAMARA
   url: https://github.com/camaraproject/QualityOnDemand
 
 servers:
-  - url: "{apiRoot}/quality-on-demand/vwip"
+  - url: "{apiRoot}/quality-on-demand/v1rc2"
     variables:
       apiRoot:
         default: http://localhost:9091

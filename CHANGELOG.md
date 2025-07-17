@@ -1,6 +1,7 @@
 # Changelog QualityOnDemand
 
 ## Table of Contents
+- [r3.1](#r31)
 - **[r2.2](#r22) (Spring25 public release)**
 - [r2.1](#r21)
 - **[r1.3](#r13) (Fall24 public release)**
@@ -24,6 +25,115 @@ The below sections record the changes for each API version in each release as fo
 * for the first release-candidate, all changes since the last public release
 * for subsequent release-candidate(s), only the delta to the previous release-candidate
 * for a public release, the consolidated changes since the previous public release
+
+# r3.1
+## Release Notes
+
+This pre-release contains the definition and documentation of
+
+* quality-on-demand v1.1.0-rc.2
+* qos-profiles v1.1.0-rc.2
+* qos-provisioning v0.3.0-rc.1
+
+The API definition(s) are based on
+* Commonalities v0.6.0-rc.1 (r3.2)
+* Identity and Consent Management v0.4.0-rc.1 (r3.2)
+
+## quality-on-demand v1.1.0-rc.2
+
+**quality-on-demand v1.1.0-rc.2 is the first release candidate of the version 1.1.0**
+
+quality-on-demand v1.1.0 will be a minor update of the API, and is backward compatible with v1.0.0.
+
+- API definition **with inline documentation**:
+  - [View it on ReDoc](https://redocly.github.io/redoc/?url=https://raw.githubusercontent.com/camaraproject/QualityOnDemand/r3.1/code/API_definitions/quality-on-demand.yaml&nocors)
+  - [View it on Swagger Editor](https://camaraproject.github.io/swagger-ui/?url=https://raw.githubusercontent.com/camaraproject/QualityOnDemand/r3.1/code/API_definitions/quality-on-demand.yaml)
+  - OpenAPI [YAML spec file](https://github.com/camaraproject/QualityOnDemand/blob/r3.1/code/API_definitions/quality-on-demand.yaml)
+
+### Added
+
+* Added HTTP-422 error response when qos profile is not applicable during session creation by @maxl2287 in https://github.com/camaraproject/QualityOnDemand/pull/433
+* Added error response documentation in `info.description` by @hdamker in https://github.com/camaraproject/QualityOnDemand/pull/467
+
+### Changed
+
+* Adjusted x-correlator pattern as defined in CAMARA Commonalities by @jlurien in https://github.com/camaraproject/QualityOnDemand/pull/465
+* Updated documentation regarding device identifiers in responses and added DeviceResponse object to limit device identifiers in responses to exactly one by @eric-murray in https://github.com/camaraproject/QualityOnDemand/pull/453
+
+### Fixed
+
+* Resolved mismatch between test and API definition for networkAccessIdentifier and sinkCredential by @jlurien in https://github.com/camaraproject/QualityOnDemand/pull/462
+
+### Removed
+
+* Removed AUTHENTICATION_REQUIRED error by @eric-murray in https://github.com/camaraproject/QualityOnDemand/pull/436
+* Removed the IDENTIFIER_MISMATCH error code option from 422 responses and associated test cases by @eric-murray in https://github.com/camaraproject/QualityOnDemand/pull/453
+
+## qos-profiles v1.1.0-rc.2
+
+**qos-profiles v1.1.0-rc.2 is the first release candidate of the version 1.1.0**
+
+qos-profiles v1.1.0 will be a minor update of the API, and is backward compatible with v1.0.0.
+
+- API definition **with inline documentation**:
+  - [View it on ReDoc](https://redocly.github.io/redoc/?url=https://raw.githubusercontent.com/camaraproject/QualityOnDemand/r3.1/code/API_definitions/qos-profiles.yaml&nocors)
+  - [View it on Swagger Editor](https://camaraproject.github.io/swagger-ui/?url=https://raw.githubusercontent.com/camaraproject/QualityOnDemand/r3.1/code/API_definitions/qos-profiles.yaml)
+  - OpenAPI [YAML spec file](https://github.com/camaraproject/QualityOnDemand/blob/r3.1/code/API_definitions/qos-profiles.yaml)
+
+### Added
+
+* Added an optional countryAvailability field to the QoS profile to allow an API provider to indicate in which countries (and networks) the profile is available by @eric-murray in https://github.com/camaraproject/QualityOnDemand/pull/435
+* Added error response documentation in `info.description` by @hdamker in https://github.com/camaraproject/QualityOnDemand/pull/467
+
+### Changed
+
+* Adjusted x-correlator pattern as defined in CAMARA Commonalities by @jlurien in https://github.com/camaraproject/QualityOnDemand/pull/465
+* Updated documentation regarding multiple device identifiers in requests and the expected behavior of implementations by @eric-murray in https://github.com/camaraproject/QualityOnDemand/pull/453
+
+### Fixed
+
+* Resolved mismatch between test and API definition for networkAccessIdentifier and sinkCredential by @jlurien in https://github.com/camaraproject/QualityOnDemand/pull/462
+
+### Removed
+
+* Removed AUTHENTICATION_REQUIRED error by @eric-murray in https://github.com/camaraproject/QualityOnDemand/pull/436
+* Removed the IDENTIFIER_MISMATCH error code option from 422 responses and associated test cases by @eric-murray in https://github.com/camaraproject/QualityOnDemand/pull/453
+
+## qos-provisioning v0.3.0-rc.1
+
+**qos-provisioning v0.3.0-rc.1 is the release candidate of the version 0.3.0 of the API**
+
+**There are multiple breaking changes compared to v0.2.0 of qod-provisioning**, e.g.:
+* The API got renamed to QoS Provisioning (from QoD Provisioning)
+* The resource path is renamed to `qos-assignments` (from `qos-device`)
+* Properties, operationIds, schemata etc are aligned with with "qos-assignments", e.g. `provisioningId` was changed to `assignmentId`
+
+- API definition **with inline documentation**:
+  - [View it on ReDoc](https://redocly.github.io/redoc/?url=https://raw.githubusercontent.com/camaraproject/QualityOnDemand/r3.1/code/API_definitions/qos-provisioning.yaml&nocors)
+  - [View it on Swagger Editor](https://camaraproject.github.io/swagger-ui/?url=https://raw.githubusercontent.com/camaraproject/QualityOnDemand/r3.1/code/API_definitions/qos-provisioning.yaml)
+  - OpenAPI [YAML spec file](https://github.com/camaraproject/QualityOnDemand/blob/r3.1/code/API_definitions/qos-provisioning.yaml)
+
+### Added
+
+* Added error response documentation in `info.description` by @hdamker in https://github.com/camaraproject/QualityOnDemand/pull/467
+
+### Changed
+
+* Refined the terminology throughout the API by @jlurien in https://github.com/camaraproject/QualityOnDemand/pull/447
+  * URL, paths, properties, operationIs and schemata etc are changed, see breaking changes above
+* Adjusted x-correlator pattern as defined in CAMARA Commonalities by @jlurien in https://github.com/camaraproject/QualityOnDemand/pull/465
+* Updated documentation regarding device identifiers in responses and added DeviceResponse object to limit device identifiers in responses to exactly one by @eric-murray in https://github.com/camaraproject/QualityOnDemand/pull/453
+
+### Fixed
+
+* Resolved mismatch between test and API definition for networkAccessIdentifier and sinkCredential by @jlurien in https://github.com/camaraproject/QualityOnDemand/pull/447
+
+### Removed
+
+* Removed AUTHENTICATION_REQUIRED error by @eric-murray in https://github.com/camaraproject/QualityOnDemand/pull/436
+* Removed the IDENTIFIER_MISMATCH error code option from 422 responses and associated test cases by @eric-murray in https://github.com/camaraproject/QualityOnDemand/pull/453
+
+**Full Changelog**: https://github.com/camaraproject/QualityOnDemand/compare/r2.2...r3.1
 
 # r2.2
 ## Release Notes
