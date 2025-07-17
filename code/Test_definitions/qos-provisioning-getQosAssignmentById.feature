@@ -1,4 +1,4 @@
-Feature: CAMARA QoD Provisioning API, v0.3.0-rc.1 - Operation getQosAssignmentById
+Feature: CAMARA QoS Provisioning API, v0.3.0-rc.1 - Operation getQosAssignmentById
     # Input to be provided by the implementation to the tester
     #
     # Implementation indications:
