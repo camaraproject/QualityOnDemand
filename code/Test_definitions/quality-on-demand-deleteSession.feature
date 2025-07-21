@@ -1,4 +1,4 @@
-Feature: CAMARA Quality On Demand API, v1.1.0-rc.2 - Operation deleteSession
+Feature: CAMARA Quality On Demand API, vwip - Operation deleteSession
     # Input to be provided by the implementation to the tester
     #
     # Implementation indications:
@@ -13,7 +13,7 @@ Feature: CAMARA Quality On Demand API, v1.1.0-rc.2 - Operation deleteSession
 
     Background: Common deleteSession setup
         Given an environment at "apiRoot"
-        And the resource "/quality-on-demand/v1rc2/sessions/{sessionId}"
+        And the resource "/quality-on-demand/vwip/sessions/{sessionId}"
         # Unless indicated otherwise the QoD provisioning must be created by the same API client given in the access token
         And the header "Authorization" is set to a valid access token
         And the header "x-correlator" complies with the schema at "#/components/schemas/XCorrelator"

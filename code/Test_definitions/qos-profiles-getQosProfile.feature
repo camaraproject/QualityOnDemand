@@ -1,4 +1,4 @@
-Feature: CAMARA QoS Profiles API, v1.1.0-rc.2 - Operation getQosProfile
+Feature: CAMARA QoS Profiles API, vwip - Operation getQosProfile
     # Input to be provided by the implementation to the tester
     #
     # Implementation indications:
@@ -11,7 +11,7 @@ Feature: CAMARA QoS Profiles API, v1.1.0-rc.2 - Operation getQosProfile
 
     Background: Common getQosProfile setup
         Given an environment at "apiRoot"
-        And the resource "qos-profiles/v1rc2/qos-profiles/{name}"
+        And the resource "qos-profiles/vwip/qos-profiles/{name}"
         And the header "Authorization" is set to a valid access token
         And the header "x-correlator" complies with the schema at "#/components/schemas/XCorrelator"
         And the path param "name" is set by default to a existing QoS profile name

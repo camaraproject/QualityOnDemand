@@ -1,4 +1,4 @@
-Feature: CAMARA Quality On Demand API, v1.1.0-rc.2 - Operation retrieveSessionsByDevice
+Feature: CAMARA Quality On Demand API, vwip - Operation retrieveSessionsByDevice
     # Input to be provided by the implementation to the tester
     #
     # Implementation indications:
@@ -15,7 +15,7 @@ Feature: CAMARA Quality On Demand API, v1.1.0-rc.2 - Operation retrieveSessionsB
 
     Background: Common retrieveSessionsByDevice setup
         Given an environment at "apiRoot"
-        And the resource "/quality-on-demand/v1rc2/retrieve-sessions"
+        And the resource "/quality-on-demand/vwip/retrieve-sessions"
         And the header "Content-Type" is set to "application/json"
         And the header "Authorization" is set to a valid access token
         And the header "x-correlator" complies with the schema at "#/components/schemas/XCorrelator"
