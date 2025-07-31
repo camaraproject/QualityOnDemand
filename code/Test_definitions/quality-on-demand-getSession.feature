@@ -27,21 +27,21 @@ Feature: CAMARA Quality On Demand API, vwip - Operation getSession
     Then the response status code is 200
     And the response header "Content-Type" is "application/json"
     And the response header "x-correlator" has same value as the request header "x-correlator"
-        # The response has to comply with the generic response schema which is part of the spec
+    # The response has to comply with the generic response schema which is part of the spec
     And the response body complies with the OAS schema at "/components/schemas/SessionInfo"
-        # Additionally any success response has to comply with some constraints beyond the schema compliance
+    # Additionally any success response has to comply with some constraints beyond the schema compliance
     And the response property "$.device" exists only if provided for createSession and with the same value
     And the response property "$.applicationServer" has the same value as in the request body
     And the response property "$.qosProfile" has the value provided for createSession
     And the response property "$.devicePorts" exists only if provided for createSession and with the same value
     And the response property "$.applicationServerPorts" exists only if provided for createSession and with the same value
     And the response property "$.sink" exists only if provided for createSession and with the same value
-        # sinkCredentials not explicitly mentioned to be returned if present, as this is debatible for security concerns
+    # sinkCredentials not explicitly mentioned to be returned if present, as this is debatable for security concerns
     And the response property "$.startedAt" exists only if "$.qosStatus" is "AVAILABLE" and the value is in the past
     And the response property "$.expiresAt" exists only if "$.qosStatus" is not "REQUESTED" and the value is later than "$.startedAt"
     And the response property "$.statusInfo" exists only if "$.qosStatus" is "UNAVAILABLE"
 
-  @quality_on_demand_getSession_02_get_recent_unvailable
+  @quality_on_demand_getSession_02_get_recent_unavailable
   Scenario: QOS Session becoming "UNAVAILABLE" is not released for at least 360 seconds
     Given an existing QoS session deleted in the last 360 seconds
     And the path parameter "sessionId" is set to the value for that QoS session

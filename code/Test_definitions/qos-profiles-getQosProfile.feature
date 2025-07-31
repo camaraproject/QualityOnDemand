@@ -19,7 +19,7 @@ Feature: CAMARA QoS Profiles API, vwip - Operation getQosProfile
   # Success scenarios
 
   @qos_profiles_getQosProfile_01_generic_success_scenario
-  Scenario: Common validations for any sucess scenario
+  Scenario: Common validations for any success scenario
     # Valid testing device and default request body compliant with the schema
     Given an existing QoS profile
     And the path parameter "name" is set to the value for an that QoS profile
