@@ -10,7 +10,7 @@ info:
 
     The QoD API offers the application developers the capability to request for stable latency (reduced jitter) or throughput for some specified application data flows between application clients (within a user device) and application servers (backend services). The developer has a pre-defined set of Quality of Service (QoS) profiles which they could choose from depending on their latency or throughput requirements.
 
-    ![QoD API Overview](https://raw.githubusercontent.com/camaraproject/QualityOnDemand/main/documentation/API_documentation/resources/QoD_latency_overview.PNG)
+    ![QoD API Overview](https://raw.githubusercontent.com/camaraproject/QualityOnDemand/r3.1/documentation/API_documentation/resources/QoD_latency_overview.PNG)
 
     The usage of the API is based on QoS session resources, which can be created (based on available QoS profiles), queried and deleted. The deletion of a requested session can be triggered by the API consumer or can be triggered automatically once the QoS session has reached its limit.
 
@@ -26,7 +26,9 @@ info:
     Latency, throughput or priority requirements of the application mapped to relevant QoS profile values. The set of QoS Profiles that an API provider is offering may be retrieved via the `qos-profiles` API (cf. https://github.com/camaraproject/QualityOnDemand/) or will be agreed during the onboarding with the API provider.
 
     * **Identifier for the device**:
-    At least one identifier for the device (user equipment) out of four options: IPv4 address, IPv6 address, Phone number, or Network Access Identifier assigned by the mobile network operator for the device. Note: Network Access Identifier is defined for future use and will not be supported with this version of the API.
+    At least one identifier for the device (user equipment) out of four options: IPv4 address, IPv6 address, Phone Number, or Network Access Identifier assigned by the mobile network operator for the device. Where more than one device identifier is provided, only one identifier will be selected by the implementation and this choice indicated to the API consumer in the session details. If only a single device identifier is provided, the implementation may or may not include the device identifier in the session details.
+
+      Note: Network Access Identifier is defined for future use and will not be supported with this version of the API.
 
     * **Identifier for the application server**:
     IPv4 and/or IPv6 address of the application server (application backend)
@@ -38,7 +40,7 @@ info:
     Duration (in seconds) for which the QoS session (between application client and application server) should be created. Limits for session duration can be set by the implementation for the QoS profile. The user may request a termination before its expiration.
 
      * **Notification URL and token**:
-    The API consumer may provide a callback URL (`sink`) on which notifications about all status change events (eg. provisioning termination) can be received from the API provider. This is an optional parameter. The notification will be sent as a CloudEvent compliant message.
+    The API consumer may provide a callback URL (`sink`) on which notifications about all status change events (eg. session termination) can be received from the API provider. This is an optional parameter. The notification will be sent as a CloudEvent compliant message.
     If `sink` is included, it is RECOMMENDED for the client to provide as well the `sinkCredential` property to protect the notification endpoint. In the current version, `sinkCredential.credentialType` MUST be set to `ACCESSTOKEN` if provided.
 
     # API functionality
@@ -54,7 +56,7 @@ info:
 
     Following diagram shows the interaction between different components
 
-    ![QoD Management API](https://raw.githubusercontent.com/camaraproject/QualityOnDemand/main/documentation/API_documentation/resources/QoD_details.PNG)
+    ![QoD Management API](https://raw.githubusercontent.com/camaraproject/QualityOnDemand/r3.1/documentation/API_documentation/resources/QoD_details.PNG)
 
     # Authorization and authentication
 
@@ -89,18 +91,22 @@ info:
     - Identifying the intended device from a unique identifier for that device, such as its source IP address and port
     - Check with the SIM provider whether a unique "secondary" phone number is already associated with each device, and use the secondary phone number to identify the intended device if available
 
-    # Further info and support
+    # Additional CAMARA error responses
 
-    (FAQs will be added in a later version of the documentation)
+    The list of error codes in this API specification is not exhaustive. Therefore the API specification may not document some non-mandatory error statuses as indicated in `CAMARA API Design Guide`.
+
+    Please refer to the `CAMARA_common.yaml` of the Commonalities Release associated to this API version for a complete list of error responses. The applicable Commonalities Release can be identified in the `API Readiness Checklist` document associated to this API version.
+
+    As a specific rule, error `501 - NOT_IMPLEMENTED` can be only a possible error response if it is explicitly documented in the API.
 
   license:
     name: Apache 2.0
     url: https://www.apache.org/licenses/LICENSE-2.0.html
   version: wip
-  x-camara-commonalities: 0.5
+  x-camara-commonalities: 0.6
 
 externalDocs:
-  description: Project documentation at Camara
+  description: Product documentation at CAMARA
   url: https://github.com/camaraproject/QualityOnDemand
 
 servers:
@@ -203,6 +209,11 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/SessionInfo"
+              examples:
+                Successful Session Creation:
+                  $ref: "#/components/examples/SESSION_CREATION_EXAMPLE"
+                Successful Session Creation With Device Disambiguation:
+                  $ref: "#/components/examples/SESSION_CREATION_EXAMPLE_WITH_DEVICE_RESPONSE"
         "400":
           $ref: "#/components/responses/CreateSessionBadRequest400"
         "401":
@@ -415,6 +426,8 @@ paths:
               examples:
                 RETRIEVE_SESSIONS_ONE_ITEM:
                   $ref: "#/components/examples/RETRIEVE_SESSIONS_EXAMPLE"
+                RETRIEVE_SESSIONS_ONE_ITEM_WITH_DEVICE_DISAMBIGUATION_REQUIRED:
+                  $ref: "#/components/examples/RETRIEVE_SESSIONS_EXAMPLE_WITH_DEVICE_RESPONSE"
                 RETRIEVE_SESSIONS_NO_ITEMS:
                   $ref: "#/components/examples/RETRIEVE_SESSIONS_EMPTY_EXAMPLE"
         "400":
@@ -450,18 +463,21 @@ components:
       in: header
       description: Correlation id for the different services
       schema:
-        type: string
-        pattern: ^[a-zA-Z0-9-]{0,55}$
-        example: "b4333c46-49c0-4f62-80d7-f0ef930f1c46"
+        $ref: "#/components/schemas/XCorrelator"
 
   headers:
     x-correlator:
       description: Correlation id for the different services
       schema:
-        type: string
-        pattern: ^[a-zA-Z0-9-]{0,55}$
+        $ref: "#/components/schemas/XCorrelator"
 
   schemas:
+    XCorrelator:
+      description: Value for the x-correlator
+      type: string
+      pattern: ^[a-zA-Z0-9-_:;.\/<>{}]{0,256}$
+      example: "b4333c46-49c0-4f62-80d7-f0ef930f1c46"
+
     SessionId:
       description: Session ID in UUID format
       type: string
@@ -471,8 +487,6 @@ components:
       description: Common attributes of a QoD session
       type: object
       properties:
-        device:
-          $ref: "#/components/schemas/Device"
         applicationServer:
           $ref: "#/components/schemas/ApplicationServer"
         devicePorts:
@@ -504,6 +518,13 @@ components:
         Note that the device object is defined as optional and will only to be returned if provided in createSession. If more than one type of device identifier was provided, only one identifier will be returned (at implementation choice and with the original value provided in createSession).
         Please note that IP addresses of devices can change and get reused, so the original values may no longer identify the same device. They identified the device at the time of session creation.
       allOf:
+        - type: object
+          properties:
+            device:
+              description: Disambiguates the device to which the session applies when multiple device identifiers were provided
+              allOf:
+                - $ref: "#/components/schemas/DeviceResponse"
+                - example: {"phoneNumber": "+123456789"}
         - $ref: "#/components/schemas/BaseSessionInfo"
         - type: object
           properties:
@@ -546,6 +567,10 @@ components:
     CreateSession:
       description: Attributes required to create a session
       allOf:
+        - type: object
+          properties:
+            device:
+              $ref: "#/components/schemas/Device"
         - $ref: "#/components/schemas/BaseSessionInfo"
         - type: object
           properties:
@@ -833,6 +858,16 @@ components:
         ipv6Address:
           $ref: "#/components/schemas/DeviceIpv6Address"
       minProperties: 1
+
+    DeviceResponse:
+      description: |
+        An identifier for the end-user equipment able to connect to the network that the response refers to. This parameter is only returned when the API consumer includes the `device` parameter in their request (i.e. they are using a two-legged access token), and is relevant when more than one device identifier is specified, as only one of those device identifiers is allowed in the response.
+
+        If the API consumer provides more than one device identifier in their request, the API provider must return a single identifier which is the one they are using to fulfil the request, even if the identifiers do not match the same device. API provider does not perform any logic to validate/correlate that the indicated device identifiers match the same device. No error should be returned if the identifiers are otherwise valid to prevent API consumers correlating different identifiers with a given end user.
+
+      allOf:
+        - $ref: "#/components/schemas/Device"
+        - maxProperties: 1
 
     ApplicationServer:
       description: |
@@ -1306,18 +1341,11 @@ components:
                       - 422
                   code:
                     enum:
-                      - IDENTIFIER_MISMATCH
                       - SERVICE_NOT_APPLICABLE
                       - MISSING_IDENTIFIER
                       - UNSUPPORTED_IDENTIFIER
                       - UNNECESSARY_IDENTIFIER
           examples:
-            GENERIC_422_IDENTIFIER_MISMATCH:
-              description: Inconsistency between identifiers not pointing to the same device
-              value:
-                status: 422
-                code: IDENTIFIER_MISMATCH
-                message: Provided identifiers are not consistent.
             GENERIC_422_SERVICE_NOT_APPLICABLE:
               description: Service not applicable for the provided identifier
               value:
@@ -1359,19 +1387,12 @@ components:
                       - 422
                   code:
                     enum:
-                      - IDENTIFIER_MISMATCH
                       - SERVICE_NOT_APPLICABLE
                       - MISSING_IDENTIFIER
                       - UNSUPPORTED_IDENTIFIER
                       - UNNECESSARY_IDENTIFIER
                       - QUALITY_ON_DEMAND.QOS_PROFILE_NOT_APPLICABLE
           examples:
-            GENERIC_422_IDENTIFIER_MISMATCH:
-              description: Inconsistency between identifiers not pointing to the same device
-              value:
-                status: 422
-                code: IDENTIFIER_MISMATCH
-                message: Provided identifiers are not consistent.
             GENERIC_422_SERVICE_NOT_APPLICABLE:
               description: Service not applicable for the provided identifier
               value:
@@ -1437,15 +1458,37 @@ components:
                 message: Rate limit reached.
 
   examples:
+    SESSION_CREATION_EXAMPLE:
+      summary: Successful session creation with device not included in response
+      description: Example response after a new QoS session has been created using a 3-legged access token, or possibly a single device identifier
+      value:
+        applicationServer:
+          ipv4Address: 198.51.100.0/24
+        qosProfile: QOS_L
+        sink: https://application-server.com/notifications
+        sessionId: 3fa85f64-5717-4562-b3fc-2c963f66afa6
+        duration: 3600
+        qosStatus: REQUESTED
+
+    SESSION_CREATION_EXAMPLE_WITH_DEVICE_RESPONSE:
+      summary: Successful session creation with device included in response
+      description: Example response after a new QoS session has been created using a 2-legged access token with multiple device identifiers, or possibly only a single device identifier
+      value:
+        device:
+          phoneNumber: "+123456789"
+        applicationServer:
+          ipv4Address: 198.51.100.0/24
+        qosProfile: QOS_L
+        sink: https://application-server.com/notifications
+        sessionId: 3fa85f64-5717-4562-b3fc-2c963f66afa6
+        duration: 3600
+        qosStatus: REQUESTED
+
     SESSION_AVAILABLE_EXAMPLE:
       summary: QoS session status is available
       description: QoS session info when status is available
       value:
         duration: 3600
-        device:
-          ipv4Address:
-            publicAddress: 203.0.113.0
-            publicPort: 59765
         applicationServer:
           ipv4Address: 198.51.100.0/24
         qosProfile: QOS_L
@@ -1460,10 +1503,6 @@ components:
       description: QoS session info when status is unavailable due to network termination
       value:
         duration: 2428
-        device:
-          ipv4Address:
-            publicAddress: 203.0.113.0
-            publicPort: 59765
         applicationServer:
           ipv4Address: 198.51.100.0/24
         qosProfile: QOS_L
@@ -1489,17 +1528,31 @@ components:
           statusInfo: 'DURATION_EXPIRED'
 
     RETRIEVE_SESSIONS_EXAMPLE:
-      summary: List of QoS sessions for the device
-      description: A single QoS session for the device is available
+      summary: List of QoS sessions for the specified device
+      description: A single QoS session for the specified device is available
       value:
-        - duration: 3600
-          device:
+        - applicationServer:
+            ipv4Address: 0.0.0.0/0
+          qosProfile: QOS_L
+          sink: https://application-server.com/notifications
+          sessionId: 3fa85f64-5717-4562-b3fc-2c963f66afa6
+          duration: 3600
+          startedAt: "2024-06-01T12:00:00Z"
+          expiresAt: "2024-06-01T13:00:00Z"
+          qosStatus: AVAILABLE
+
+    RETRIEVE_SESSIONS_EXAMPLE_WITH_DEVICE_RESPONSE:
+      summary: List of QoS sessions for a specified device with the device in the response
+      description: A single QoS session for the device is available and the device to which the session applies is included in the response
+      value:
+        - device:
             phoneNumber: "+123456789"
           applicationServer:
             ipv4Address: 0.0.0.0/0
           qosProfile: QOS_L
           sink: https://application-server.com/notifications
           sessionId: 3fa85f64-5717-4562-b3fc-2c963f66afa6
+          duration: 3600
           startedAt: "2024-06-01T12:00:00Z"
           expiresAt: "2024-06-01T13:00:00Z"
           qosStatus: AVAILABLE

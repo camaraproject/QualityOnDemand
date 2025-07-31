@@ -2,7 +2,7 @@ openapi: 3.0.3
 info:
   title: QoS Profiles
   description: |
-    The Qualtiy-of-Service (QoS) Profiles API provides a set of predefined network performance characteristics, such as latency, throughput, and priority, identified by a unique name. These profiles allow application developers to specify the desired network behavior for their application's data traffic, ensuring optimal performance. By selecting an appropriate QoS profile, developers can request stable latency (reduced jitter) or throughput for specific data flows between client devices and application servers when used by the Quality-On-Demand APIs.
+    The Quality-of-Service (QoS) Profiles API provides a set of predefined network performance characteristics, such as latency, throughput, and priority, identified by a unique name. These profiles allow application developers to specify the desired network behavior for their application's data traffic, ensuring optimal performance. By selecting an appropriate QoS profile, developers can request stable latency (reduced jitter) or throughput for specific data flows between client devices and application servers when used by the Quality-On-Demand APIs.
 
     # Introduction
 
@@ -15,7 +15,7 @@ info:
     - Discover the available QoS profiles for a specific device
     - Retrieve the characteristics of a specific QoS profile by name
 
-    How QoS profiles are mapped to connectivity characteristics are subject to agreements between the API provider and the API consumer. Within the CAMARA project, you can find a sample for such a mapping of QoS profiles. [CAMARA QoS Profiles Mapping Table (REFERENCE DRAFT)](https://github.com/camaraproject/QualityOnDemand/blob/main/documentation/API_documentation/QoSProfile_Mapping_Table.md)
+    How QoS profiles are mapped to connectivity characteristics are subject to agreements between the API provider and the API consumer. Within the CAMARA project, you can find a sample for such a mapping of QoS profiles. [CAMARA QoS Profiles Mapping Table (REFERENCE DRAFT)](https://github.com/camaraproject/QualityOnDemand/blob/r3.1/documentation/API_documentation/QoSProfile_Mapping_Table.md)
 
     # Authorization and authentication
 
@@ -46,23 +46,27 @@ info:
     - Identify the intended device from a unique identifier for that device, such as its source IP address and port
     - Check with the SIM provider whether a unique "secondary" phone number is already associated with each device, and use the secondary phone number to identify the intended device if available
 
-    # Further info and support
+    # Additional CAMARA error responses
 
-    (FAQs will be added in a later version of the documentation)
+    The list of error codes in this API specification is not exhaustive. Therefore the API specification may not document some non-mandatory error statuses as indicated in `CAMARA API Design Guide`.
+
+    Please refer to the `CAMARA_common.yaml` of the Commonalities Release associated to this API version for a complete list of error responses. The applicable Commonalities Release can be identified in the `API Readiness Checklist` document associated to this API version.
+
+    As a specific rule, error `501 - NOT_IMPLEMENTED` can be only a possible error response if it is explicitly documented in the API.
 
   license:
     name: Apache 2.0
     url: https://www.apache.org/licenses/LICENSE-2.0.html
   version: wip
-  x-camara-commonalities: 0.5
+  x-camara-commonalities: 0.6
 
 
 externalDocs:
-  description: Project documentation at Camara
+  description: Product documentation at CAMARA
   url: https://github.com/camaraproject/QualityOnDemand
 
 servers:
-  - url: "{apiRoot}/qos-profiles/wip"
+  - url: "{apiRoot}/qos-profiles/vwip"
     variables:
       apiRoot:
         default: http://localhost:9091
@@ -83,6 +87,7 @@ paths:
         **NOTES:**
         - The access token may be either a 2-legged or 3-legged access token.
         - If the access token is 3-legged, all returned QoS Profiles will be available to the subject (device) associated with the access token.
+        - If the access token is 2-legged and a device filter is provided, all returned QoS Profiles will be available to that device. If multiple device identifiers are provided within the device property, only QoS Profiles available to the device identifier chosen by the implementation will be returned, even if the identifiers do not match the same device. API provider does not perform any logic to validate/correlate that the indicated device identifiers match the same device. No error should be returned if the identifiers are otherwise valid to prevent API consumers correlating different identifiers with a given end user.
         - This call uses the POST method instead of GET to comply with the CAMARA Commonalities guidelines for sending sensitive or complex data in API calls. Since the device field may contain personally identifiable information, it should not be sent via GET. Additionally, this call may include complex data structures.
           [CAMARA API Design Guidelines](https://github.com/camaraproject/Commonalities/blob/r2.3/documentation/API-design-guidelines.md#post-or-get-for-transferring-sensitive-or-complex-data)
 
@@ -111,6 +116,9 @@ paths:
                 type: array
                 items:
                   $ref: "#/components/schemas/QosProfile"
+              examples:
+                List of QoS Profiles:
+                  $ref: "#/components/examples/LIST_OF_QOS_PROFILES"
         "400":
           $ref: "#/components/responses/Generic400"
         "401":
@@ -179,19 +187,21 @@ components:
       in: header
       description: Correlation id for the different services
       schema:
-        type: string
-        pattern: ^[a-zA-Z0-9-]{0,55}$
-        example: "b4333c46-49c0-4f62-80d7-f0ef930f1c46"
+        $ref: "#/components/schemas/XCorrelator"
 
   headers:
     x-correlator:
       description: Correlation id for the different services
       schema:
-        type: string
-        pattern: ^[a-zA-Z0-9-]{0,55}$
-        example: "b4333c46-49c0-4f62-80d7-f0ef930f1c46"
+        $ref: "#/components/schemas/XCorrelator"
 
   schemas:
+    XCorrelator:
+      description: Value for the x-correlator
+      type: string
+      pattern: ^[a-zA-Z0-9-_:;.\/<>{}]{0,256}$
+      example: "b4333c46-49c0-4f62-80d7-f0ef930f1c46"
+
     QosProfile:
       description: |
         Data type with attributes of a QosProfile
@@ -206,6 +216,14 @@ components:
           example: "QoS profile for video streaming"
         status:
           $ref: "#/components/schemas/QosProfileStatusEnum"
+        countryAvailability:
+          description: |
+            A list of countries, and optionally networks, for which the API provider makes the profile available.
+            - When profiles are filtered for a specific device (i.e. using a 3-legged access token or an explicit device filter parameter), the profile can be used by that device in any of these countries when connected to any of the listed networks (assuming roaming is permitted for networks that are not the device's home network), or the API provider's own network if no networks are listed
+            - When there is no device filter, availability for a given country means that the QoS profile may be available to some devices connected to the listed networks in that country (or to the API provider’s default network if none are listed). However, this does not imply that the profile is available to all devices, or that a particular device will be able to use the profile across all listed countries or networks. In particular, the response does not provide enough information to determine availability for roaming for specific devices; consumers should query the API with a specific device identifier to get definitive availability.
+            - If this field is not present in the QoS profile, no assumption can be made about the availability of the profile in any given country or for any given network
+          allOf:
+            - $ref: "#/components/schemas/Availability"
         targetMinUpstreamRate:
           description: |
             This is the target minimum upload speed for the QoS profile.
@@ -461,6 +479,30 @@ components:
         status:
           $ref: '#/components/schemas/QosProfileStatusEnum'
 
+    Availability:
+      description: A list of countries, and optionally networks, for which the API provider makes the profile available
+      type: array
+      items:
+        type: object
+        required:
+          - countryName
+        properties:
+          countryName:
+            description: The two letter ISO 3166-2 country code for the country in which the QoS profile is available in at least one network
+            type: string
+            pattern: ^[A-Z]{2}$
+            example: "GB"
+          networks:
+            description: A list of networks within the country for which the QoS profile is available from the API provider
+            type: array
+            items:
+              description: The network identifier. For mobile networks, this is the PLMN Identifier (MCC + MNC), which is a 5 or 6 digit integer.
+              type: string
+              example: "23591"
+            example: ["23591", "23415"]
+        example: {"countryName": "GB", "networks": ["23591", "23415"]}
+      example: [{"countryName": "GB", "networks": ["23591", "23415"]}, {"countryName": "DE", "networks": ["26202"]}]
+
     Device:
       description: |
         End-user equipment able to connect to a mobile network. Examples of devices include smartphones or IoT sensors/actuators.
@@ -484,7 +526,6 @@ components:
         ipv6Address:
           $ref: "#/components/schemas/DeviceIpv6Address"
       minProperties: 1
-      maxProperties: 4
 
     NetworkAccessIdentifier:
       description: A public identifier addressing a subscription in a mobile network. In 3GPP terminology, it corresponds to the GPSI formatted with the External Identifier ({Local Identifier}@{Domain Identifier}). Unlike the telephone number, the network access identifier is not subjected to portability ruling in force, and is individually managed by each operator.
@@ -724,17 +765,10 @@ components:
                       - 422
                   code:
                     enum:
-                      - IDENTIFIER_MISMATCH
                       - SERVICE_NOT_APPLICABLE
                       - UNSUPPORTED_IDENTIFIER
                       - UNNECESSARY_IDENTIFIER
           examples:
-            GENERIC_422_IDENTIFIER_MISMATCH:
-              description: Inconsistency between identifiers not pointing to the same device
-              value:
-                status: 422
-                code: IDENTIFIER_MISMATCH
-                message: Provided identifiers are not consistent.
             GENERIC_422_SERVICE_NOT_APPLICABLE:
               description: Service not applicable for the provided identifier
               value:
@@ -786,3 +820,33 @@ components:
                 status: 429
                 code: TOO_MANY_REQUESTS
                 message: Rate limit reached.
+
+  examples:
+    LIST_OF_QOS_PROFILES:
+      summary: A list of QoS profiles with a single entry
+      description: Example response when requesting a list of QoS profiles
+      value:
+        - name: "voice"
+          description: "QoS profile for high-quality interactive voice"
+          status: "ACTIVE"
+          targetMinUpstreamRate:
+            value: 100
+            unit: "kbps"
+          targetMinDownstreamRate:
+            value: 100
+            unit: "kbps"
+          minDuration:
+            value: 1
+            unit: "Days"
+          maxDuration:
+            value: 10
+            unit: "Days"
+          priority: 10
+          packetDelayBudget:
+            value: 50
+            unit: "Milliseconds"
+          jitter:
+            value: 5
+            unit: "Milliseconds"
+          packetErrorLossRate: 3
+          l4sQueueType: "non-l4s-queue"
