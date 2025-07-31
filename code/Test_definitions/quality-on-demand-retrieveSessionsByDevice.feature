@@ -137,7 +137,6 @@ Feature: CAMARA Quality On Demand API, vwip - Operation retrieveSessionsByDevice
     And the response property "$.code" is "SERVICE_NOT_APPLICABLE"
     And the response property "$.message" contains a user-friendly text
 
-
   # Errors 400
 
   @quality_on_demand_retrieveSessionsByDevice_400.1_schema_not_compliant

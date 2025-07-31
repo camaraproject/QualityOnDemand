@@ -40,7 +40,6 @@ Feature: CAMARA QoS Provisioning API, vwip - Operation getQosAssignmentByDevice
     And the response property "$.startedAt" exists only if "$.status" is "AVAILABLE" and the value is in the past
     And the response property "$.statusInfo" exists only if "$.status" is "UNAVAILABLE"
 
-
     # Common error scenarios for management of input parameter device
 
   @qos_provisioning_getQosAssignmentByDevice_C01.01_device_empty
@@ -52,7 +51,6 @@ Feature: CAMARA QoS Provisioning API, vwip - Operation getQosAssignmentByDevice
     And the response property "$.status" is 400
     And the response property "$.code" is "INVALID_ARGUMENT"
     And the response property "$.message" contains a user friendly text
-
 
   @qos_provisioning_getQosAssignmentByDevice_C01.02_device_identifiers_not_schema_compliant
   Scenario Outline: Some device identifier value does not comply with the schema
@@ -71,7 +69,6 @@ Feature: CAMARA QoS Provisioning API, vwip - Operation getQosAssignmentByDevice
       | $.device.ipv6Address             | /components/schemas/DeviceIpv6Address       |
       | $.device.networkAccessIdentifier | /components/schemas/NetworkAccessIdentifier |
 
-  
   # This scenario may happen e.g. with 2-legged access tokens, which do not identify a single device.
   @qos_provisioning_getQosAssignmentByDevice_C01.03_device_not_found
   Scenario: Some identifier cannot be matched to a device
@@ -83,7 +80,6 @@ Feature: CAMARA QoS Provisioning API, vwip - Operation getQosAssignmentByDevice
     And the response property "$.code" is "IDENTIFIER_NOT_FOUND"
     And the response property "$.message" contains a user friendly text
 
-
   @qos_provisioning_getQosAssignmentByDevice_C01.04_unnecessary_device
   Scenario: Device not to be included when it can be deduced from the access token
     Given the header "Authorization" is set to a valid access token identifying a device
@@ -94,7 +90,6 @@ Feature: CAMARA QoS Provisioning API, vwip - Operation getQosAssignmentByDevice
     And the response property "$.code" is "UNNECESSARY_IDENTIFIER"
     And the response property "$.message" contains a user-friendly text
 
-
   @qos_provisioning_getQosAssignmentByDevice_C01.05_missing_device
   Scenario: Device not included and cannot be deduced from the access token
     Given the header "Authorization" is set to a valid access token which does not identify a single device
@@ -104,7 +99,6 @@ Feature: CAMARA QoS Provisioning API, vwip - Operation getQosAssignmentByDevice
     And the response property "$.status" is 422
     And the response property "$.code" is "MISSING_IDENTIFIER"
     And the response property "$.message" contains a user-friendly text
-
 
   @qos_provisioning_getQosAssignmentByDevice_C01.06_unsupported_device
   Scenario: None of the provided device identifiers is supported by the implementation
@@ -117,8 +111,7 @@ Feature: CAMARA QoS Provisioning API, vwip - Operation getQosAssignmentByDevice
     And the response property "$.code" is "UNSUPPORTED_IDENTIFIER"
     And the response property "$.message" contains a user-friendly text
 
-
-    # When the service is only offered to certain types of devices or subscriptions, e.g. IoT, B2C, etc.
+  # When the service is only offered to certain types of devices or subscriptions, e.g. IoT, B2C, etc.
   @qos_provisioning_getQosAssignmentByDevice_C01.07_device_not_supported
   Scenario: Service not available for the device
     Given that the service is not available for all devices commercialized by the operator
@@ -128,7 +121,6 @@ Feature: CAMARA QoS Provisioning API, vwip - Operation getQosAssignmentByDevice
     And the response property "$.status" is 422
     And the response property "$.code" is "SERVICE_NOT_APPLICABLE"
     And the response property "$.message" contains a user-friendly text
-
 
   # Errors 400
 

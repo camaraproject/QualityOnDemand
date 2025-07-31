@@ -146,7 +146,6 @@ Feature: CAMARA QoS Profiles API, vwip - Operation retrieveQoSProfiles
     And the response property "$.code" is "UNNECESSARY_IDENTIFIER"
     And the response property "$.message" contains a user-friendly text
 
-
   @qos_profiles_retrieveQoSProfiles_C01.06_unsupported_device
   Scenario: None of the provided device identifiers is supported by the implementation
     Given that some types of device identifiers are not supported by the implementation
@@ -158,7 +157,6 @@ Feature: CAMARA QoS Profiles API, vwip - Operation retrieveQoSProfiles
     And the response property "$.code" is "UNSUPPORTED_IDENTIFIER"
     And the response property "$.message" contains a user-friendly text
 
-
   # When the service is only offered to certain types of devices or subscriptions, e.g. IoT, B2C, etc.
   @qos_profiles_retrieveQoSProfiles_C01.07_device_not_supported
   Scenario: Service not available for the device
@@ -169,7 +167,6 @@ Feature: CAMARA QoS Profiles API, vwip - Operation retrieveQoSProfiles
     And the response property "$.status" is 422
     And the response property "$.code" is "SERVICE_NOT_APPLICABLE"
     And the response property "$.message" contains a user-friendly text
-
 
   # Errors 400
 
@@ -245,4 +242,3 @@ Feature: CAMARA QoS Profiles API, vwip - Operation retrieveQoSProfiles
     And the response property "$.status" is 403
     And the response property "$.code" is "PERMISSION_DENIED"
     And the response property "$.message" contains a user friendly text
-

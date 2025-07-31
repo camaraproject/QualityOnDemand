@@ -10,7 +10,6 @@ Feature: CAMARA QoS Provisioning API, vwip - Operation revokeQosAssignment
     #
     # References to OAS spec schemas refer to schemas specified in qos-provisioning.yaml
 
-
   Background: Common revokeQosAssignment setup
     Given an environment at "apiRoot"
     And the resource "/qos-provisioning/vwip/qos-assignments/{assignmentId}"
@@ -76,7 +75,7 @@ Feature: CAMARA QoS Provisioning API, vwip - Operation revokeQosAssignment
     When the request "revokeQosAssignment" is sent
     Then the response status code is 202
     And when the asynchronous deletion process is completed
-    Then an event is received at the address of the "$.sink" provided for createQosAssignment
+    And an event is received at the address of the "$.sink" provided for createQosAssignment
     And the event header "Authorization" is set to "Bearer: " + the value of "$.sinkCredential.accessToken" provided for createQosAssignment
     And the event header "Content-Type" is set to "application/cloudevents+json"
     And the event body complies with the OAS schema at "/components/schemas/EventStatusChanged"
