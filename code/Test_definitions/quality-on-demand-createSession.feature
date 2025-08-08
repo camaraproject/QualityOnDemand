@@ -27,7 +27,7 @@ Feature: CAMARA Quality On Demand API, vwip - Operation createSession
 
   @quality_on_demand_createSession_01_generic_success_scenario
   Scenario: Common validations for any success scenario
-        # Valid testing device and default request body compliant with the schema
+    # Valid testing device and default request body compliant with the schema
     Given a valid testing device supported by the service, identified by the token or provided in the request body
     And the request body property "$.applicationServer" is set to a valid application server
     And the request property "$.qosProfile" is set to a valid QoS Profile as returned by QoS Profiles API
@@ -36,9 +36,9 @@ Feature: CAMARA Quality On Demand API, vwip - Operation createSession
     Then the response status code is 201
     And the response header "Content-Type" is "application/json"
     And the response header "x-correlator" has the same value as the request header "x-correlator"
-        # The response has to comply with the generic response schema which is part of the spec
+    # The response has to comply with the generic response schema which is part of the spec
     And the response body complies with the OAS schema at "/components/schemas/SessionInfo"
-        # Additionally, any success response has to comply with some constraints beyond the schema compliance
+    # Additionally, any success response has to comply with some constraints beyond the schema compliance
     And the response property "$.device" exists only if provided in the request body and with the same value
     And the response property "$.applicationServer" has the same value as in the request body
     And the response property "$.qosProfile" has the same value as in the request body
