@@ -51,7 +51,7 @@ Feature: CAMARA Quality On Demand API, vwip - Operation createSession
       | $.sink                   | exists only if provided in the request body and with the same value          |
       | $.startedAt              | exists only if "$.qosStatus" is "AVAILABLE" and value is in the past         |
       | $.expiresAt              | exists only if "$.qosStatus" is not "REQUESTED" and later than "$.startedAt" |
-      | $.statusInfo             | exists only if "$.qosStatus" is "UNAVAILABLE"
+      | $.statusInfo             | exists only if "$.qosStatus" is "UNAVAILABLE"                                |
 
   @quality_on_demand_createSession_02_1_sinkcredential_provided
   Scenario: Create QoS session with sink and sinkCredential provided
