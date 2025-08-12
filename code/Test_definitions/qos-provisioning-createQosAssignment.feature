@@ -299,7 +299,9 @@ Feature: CAMARA QoS Provisioning API, vwip - Operation createQosAssignment
     And the response header "Content-Type" is "application/json"
     And the response property "$.status" is 409
     And the response property "$.code" is "CONFLICT"
-    And the response property "$.message" contains a user friendly text# Errors 422
+    And the response property "$.message" contains a user friendly text
+
+  # Errors 422
 
   @qos_provisioning_createQosAssignment_422.1_qos_profile_not_applicable
   Scenario: QoS Profile not applicable for the QoS assignment
