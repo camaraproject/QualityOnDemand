@@ -1,0 +1,42 @@
+# =========================================================================================
+# CAMARA Project - Linting OpenAPI Specification with CAMARA Ruleset Caller
+#
+# This GitHub Actions workflow is responsible for invoking a reusable "Spectral linting with 
+# CAMARA ruleset" workflow from the camaraproject/tooling repository. It is intended to 
+# provide more detailed output from Spectral tool (warnings, hints)  
+#
+# CHANGELOG:
+# - 2025-08-01: Initial version for v0
+#
+# USAGE:
+# - Can be triggered manually via workflow_dispatch.
+# - Calls by default the reusable workflow at 
+#   camaraproject/tooling/.github/workflows/spectral-oas.yml@v0
+#
+# DOCUMENTATION:
+# see https://github.com/camaraproject/tooling/tree/main/linting/docs
+# =========================================================================================
+
+name: Caller for Spectral linting with CAMARA ruleset
+
+on: 
+  workflow_dispatch:
+
+concurrency:
+  group: ${{ github.ref }}-${{ github.workflow }}
+  cancel-in-progress: true
+
+permissions:
+  # Grant necessary write permissions for PRs and issues
+  pull-requests: write
+  contents: read
+  issues: write
+
+jobs:
+  spectral:
+  # Invoke the reusable PR validation workflow from the main branch of camaraproject/tooling
+    uses: camaraproject/tooling/.github/workflows/spectral-oas.yml@v0
+# Spectral configuration from the tooling repository subfolder of /linting/config/ indicated by `configurations` variable
+# If needed, you can specify a configuration from another subfolder of camaraproject/tooling/linting/config/ (uncomment below)
+#    with:
+#      configurations: api-name

@@ -1,0 +1,49 @@
+# =========================================================================================
+# CAMARA Project - Pull Request Validation Workflow Caller
+#
+# This GitHub Actions workflow is responsible for invoking a reusable PR validation workflow
+# from the camaraproject/tooling repository. It is intended to ensure consistent validation
+# steps for all PRs targeting the main branch in this repository.
+#
+# CHANGELOG:
+# - 2025-08-01: Initial version for v0
+#
+# USAGE:
+# - Automatically triggers on pull requests targeting main.
+# - Can be triggered manually via workflow_dispatch.
+# - Calls by default the reusable workflow at 
+#   camaraproject/tooling/.github/workflows/pr_validation.yml@v0
+#
+# DOCUMENTATION:
+# see https://github.com/camaraproject/tooling/tree/main/linting/docs
+# =========================================================================================
+
+name: Caller for PR validation workflow
+
+on:
+  # Trigger on pull requests to the main branch only
+  pull_request:
+    branches: main
+  # Enable manual trigger via the GitHub UI
+  workflow_dispatch:
+  
+concurrency:
+  group: ${{ github.ref }}-${{ github.workflow }}
+  cancel-in-progress: true
+
+permissions:
+  # Grant necessary write permissions for PRs, contents, and issues
+  pull-requests: write
+  contents: write
+  issues: write
+  statuses: write
+
+jobs:
+  pr_validation:
+    # Invoke the reusable PR validation workflow from "v0" tag of camaraproject/tooling
+    uses: camaraproject/tooling/.github/workflows/pr_validation.yml@v0
+    secrets: inherit
+# Tools configuration from the tooling repository subfolder of /linting/config/ indicated by `configurations` variable
+# If needed, you can specify a configuration from another subfolder of camaraproject/tooling/linting/config/ (uncomment below)
+#    with:
+#      configurations: api-name
