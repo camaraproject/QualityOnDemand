@@ -109,7 +109,7 @@ externalDocs:
   description: Product documentation at CAMARA
   url: https://github.com/camaraproject/QualityOnDemand
 
-servers:
+servers:  
   - url: "{apiRoot}/quality-on-demand/vwip"
     variables:
       apiRoot:
