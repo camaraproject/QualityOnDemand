@@ -37,7 +37,7 @@ Feature: CAMARA Quality On Demand API, vwip - Operation deleteSession
         When the request "deleteSession" is sent
         Then the response status code is 204
         And an event is received at the address of the "$.sink" provided for createSession
-        And the event header "Authorization" is set to "Bearer: " + the value of the property "$.sinkCredential.accessToken" provided for createSession
+        And the event header "Authorization" is set to "Bearer " + the value of the property "$.sinkCredential.accessToken" provided for createSession
         And the event header "Content-Type" is set to "application/cloudevents+json"
         And the event body complies with the OAS schema at "/components/schemas/EventQosStatusChanged"
         # Additionally any event body has to comply with some constraints beyond the schema compliance

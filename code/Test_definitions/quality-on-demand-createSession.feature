@@ -65,7 +65,7 @@ Feature: CAMARA Quality On Demand API, vwip - Operation createSession
         Then the response status code is 201
         # There is no specific limit defined for the process to end
         And an event is received at the address of the request property "$.sink"
-        And the event header "Authorization" is set to "Bearer: " + the value of the request property "$.sinkCredential.accessToken"
+        And the event header "Authorization" is set to "Bearer " + the value of the request property "$.sinkCredential.accessToken"
         And the event header "Content-Type" is set to "application/cloudevents+json"
         And the event body complies with the OAS schema at "/components/schemas/EventQosStatusChanged"
         # Additionally any event body has to comply with some constraints beyond the schema compliance
