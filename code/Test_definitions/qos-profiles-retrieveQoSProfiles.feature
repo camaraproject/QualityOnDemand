@@ -117,7 +117,7 @@ Feature: CAMARA QoS Profiles API, vwip - Operation retrieveQoSProfiles
     And the response property "$.status" is 400
     And the response property "$.code" is "INVALID_ARGUMENT"
     And the response property "$.message" contains a user friendly text
-        
+
     Examples:
       | device_identifier                | oas_spec_schema                             |
       | $.device.phoneNumber             | /components/schemas/PhoneNumber             |
