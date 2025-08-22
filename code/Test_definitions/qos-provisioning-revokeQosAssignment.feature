@@ -173,5 +173,4 @@ Feature: CAMARA QoS Provisioning API, vwip - Operation revokeQosAssignment
     And the response header "Content-Type" is "application/json"
     And the response property "$.status" is 404
     And the response property "$.code" is "NOT_FOUND"
-
     And the response property "$.message" contains a user friendly text
