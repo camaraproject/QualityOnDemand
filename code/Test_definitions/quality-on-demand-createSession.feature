@@ -26,7 +26,7 @@ Feature: CAMARA Quality On Demand API, vwip - Operation createSession
   # Success scenarios
 
   @quality_on_demand_createSession_01_generic_success_scenario
-  Scenario: Common validations for any success scenario
+  Scenario Outline: Common validations for any success scenario
     # Valid testing device and default request body compliant with the schema
     Given a valid testing device supported by the service, identified by the token or provided in the request body
     And the request body property "$.applicationServer" is set to a valid application server
@@ -39,20 +39,22 @@ Feature: CAMARA Quality On Demand API, vwip - Operation createSession
     # The response has to comply with the generic response schema which is part of the spec
     And the response body complies with the OAS schema at "/components/schemas/SessionInfo"
     # Additionally, any success response has to comply with some constraints beyond the schema compliance
-    And the response property "$.device" exists only if provided in the request body and with the same value
-    And the response property "$.applicationServer" has the same value as in the request body
-    And the response property "$.qosProfile" has the same value as in the request body
-    And the response property "$.devicePorts" exists only if provided in the request body and with the same value
-    And the response property "$.applicationServerPorts" exists only if provided in the request body and with the same value
-    And the response property "$.sink" exists only if provided in the request body and with the same value
-    # sinkCredential not explicitly mentioned to be returned if present, as this is debatable for security concerns
-    And the response property "$.startedAt" exists only if "$.qosStatus" is "AVAILABLE" and the value is in the past
-    And the response property "$.expiresAt" exists only if "$.qosStatus" is not "REQUESTED" and the value is later than "$.startedAt"
-    And the response property "$.statusInfo" exists only if "$.qosStatus" is "UNAVAILABLE"
+    And the response property "<property>" matches the rule: <condition>
 
-  @quality_on_demand_createSession_02_event_notification
-  Scenario: Events are received after a QoS session change if sink is provided
-    # Valid testing device and default request body compliant with the schema
+    Examples:
+      | property                 | condition                                                                    |
+      | $.device                 | exists only if provided in the request body and with the same value          |
+      | $.applicationServer      | same value as in the request body                                            |
+      | $.qosProfile             | same value as in the request body                                            |
+      | $.devicePorts            | exists only if provided in the request body and with the same value          |
+      | $.applicationServerPorts | exists only if provided in the request body and with the same value          |
+      | $.sink                   | exists only if provided in the request body and with the same value          |
+      | $.startedAt              | exists only if "$.qosStatus" is "AVAILABLE" and value is in the past         |
+      | $.expiresAt              | exists only if "$.qosStatus" is not "REQUESTED" and later than "$.startedAt" |
+      | $.statusInfo             | exists only if "$.qosStatus" is "UNAVAILABLE"                                |
+
+  @quality_on_demand_createSession_02_1_sinkcredential_provided
+  Scenario: Create QoS session with sink and sinkCredential provided
     Given a valid testing device supported by the service, identified by the token or provided in the request body
     And the request body property "$.applicationServer" is set to a valid application server
     And the request property "$.qosProfile" is set to a valid QoS Profile as returned by QoS Profiles API
@@ -63,12 +65,15 @@ Feature: CAMARA Quality On Demand API, vwip - Operation createSession
     And the request property "$.sinkCredential.accessToken" is set to a valid access token accepted by the events receiver
     When the request "createSession" is sent
     Then the response status code is 201
-    # There is no specific limit defined for the process to end
-    And an event is received at the address of the request property "$.sink"
+
+  @quality_on_demand_createSession_02_2_event_received
+  Scenario: Event is received when a session status changes after using sink
+    Given a QoS session has been created successfully and includes a valid sink and sinkCredentials
+    When the QoS status of the session becomes known
+    Then an event is received at the address of the request property "$.sink"
     And the event header "Authorization" is set to "Bearer: " + the value of the request property "$.sinkCredential.accessToken"
     And the event header "Content-Type" is set to "application/cloudevents+json"
     And the event body complies with the OAS schema at "/components/schemas/EventQosStatusChanged"
-    # Additionally any event body has to comply with some constraints beyond the schema compliance
     And the event body property "$.id" is unique
     And the event body property "$.type" is set to "org.camaraproject.qod.v1.qos-status-changed"
     And the event body property "$.data.sessionId" has the same value as createSession response property "$.sessionId"

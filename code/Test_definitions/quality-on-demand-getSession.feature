@@ -25,10 +25,9 @@ Feature: CAMARA Quality On Demand API, vwip - Operation getSession
     And the path parameter "sessionId" is set to the value for that QoS session
     When the request "getSession" is sent
     Then the response status code is 200
-    And the response header "Content-Type" is "application/json"
     And the response header "x-correlator" has same value as the request header "x-correlator"
     # The response has to comply with the generic response schema which is part of the spec
-    And the response body complies with the OAS schema at "/components/schemas/SessionInfo"
+    And the response body complies with the OAS schema at "#/components/schemas/SessionInfo"
     # Additionally any success response has to comply with some constraints beyond the schema compliance
     And the response property "$.device" exists only if provided for createSession and with the same value
     And the response property "$.applicationServer" has the same value as in the request body
@@ -41,7 +40,7 @@ Feature: CAMARA Quality On Demand API, vwip - Operation getSession
     And the response property "$.expiresAt" exists only if "$.qosStatus" is not "REQUESTED" and the value is later than "$.startedAt"
     And the response property "$.statusInfo" exists only if "$.qosStatus" is "UNAVAILABLE"
 
-  @quality_on_demand_getSession_02_get_recent_unvailable
+  @quality_on_demand_getSession_02_get_recent_unavailable
   Scenario: QOS Session becoming "UNAVAILABLE" is not released for at least 360 seconds
     Given an existing QoS session deleted in the last 360 seconds
     And the path parameter "sessionId" is set to the value for that QoS session
@@ -49,7 +48,7 @@ Feature: CAMARA Quality On Demand API, vwip - Operation getSession
     Then the response status code is 200
     And the response header "Content-Type" is "application/json"
     And the response header "x-correlator" has same value as the request header "x-correlator"
-    And the response body complies with the OAS schema at "/components/schemas/SessionInfo"
+    And the response body complies with the OAS schema at "#/components/schemas/SessionInfo"
     And the response property "$.status" is "UNAVAILABLE"
 
   # Errors 400

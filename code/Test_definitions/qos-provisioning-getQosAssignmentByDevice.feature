@@ -184,7 +184,7 @@ Feature: CAMARA QoS Provisioning API, vwip - Operation getQosAssignmentByDevice
   @qos_provisioning_getQosAssignmentByDevice_401.3_invalid_access_token
   Scenario: Invalid access token
     Given the header "Authorization" is set to an invalid access token
-    Then the request "getQosAssignmentByDevice" is sent
+    When the request "getQosAssignmentByDevice" is sent
     Then the response status code is 401
     And the response header "x-correlator" has same value as the request header "x-correlator"
     And the response header "Content-Type" is "application/json"
@@ -228,4 +228,5 @@ Feature: CAMARA QoS Provisioning API, vwip - Operation getQosAssignmentByDevice
     And the response header "Content-Type" is "application/json"
     And the response property "$.status" is 404
     And the response property "$.code" is "NOT_FOUND"
+
     And the response property "$.message" contains a user friendly text

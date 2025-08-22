@@ -16,14 +16,14 @@ Feature: CAMARA Quality On Demand API, vwip - Operation extendQosSessionDuration
     And the header "Content-Type" is set to "application/json"
     And the header "Authorization" is set to a valid access token
     And the header "x-correlator" complies with the schema at "#/components/schemas/XCorrelator"
-    # Properties not explicitly overwitten in the Scenarios can take any values compliant with the schema
+    # Properties not explicitly overwritten in the Scenarios can take any values compliant with the schema
     And the request body is set by default to a request body compliant with the schema at "/components/schemas/ExtendSessionDuration"
     And the path parameter "sessionId" is set by default to a existing QoS session sessionId
 
   # Success scenarios
 
   @quality_on_demand_extendQosSessionDuration_01_generic_success_scenario
-  Scenario: Common validations for any sucess scenario
+  Scenario: Common validations for any success scenario
     # Valid testing device and default request body compliant with the schema
     Given an existing QoS session created by operation createSession with qosStatus "AVAILABLE"
     And the path parameter "sessionId" is set to the value for that QoS session

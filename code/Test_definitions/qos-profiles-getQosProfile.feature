@@ -11,7 +11,7 @@ Feature: CAMARA QoS Profiles API, vwip - Operation getQosProfile
 
   Background: Common getQosProfile setup
     Given an environment at "apiRoot"
-    And the resource "qos-profiles/vwip/qos-profiles/{name}"
+    And the resource "/qos-profiles/vwip/qos-profiles/{name}"
     And the header "Authorization" is set to a valid access token
     And the header "x-correlator" complies with the schema at "#/components/schemas/XCorrelator"
     And the path param "name" is set by default to a existing QoS profile name
@@ -19,7 +19,7 @@ Feature: CAMARA QoS Profiles API, vwip - Operation getQosProfile
   # Success scenarios
 
   @qos_profiles_getQosProfile_01_generic_success_scenario
-  Scenario: Common validations for any sucess scenario
+  Scenario: Common validations for any success scenario
     # Valid testing device and default request body compliant with the schema
     Given an existing QoS profile
     And the path parameter "name" is set to the value for an that QoS profile
