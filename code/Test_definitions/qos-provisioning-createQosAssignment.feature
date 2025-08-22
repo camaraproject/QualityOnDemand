@@ -21,7 +21,7 @@ Feature: CAMARA QoS Provisioning API, vwip - Operation createQosAssignment
     # Properties not explicitly overwritten in the Scenarios can take any values compliant with the schema
     And the request body is set by default to a request body compliant with the schema at "/components/schemas/CreateAssignment"
 
-    # Success scenarios
+  # Success scenarios
 
   @qos_provisioning_createQosAssignment_01_generic_success_scenario
   Scenario: Common validations for any success scenario
@@ -42,8 +42,8 @@ Feature: CAMARA QoS Provisioning API, vwip - Operation createQosAssignment
     And the response property "$.startedAt" exists only if "$.status" is "AVAILABLE" and the value is in the past
     And the response property "$.statusInfo" exists only if "$.status" is "UNAVAILABLE"
 
-  @qos_provisioning_createQosAssignment_02_event_notification
-  Scenario: Events for the outcome of QoS Provisioning creation if sink is provided
+  @qos_provisioning_createQosAssignment_02_1_sinkcredential_provided
+  Scenario: Create QoS assignment with sink and valid sinkCredential
     Given a valid testing device supported by the service, identified by the token or provided in the request body
     And the request property "$.qosProfile" is set to a valid QoS Profile as returned by QoS Profiles API
     And the request property "$.sink" is set to a URL when events can be monitored
@@ -51,15 +51,18 @@ Feature: CAMARA QoS Provisioning API, vwip - Operation createQosAssignment
     And the request property "$.sinkCredential.accessTokenType" is set to "bearer"
     And the request property "$.sinkCredential.accessToken" is set to a valid access token accepted by the events receiver
     And the request property "$.sinkCredential.accessTokenExpiresUtc" is set to a value long enough in the future
-    And the request "createQosAssignment" is sent
-    And the response status code is 201
-    # There is no specific limit defined for the process to end
+    When the request "createQosAssignment" is sent
+    Then the response status code is 201
+
+  @qos_provisioning_createQosAssignment_02_2_event_notification_sent
+  Scenario: Event is received for QoS assignment outcome after providing sink
+    # Assumes a valid QoS assignment with sinkCredential has been created
+    Given a QoS assignment has been created successfully and includes a valid sink with sinkCredentials
     When the QoS assignment outcome is known
     Then an event is received at the address of the request property "$.sink"
     And the event header "Authorization" is set to "Bearer: " + the value of the request property "$.sinkCredential.accessToken"
     And the event header "Content-Type" is set to "application/cloudevents+json"
     And the event body complies with the OAS schema at "/components/schemas/EventStatusChanged"
-    # Additionally any event body has to comply with some constraints beyond the schema compliance
     And the event body property "$.id" is unique
     And the event body property "$.type" is set to "org.camaraproject.qos-provisioning.v0.status-changed"
     And the event body property "$.data.assignmentId" has the same value as createQosAssignment response property "$.assignmentId"
@@ -224,7 +227,7 @@ Feature: CAMARA QoS Provisioning API, vwip - Operation createQosAssignment
     And the response property "$.code" is "INVALID_TOKEN" or "INVALID_ARGUMENT"
     And the response property "$.message" contains a user friendly text
 
-  # TBD if we neeed a dedicated code
+  # TBD if we need a dedicated code
   @qos_provisioning_createQosAssignment_400.9_non_existent_qos_profile
   Scenario: Non existent QoS profile
     Given the request body property "qosProfile" is set to a non-existent QoS Profile

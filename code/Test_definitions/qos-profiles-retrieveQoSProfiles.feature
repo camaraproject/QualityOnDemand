@@ -15,17 +15,17 @@ Feature: CAMARA QoS Profiles API, vwip - Operation retrieveQoSProfiles
 
   Background: Common retrieveQoSProfiles setup
     Given an environment at "apiRoot"
-    And the resource "qos-profiles/vwip/retrieve-qos-profiles"
+    And the resource "/qos-profiles/vwip/retrieve-qos-profiles"
     And the header "Content-Type" is set to "application/json"
     And the header "Authorization" is set to a valid access token
     And the header "x-correlator" complies with the schema at "#/components/schemas/XCorrelator"
-    # Properties not explicitly overwitten in the Scenarios can take any values compliant with the schema
+    # Properties not explicitly overwritten in the Scenarios can take any values compliant with the schema
     And the request body is set by default to a request body compliant with the schema at "/components/schemas/QosProfileDeviceRequest"
 
-  # Success scenarios
+    # Success scenarios
 
   @qos_profiles_retrieveQoSProfiles_01_generic_success_scenario
-  Scenario: Common validations for any sucess scenario
+  Scenario: Common validations for any success scenario
     # Valid testing device and default request body compliant with the schema
     Given a request body compliant with the schema at "/components/schemas/QosProfileDeviceRequest"
     When the request "retrieveQoSProfiles" is sent
