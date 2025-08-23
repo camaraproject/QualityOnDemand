@@ -1,13 +1,13 @@
 Feature: CAMARA QoS Provisioning API, vwip - Operation getQosAssignmentById
-    # Input to be provided by the implementation to the tester
-    #
-    # Implementation indications:
-    # * apiRoot: API root of the server URL
-    #
-    # Testing assets:
-    # * The assignmentId of an existing QoS assignment, and the request properties used for createQosAssignment
-    #
-    # References to OAS spec schemas refer to schemas specified in qos-provisioning.yaml
+  # Input to be provided by the implementation to the tester
+  #
+  # Implementation indications:
+  # * apiRoot: API root of the server URL
+  #
+  # Testing assets:
+  # * The assignmentId of an existing QoS assignment, and the request properties used for createQosAssignment
+  #
+  # References to OAS spec schemas refer to schemas specified in qos-provisioning.yaml
 
   Background: Common getQosAssignmentById setup
     Given an environment at "apiRoot"

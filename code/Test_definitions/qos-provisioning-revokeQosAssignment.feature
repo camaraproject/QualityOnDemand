@@ -1,14 +1,14 @@
 Feature: CAMARA QoS Provisioning API, vwip - Operation revokeQosAssignment
-    # Input to be provided by the implementation to the tester
-    #
-    # Implementation indications:
-    # * apiRoot: API root of the server URL
-    #
-    # Testing assets:
-    # * The AssignmentInfo of an existing QoS assignment
-    # * The AssignmentInfo of an existing QoS assignment with status "AVAILABLE", and with provided values for "sink" and "sinkCredential"
-    #
-    # References to OAS spec schemas refer to schemas specified in qos-provisioning.yaml
+  # Input to be provided by the implementation to the tester
+  #
+  # Implementation indications:
+  # * apiRoot: API root of the server URL
+  #
+  # Testing assets:
+  # * The AssignmentInfo of an existing QoS assignment
+  # * The AssignmentInfo of an existing QoS assignment with status "AVAILABLE", and with provided values for "sink" and "sinkCredential"
+  #
+  # References to OAS spec schemas refer to schemas specified in qos-provisioning.yaml
 
   Background: Common revokeQosAssignment setup
     Given an environment at "apiRoot"

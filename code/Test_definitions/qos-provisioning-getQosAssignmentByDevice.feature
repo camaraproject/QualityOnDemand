@@ -1,17 +1,17 @@
 Feature: CAMARA QoS Provisioning API, vwip - Operation getQosAssignmentByDevice
-    # Input to be provided by the implementation to the tester
-    #
-    # Implementation indications:
-    # * apiRoot: API root of the server URL
-    # * List of device identifier types which are not supported, among: phoneNumber, ipv4Address, ipv6Address.
-    #   For this version, CAMARA does not allow the use of networkAccessIdentifier, so it is considered by default as not supported.
-    #
-    # Testing assets:
-    # * A device object with an existing QoS assignment associated, and the request properties used for createQosAssignment
-    # * A device object with NO existing QoS assignment associated
-    # * A device object identifying a device commercialized by the implementation for which the service is not applicable, if any
-    #
-    # References to OAS spec schemas refer to schemas specified in qos-provisioning.yaml
+  # Input to be provided by the implementation to the tester
+  #
+  # Implementation indications:
+  # * apiRoot: API root of the server URL
+  # * List of device identifier types which are not supported, among: phoneNumber, ipv4Address, ipv6Address.
+  #   For this version, CAMARA does not allow the use of networkAccessIdentifier, so it is considered by default as not supported.
+  #
+  # Testing assets:
+  # * A device object with an existing QoS assignment associated, and the request properties used for createQosAssignment
+  # * A device object with NO existing QoS assignment associated
+  # * A device object identifying a device commercialized by the implementation for which the service is not applicable, if any
+  #
+  # References to OAS spec schemas refer to schemas specified in qos-provisioning.yaml
 
   Background: Common getQosAssignmentByDevice setup
     Given an environment at "apiRoot"
@@ -30,17 +30,17 @@ Feature: CAMARA QoS Provisioning API, vwip - Operation getQosAssignmentByDevice
     Then the response status code is 200
     And the response header "x-correlator" has same value as the request header "x-correlator"
     And the response header "Content-Type" is "application/json"
-        # The response has to comply with the generic response schema which is part of the spec
+    # The response has to comply with the generic response schema which is part of the spec
     And the response body complies with the OAS schema at "/components/schemas/AssignmentInfo"
-        # Additionally any success response has to comply with some constraints beyond the schema compliance
+    # Additionally any success response has to comply with some constraints beyond the schema compliance
     And the response property "$.device" exists only if provided for createQosAssignment and with the same value
     And the response property "$.qosProfile" has the value provided for createQosAssignment
     And the response property "$.sink" exists only if provided for createQosAssignment and with the same value
-        # sinkCredential not explicitly mentioned to be returned if present, as this is debatable for security concerns
+    # sinkCredential not explicitly mentioned to be returned if present, as this is debatable for security concerns
     And the response property "$.startedAt" exists only if "$.status" is "AVAILABLE" and the value is in the past
     And the response property "$.statusInfo" exists only if "$.status" is "UNAVAILABLE"
 
-    # Common error scenarios for management of input parameter device
+  # Common error scenarios for management of input parameter device
 
   @qos_provisioning_getQosAssignmentByDevice_C01.01_device_empty
   Scenario: The device value is an empty object

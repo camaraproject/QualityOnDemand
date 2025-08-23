@@ -1,18 +1,18 @@
 Feature: CAMARA Quality On Demand API, vwip - Operation createSession
-    # Input to be provided by the implementation to the tester
-    #
-    # Implementation indications:
-    # * apiRoot: API root of the server URL
-    # * List of device identifier types which are not supported, among: phoneNumber, ipv4Address, ipv6Address.
-    #   For this version, CAMARA does not allow the use of networkAccessIdentifier, so it is considered by default as not supported.
-    # * List of application server IP formats which are not supported, among ipv4 and ipv6.
-    #
-    # Testing assets:
-    # * A device object applicable for Quality On Demand service.
-    # * A device object identifying a device commercialized by the implementation for which the service is not applicable, if any.
-    #
+  # Input to be provided by the implementation to the tester
+  #
+  # Implementation indications:
+  # * apiRoot: API root of the server URL
+  # * List of device identifier types which are not supported, among: phoneNumber, ipv4Address, ipv6Address.
+  #   For this version, CAMARA does not allow the use of networkAccessIdentifier, so it is considered by default as not supported.
+  # * List of application server IP formats which are not supported, among ipv4 and ipv6.
+  #
+  # Testing assets:
+  # * A device object applicable for Quality On Demand service.
+  # * A device object identifying a device commercialized by the implementation for which the service is not applicable, if any.
+  #
 
-    # References to OAS spec schemas refer to schemas specifies in quality-on-demand.yaml
+  # References to OAS spec schemas refer to schemas specifies in quality-on-demand.yaml
 
   Background: Common createSession setup
     Given an environment at "apiRoot"

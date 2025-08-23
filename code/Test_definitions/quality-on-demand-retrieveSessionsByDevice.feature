@@ -1,17 +1,17 @@
 Feature: CAMARA Quality On Demand API, vwip - Operation retrieveSessionsByDevice
-    # Input to be provided by the implementation to the tester
-    #
-    # Implementation indications:
-    # * apiRoot: API root of the server URL
-    # * List of device identifier types which are not supported, among: phoneNumber, ipv4Address, ipv6Address.
-    #   For this version, CAMARA does not allow the use of networkAccessIdentifier, so it is considered by default as not supported.
-    #
-    # Testing assets:
-    # * A device object applicable for Quality On Demand service with an QoS Sessions associated, and the request properties used for createSession
-    # * A device object applicable for Quality On Demand service with NO QoS Sessions associated
-    # * A device object identifying a device commercialized by the implementation for which the service is not applicable, if any.
-    #
-    # References to OAS spec schemas refer to schemas specifies in quality-on-demand.yaml
+  # Input to be provided by the implementation to the tester
+  #
+  # Implementation indications:
+  # * apiRoot: API root of the server URL
+  # * List of device identifier types which are not supported, among: phoneNumber, ipv4Address, ipv6Address.
+  #   For this version, CAMARA does not allow the use of networkAccessIdentifier, so it is considered by default as not supported.
+  #
+  # Testing assets:
+  # * A device object applicable for Quality On Demand service with an QoS Sessions associated, and the request properties used for createSession
+  # * A device object applicable for Quality On Demand service with NO QoS Sessions associated
+  # * A device object identifying a device commercialized by the implementation for which the service is not applicable, if any.
+  #
+  # References to OAS spec schemas refer to schemas specifies in quality-on-demand.yaml
 
   Background: Common retrieveSessionsByDevice setup
     Given an environment at "apiRoot"

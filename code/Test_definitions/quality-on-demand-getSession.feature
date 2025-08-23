@@ -1,13 +1,13 @@
 Feature: CAMARA Quality On Demand API, vwip - Operation getSession
-    # Input to be provided by the implementation to the tester
-    #
-    # Implementation indications:
-    # * apiRoot: API root of the server URL
-    #
-    # Testing assets:
-    # * The sessionId of an existing QoS session, and the request properties used for createSession
-    #
-    # References to OAS spec schemas refer to schemas specifies in quality-on-demand.yaml
+  # Input to be provided by the implementation to the tester
+  #
+  # Implementation indications:
+  # * apiRoot: API root of the server URL
+  #
+  # Testing assets:
+  # * The sessionId of an existing QoS session, and the request properties used for createSession
+  #
+  # References to OAS spec schemas refer to schemas specifies in quality-on-demand.yaml
 
   Background: Common getSession setup
     Given an environment at "apiRoot"

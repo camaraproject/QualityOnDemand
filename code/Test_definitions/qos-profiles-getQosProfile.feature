@@ -1,13 +1,13 @@
 Feature: CAMARA QoS Profiles API, vwip - Operation getQosProfile
-    # Input to be provided by the implementation to the tester
-    #
-    # Implementation indications:
-    # * apiRoot: API root of the server URL
-    #
-    # Testing assets:
-    # * The name of an existing QoS profile
-    #
-    # References to OAS spec schemas refer to schemas specifies in qos-profiles.yaml
+  # Input to be provided by the implementation to the tester
+  #
+  # Implementation indications:
+  # * apiRoot: API root of the server URL
+  #
+  # Testing assets:
+  # * The name of an existing QoS profile
+  #
+  # References to OAS spec schemas refer to schemas specifies in qos-profiles.yaml
 
   Background: Common getQosProfile setup
     Given an environment at "apiRoot"
