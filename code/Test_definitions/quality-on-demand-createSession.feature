@@ -71,7 +71,7 @@ Feature: CAMARA Quality On Demand API, vwip - Operation createSession
     Given a QoS session has been created successfully and includes a valid sink and sinkCredentials
     When the QoS status of the session becomes known
     Then an event is received at the address of the request property "$.sink"
-    And the event header "Authorization" is set to "Bearer: " + the value of the request property "$.sinkCredential.accessToken"
+    And the event header "Authorization" is set to "Bearer " + the value of the request property "$.sinkCredential.accessToken"
     And the event header "Content-Type" is set to "application/cloudevents+json"
     And the event body complies with the OAS schema at "/components/schemas/EventQosStatusChanged"
     And the event body property "$.id" is unique

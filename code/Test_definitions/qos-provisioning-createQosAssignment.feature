@@ -60,7 +60,7 @@ Feature: CAMARA QoS Provisioning API, vwip - Operation createQosAssignment
     Given a QoS assignment has been created successfully and includes a valid sink with sinkCredentials
     When the QoS assignment outcome is known
     Then an event is received at the address of the request property "$.sink"
-    And the event header "Authorization" is set to "Bearer: " + the value of the request property "$.sinkCredential.accessToken"
+    And the event header "Authorization" is set to "Bearer " + the value of the request property "$.sinkCredential.accessToken"
     And the event header "Content-Type" is set to "application/cloudevents+json"
     And the event body complies with the OAS schema at "/components/schemas/EventStatusChanged"
     And the event body property "$.id" is unique
