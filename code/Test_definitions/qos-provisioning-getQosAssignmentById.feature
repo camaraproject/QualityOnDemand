@@ -1,4 +1,4 @@
-Feature: CAMARA QoS Provisioning API, vwip - Operation getQosAssignmentById
+Feature: CAMARA QoS Provisioning API, v0.3.0 - Operation getQosAssignmentById
   # Input to be provided by the implementation to the tester
   #
   # Implementation indications:
@@ -11,7 +11,7 @@ Feature: CAMARA QoS Provisioning API, vwip - Operation getQosAssignmentById
 
   Background: Common getQosAssignmentById setup
     Given an environment at "apiRoot"
-    And the resource "/qos-provisioning/vwip/qos-assignments/{assignmentId}"                                                              |
+    And the resource "/qos-provisioning/v0.3/qos-assignments/{assignmentId}"                                                              |
     # Unless indicated otherwise the QoS assignment must be created by the same API client given in the access token
     And the header "Authorization" is set to a valid access token granted to the same client that created the QoS assignment
     And the header "x-correlator" complies with the schema at "#/components/schemas/XCorrelator"
