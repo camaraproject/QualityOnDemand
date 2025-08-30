@@ -30,7 +30,7 @@ The below sections record the changes for each API version in each release as fo
 # r3.2
 ## Release Notes
 
-This pre-release contains the definition and documentation of
+This public release contains the definition and documentation of
 
 * quality-on-demand v1.1.0
 * qos-profiles v1.1.0
