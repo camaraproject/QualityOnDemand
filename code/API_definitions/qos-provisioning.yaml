@@ -1205,7 +1205,7 @@ components:
         sink: https://application-server.com/callback
         sinkCredential:
           credentialType: ACCESSTOKEN
-          accessToken: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c"
+          accessToken: "eyJhbGciOiJIUzI1NiIsInR..."
           accessTokenExpiresUtc: "2024-12-01T12:00:00Z"
           accessTokenType: bearer
         assignmentId: 3fa85f64-5717-4562-b3fc-2c963f66afa6
@@ -1220,7 +1220,7 @@ components:
         sink: https://application-server.com/callback
         sinkCredential:
           credentialType: ACCESSTOKEN
-          accessToken: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c"
+          accessToken: "eyJhbGciOiJIUzI1NiIsInR..."
           accessTokenExpiresUtc: "2024-12-01T12:00:00Z"
           accessTokenType: bearer
         assignmentId: 3fa85f64-5717-4562-b3fc-2c963f66afa6
@@ -1236,7 +1236,7 @@ components:
         sink: https://application-server.com/callback
         sinkCredential:
           credentialType: ACCESSTOKEN
-          accessToken: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c"
+          accessToken: "eyJhbGciOiJIUzI1NiIsInR..."
           accessTokenExpiresUtc: "2024-12-01T12:00:00Z"
           accessTokenType: bearer
         assignmentId: 3fa85f64-5717-4562-b3fc-2c963f66afa6
