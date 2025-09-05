@@ -42,7 +42,7 @@ Feature: CAMARA Quality On Demand API, v1.1.0 - Operation getSession
 
   @quality_on_demand_getSession_02_get_recent_unavailable
   Scenario: QOS Session becoming "UNAVAILABLE" is not released for at least 360 seconds
-    Given an existing QoS session deleted in the last 360 seconds
+    Given an existing QoS session failed to be created in the last 360 seconds
     And the path parameter "sessionId" is set to the value for that QoS session
     When the request "getSession" is sent
     Then the response status code is 200

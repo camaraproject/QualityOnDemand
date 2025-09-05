@@ -34,16 +34,16 @@ Feature: CAMARA Quality On Demand API, v1.1.0 - Operation retrieveSessionsByDevi
     # The response has to comply with the generic response schema which is part of the spec
     And the response body complies with the OAS schema at "/components/schemas/RetrieveSessionsOutput"
     # Additionally any success response has to comply with some constraints beyond the schema compliance
-    And the response property "$.device" exists only if provided for createSession and with the same value
-    And the response property "$.applicationServer" has the same value as in the request body
-    And the response property "$.qosProfile" has the value provided for createSession
-    And the response property "$.devicePorts" exists only if provided for createSession and with the same value
-    And the response property "$.applicationServerPorts" exists only if provided for createSession and with the same value
-    And the response property "$.sink" exists only if provided for createSession and with the same value
+    And in all items in the response, property "device" exists only if provided for createSession and with the same value
+    And in all items in the response, property "applicationServer" has the same value as in the request body
+    And in all items in the response, property "qosProfile" has the value provided for createSession
+    And in all items in the response, property "devicePorts" exists only if provided for createSession and with the same value
+    And in all items in the response, property "applicationServerPorts" exists only if provided for createSession and with the same value
+    And in all items in the response, property "sink" exists only if provided for createSession and with the same value
     # sinkCredential not explicitly mentioned to be returned if present, as this is debatable for security concerns
-    And the response property "$.startedAt" exists only if "$.qosStatus" is "AVAILABLE" and the value is in the past
-    And the response property "$.expiresAt" exists only if "$.qosStatus" is not "REQUESTED" and the value is later than "$.startedAt"
-    And the response property "$.statusInfo" exists only if "$.qosStatus" is "UNAVAILABLE"
+    And in all items in the response, property "startedAt" exists only if "qosStatus" is "AVAILABLE" and the value is in the past
+    And in all items in the response, property "expiresAt" exists only if "qosStatus" is not "REQUESTED" and the value is later than "startedAt"
+    And in all items in the response, property "statusInfo" exists only if "qosStatus" is "UNAVAILABLE"
 
   @quality_on_demand_retrieveSessionsByDevice_02_sessions_not_found
   Scenario: Device has not QoS sessions
@@ -153,17 +153,6 @@ Feature: CAMARA Quality On Demand API, v1.1.0 - Operation retrieveSessionsByDevi
   @quality_on_demand_retrieveSessionsByDevice_400.2_no_request_body
   Scenario: Missing request body
     Given the request body is not included
-    When the request "retrieveSessionsByDevice" is sent
-    Then the response status code is 400
-    And the response header "x-correlator" has same value as the request header "x-correlator"
-    And the response header "Content-Type" is "application/json"
-    And the response property "$.status" is 400
-    And the response property "$.code" is "INVALID_ARGUMENT"
-    And the response property "$.message" contains a user friendly text
-
-  @quality_on_demand_retrieveSessionsByDevice_400.3_empty_request_body
-  Scenario: Empty object as request body
-    Given the request body is set to {}
     When the request "retrieveSessionsByDevice" is sent
     Then the response status code is 400
     And the response header "x-correlator" has same value as the request header "x-correlator"
