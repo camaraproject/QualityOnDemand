@@ -15,7 +15,7 @@ Feature: CAMARA QoS Provisioning API, vwip - Operation getQosAssignmentByDevice
 
   Background: Common getQosAssignmentByDevice setup
     Given an environment at "apiRoot"
-    And the resource "/qos-provisioning/vwip/retrieve-qos-assignment"                                                              
+    And the resource "/qos-provisioning/vwip/retrieve-qos-assignment"
     And the header "Content-Type" is set to "application/json"
     # Unless indicated otherwise the QoS assignment must be created by the same API client given in the access token
     And the header "Authorization" is set to a valid access token granted to the same client that created the QoS assignment
