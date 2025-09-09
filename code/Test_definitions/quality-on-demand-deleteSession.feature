@@ -9,7 +9,7 @@ Feature: CAMARA Quality On Demand API, vwip - Operation deleteSession
   # * The sessionId of an existing session with status "AVAILABLE", and with provided values for "sink" and "sinkCredential".
   # * The sessionId of an existing session with status "UNAVAILABLE", and with provided values for "sink" and "sinkCredential".
   #
-  # References to OAS spec schemas refer to schemas specifies in quality-on-demand.yaml
+  # References to OAS spec schemas refer to schemas specified in quality-on-demand.yaml
 
   Background: Common deleteSession setup
     Given an environment at "apiRoot"
@@ -125,7 +125,7 @@ Feature: CAMARA Quality On Demand API, vwip - Operation deleteSession
   # Errors 404
 
   @quality_on_demand_deleteSession_404.1_not_found
-  Scenario: sessionId of a no existing QoS session
+  Scenario: sessionId of a non-existing QoS session
     Given the path parameter "sessionId" is set to a random UUID
     When the request "deleteSession" is sent
     Then the response status code is 404
