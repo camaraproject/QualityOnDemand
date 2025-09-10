@@ -12,7 +12,7 @@ Feature: CAMARA Quality On Demand API, v1.1.0 - Operation createSession
   # * A device object identifying a device commercialized by the implementation for which the service is not applicable, if any.
   #
 
-  # References to OAS spec schemas refer to schemas specifies in quality-on-demand.yaml
+  # References to OAS spec schemas refer to schemas specified in quality-on-demand.yaml
 
   Background: Common createSession setup
     Given an environment at "apiRoot"
@@ -229,7 +229,7 @@ Feature: CAMARA Quality On Demand API, v1.1.0 - Operation createSession
 
   # The maximum is considered in the schema so a generic schema validator may fail and generate a 400 INVALID_ARGUMENT without further distinction,
   # and both could be accepted
-  @quality_on_demand_createSession_400.6_out_of_range_port
+  @quality_on_demand_createSession_400.5_out_of_range_port
   Scenario Outline: Out of range port
     Given the request body property "<port_property>" is set to a value not between between 0 and 65535
     When the request "createSession" is sent
@@ -251,7 +251,7 @@ Feature: CAMARA Quality On Demand API, v1.1.0 - Operation createSession
       | $.applicationServerPorts.ports[*]    |
 
   # PLAIN and REFRESHTOKEN are considered in the schema so INVALID_ARGUMENT is not expected
-  @quality_on_demand_createSession_400.7_invalid_sink_credential
+  @quality_on_demand_createSession_400.6_invalid_sink_credential
   Scenario Outline: Invalid credential
     Given the request body property  "$.sinkCredential.credentialType" is set to "<unsupported_credential_type>"
     When the request "createSession" is sent
@@ -269,7 +269,7 @@ Feature: CAMARA Quality On Demand API, v1.1.0 - Operation createSession
 
   # Only "bearer" is considered in the schema so a generic schema validator may fail and generate a 400 INVALID_ARGUMENT without further distinction,
   # and both could be accepted
-  @quality_on_demand_createSession_400.8_sink_credential_invalid_token
+  @quality_on_demand_createSession_400.7_sink_credential_invalid_token
   Scenario: Invalid token
     Given the request body property  "$.sinkCredential.accessTokenType" is set to a value other than "bearer"
     When the request "createSession" is sent
@@ -280,7 +280,7 @@ Feature: CAMARA Quality On Demand API, v1.1.0 - Operation createSession
     And the response property "$.code" is "INVALID_TOKEN" or "INVALID_ARGUMENT"
     And the response property "$.message" contains a user friendly text
 
-  @quality_on_demand_createSession_400.9_non_existent_qos_profile
+  @quality_on_demand_createSession_400.8_non_existent_qos_profile
   Scenario: Error response for invalid qos profile in request body
     Given the request body property "qosProfile" is set to a non existent qos Profile
     When the request "createSession" is sent
@@ -291,7 +291,7 @@ Feature: CAMARA Quality On Demand API, v1.1.0 - Operation createSession
     And the response property "$.code" is "INVALID_ARGUMENT"
     And the response property "$.message" contains a user friendly text
 
-  @quality_on_demand_createSession_400.10_invalid_duration
+  @quality_on_demand_createSession_400.9_invalid_duration
   Scenario: Error response when duration is not valid for selected qos profile
     Given the request body property "duration" is set to an invalid duration for the selected qosProfile
     When the request "createSession" is sent

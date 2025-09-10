@@ -8,7 +8,7 @@ Feature: CAMARA Quality On Demand API, v1.1.0 - Operation extendQosSessionDurati
   # * The sessionId of an existing session with qosStatus "AVAILABLE"
   # * The sessionId of an existing session with qosStatus "UNAVAILABLE"
   #
-  # References to OAS spec schemas refer to schemas specifies in quality-on-demand.yaml
+  # References to OAS spec schemas refer to schemas specified in quality-on-demand.yaml
 
   Background: Common extendQosSessionDuration setup
     Given an environment at "apiRoot"
@@ -62,7 +62,7 @@ Feature: CAMARA Quality On Demand API, v1.1.0 - Operation extendQosSessionDurati
 
   @quality_on_demand_extendQosSessionDuration_400.1_schema_not_compliant
   Scenario: Invalid Argument. Generic Syntax Exception
-    Given the request body is set to any value which is not compliant with the schema at "/components/schemas/extendQosSessionDuration"
+    Given the request body is set to any value which is not compliant with the schema at "/components/schemas/ExtendSessionDuration"
     When the request "extendQosSessionDuration" is sent
     Then the response status code is 400
     And the response header "x-correlator" has same value as the request header "x-correlator"
@@ -170,7 +170,7 @@ Feature: CAMARA Quality On Demand API, v1.1.0 - Operation extendQosSessionDurati
   # Errors 404
 
   @quality_on_demand_extendQosSessionDuration_404.1_not_found
-  Scenario: sessionId of a no existing QoS session
+  Scenario: sessionId of a non-existing QoS session
     Given the path parameter "sessionId" is set to a random UUID
     And the request body is set to a valid request body
     When the request "extendQosSessionDuration" is sent

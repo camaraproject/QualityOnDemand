@@ -11,7 +11,7 @@ Feature: CAMARA Quality On Demand API, v1.1.0 - Operation retrieveSessionsByDevi
   # * A device object applicable for Quality On Demand service with NO QoS Sessions associated
   # * A device object identifying a device commercialized by the implementation for which the service is not applicable, if any.
   #
-  # References to OAS spec schemas refer to schemas specifies in quality-on-demand.yaml
+  # References to OAS spec schemas refer to schemas specified in quality-on-demand.yaml
 
   Background: Common retrieveSessionsByDevice setup
     Given an environment at "apiRoot"
@@ -141,7 +141,7 @@ Feature: CAMARA Quality On Demand API, v1.1.0 - Operation retrieveSessionsByDevi
 
   @quality_on_demand_retrieveSessionsByDevice_400.1_schema_not_compliant
   Scenario: Invalid Argument. Generic Syntax Exception
-    Given the request body is set to any value which is not compliant with the schema at "/components/schemas/retrieveSessionsByDevice"
+    Given the request body is set to any value which is not compliant with the schema at "/components/schemas/RetrieveSessionsInput"
     When the request "retrieveSessionsByDevice" is sent
     Then the response status code is 400
     And the response header "x-correlator" has same value as the request header "x-correlator"

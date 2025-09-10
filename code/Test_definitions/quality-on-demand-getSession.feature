@@ -7,7 +7,7 @@ Feature: CAMARA Quality On Demand API, v1.1.0 - Operation getSession
   # Testing assets:
   # * The sessionId of an existing QoS session, and the request properties used for createSession
   #
-  # References to OAS spec schemas refer to schemas specifies in quality-on-demand.yaml
+  # References to OAS spec schemas refer to schemas specified in quality-on-demand.yaml
 
   Background: Common getSession setup
     Given an environment at "apiRoot"
@@ -49,7 +49,7 @@ Feature: CAMARA Quality On Demand API, v1.1.0 - Operation getSession
     And the response header "Content-Type" is "application/json"
     And the response header "x-correlator" has same value as the request header "x-correlator"
     And the response body complies with the OAS schema at "#/components/schemas/SessionInfo"
-    And the response property "$.status" is "UNAVAILABLE"
+    And the response property "$.qosStatus" is "UNAVAILABLE"
 
   # Errors 400
 
@@ -130,7 +130,7 @@ Feature: CAMARA Quality On Demand API, v1.1.0 - Operation getSession
   # Errors 404
 
   @quality_on_demand_getSession_404.1_not_found
-  Scenario: sessionId of a no existing QoS session
+  Scenario: sessionId of a non-existing QoS session
     Given the path parameter "sessionId" is set to a random UUID
     When the request "getSession" is sent
     Then the response status code is 404

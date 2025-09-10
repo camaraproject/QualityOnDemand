@@ -11,7 +11,7 @@ Feature: CAMARA QoS Profiles API, v1.1.0 - Operation retrieveQoSProfiles
   # * If some QoS Profile is restricted for some devices, provide the QoS profile name and device
   # * A device object identifying a device commercialized by the implementation for which the service is not applicable, if any
 
-  # References to OAS spec schemas refer to schemas specifies in qos-profiles.yaml
+  # References to OAS spec schemas refer to schemas specified in qos-profiles.yaml
 
   Background: Common retrieveQoSProfiles setup
     Given an environment at "apiRoot"
@@ -32,7 +32,7 @@ Feature: CAMARA QoS Profiles API, v1.1.0 - Operation retrieveQoSProfiles
     Then the response status code is 200
     And the response header "Content-Type" is "application/json"
     And the response header "x-correlator" has same value as the request header "x-correlator"
-    And each item of the the response array, if any, complies with the OAS schema at "/components/schemas/QosProfile"
+    And each item of the response array, if any, complies with the OAS schema at "/components/schemas/QosProfile"
     # TBC: Add additional constraints, such as max* properties must be higher than min* equivalent properties, etc
 
   @qos_profiles_retrieveQoSProfiles_02_filter_by_name_only
@@ -54,8 +54,8 @@ Feature: CAMARA QoS Profiles API, v1.1.0 - Operation retrieveQoSProfiles
     Then the response status code is 200
     And the response header "Content-Type" is "application/json"
     And the response header "x-correlator" has same value as the request header "x-correlator"
-    And each item of the the response array, if any, complies with the OAS schema at "/components/schemas/QosProfile"
-    And each item of the the response array, if any, has property "$[*].status" equal to <status>
+    And each item of the response array, if any, complies with the OAS schema at "/components/schemas/QosProfile"
+    And each item of the response array, if any, has property "$[*].status" equal to <status>
 
     Examples:
       | status     |
@@ -72,8 +72,8 @@ Feature: CAMARA QoS Profiles API, v1.1.0 - Operation retrieveQoSProfiles
     Then the response status code is 200
     And the response header "Content-Type" is "application/json"
     And the response header "x-correlator" has same value as the request header "x-correlator"
-    And each item of the the response array complies with the OAS schema at "/components/schemas/QosProfile"
-    And the restricted QoS Profiles is returned in the response
+    And each item of the response array complies with the OAS schema at "/components/schemas/QosProfile"
+    And the restricted QoS Profiles are returned in the response
 
   @qos_profiles_retrieveQoSProfiles_05_not_return_restricted_profiles
   Scenario: Do not return restricted QoS Profiles restricted to certain devices
@@ -84,11 +84,11 @@ Feature: CAMARA QoS Profiles API, v1.1.0 - Operation retrieveQoSProfiles
     Then the response status code is 200
     And the response header "Content-Type" is "application/json"
     And the response header "x-correlator" has same value as the request header "x-correlator"
-    And each item of the the response array complies with the OAS schema at "/components/schemas/QosProfile"
+    And each item of the response array complies with the OAS schema at "/components/schemas/QosProfile"
     And no restricted QoS Profile is included in the response
 
   @qos_profiles_retrieveQoSProfiles_06_device_qos_profiles_not_found
-  Scenario: Device has not QoS profiles associated
+  Scenario: Device has no QoS profiles associated
     Given a device for which the service is not applicable, provided in the request body or identified by the access token
     When the request "retrieveQoSProfiles" is sent
     Then the response status code is 200

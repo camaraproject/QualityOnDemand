@@ -7,14 +7,14 @@ Feature: CAMARA QoS Profiles API, v1.1.0 - Operation getQosProfile
   # Testing assets:
   # * The name of an existing QoS profile
   #
-  # References to OAS spec schemas refer to schemas specifies in qos-profiles.yaml
+  # References to OAS spec schemas refer to schemas specified in qos-profiles.yaml
 
   Background: Common getQosProfile setup
     Given an environment at "apiRoot"
     And the resource "/qos-profiles/v1/qos-profiles/{name}"
     And the header "Authorization" is set to a valid access token
     And the header "x-correlator" complies with the schema at "#/components/schemas/XCorrelator"
-    And the path param "name" is set by default to a existing QoS profile name
+    And the path param "name" is set by default to an existing QoS profile name
 
   # Success scenarios
 
@@ -22,12 +22,12 @@ Feature: CAMARA QoS Profiles API, v1.1.0 - Operation getQosProfile
   Scenario: Common validations for any success scenario
     # Valid testing device and default request body compliant with the schema
     Given an existing QoS profile
-    And the path parameter "name" is set to the value for an that QoS profile
+    And the path parameter "name" is set to the value for that QoS profile
     When the request "getQosProfile" is sent
     Then the response status code is 200
     And the response header "Content-Type" is "application/json"
     And the response header "x-correlator" has same value as the request header "x-correlator"
-    And each item of the the response array complies with the OAS schema at "/components/schemas/QosProfile"
+    And each item of the response array complies with the OAS schema at "/components/schemas/QosProfile"
     And the response property "$.name" value is equal to path param "name"
     # TBC: Add additional constraints, such as max* properties must be higher than min* equivalent properties, etc
 
@@ -110,7 +110,7 @@ Feature: CAMARA QoS Profiles API, v1.1.0 - Operation getQosProfile
   # Generic 404 errors
 
   @qos_profiles_getQosProfile_404.1_not_found
-  Scenario: name of a no existing QoS profile
+  Scenario: name of a non-existing QoS profile
     Given the path parameter "name" is set to a random string compliant with the pattern
     When the request "getQosProfile" is sent
     Then the response status code is 404

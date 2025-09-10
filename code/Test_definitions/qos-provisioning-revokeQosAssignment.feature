@@ -94,7 +94,7 @@ Feature: CAMARA QoS Provisioning API, v0.3.0 - Operation revokeQosAssignment
   Scenario: Invalid Argument. Generic Syntax Exception
     Given the path parameter "assignmentId" has not a UUID format
     When the request "revokeQosAssignment" is sent
-    Then the response status code is 404
+    Then the response status code is 400
     And the response header "x-correlator" has same value as the request header "x-correlator"
     And the response header "Content-Type" is "application/json"
     And the response property "$.status" is 400
@@ -165,7 +165,7 @@ Feature: CAMARA QoS Provisioning API, v0.3.0 - Operation revokeQosAssignment
   # Errors 404
 
   @qos_provisioning_revokeQosAssignment_404.1_not_found
-  Scenario: assignmentId of a no existing QoS assignment
+  Scenario: assignmentId of a non-existing QoS assignment
     Given the path parameter "assignmentId" is set to a random UUID
     When the request "revokeQosAssignment" is sent
     Then the response status code is 404
