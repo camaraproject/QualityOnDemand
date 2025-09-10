@@ -11,7 +11,7 @@ Feature: CAMARA QoS Provisioning API, vwip - Operation getQosAssignmentById
 
   Background: Common getQosAssignmentById setup
     Given an environment at "apiRoot"
-    And the resource "/qos-provisioning/vwip/qos-assignments/{assignmentId}"                                                              |
+    And the resource "/qos-provisioning/vwip/qos-assignments/{assignmentId}"
     # Unless indicated otherwise the QoS assignment must be created by the same API client given in the access token
     And the header "Authorization" is set to a valid access token granted to the same client that created the QoS assignment
     And the header "x-correlator" complies with the schema at "#/components/schemas/XCorrelator"
@@ -127,7 +127,7 @@ Feature: CAMARA QoS Provisioning API, vwip - Operation getQosAssignmentById
   # Errors 404
 
   @qos_provisioning_getQosAssignmentById_404.1_not_found
-  Scenario: assignmentId of a no existing QoS assignment
+  Scenario: assignmentId of a non-existing QoS assignment
     Given the path parameter "assignmentId" is set to a random UUID
     When the request "getQosAssignmentById" is sent
     Then the response status code is 404
