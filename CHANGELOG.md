@@ -42,7 +42,7 @@ The API definition(s) are based on
 
 ## quality-on-demand v1.1.0
 
-**quality-on-demand v1.1.0 is minor update of the API, and is backward compatible with v1.0.0.**
+**quality-on-demand v1.1.0 is a minor update of the API, and is backward compatible with v1.0.0.**
 
 - API definition **with inline documentation**:
   - [View it on ReDoc](https://redocly.github.io/redoc/?url=https://raw.githubusercontent.com/camaraproject/QualityOnDemand/r3.2/code/API_definitions/quality-on-demand.yaml&nocors)
