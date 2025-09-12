@@ -74,7 +74,7 @@ info:
   license:
     name: Apache 2.0
     url: https://www.apache.org/licenses/LICENSE-2.0.html
-  version: wip
+  version: 0.3.0
   x-camara-commonalities: 0.6
 
 externalDocs:
@@ -82,7 +82,7 @@ externalDocs:
   url: https://github.com/camaraproject/QualityOnDemand
 
 servers:
-  - url: "{apiRoot}/qos-provisioning/vwip"
+  - url: "{apiRoot}/qos-provisioning/v0.3"
     variables:
       apiRoot:
         default: http://localhost:9091
@@ -307,7 +307,7 @@ paths:
           - When a three-legged access token is used however, this optional identifier MUST NOT be provided, as the subject will be uniquely identified from the access token.
         - The QoS profile assignment must have been created by the same API consumer given in the access token.
         - If no QoS profile assignment is found for the device, an error response 404 is returned with code "NOT_FOUND".
-        - This call uses the POST method instead of GET to comply with the [CAMARA Commonalities guidelines](https://github.com/camaraproject/Commonalities/blob/r2.3/documentation/API-design-guidelines.md#post-or-get-for-transferring-sensitive-or-complex-data) for sending sensitive or complex data in API calls. Since the device field may contain personally identifiable information, it should not be sent via GET.
+        - This call uses the POST method instead of GET to comply with the [CAMARA Commonalities guidelines](https://github.com/camaraproject/Commonalities/blob/r3.3/documentation/CAMARA-API-Design-Guide.md#65-post-or-get-for-transferring-sensitive-or-complex-data) for sending sensitive or complex data in API calls. Since the device field may contain personally identifiable information, it should not be sent via GET.
 
       operationId: getQosAssignmentByDevice
       parameters:
