@@ -522,10 +522,9 @@ components:
         - type: object
           properties:
             device:
+              $ref: "#/components/schemas/DeviceResponse"
               description: Disambiguates the device to which the session applies when multiple device identifiers were provided
-              allOf:
-                - $ref: "#/components/schemas/DeviceResponse"
-                - example: {"phoneNumber": "+123456789"}
+              example: { "phoneNumber": "+123456789" }
         - $ref: "#/components/schemas/BaseSessionInfo"
         - type: object
           properties:
