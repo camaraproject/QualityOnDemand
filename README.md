@@ -9,7 +9,7 @@
 
 # QualityOnDemand
 
-Incubating API Repository to evolve and maintain the definitions and documentation of QualityOnDemand Service API(s) within the Sub Project [Quality On Demand](https://lf-camaraproject.atlassian.net/wiki/x/hAClB)
+Incubating API Repository to evolve and maintain the definitions and documentation of QualityOnDemand Service API(s) within the Sub Project [Connectivity Quality Management](https://lf-camaraproject.atlassian.net/wiki/x/hAClB)
 
 * API Repository [wiki page](https://lf-camaraproject.atlassian.net/wiki/x/XCPe)
 
@@ -63,5 +63,5 @@ Incubating API Repository to evolve and maintain the definitions and documentati
   * [Registration / Join](https://zoom-lfx.platform.linuxfoundation.org/meeting/94112812156?password=f238d6af-c959-48d7-a862-abdb3c648e40)
   * Minutes: Access [meeting minutes](https://lf-camaraproject.atlassian.net/wiki/x/XCPe)
 * Mailing List
-  * Subscribe / unsubscribe to the mailing list of this Sub Project <https://lists.camaraproject.org/g/sp-qod>.
-  * A message to the community of this Sub Project can be sent using <sp-qod@lists.camaraproject.org>.
+  * Subscribe / unsubscribe to the mailing list of this Sub Project <https://lists.camaraproject.org/g/sp-cqm>.
+  * A message to the community of this Sub Project can be sent using <sp-cqm@lists.camaraproject.org>.
