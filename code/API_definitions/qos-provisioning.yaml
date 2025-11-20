@@ -1256,4 +1256,3 @@ components:
           assignmentId: 123e4567-e89b-12d3-a456-426614174000
           status: UNAVAILABLE
           statusInfo: NETWORK_TERMINATED
-
