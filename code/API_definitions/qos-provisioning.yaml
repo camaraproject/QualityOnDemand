@@ -1214,7 +1214,7 @@ components:
 
     ASSIGNMENT_UNAVAILABLE:
       summary: QoD provisioning status is unavailable
-      description: The sssignment could not be created or is not active anymore
+      description: The asssignment could not be created or is not active anymore
       value:
         qosProfile: QOS_L
         sink: https://application-server.com/callback
