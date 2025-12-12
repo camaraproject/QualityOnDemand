@@ -12,3 +12,4 @@
 | Verizon/ 5GFF| Mahesh Chapalamadugu | maheshc01 |
 | KDDI | Toshi (Toshiyasu) Wakayama | ToshiWakayama-KDDI |
 | CableLabs | Randy Levensalor | RandyLevensalor |
+| CableLabs | Ben Hepworth | benhepworth |

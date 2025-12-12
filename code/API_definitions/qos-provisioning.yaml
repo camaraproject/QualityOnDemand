@@ -1,12 +1,12 @@
 openapi: 3.0.3
 info:
-  title: QoD Provisioning API
+  title: QoS Provisioning
   description: |
-    The Quality-on-Demand (QoD) Provisioning API provides a programmable interface for developers to request the association of a specific QoS profile with a device, indefinitely.
+    The Quality of Service (QoS) Provisioning API provides a programmable interface for developers to request the indefinite assignment of a specified QoS profile to all traffic being sent or received by a specified device.
 
-    The association resulting from the QoD provisioning request is represented by a QoD provisioning record (or QoD provisioning for short) that includes information about the date of provisioning, the QoS profile, the provisioning status, etc., as well as a provisioningId that uniquely identifies this record for later use.
+    The association resulting from the QoS provisioning request is represented by a QoS assignment record (or QoS assignment for short) that includes information about the date of assignment, the QoS profile assigned to a device, the assignment status, etc., as well as an `assignmentId` that uniquely identifies this record for later use.
 
-    Additionally, this API configures the network to apply the requested QoS profile to a specified device whenever the device is connected to the network, until the provisioning is revoked.
+    Additionally, this API configures the network to apply the requested QoS profile to a specified device whenever the device is connected to the network, until the assignment is revoked.
 
     # Relevant terms and definitions
 
@@ -14,18 +14,21 @@ info:
     Latency, throughput or priority requirements of the application mapped to relevant QoS profile values. The set of QoS Profiles that a network operator is offering may be retrieved via the `qos-profiles` API (cf. https://github.com/camaraproject/QualityOnDemand/) or will be agreed during the onboarding with the API service provider.
 
     * **Identifier for the device**:
-    At least one identifier for the device out of four options: IPv4 address, IPv6 address, Phone number, or Network Access Identifier assigned by the network operator for the device, at the request time. After the provisioning request is accepted, the device may get different IP addresses, but the provisioning will still apply to the device that was identified during the request process. Note: Network Access Identifier is defined for future use and will not be supported with this version of the API.
+    At least one identifier for the device (user equipment) out of four options: IPv4 address, IPv6 address, Phone Number, or Network Access Identifier assigned by the mobile network operator for the device. Where more than one device identifier is provided, only one identifier will be selected by the implementation and this choice indicated to the API consumer in the provisioning details. If only a single device identifier is provided, the implementation may or may not include the device identifier in the assignment details.
+
+
+      Note: Network Access Identifier is defined for future use and will not be supported with this version of the API.
 
     * **Notification URL and token**:
-    API consumers may provide a callback URL (`sink`) on which notifications about all status change events (eg. provisioning termination) can be received from the API provider. This is an optional parameter. The notification will be sent as a CloudEvent compliant message. If `sink` is included, it is RECOMMENDED for the client to provide as well the `sinkCredential` property to protect the notification endpoint.
+    API consumers may provide a callback URL (`sink`) on which notifications about all status change events (eg. assignment termination) can be received from the API provider. This is an optional parameter. The notification will be sent as a CloudEvent compliant message. If `sink` is included, it is RECOMMENDED for the client to provide as well the `sinkCredential` property to protect the notification endpoint.
 
     # Resources and Operations overview
     The API defines four operations:
 
-    - An operation to set up a new QoD provisioning for a given device.
-    - An operation to get the information about a specific QoD provisioning, identified by its `provisioningId`.
-    - An operation to get the QoD provisioning for a given device.
-    - An operation to revoke a QoD provisioning, identified by its `provisioningId`.
+    - An operation to assign a QoS profile for a given device indefinitely.
+    - An operation to get the information about a specific QoS assignment record, identified by its `assignmentId`.
+    - An operation to get the details of a QoS assignment record for a given device.
+    - An operation to revoke the assignment of a QoS profile to a given device, identified by the `assignmentId`.
 
     # Authorization and authentication
 
@@ -49,79 +52,88 @@ info:
 
     - If the subject can be identified from the access token and the optional `device` object is also included in the request, then the server will return an error with the `422 UNNECESSARY_IDENTIFIER` error code. This will be the case even if the same device is identified by these two methods, as the server is unable to make this comparison.
 
+    - If the requested `qosProfile` exists but is currently not available or incompatible for the QoS assignment (e.g., its status is INACTIVE or DEPRECATED, or its characteristics are not compatible with QoS Provisioning service), then the server will return an error with the `422 QOS_PROVISIONING.QOS_PROFILE_NOT_APPLICABLE` error code.
+
     # Multi-SIM scenario handling
 
-    In multi-SIM scenarios where more than one mobile device is associated with a phone number (e.g. a smartphone with an associated smartwatch), it might not be possible to uniquely identify the device to which the QoD provisioning should apply from that phone number. If the phone number is used as the device identifier when provisioning in a multi-SIM scenario, the API may respond with an error, apply the provisioning to all devices in the multi-SIM group, or apply the provisioning to a single device in the multi-SIM group which may not be the intended device.
+    In multi-SIM scenarios where more than one mobile device is associated with a phone number (e.g. a smartphone with an associated smartwatch), it might not be possible to uniquely identify the device to which the QoS profile should apply from that phone number. If the phone number is used as the device identifier when assigning a QoS profile in a multi-SIM scenario, the API may respond with an error, apply the QoS profile to all devices in the multi-SIM group, or apply the QoS profile to a single device in the multi-SIM group which may not be the intended device.
 
     Possible solutions in such a scenario include:
     - Using the authorisation code flow to obtain an access token, which will automatically identify the intended device
     - Identifying the intended device from a unique identifier for that device, such as its source IP address and port
     - Check with the SIM provider whether a unique "secondary" phone number is already associated with each device, and use the secondary phone number to identify the intended device if available.
 
+    # Additional CAMARA error responses
+
+    The list of error codes in this API specification is not exhaustive. Therefore the API specification may not document some non-mandatory error statuses as indicated in `CAMARA API Design Guide`.
+
+    Please refer to the `CAMARA_common.yaml` of the Commonalities Release associated to this API version for a complete list of error responses. The applicable Commonalities Release can be identified in the `API Readiness Checklist` document associated to this API version.
+
+    As a specific rule, error `501 - NOT_IMPLEMENTED` can be only a possible error response if it is explicitly documented in the API.
+
   license:
     name: Apache 2.0
     url: https://www.apache.org/licenses/LICENSE-2.0.html
   version: wip
-  x-camara-commonalities: 0.5
+  x-camara-commonalities: 0.6
 
 externalDocs:
   description: Project documentation at CAMARA
   url: https://github.com/camaraproject/QualityOnDemand
 
 servers:
-  - url: "{apiRoot}/qod-provisioning/vwip"
+  - url: "{apiRoot}/qos-provisioning/vwip"
     variables:
       apiRoot:
         default: http://localhost:9091
         description: API root, defined by the service provider, e.g. `api.example.com` or `api.example.com/somepath`
 tags:
-  - name: QoD Provisioning
-    description: Manage the permanent provisioning of QoD
+  - name: QoS Assignment
+    description: Manage the permanent assignment of a QoS profile to a device
 
 paths:
-  /device-qos:
+  /qos-assignments:
     post:
       tags:
-        - QoD Provisioning
-      summary: Triggers a new provisioning of QoS for a device
+        - QoS Assignment
+      summary: Triggers the provisioning process for the assignment of a QoS profile to a device
       description: |
-        Triggers the provisioning in the operator's environment to associate a given QoS profile with a given device.
+        Initiates the assignment of a specific QoS profile to a given device when connected to the operator's network.
 
+        - If the QoS profile assignment is completed synchronously, the response will be 201 with `status` = `AVAILABLE`.
+        - If the QoS profile assignment request is accepted but not yet completed, the response will be 201 with `status` = `REQUESTED`.
+        - If the operator determines synchronously that the QoS profile assignment request cannot be fulfilled, the response will be 201 with `status` = `UNAVAILABLE`.
 
-        - If the provisioning is completed synchronously, the response will be 201 with `status` = `AVAILABLE`.
-        - If the provisioning request is accepted but not yet completed, the response will be 201 with `status` = `REQUESTED`.
-        - If the operator determines synchronously that the provisioning request cannot be fulfilled, the response will be 201 with `status` = `UNAVAILABLE`.
-
-        - If the request includes  the `sink` and `sinkCredential` properties, the client will receive a `status-changed` event with the outcome of the process. The event will be sent also for synchronous operations.
+        - If the request includes the `sink` and `sinkCredential` properties, the client will receive a `status-changed` event with the outcome of the process. The event will be sent also for synchronous operations.
 
         **NOTES:**
-        - When the provisioning status becomes `UNAVAILABLE`, the QoD provisioning resource is not immediately released, but will get deleted automatically, at earliest 360 seconds after.
+        - When the assignment status becomes `UNAVAILABLE`, the QoS profile assignment is not immediately released, but will get deleted automatically, at earliest 360 seconds after.
 
-        This behavior allows API consumers which are not receiving notification events but are polling, to get the provisioning status information. Before a client can attempt to create a new QoD provisioning for the same device, they must release the provisioning resources with an explicit `delete` operation if not yet automatically deleted.
+        This behavior allows API consumers that are not receiving notification events but are polling, to get the QoS profile assignment status information. Before a client can attempt to create a new QoS profile assignment for the same device, they must release the previous assignment resources with an explicit `delete` operation if not yet automatically deleted.
         - The access token may be either 2-legged or 3-legged. See "Identifying the device from the access token" for further information
           - When the API is invoked using a two-legged access token, the subject will be identified from the optional `device` object, which therefore MUST be provided.
           - When a three-legged access token is used however, this optional identifier MUST NOT be provided, as the subject will be uniquely identified from the access token.
 
-      operationId: triggerProvisioning
+      operationId: createQosAssignment
       parameters:
         - $ref: "#/components/parameters/x-correlator"
       requestBody:
-        description: Parameters to trigger a new provisioning
+        description: Parameters to assign a QoS profile to a device
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/TriggerProvisioning"
+              $ref: "#/components/schemas/CreateAssignment"
         required: true
       callbacks:
         notifications:
           "{$request.body#/sink}":
             post:
-              summary: Provisioning notifications callback
+              summary: Assignment notifications callback
               description: |
                 Important: this endpoint is to be implemented by the API consumer.
-                The QoD server will call this endpoint whenever any QoD provisioning change related event occurs.
-                Currently only `PROVISIONING_STATUS_CHANGED` event is defined.
-              operationId: postProvisioningNotification
+                The QoS server will call this endpoint whenever any QoS assignment change related event occurs.
+                Currently only `ASSIGNMENT_STATUS_CHANGED` event is defined.
+              operationId: postQosAssignmentNotification
               parameters:
                 - $ref: "#/components/parameters/x-correlator"
               requestBody:
@@ -131,8 +143,8 @@ paths:
                     schema:
                       $ref: "#/components/schemas/CloudEvent"
                     examples:
-                      PROVISIONING_STATUS_CHANGED_EXAMPLE:
-                        $ref: "#/components/examples/PROVISIONING_STATUS_CHANGED_EXAMPLE"
+                      ASSIGNMENT_STATUS_CHANGED_EXAMPLE:
+                        $ref: "#/components/examples/ASSIGNMENT_STATUS_CHANGED_EXAMPLE"
               responses:
                 "204":
                   description: Successful notification
@@ -154,16 +166,21 @@ paths:
                 - notificationsBearerAuth: []
       responses:
         "201":
-          description: Provisioning created
+          description: Assignment created
           headers:
             x-correlator:
               $ref: "#/components/headers/x-correlator"
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/ProvisioningInfo"
+                $ref: "#/components/schemas/AssignmentInfo"
+              examples:
+                Successful QoS Profile Assignment Creation:
+                  $ref: "#/components/examples/ASSIGNMENT_CREATION_EXAMPLE"
+                Successful QoS Profile Assignment Creation with Device in the response:
+                  $ref: "#/components/examples/ASSIGNMENT_CREATION_EXAMPLE_WITH_DEVICE_RESPONSE"
         "400":
-          $ref: "#/components/responses/TriggerProvisioning400"
+          $ref: "#/components/responses/CreateAssignment400"
         "401":
           $ref: "#/components/responses/Generic401"
         "403":
@@ -171,48 +188,48 @@ paths:
         "404":
           $ref: "#/components/responses/GenericDevice404"
         "409":
-          $ref: "#/components/responses/ProvisioningConflict409"
+          $ref: "#/components/responses/AssignmentConflict409"
         "422":
-          $ref: "#/components/responses/Generic422"
+          $ref: "#/components/responses/CreateAssignment422"
         "429":
           $ref: "#/components/responses/Generic429"
       security:
         - openId:
-            - "qod-provisioning:device-qos:create"
+            - "qos-provisioning:qos-assignments:create"
 
-  /device-qos/{provisioningId}:
+  /qos-assignments/{assignmentId}:
     get:
       tags:
-        - QoD Provisioning
-      summary: Get QoD provisioning information
+        - QoS Assignment
+      summary: Get the QoS profile assignment information identified by an assignment record ID
       description: |
-        Querying for QoD provisioning resource information details
+        Querying for details about the QoS profile assignment
 
         **NOTES:**
         - The access token may be either 2-legged or 3-legged.
-        - If a 3-legged access token is used, the subject associated with the QoD provisioning must also be associated with the access token.
-        - The QoD provisioning must have been created by the same API consumer given in the access token.
-      operationId: getProvisioningById
+        - If a 3-legged access token is used, the subject associated with the QoS profile assignment must also be associated with the access token.
+        - The QoS profile assignment must have been created by the same API consumer given in the access token.
+      operationId: getQosAssignmentById
       parameters:
-        - $ref: "#/components/parameters/provisioningId"
+        - $ref: "#/components/parameters/assignmentId"
         - $ref: "#/components/parameters/x-correlator"
       responses:
         "200":
-          description: Returns information about certain provisioning
+          description: Returns information about certain assignment
           headers:
             x-correlator:
               $ref: "#/components/headers/x-correlator"
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/ProvisioningInfo"
+                $ref: "#/components/schemas/AssignmentInfo"
               examples:
-                PROVISIONING_AVAILABLE:
-                  $ref: "#/components/examples/PROVISIONING_AVAILABLE"
-                PROVISIONING_UNAVAILABLE:
-                  $ref: "#/components/examples/PROVISIONING_UNAVAILABLE"
-                PROVISIONING_AVAILABLE_WITHOUT_DEVICE:
-                  $ref: "#/components/examples/PROVISIONING_AVAILABLE_WITHOUT_DEVICE"
+                ASSIGNMENT_AVAILABLE:
+                  $ref: "#/components/examples/ASSIGNMENT_AVAILABLE"
+                ASSIGNMENT_UNAVAILABLE:
+                  $ref: "#/components/examples/ASSIGNMENT_UNAVAILABLE"
+                ASSIGNMENT_AVAILABLE_WITHOUT_DEVICE:
+                  $ref: "#/components/examples/ASSIGNMENT_AVAILABLE_WITHOUT_DEVICE"
         "400":
           $ref: "#/components/responses/Generic400"
         "401":
@@ -225,32 +242,31 @@ paths:
           $ref: "#/components/responses/Generic429"
       security:
         - openId:
-            - "qod-provisioning:device-qos:read"
+            - "qos-provisioning:qos-assignments:read"
 
     delete:
       tags:
-        - QoD Provisioning
-      summary: Revokes a QoD provisioning
+        - QoS Assignment
+      summary: Revokes a QoS profile assignment identified by an assignment record ID
       description: |
-        Revokes the association of a QoS profile with the device performed by a previous provisioning.
+        Revokes the assignment of a QoS profile to a device performed by a previous assignment operation.
 
-
-        If the notification callback is provided and the provisioning status was `AVAILABLE`, when the process is completed, the API consumer will receive in addition to the response a `PROVISIONING_STATUS_CHANGED` event with
+        If the notification callback is provided and the assignment status was `AVAILABLE`, when the process is completed, the API consumer will receive in addition to the response a `ASSIGNMENT_STATUS_CHANGED` event with
         - `status` as `UNAVAILABLE` and
         - `statusInfo` as `DELETE_REQUESTED`
         There will be no notification event if the `status` was already `UNAVAILABLE`.
 
         **NOTES:**
         - The access token may be either 2-legged or 3-legged.
-        - If a 3-legged access token is used, the subject associated with the QoD provisioning must also be associated with the access token.
-        - The QoD provisioning must have been created by the same API consumer given in the access token.
-      operationId: revokeProvisioning
+        - If a 3-legged access token is used, the subject associated with the QoS profile assignment must also be associated with the access token.
+        - The QoS profile assignment must have been created by the same API consumer given in the access token.
+      operationId: revokeQosAssignment
       parameters:
-        - $ref: "#/components/parameters/provisioningId"
+        - $ref: "#/components/parameters/assignmentId"
         - $ref: "#/components/parameters/x-correlator"
       responses:
         "204":
-          description: Provisioning revoked
+          description: Assignment revoked
           headers:
             x-correlator:
               $ref: "#/components/headers/x-correlator"
@@ -262,7 +278,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/ProvisioningInfo"
+                $ref: "#/components/schemas/AssignmentInfo"
         "400":
           $ref: "#/components/responses/Generic400"
         "401":
@@ -275,37 +291,37 @@ paths:
           $ref: "#/components/responses/Generic429"
       security:
         - openId:
-            - "qod-provisioning:device-qos:delete"
+            - "qos-provisioning:qos-assignments:delete"
 
-  /retrieve-device-qos:
+  /retrieve-qos-assignment:
     post:
       tags:
-        - QoD Provisioning
-      summary: Gets the QoD provisioning for a device
+        - QoS Assignment
+      summary: Returns the assignment record details of the QoS profile assignment for a device
       description: |
-        Retrieves the QoD provisioning for a device.
+        Returns the details of the record for the assignment of a QoS profile to a device, if any.
 
         **NOTES:**
         - The access token may be either 2-legged or 3-legged. See "Identifying the device from the access token" for further information
           - When the API is invoked using a two-legged access token, the subject will be identified from the optional `device` object, which therefore MUST be provided.
           - When a three-legged access token is used however, this optional identifier MUST NOT be provided, as the subject will be uniquely identified from the access token.
-        - The QoD provisioning must have been created by the same API consumer given in the access token.
-        - If no provisioning is found for the device, an error response 404 is returned with code "NOT_FOUND".
-        - This call uses the POST method instead of GET to comply with the [CAMARA Commonalities guidelines](https://github.com/camaraproject/Commonalities/blob/r2.3/documentation/API-design-guidelines.md#post-or-get-for-transferring-sensitive-or-complex-data) for sending sensitive or complex data in API calls. Since the device field may contain personally identifiable information, it should not be sent via GET.
+        - The QoS profile assignment must have been created by the same API consumer given in the access token.
+        - If no QoS profile assignment is found for the device, an error response 404 is returned with code "NOT_FOUND".
+        - This call uses the POST method instead of GET to comply with the [CAMARA Commonalities guidelines](https://github.com/camaraproject/Commonalities/blob/r3.3/documentation/CAMARA-API-Design-Guide.md#65-post-or-get-for-transferring-sensitive-or-complex-data) for sending sensitive or complex data in API calls. Since the device field may contain personally identifiable information, it should not be sent via GET.
 
-      operationId: retrieveProvisioningByDevice
+      operationId: getQosAssignmentByDevice
       parameters:
         - $ref: "#/components/parameters/x-correlator"
       requestBody:
-        description: Parameters to retrieve a provisioning by device
+        description: Parameters to retrieve an assignment record by device
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/RetrieveProvisioningByDevice"
+              $ref: "#/components/schemas/RetrieveAssignmentByDevice"
         required: true
       responses:
         "200":
-          description: Returns information about the QoD provisioning for the device.
+          description: Returns information about the QoS profile assignment for the device.
 
           headers:
             x-correlator:
@@ -313,12 +329,14 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/ProvisioningInfo"
+                $ref: "#/components/schemas/AssignmentInfo"
               examples:
-                PROVISIONING_AVAILABLE:
-                  $ref: "#/components/examples/PROVISIONING_AVAILABLE"
-                PROVISIONING_AVAILABLE_WITHOUT_DEVICE:
-                  $ref: "#/components/examples/PROVISIONING_AVAILABLE_WITHOUT_DEVICE"
+                ASSIGNMENT_AVAILABLE:
+                  $ref: "#/components/examples/ASSIGNMENT_AVAILABLE"
+                ASSIGNMENT_UNAVAILABLE:
+                  $ref: "#/components/examples/ASSIGNMENT_UNAVAILABLE"
+                ASSIGNMENT_AVAILABLE_WITHOUT_DEVICE:
+                  $ref: "#/components/examples/ASSIGNMENT_AVAILABLE_WITHOUT_DEVICE"
         "400":
           $ref: "#/components/responses/Generic400"
         "401":
@@ -333,7 +351,7 @@ paths:
           $ref: "#/components/responses/Generic429"
       security:
         - openId:
-            - "qod-provisioning:device-qos:read-by-device"
+            - "qos-provisioning:qos-assignments:read-by-device"
 
 components:
   securitySchemes:
@@ -348,39 +366,41 @@ components:
       bearerFormat: "{$request.body#/sinkCredential.credentialType}"
 
   parameters:
-    provisioningId:
-      name: provisioningId
+    assignmentId:
+      name: assignmentId
       in: path
-      description: Provisioning ID that was obtained from the createProvision operation
+      description: Identifier of the assignment record for the QoS profile assignment, that was created by the `createQosAssignment` operation
       required: true
       schema:
-        $ref: "#/components/schemas/ProvisioningId"
+        $ref: "#/components/schemas/AssignmentId"
 
     x-correlator:
       name: x-correlator
       in: header
       description: Correlation id for the different services
       schema:
-        type: string
-        pattern: ^[a-zA-Z0-9-]{0,55}$
-        example: "b4333c46-49c0-4f62-80d7-f0ef930f1c46"
+        $ref: "#/components/schemas/XCorrelator"
 
   headers:
     x-correlator:
       description: Correlation id for the different services
       schema:
-        type: string
-        pattern: ^[a-zA-Z0-9-]{0,55}$
-        example: "b4333c46-49c0-4f62-80d7-f0ef930f1c46"
+        $ref: "#/components/schemas/XCorrelator"
 
   schemas:
-    ProvisioningId:
-      description: Provisioning Identifier in UUID format
+    XCorrelator:
+      description: Value for the x-correlator
+      type: string
+      pattern: ^[a-zA-Z0-9-_:;.\/<>{}]{0,256}$
+      example: "b4333c46-49c0-4f62-80d7-f0ef930f1c46"
+
+    AssignmentId:
+      description: Identifier of the assignment record for the QoS profile assignment, that was created by the `createQosAssignment` operation
       type: string
       format: uuid
 
-    BaseProvisioningInfo:
-      description: Common attributes of a QoD provisioning
+    BaseAssignmentInfo:
+      description: Common attributes of the assignment record for a QoS profile assignment
       type: object
       properties:
         device:
@@ -390,6 +410,7 @@ components:
         sink:
           type: string
           format: uri
+          pattern: ^https:\/\/.+$
           description: The address to which events shall be delivered using the selected protocol.
           example: "https://endpoint.example.com/sink"
         sinkCredential:
@@ -397,20 +418,24 @@ components:
       required:
         - qosProfile
 
-    ProvisioningInfo:
+    AssignmentInfo:
       description: |
-        Provisioning related information returned in responses.
-        Optional device object only to be returned if provided in triggerProvisioning. If more than one type of device identifier was provided, only one identifier will be returned (at implementation choice and with the original value provided in triggerProvisioning).
-        Please note that IP addresses of devices can change and get reused, so the original values may no longer identify the same device. They identified the device at the time the QoD provisioning was triggered.
+        Information about a QoS profile assignment returned in responses.
+        Optional device object only to be returned if provided in `createQosAssignment`. If more than one type of device identifier was provided, only one identifier will be returned (at implementation choice and with the original value provided in assignQosProfile).
+        Please note that IP addresses of devices can change and get reused, so the original values may no longer identify the same device. They identified the device at the time the QoS profile assignment was created.
 
       allOf:
-        - $ref: "#/components/schemas/BaseProvisioningInfo"
         - type: object
           properties:
-            provisioningId:
-              $ref: "#/components/schemas/ProvisioningId"
+            device:
+              $ref: "#/components/schemas/DeviceResponse"
+        - $ref: "#/components/schemas/BaseAssignmentInfo"
+        - type: object
+          properties:
+            assignmentId:
+              $ref: "#/components/schemas/AssignmentId"
             startedAt:
-              description: Date and time when the provisioning became "AVAILABLE". Not to be returned when `status` is "REQUESTED". Format must follow RFC 3339 and must indicate time zone (UTC or local).
+              description: Date and time when the QoS profile assignment became "AVAILABLE". Not to be returned when `status` is "REQUESTED". It must follow [RFC 3339](https://datatracker.ietf.org/doc/html/rfc3339#section-5.6) and must have time zone.
               type: string
               format: date-time
               example: "2024-06-01T12:00:00Z"
@@ -419,16 +444,20 @@ components:
             statusInfo:
               $ref: "#/components/schemas/StatusInfo"
           required:
-            - provisioningId
+            - assignmentId
             - status
 
-    TriggerProvisioning:
-      description: Attributes to request a new QoD provisioning
+    CreateAssignment:
+      description: Attributes to request a new QoS profile assignment
       allOf:
-        - $ref: "#/components/schemas/BaseProvisioningInfo"
+        - type: object
+          properties:
+            device:
+              $ref: "#/components/schemas/Device"
+        - $ref: "#/components/schemas/BaseAssignmentInfo"
 
-    RetrieveProvisioningByDevice:
-      description: Attributes to look for QoD provisioning
+    RetrieveAssignmentByDevice:
+      description: Attributes to look for a QoS profile assignment
       type: object
       properties:
         device:
@@ -488,11 +517,10 @@ components:
               format: date-time
               description: |
                 REQUIRED. An absolute (UTC) timestamp at which the token shall be considered expired. Token expiration should occur
-                after the termination of the requested provisioning, allowing the client to be notified of any changes during the
-                provisioning's existence. If the token expires while the provisioning is still active, the client will stop receiving notifications.
+                after the termination of the requested assignment, allowing the client to be notified of any changes during the
+                assignment's existence. If the token expires while the assignment is still active, the client will stop receiving notifications.
                 If the access token is a JWT and registered "exp" (Expiration Time) claim is present, the two expiry times should match.
                 It must follow [RFC 3339](https://datatracker.ietf.org/doc/html/rfc3339#section-5.6) and must have time zone.
-                Recommended format is yyyy-MM-dd'T'HH:mm:ss.SSSZ (i.e. which allows 2023-07-03T14:27:08.312+02:00 or 2023-07-03T12:27:08.312Z)
               example: "2023-07-03T12:27:08.312Z"
             accessTokenType:
               description: REQUIRED. Type of the access token (See [OAuth 2.0](https://tools.ietf.org/html/rfc6749#section-7.1)).
@@ -517,7 +545,10 @@ components:
             accessTokenExpiresUtc:
               type: string
               format: date-time
-              description: REQUIRED. An absolute UTC instant at which the token shall be considered expired.
+              description: |
+                REQUIRED. An absolute UTC instant at which the token shall be considered expired.
+                If the access token is a JWT and registered "exp" (Expiration Time) claim is present, the two expiry times should match.
+                It must follow [RFC 3339](https://datatracker.ietf.org/doc/html/rfc3339#section-5.6) and must have time zone.
             accessTokenType:
               description: REQUIRED. Type of the access token (See [OAuth 2.0](https://tools.ietf.org/html/rfc6749#section-7.1)).
               type: string
@@ -579,7 +610,7 @@ components:
           description: The type of the event.
           type: string
           enum:
-            - "org.camaraproject.qod-provisioning.v0.status-changed"
+            - "org.camaraproject.qos-provisioning.v0.status-changed"
         specversion:
           description: Version of the specification to which this event conforms (must be 1.0 if it conforms to cloudevents 1.0.2 version)
           type: string
@@ -595,16 +626,16 @@ components:
           type: object
         time:
           description: |
-            Timestamp of when the occurrence happened. It must follow RFC 3339
+            Timestamp of when the occurrence happened. It must follow [RFC 3339](https://datatracker.ietf.org/doc/html/rfc3339#section-5.6) and must have time zone.
           type: string
           format: date-time
       discriminator:
         propertyName: "type"
         mapping:
-          org.camaraproject.qod-provisioning.v0.status-changed: "#/components/schemas/EventStatusChanged"
+          org.camaraproject.qos-provisioning.v0.status-changed: "#/components/schemas/EventStatusChanged"
 
     EventStatusChanged:
-      description: Event to notify a QoD provisioning status change
+      description: Event to notify a QoS provisioning status change
       allOf:
         - $ref: "#/components/schemas/CloudEvent"
         - type: object
@@ -613,11 +644,11 @@ components:
               type: object
               description: Event details depending on the event type
               required:
-                - provisioningId
+                - assignmentId
                 - qosStatus
               properties:
-                provisioningId:
-                  $ref: "#/components/schemas/ProvisioningId"
+                assignmentId:
+                  $ref: "#/components/schemas/AssignmentId"
                 status:
                   $ref: "#/components/schemas/StatusChanged"
                 statusInfo:
@@ -628,8 +659,8 @@ components:
     StatusInfo:
       description: |
         Reason for the new `status`:
-        * `NETWORK_TERMINATED` - Network terminated the QoD provisioning
-        * `DELETE_REQUESTED`- User requested the deletion of the QoD provisioning
+        * `NETWORK_TERMINATED` - Network terminated the QoS profile assignment
+        * `DELETE_REQUESTED` - User requested the deletion of the QoS profile assignment
 
       type: string
       enum:
@@ -660,6 +691,16 @@ components:
         ipv6Address:
           $ref: "#/components/schemas/DeviceIpv6Address"
       minProperties: 1
+
+    DeviceResponse:
+      description: |
+        An identifier for the end-user equipment able to connect to the network that the response refers to. This parameter is only returned when the API consumer includes the `device` parameter in their request (i.e. they are using a two-legged access token), and is relevant when more than one device identifier is specified, as only one of those device identifiers is allowed in the response.
+
+        If the API consumer provides more than one device identifier in their request, the API provider must return a single identifier which is the one they are using to fulfil the request, even if the identifiers do not match the same device. API provider does not perform any logic to validate/correlate that the indicated device identifiers match the same device. No error should be returned if the identifiers are otherwise valid to prevent API consumers correlating different identifiers with a given end user.
+
+      allOf:
+        - $ref: "#/components/schemas/Device"
+        - maxProperties: 1
 
     NetworkAccessIdentifier:
       description: A public identifier addressing a subscription in a mobile network. In 3GPP terminology, it corresponds to the GPSI formatted with the External Identifier ({Local Identifier}@{Domain Identifier}). Unlike the telephone number, the network access identifier is not subjected to portability ruling in force, and is individually managed by each operator.
@@ -713,10 +754,10 @@ components:
 
     Status:
       description: |
-        The current status of the requested QoD provisioning. The status can be one of the following:
-        * `REQUESTED` - QoD provisioning has been requested but is still being processed.
-        * `AVAILABLE` - The requested QoS profile has been provisioned to the device, and is active.
-        * `UNAVAILABLE` - The QoD provisioning request has been processed but is not active. `statusInfo` may provide additional information about the reason for the unavailability.
+        The current status of the requested QoS profile assignment. The status can be one of the following:
+        * `REQUESTED` - QoS profile assignment has been requested but is still being processed.
+        * `AVAILABLE` - The requested QoS profile has been assigned to the device, and is active.
+        * `UNAVAILABLE` - The QoS profile assignment request has been processed but is not active. `statusInfo` may provide additional information about the reason for the unavailability.
       enum:
         - REQUESTED
         - AVAILABLE
@@ -724,9 +765,9 @@ components:
 
     StatusChanged:
       description: |
-        The current status of a requested or previously available QoD provisioning. Applicable values in the event are:
-        *  `AVAILABLE` - The requested QoS profile has been provisioned to the device, and is active.
-        *  `UNAVAILABLE` - A requested or previously available QoD provisioning is now unavailable. `statusInfo` may provide additional information about the reason for the unavailability.
+        The current status of a requested or previously available QoS profile assignment. Applicable values in the event are:
+        *  `AVAILABLE` - The requested QoS profile has been assigned to the device, and is active.
+        *  `UNAVAILABLE` - A requested or previously available QoS profile assignment is now unavailable. `statusInfo` may provide additional information about the reason for the unavailability.
       type: string
       enum:
         - AVAILABLE
@@ -738,13 +779,13 @@ components:
       properties:
         status:
           type: integer
-          description: HTTP status code returned along with this error response
+          description: HTTP response status code
         code:
           type: string
-          description: Code given to this error
+          description: A human-readable code to describe the error
         message:
           type: string
-          description: Detailed error description
+          description: A human-readable description of what the event represents
       required:
         - status
         - code
@@ -784,7 +825,7 @@ components:
                 code: OUT_OF_RANGE
                 message: Client specified an invalid range.
 
-    TriggerProvisioning400:
+    CreateAssignment400:
       description: Bad Request with additional errors for implicit notifications
       headers:
         x-correlator:
@@ -805,6 +846,7 @@ components:
                       - OUT_OF_RANGE
                       - INVALID_CREDENTIAL
                       - INVALID_TOKEN
+                      - INVALID_SINK
           examples:
             GENERIC_400_INVALID_ARGUMENT:
               description: Invalid Argument. Generic Syntax Exception
@@ -828,6 +870,12 @@ components:
                 status: 400
                 code: INVALID_TOKEN
                 message: Only bearer token is supported
+            GENERIC_400_INVALID_SINK:
+              description: Invalid sink value
+              value:
+                status: 400
+                code: INVALID_SINK
+                message: sink not valid for the specified protocol
 
     Generic401:
       description: Unauthorized
@@ -847,20 +895,13 @@ components:
                   code:
                     enum:
                       - UNAUTHENTICATED
-                      - AUTHENTICATION_REQUIRED
           examples:
             GENERIC_401_UNAUTHENTICATED:
-              description: Request cannot be authenticated
+              description: Request cannot be authenticated and a new authentication is required
               value:
                 status: 401
                 code: UNAUTHENTICATED
-                message: Request not authenticated due to missing, invalid, or expired credentials.
-            GENERIC_401_AUTHENTICATION_REQUIRED:
-              description: New authentication is needed, authentication is no longer valid
-              value:
-                status: 401
-                code: AUTHENTICATION_REQUIRED
-                message: New authentication is required.
+                message: Request not authenticated due to missing, invalid, or expired credentials. A new authentication is required.
 
     Generic403:
       description: Forbidden
@@ -947,8 +988,8 @@ components:
                 code: IDENTIFIER_NOT_FOUND
                 message: Device identifier not found.
 
-    ProvisioningConflict409:
-      description: Provisioning conflict
+    AssignmentConflict409:
+      description: Assignment conflict
       headers:
         x-correlator:
           $ref: "#/components/headers/x-correlator"
@@ -966,8 +1007,8 @@ components:
                     enum:
                       - CONFLICT
           examples:
-            PROVISIONING_409_CONFLICT:
-              description: The requested provisioning conflicts with an existing one
+            ASSIGNMENT_409_CONFLICT:
+              description: The requested provisioning process conflicts with an existing one
               value:
                 status: 409
                 code: CONFLICT
@@ -1016,18 +1057,59 @@ components:
                       - 422
                   code:
                     enum:
-                      - IDENTIFIER_MISMATCH
                       - SERVICE_NOT_APPLICABLE
                       - MISSING_IDENTIFIER
                       - UNSUPPORTED_IDENTIFIER
                       - UNNECESSARY_IDENTIFIER
           examples:
-            GENERIC_422_IDENTIFIER_MISMATCH:
-              description: Inconsistency between identifiers not pointing to the same device
+            GENERIC_422_SERVICE_NOT_APPLICABLE:
+              description: Service not applicable for the provided identifier
               value:
                 status: 422
-                code: IDENTIFIER_MISMATCH
-                message: Provided identifiers are not consistent.
+                code: SERVICE_NOT_APPLICABLE
+                message: The service is not available for the provided identifier.
+            GENERIC_422_MISSING_IDENTIFIER:
+              description: An identifier is not included in the request and the device or phone number identification cannot be derived from the access token
+              value:
+                status: 422
+                code: MISSING_IDENTIFIER
+                message: The device cannot be identified.
+            GENERIC_422_UNSUPPORTED_IDENTIFIER:
+              description: None of the provided identifiers is supported by the implementation
+              value:
+                status: 422
+                code: UNSUPPORTED_IDENTIFIER
+                message: The identifier provided is not supported.
+            GENERIC_422_UNNECESSARY_IDENTIFIER:
+              description: An explicit identifier is provided when a device or phone number has already been identified from the access token
+              value:
+                status: 422
+                code: UNNECESSARY_IDENTIFIER
+                message: The device is already identified by the access token.ç
+
+    CreateAssignment422:
+      description: Unprocessable Content
+      headers:
+        x-correlator:
+          $ref: "#/components/headers/x-correlator"
+      content:
+        application/json:
+          schema:
+            allOf:
+              - $ref: "#/components/schemas/ErrorInfo"
+              - type: object
+                properties:
+                  status:
+                    enum:
+                      - 422
+                  code:
+                    enum:
+                      - SERVICE_NOT_APPLICABLE
+                      - MISSING_IDENTIFIER
+                      - UNSUPPORTED_IDENTIFIER
+                      - UNNECESSARY_IDENTIFIER
+                      - QOS_PROVISIONING.QOS_PROFILE_NOT_APPLICABLE
+          examples:
             GENERIC_422_SERVICE_NOT_APPLICABLE:
               description: Service not applicable for the provided identifier
               value:
@@ -1052,6 +1134,12 @@ components:
                 status: 422
                 code: UNNECESSARY_IDENTIFIER
                 message: The device is already identified by the access token.
+            QOS_PROVISIONING_422_QOS_PROFILE_NOT_APPLICABLE:
+              description: The requested QoS Profile exists but cannot be used for the QoS assignment.
+              value:
+                status: 422
+                code: QOS_PROVISIONING.QOS_PROFILE_NOT_APPLICABLE
+                message: The requested QoS Profile is not compatible with the QoS Provisioning service.
 
     Generic429:
       description: Too Many Requests
@@ -1087,9 +1175,29 @@ components:
                 message: Rate limit reached.
 
   examples:
-    PROVISIONING_AVAILABLE:
-      summary: QoD provisioning status is available
-      description: The provisioning has become available
+    ASSIGNMENT_CREATION_EXAMPLE:
+      summary: Successful assignment creation without device in the assignment details
+      description: Example response after a new QoS profile assignment has been created using a 3-legged access token, or possibly a single device identifier
+      value:
+        qosProfile: QOS_L
+        sink: https://application-server.com/callback
+        assignmentId: 3fa85f64-5717-4562-b3fc-2c963f66afa6
+        status: REQUESTED
+
+    ASSIGNMENT_CREATION_EXAMPLE_WITH_DEVICE_RESPONSE:
+      summary: Successful assignment creation with device in the assignment details
+      description: Example response after a new QoS profile assignment has been created using a 2-legged access token with multiple device identifiers, or possibly only a single device identifier
+      value:
+        device:
+          phoneNumber: "+123456789"
+        qosProfile: QOS_L
+        sink: https://application-server.com/callback
+        assignmentId: 3fa85f64-5717-4562-b3fc-2c963f66afa6
+        status: REQUESTED
+
+    ASSIGNMENT_AVAILABLE:
+      summary: QoS assignment status is available with device in the assignment details
+      description: The QoS profile assignment has become available, and the device to which the assignment applies is included in the assignment details
       value:
         device:
           phoneNumber: "+123456789"
@@ -1097,59 +1205,54 @@ components:
         sink: https://application-server.com/callback
         sinkCredential:
           credentialType: ACCESSTOKEN
-          accessToken: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c"
+          accessToken: "eyJhbGciOiJIUzI1NiIsInR..."
           accessTokenExpiresUtc: "2024-12-01T12:00:00Z"
           accessTokenType: bearer
-        provisioningId: 3fa85f64-5717-4562-b3fc-2c963f66afa6
+        assignmentId: 3fa85f64-5717-4562-b3fc-2c963f66afa6
         startedAt: "2024-05-12T17:32:01Z"
         status: AVAILABLE
 
-    PROVISIONING_UNAVAILABLE:
+    ASSIGNMENT_UNAVAILABLE:
       summary: QoD provisioning status is unavailable
-      description: The provisioning could not be created or is not active anymore
+      description: The asssignment could not be created or is not active anymore
       value:
-        duration: 86400
-        device:
-          ipv4Address:
-            publicAddress: 203.0.113.0
-            publicPort: 59765
         qosProfile: QOS_L
         sink: https://application-server.com/callback
         sinkCredential:
           credentialType: ACCESSTOKEN
-          accessToken: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c"
+          accessToken: "eyJhbGciOiJIUzI1NiIsInR..."
           accessTokenExpiresUtc: "2024-12-01T12:00:00Z"
           accessTokenType: bearer
-        provisioningId: 3fa85f64-5717-4562-b3fc-2c963f66afa6
+        assignmentId: 3fa85f64-5717-4562-b3fc-2c963f66afa6
         startedAt: "2024-05-12T17:32:01Z"
         status: UNAVAILABLE
         statusInfo: NETWORK_TERMINATED
 
-    PROVISIONING_AVAILABLE_WITHOUT_DEVICE:
-      summary: QoD provisioning status is available but no device information is provided
+    ASSIGNMENT_AVAILABLE_WITHOUT_DEVICE:
+      summary: QoS assignment status is available
       description: Device is optional in responses and must not be provided if it was not provided in the request
       value:
         qosProfile: QOS_M
         sink: https://application-server.com/callback
         sinkCredential:
           credentialType: ACCESSTOKEN
-          accessToken: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c"
+          accessToken: "eyJhbGciOiJIUzI1NiIsInR..."
           accessTokenExpiresUtc: "2024-12-01T12:00:00Z"
           accessTokenType: bearer
-        provisioningId: 3fa85f64-5717-4562-b3fc-2c963f66afa6
+        assignmentId: 3fa85f64-5717-4562-b3fc-2c963f66afa6
         startedAt: "2024-05-12T17:32:01Z"
         status: AVAILABLE
 
-    PROVISIONING_STATUS_CHANGED_EXAMPLE:
-      description: Provisioning status changed
-      summary: Cloud event example for QoD provisioning status change to UNAVAILABLE due to NETWORK_TERMINATED
+    ASSIGNMENT_STATUS_CHANGED_EXAMPLE:
+      description: Assignment status changed
+      summary: Cloud event example for QoD assignment status change to UNAVAILABLE due to NETWORK_TERMINATED
       value:
         id: 83a0d986-0866-4f38-b8c0-fc65bfcda452
-        source: https://api.example.com/qod-provisioning/v0.2/device-qos/123e4567-e89b-12d3-a456-426614174000
+        source: https://api.example.com/qos-provisioning/v0.4/qos-assignments/123e4567-e89b-12d3-a456-426614174000
         specversion: "1.0"
-        type: org.camaraproject.qod-provisioning.v0.status-changed
+        type: org.camaraproject.qos-provisioning.v0.status-changed
         time: "2021-12-12T00:00:00Z"
         data:
-          provisioningId: 123e4567-e89b-12d3-a456-426614174000
+          assignmentId: 123e4567-e89b-12d3-a456-426614174000
           status: UNAVAILABLE
           statusInfo: NETWORK_TERMINATED

@@ -9,7 +9,9 @@
 
 # QualityOnDemand
 
-Incubating API Repository to evolve and maintain the definitions and documentation of QualityOnDemand Service API(s) within the Sub Project [Quality On Demand](https://lf-camaraproject.atlassian.net/wiki/x/hAClB)
+Incubating API Repository to evolve and maintain the definitions and documentation of QualityOnDemand Service API(s) within the Sub Project [Connectivity Quality Management](https://lf-camaraproject.atlassian.net/wiki/x/hAClB)
+
+* API Repository [wiki page](https://lf-camaraproject.atlassian.net/wiki/x/XCPe)
 
 ## Scope
 
@@ -28,22 +30,22 @@ Incubating API Repository to evolve and maintain the definitions and documentati
 
 * Note: Please be aware that the project will have frequent updates to the main branch. There are no compatibility guarantees associated with code in any branch, including main, until a new release is created. For example, changes may be reverted before a release is created. **For best results, use the latest public release**.
 
-* **The latest public release is [r2.2](https://github.com/camaraproject/QualityOnDemand/releases/tag/r2.2), with the following API versions:**
+* **NEW**: **The latest public release is [r3.2](https://github.com/camaraproject/QualityOnDemand/releases/tag/r3.2), with the following API versions:**
 
-  * **quality-on-demand v1.0.0 (first stable version)**  
-  [[YAML]](https://github.com/camaraproject/QualityOnDemand/blob/r2.2/code/API_definitions/quality-on-demand.yaml)
-  [[View it on ReDoc]](https://redocly.github.io/redoc/?url=https://raw.githubusercontent.com/camaraproject/QualityOnDemand/r2.2/code/API_definitions/quality-on-demand.yaml&nocors)
-  [[View it on Swagger Editor]](https://editor.swagger.io/?url=https://raw.githubusercontent.com/camaraproject/QualityOnDemand/r2.2/code/API_definitions/quality-on-demand.yaml)
+  * **quality-on-demand v1.1.0**  
+  [[YAML]](https://github.com/camaraproject/QualityOnDemand/blob/r3.2/code/API_definitions/quality-on-demand.yaml)
+  [[View it on ReDoc]](https://redocly.github.io/redoc/?url=https://raw.githubusercontent.com/camaraproject/QualityOnDemand/r3.2/code/API_definitions/quality-on-demand.yaml&nocors)
+  [[View it on Swagger Editor]](https://camaraproject.github.io/swagger-ui/?url=https://raw.githubusercontent.com/camaraproject/QualityOnDemand/r3.2/code/API_definitions/quality-on-demand.yaml)
   
-  * **qos-profiles v1.0.0 (first stable version)**  
-  [[YAML]](https://github.com/camaraproject/QualityOnDemand/blob/r2.2/code/API_definitions/qos-profiles.yaml)
-  [[View it on ReDoc]](https://redocly.github.io/redoc/?url=https://raw.githubusercontent.com/camaraproject/QualityOnDemand/r2.2/code/API_definitions/qos-profiles.yaml&nocors)
-  [[View it on Swagger Editor]](https://editor.swagger.io/?url=https://raw.githubusercontent.com/camaraproject/QualityOnDemand/r2.2/code/API_definitions/qos-profiles.yaml)
+  * **qos-profiles v1.1.0**  
+  [[YAML]](https://github.com/camaraproject/QualityOnDemand/blob/r3.2/code/API_definitions/qos-profiles.yaml)
+  [[View it on ReDoc]](https://redocly.github.io/redoc/?url=https://raw.githubusercontent.com/camaraproject/QualityOnDemand/r3.2/code/API_definitions/qos-profiles.yaml&nocors)
+  [[View it on Swagger Editor]](https://camaraproject.github.io/swagger-ui/?url=https://raw.githubusercontent.com/camaraproject/QualityOnDemand/r3.2/code/API_definitions/qos-profiles.yaml)
 
-  * qod-provisioning v0.2.0 (second initial version)  
-  [[YAML]](https://github.com/camaraproject/QualityOnDemand/blob/r2.2/code/API_definitions/qod-provisioning.yaml)
-  [[View it on ReDoc]](https://redocly.github.io/redoc/?url=https://raw.githubusercontent.com/camaraproject/QualityOnDemand/r2.2/code/API_definitions/qod-provisioning.yaml&nocors)
-  [[View it on Swagger Editor]](https://editor.swagger.io/?url=https://raw.githubusercontent.com/camaraproject/QualityOnDemand/r2.2/code/API_definitions/qod-provisioning.yaml)
+  * qos-provisioning v0.3.0 (third initial version)  
+  [[YAML]](https://github.com/camaraproject/QualityOnDemand/blob/r3.2/code/API_definitions/qos-provisioning.yaml)
+  [[View it on ReDoc]](https://redocly.github.io/redoc/?url=https://raw.githubusercontent.com/camaraproject/QualityOnDemand/r3.2/code/API_definitions/qos-provisioning.yaml&nocors)
+  [[View it on Swagger Editor]](https://camaraproject.github.io/swagger-ui/?url=https://raw.githubusercontent.com/camaraproject/QualityOnDemand/r3.2/code/API_definitions/qos-provisioning.yaml)
   
 * Previous releases and pre-releases are available here: https://github.com/camaraproject/QualityOnDemand/releases
 * For changes see the [CHANGELOG.md](https://github.com/camaraproject/QualityOnDemand/blob/main/CHANGELOG.md)
@@ -61,5 +63,5 @@ Incubating API Repository to evolve and maintain the definitions and documentati
   * [Registration / Join](https://zoom-lfx.platform.linuxfoundation.org/meeting/94112812156?password=f238d6af-c959-48d7-a862-abdb3c648e40)
   * Minutes: Access [meeting minutes](https://lf-camaraproject.atlassian.net/wiki/x/XCPe)
 * Mailing List
-  * Subscribe / unsubscribe to the mailing list of this Sub Project <https://lists.camaraproject.org/g/sp-qod>.
-  * A message to the community of this Sub Project can be sent using <sp-qod@lists.camaraproject.org>.
+  * Subscribe / unsubscribe to the mailing list of this Sub Project <https://lists.camaraproject.org/g/sp-cqm>.
+  * A message to the community of this Sub Project can be sent using <sp-cqm@lists.camaraproject.org>.
