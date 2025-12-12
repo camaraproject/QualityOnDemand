@@ -469,7 +469,15 @@ components:
 
     QosProfileDeviceRequest:
       description: |
-        Request object for QoS Profiles for a given device
+        Request object for QoS Profiles for a given device.
+        When attributes are specified, only profiles that meet or exceed the requested capabilities will be returned:
+        - Rate attributes (targetMinUpstreamRate, maxUpstreamRate, etc.): returned profiles will have rates greater than or equal to the requested values
+        - Duration attributes:
+          - minDuration: returned profiles will have minDuration less than or equal to the requested value
+          - maxDuration: returned profiles will have maxDuration greater than or equal to the requested value
+        - Priority: returned profiles will have priority less than or equal to the requested value (lower values = higher priority)
+        - Jitter & packetDelayBudget: returned profiles will have values less than or equal to the requested values
+        - packetErrorLossRate: returned profiles will have values less than or equal to the requested value
       type: object
       properties:
         device:
@@ -478,6 +486,57 @@ components:
           $ref: "#/components/schemas/QosProfileName"
         status:
           $ref: '#/components/schemas/QosProfileStatusEnum'
+        targetMinUpstreamRate:
+          $ref: "#/components/schemas/Rate"
+        maxUpstreamRate:
+          $ref: "#/components/schemas/Rate"
+        maxUpstreamBurstRate:
+          $ref: "#/components/schemas/Rate"
+        targetMinDownstreamRate:
+          $ref: "#/components/schemas/Rate"
+        maxDownstreamRate:
+          $ref: "#/components/schemas/Rate"
+        maxDownstreamBurstRate:
+          $ref: "#/components/schemas/Rate"
+        minDuration:
+          $ref: "#/components/schemas/Duration"
+        maxDuration:
+          $ref: "#/components/schemas/Duration"
+        priority:
+          type: integer
+          format: int32
+          minimum: 1
+          maximum: 100
+        packetDelayBudget:
+          $ref: "#/components/schemas/Duration"
+        jitter:
+          $ref: "#/components/schemas/Duration"
+        packetErrorLossRate:
+          type: integer
+          format: int32
+          minimum: 1
+          maximum: 10
+        l4sQueueType:
+          type: string
+          enum:
+            - non-l4s-queue
+            - l4s-queue
+            - mixed-queue
+        serviceClass:
+          type: string
+          enum:
+            - microsoft_voice
+            - microsoft_audio_video
+            - real_time_interactive
+            - multimedia_streaming
+            - broadcast_video
+            - low_latency_data
+            - high_throughput_data
+            - low_priority_data
+            - standard
+      required:
+        - name
+        - status
 
     Availability:
       description: A list of countries, and optionally networks, for which the API provider makes the profile available
