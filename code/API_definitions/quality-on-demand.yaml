@@ -31,7 +31,7 @@ info:
       Note: Network Access Identifier is defined for future use and will not be supported with this version of the API.
 
     * **Identifier for the application server**:
-    IPv4 and/or IPv6 address of the application server (application backend)
+    The domain name and/or IPv4 address(es) and/or IPv6 address(es) used by the application server (application backend). Domain names shall be expanded to a list of IP addresses using the network operator's own DNS service, and the QoS profile will apply to all IP addresses specified.
 
     * **App-Flow (between the application client and application server)**:
     The precise application data flow the developer wants to prioritize and have stable latency or throughput for. This flow is in the current API version determined by the identified device and the application server. And it can be further elaborated with details such as ports or port-ranges. Future version of the API might allow more detailed flow identification features.
@@ -876,12 +876,20 @@ components:
       description: |
         A server hosting backend applications to deliver some business logic to clients.
 
-        The developer can choose to provide the below specified device identifiers:
+        The developer must provide one or more of the following application server identifiers:
 
+        * `domainName`
         * `ipv4Address`
         * `ipv6Address`
+        
+        If more than one identifier is provided, the QoS profile shall apply to all application servers identified.
+
+        If the developer specifies a domain name, the API provider shall resolve that domain name to a list of IP addresses using the DNS service that the network operator provides for devices connected to their network. The QoS profile shall apply to all traffic using these IP addresses, which may include traffic for a different domain name that shares one or more of these IP addresses. Note that if the device itself uses a different DNS service, there is no guarantee that the QoS profile will apply to the IP addresses returned by that service for the specified domain name.
+        
       type: object
       properties:
+        domainName:
+          $ref: "#/components/schemas/ApplicationServerDomainName"
         ipv4Address:
           $ref: "#/components/schemas/ApplicationServerIpv4Address"
         ipv6Address:
@@ -939,6 +947,13 @@ components:
       type: string
       format: ipv6
       example: 2001:db8:85a3:8d3:1319:8a2e:370:7344
+
+    ApplicationServerDomainName:
+      type: string
+      format: hostname
+      example: "example.com"
+      description: |
+        The domain name used by the application server. The domain name must be resolvable using the DNS service provided by the network operator for devices connected to their network. It is expected that the domain name will usually be a fully qualified domain name (FQDN).
 
     ApplicationServerIpv4Address:
       type: string
