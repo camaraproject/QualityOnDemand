@@ -881,11 +881,11 @@ components:
         * `domainName`
         * `ipv4Address`
         * `ipv6Address`
-        
+
         If more than one identifier is provided, the QoS profile shall apply to all application servers identified.
 
         If the developer specifies a domain name, the API provider shall resolve that domain name to a list of IP addresses using the DNS service that the network operator provides for devices connected to their network. The QoS profile shall apply to all traffic using these IP addresses, which may include traffic for a different domain name that shares one or more of these IP addresses. Note that if the device itself uses a different DNS service, there is no guarantee that the QoS profile will apply to the IP addresses returned by that service for the specified domain name.
-        
+
       type: object
       properties:
         domainName:
