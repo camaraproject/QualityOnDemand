@@ -879,8 +879,13 @@ components:
         The developer must provide one or more of the following application server identifiers:
 
         * `domainName`
+          - The domain name that the device may use to connect to the application server
+        * `ipAddresses`
+          - A list of IPv4 and/or IPv6 addresses that may be used by the application server
         * `ipv4Address`
+          - An IPv4 subnet
         * `ipv6Address`
+          - An IPv6 subnet
 
         If more than one identifier is provided, the QoS profile shall apply to all application servers identified.
 
@@ -890,11 +895,25 @@ components:
       properties:
         domainName:
           $ref: "#/components/schemas/ApplicationServerDomainName"
+        ipAddresses:
+          $ref: "#/components/schemas/ApplicationServerIPAddressList"
         ipv4Address:
           $ref: "#/components/schemas/ApplicationServerIpv4Address"
         ipv6Address:
           $ref: "#/components/schemas/ApplicationServerIpv6Address"
       minProperties: 1
+
+    ApplicationServerIPAddressList:
+          description: A list of IPv4 and/or IPv6 addresses that may be used by the application server
+          type: array
+          items:
+            description: An IP address that may be used by the application server
+            type: string
+            oneOf:
+              - format: ipv4
+              - format: ipv6
+          minItems: 1
+          maxItems: 16
 
     NetworkAccessIdentifier:
       description: A public identifier addressing a subscription in a mobile network. In 3GPP terminology, it corresponds to the GPSI formatted with the External Identifier ({Local Identifier}@{Domain Identifier}). Unlike the telephone number, the network access identifier is not subjected to portability ruling in force, and is individually managed by each operator.
