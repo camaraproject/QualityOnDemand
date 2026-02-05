@@ -32,10 +32,8 @@ info:
 
     * **Identifier for the application server**:
     The domain name and/or IPv4 address(es) and/or IPv6 address(es) used by the application server (application backend). Domain names shall be expanded to a list of IP addresses using the network operator's own DNS service, and the QoS profile will apply to all IP packets with these IP addresses as source or destination address.
-    
+
     The application service provider should ensure, that the application clients use the network operator's own DNS service for resolving the application servers IP addresses. The application client should use the same application server IP address(es) as the network for a correction functioning of the feature.
-    
-    Note that application data flows of WebRTC (e.g. speech flow) cannot be described using FQDNs, as the IP addresses of the peer (e.g. a TURN server) is typically not based on a DNS resolution.
 
     * **App-Flow (between the application client and application server)**:
     The precise application data flow the developer wants to prioritize and have stable latency or throughput for. This flow is in the current API version determined by the identified device and the application server. And it can be further elaborated with details such as ports or port-ranges. Future version of the API might allow more detailed flow identification features.
