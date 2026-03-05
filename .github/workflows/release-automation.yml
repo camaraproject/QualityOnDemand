@@ -1,0 +1,83 @@
+# Release Automation Caller Workflow
+#
+# This workflow template should be copied to .github/workflows/ in API repositories
+# that want to use the CAMARA release automation.
+#
+# Copy this file as: .github/workflows/release-automation.yml
+#
+# Triggers:
+# - Slash commands: /create-snapshot, /discard-snapshot, /delete-draft, /publish-release
+# - Issue events: close (with auto-reopen), reopen
+# - PR merge: on release-snapshot branches (creates draft release)
+# - Push to main: when release-plan.yaml changes (auto sync-issue)
+# - Manual: workflow_dispatch triggers sync-issue (reads from release-plan.yaml)
+
+name: Release Automation
+
+on:
+  # Slash commands via issue comments
+  issue_comment:
+    types: [created]
+
+  # Issue close/reopen events
+  issues:
+    types: [closed, reopened]
+
+  # PR merge to snapshot branches
+  pull_request:
+    types: [closed]
+    branches:
+      - 'release-snapshot/**'
+
+  # Push to main with release-plan.yaml changes (auto sync-issue)
+  push:
+    branches: [main]
+    paths: ['release-plan.yaml']
+
+  # Manual trigger for sync-issue only
+  # Use this for: initial setup, recovery after manual repo changes, or forced sync
+  # All other commands must be issued via slash commands in the Release Issue
+  # Future: will accept branch input (main by default, maintenance branches as option)
+  workflow_dispatch:
+
+# Serialize release automation runs per repository.
+# Prevents race conditions from concurrent slash commands, issue events, PR merges,
+# and workflow_dispatch triggers. With cancel-in-progress: false, queued runs wait
+# for the current run to complete before starting.
+# Note: GitHub allows at most 1 running + 1 pending per concurrency group.
+# A third arrival replaces the pending run (acceptable — codeowners act carefully).
+concurrency:
+  group: release-automation-${{ github.repository }}
+  cancel-in-progress: false
+
+permissions:
+  contents: write
+  issues: write
+  pull-requests: write
+
+jobs:
+  release-automation:
+    # Skip if:
+    # - issue_comment from a Bot (release automation bot comments, not human commands)
+    # - issue_comment but not a release command or not on a release issue
+    # - issues event but not a release issue
+    # - pull_request but not merged or not to a snapshot branch
+    if: |
+      (github.event_name == 'push') ||
+      github.event_name == 'workflow_dispatch' ||
+      (github.event_name == 'issue_comment' &&
+       github.event.comment.user.type != 'Bot' &&
+       contains(github.event.issue.labels.*.name, 'release-issue') &&
+       (startsWith(github.event.comment.body, '/create-snapshot') ||
+        startsWith(github.event.comment.body, '/discard-snapshot') ||
+        startsWith(github.event.comment.body, '/delete-draft') ||
+        startsWith(github.event.comment.body, '/publish-release') ||
+        startsWith(github.event.comment.body, '/sync-issue'))) ||
+      (github.event_name == 'issues' &&
+       contains(github.event.issue.labels.*.name, 'release-issue')) ||
+      (github.event_name == 'pull_request' &&
+       github.event.pull_request.merged == true &&
+       startsWith(github.event.pull_request.base.ref, 'release-snapshot/'))
+
+    uses: camaraproject/tooling/.github/workflows/release-automation-reusable.yml@ra-v1-rc
+    secrets: inherit
