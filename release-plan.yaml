@@ -1,0 +1,58 @@
+# CAMARA Release Plan
+# This file declares release intentions for this repository.
+# It replaces manual wiki tracking with automated tooling.
+#
+# Update this file; CI validates it; releases are generated from this plan.
+# Docs: https://github.com/camaraproject/ReleaseManagement/tree/main/documentation
+
+repository:
+  # How this repository participates in CAMARA releases
+  # Options: independent (default) | meta-release
+  release_track: meta-release
+  # Meta-release participation (update for next cycle when planning)
+  meta_release: Sync26
+
+  # Target CAMARA release tag.
+  # Initialized to the latest release; update when planning the next release.
+  # - New release cycle (increment first number, reset second to 1)
+  # - Progression in same cycle (increment second number)
+  target_release_tag: r4.1
+
+  # Release type being prepared (must be set before release can be triggered)
+  # Options: none | pre-release-alpha | pre-release-rc | public-release | maintenance-release
+  target_release_type: none
+
+# Dependencies on Commonalities and ICM releases
+# Update per ReleaseManagement requirements for each release cycle
+dependencies:
+  commonalities_release: r4.1
+  identity_consent_management_release: r4.1
+
+# APIs in this repository
+# - api_name: kebab-case identifier (must be filename in code/API_definitions/)
+# - target_api_status: draft (no file yet) | alpha | rc | public
+apis:
+  - api_name: qos-profiles
+    target_api_version: 1.2.0
+    target_api_status: alpha
+    main_contacts:
+      - hdamker
+      - eric-murray
+      - RandyLevensalor
+      - jlurien
+  - api_name: qos-provisioning
+    target_api_version: 0.4.0
+    target_api_status: alpha
+    main_contacts:
+      - hdamker
+      - eric-murray
+      - RandyLevensalor
+      - jlurien
+  - api_name: quality-on-demand
+    target_api_version: 1.1.0
+    target_api_status: public
+    main_contacts:
+      - hdamker
+      - eric-murray
+      - RandyLevensalor
+      - jlurien
