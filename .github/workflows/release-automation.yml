@@ -54,6 +54,7 @@ permissions:
   contents: write
   issues: write
   pull-requests: write
+  id-token: write
 
 jobs:
   release-automation:
@@ -80,4 +81,6 @@ jobs:
        startsWith(github.event.pull_request.base.ref, 'release-snapshot/'))
 
     uses: camaraproject/tooling/.github/workflows/release-automation-reusable.yml@ra-v1-rc
+    # with:
+    #   tooling_ref_override: "0123456789abcdef0123456789abcdef01234567"  # Optional break-glass SHA override (requires workflow file change)
     secrets: inherit
