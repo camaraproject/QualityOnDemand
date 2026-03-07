@@ -373,6 +373,11 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/SessionInfo"
+              examples:
+                SESSION_EXTENDED:
+                  $ref: "#/components/examples/SESSION_EXTENDED_EXAMPLE"
+                SESSION_EXTENDED_WITH_DEVICE_RESPONSE:
+                  $ref: "#/components/examples/SESSION_EXTENDED_EXAMPLE_WITH_DEVICE_RESPONSE"
         "400":
           $ref: "#/components/responses/GenericExtendSessionDuration400"
         "401":
@@ -1566,6 +1571,36 @@ components:
           startedAt: "2024-06-01T12:00:00Z"
           expiresAt: "2024-06-01T13:00:00Z"
           qosStatus: AVAILABLE
+
+    SESSION_EXTENDED_EXAMPLE:
+      summary: Successful session extension with device not included in response
+      description: Example response after the duration of an active QoS session has been extended using a 3-legged access token, or possibly a single device identifier. The session remains AVAILABLE with updated duration and expiresAt values.
+      value:
+        applicationServer:
+          ipv4Address: 198.51.100.0/24
+        qosProfile: QOS_L
+        sink: https://application-server.com/notifications
+        sessionId: 3fa85f64-5717-4562-b3fc-2c963f66afa6
+        duration: 5400
+        startedAt: "2024-06-01T12:00:00Z"
+        expiresAt: "2024-06-01T13:30:00Z"
+        qosStatus: AVAILABLE
+
+    SESSION_EXTENDED_EXAMPLE_WITH_DEVICE_RESPONSE:
+      summary: Successful session extension with device included in response
+      description: Example response after the duration of an active QoS session has been extended using a 2-legged access token with multiple device identifiers, or possibly only a single device identifier. The session remains AVAILABLE with updated duration and expiresAt values.
+      value:
+        device:
+          phoneNumber: "+123456789"
+        applicationServer:
+          ipv4Address: 198.51.100.0/24
+        qosProfile: QOS_L
+        sink: https://application-server.com/notifications
+        sessionId: 3fa85f64-5717-4562-b3fc-2c963f66afa6
+        duration: 5400
+        startedAt: "2024-06-01T12:00:00Z"
+        expiresAt: "2024-06-01T13:30:00Z"
+        qosStatus: AVAILABLE
 
     RETRIEVE_SESSIONS_EMPTY_EXAMPLE:
       summary: No sessions found for the device
