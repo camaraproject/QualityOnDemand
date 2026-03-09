@@ -1,4 +1,4 @@
-| Org                    | Name                 | GitHub Name        |
+| Org                    | Name                 | GitHub Username    |
 | -----------------------| -------------------- | ------------------ |
 | Deutsche Telekom AG | Herbert Damker | hdamker |
 | Ericsson | Emil Zhang | emil-cheung |
