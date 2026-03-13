@@ -1,7 +1,7 @@
 | Org                    | Name                 | GitHub Username    |
 | -----------------------| -------------------- | ------------------ |
 | Deutsche Telekom AG | Herbert Damker | hdamker |
-| Ericsson | Emil Zhang | emil-cheung |
+| Ericsson | Emil Zhang | emilcheung |
 | Orange | Sylvain Morel | SylMOREL |
 | Orange | Patrice Conil | patrice-conil |
 | Spry Fox Networks | Ramesh Shanmugasundaram | sfnuser |
