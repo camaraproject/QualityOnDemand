@@ -245,8 +245,8 @@ components:
             - $ref: "#/components/schemas/Rate"
         targetMinDownstreamRate:
           description: |
-            This is the target maximum upload speed for the QoS profile.
-            It represents the maximum rate that the network attempts to deliver.
+            This is the target minimum download speed for the QoS profile.
+            It represents the minimum rate that the network attempts to deliver.
             Please note that this is a target value—the network might not always be able to provide this rate under all conditions.
             It helps ensure that applications like video calls or live streaming perform consistently.
           allOf:
