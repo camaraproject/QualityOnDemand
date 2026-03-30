@@ -878,7 +878,7 @@ components:
       description: |
         A server hosting backend applications to deliver some business logic to clients.
 
-        The developer must provide one or more of the following application server identifiers:
+        The API consumer must provide one or more of the following application server identifiers:
 
         * `domainName`
           - The domain name that the device may use to connect to the application server
