@@ -2,13 +2,13 @@ openapi: 3.0.3
 info:
   title: Quality-On-Demand
   description: |
-    The Quality-On-Demand (QoD) API provides a programmable interface for developers and other users (API consumers) to request stable latency or throughput managed by networks without the necessity to have an in-depth knowledge of the underlying network complexity (e.g. the 4G/5G system in case of a mobile network).
+    The Quality-On-Demand (QoD) API provides a programmable interface for API consumers to request stable latency or throughput managed by networks without the necessity to have an in-depth knowledge of the underlying network complexity (e.g. the 4G/5G system in case of a mobile network).
 
     # Introduction
 
     Industrial (IoT), VR/Gaming, live video streaming, autonomous driving and many other scenarios demand network communication quality and are sensitive to any change in transmission conditions. Being able to request a stable latency (reduced jitter) or prioritized throughput from the network can improve user experience substantially.
 
-    The QoD API offers the application developers the capability to request for stable latency (reduced jitter) or throughput for some specified application data flows between application clients (within a user device) and application servers (backend services). The developer has a pre-defined set of Quality of Service (QoS) profiles which they could choose from depending on their latency or throughput requirements.
+    The QoD API offers the API consumers the capability to request for stable latency (reduced jitter) or throughput for some specified application data flows between application clients (within a user device) and application servers (backend services). The API consumer has a pre-defined set of Quality of Service (QoS) profiles which they could choose from depending on their latency or throughput requirements.
 
     ![QoD API Overview](https://raw.githubusercontent.com/camaraproject/QualityOnDemand/main/documentation/API_documentation/resources/QoD_latency_overview.PNG)
 
@@ -34,7 +34,7 @@ info:
     IPv4 and/or IPv6 address of the application server (application backend)
 
     * **App-Flow (between the application client and application server)**:
-    The precise application data flow the developer wants to prioritize and have stable latency or throughput for. This flow is in the current API version determined by the identified device and the application server. And it can be further elaborated with details such as ports or port-ranges. Future version of the API might allow more detailed flow identification features.
+    The precise application data flow the API consumer wants to prioritize and have stable latency or throughput for. This flow is in the current API version determined by the identified device and the application server. And it can be further elaborated with details such as ports or port-ranges. Future version of the API might allow more detailed flow identification features.
 
     * **Duration**:
     Duration (in seconds) for which the QoS session (between application client and application server) should be created. Limits for session duration can be set by the implementation for the QoS profile. The user may request a termination before its expiration.
@@ -50,7 +50,7 @@ info:
 
     * A specified App-Flow is prioritized to ensure stable latency or throughput for that flow.
     * The prioritized App-Flow is described by providing information such as device IP address (or other device identifier) & application server IP addresses and port/port-ranges.
-    * The developer specifies the duration for which they need the prioritized App-flow.
+    * The API consumer specifies the duration for which they need the prioritized App-flow.
     * Stable latency or throughput is requested by selecting from the list of QoS profiles made available by the service provider (e.g. QOS_E) to map latency and throughput requirements.
     * The API consumer can optionally also specify callback URL (`sink` param) on which notifications for the session can be sent. <br>
 
@@ -334,7 +334,7 @@ paths:
       description: |
         Extend the overall session duration of an active QoS session (with qosStatus = AVAILABLE).
         The overall duration of the QoS session, including the additional extended duration, shall not exceed the maximum duration limit fixed for the QoS Profile. If the current duration plus the value of `requestedAdditionalDuration` exceeds the maximum limit, the new overall duration shall be capped to the maximum value allowed.
-        An example: For a QoS profile limited to a `maxDuration` of 50,000 seconds, a QoD session was originally created with duration 30,000 seconds. Before the session expires, the developer requests to extend the session by another 30,000 seconds:
+        An example: For a QoS profile limited to a `maxDuration` of 50,000 seconds, a QoD session was originally created with duration 30,000 seconds. Before the session expires, the API consumer requests to extend the session by another 30,000 seconds:
         - Previous duration: 30,000 seconds
         - Requested additional duration: 30,000 seconds
         - New overall session duration: 50,000 seconds (the maximum allowed)
@@ -846,7 +846,7 @@ components:
       description: |
         End-user equipment able to connect to a network. Examples of devices include smartphones or IoT sensors/actuators.
 
-        The developer can choose to provide the below specified device identifiers:
+        The API consumer can choose to provide the below specified device identifiers:
 
         * `ipv4Address`
         * `ipv6Address`
@@ -881,7 +881,7 @@ components:
       description: |
         A server hosting backend applications to deliver some business logic to clients.
 
-        The developer can choose to provide the below specified device identifiers:
+        The API consumer can choose to provide the below specified device identifiers:
 
         * `ipv4Address`
         * `ipv6Address`
