@@ -916,7 +916,7 @@ components:
       items:
         description: An IP address that may be used by the application server
         type: string
-        oneOf:
+        anyOf:
           - format: ipv4
           - format: ipv6
       uniqueItems: true
