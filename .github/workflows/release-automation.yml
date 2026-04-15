@@ -12,7 +12,7 @@
 # - Push to main: when release-plan.yaml changes (auto sync-issue)
 # - Manual: workflow_dispatch triggers sync-issue (reads from release-plan.yaml)
 
-name: Release Automation
+name: CAMARA Release Automation
 
 on:
   # Slash commands via issue comments
@@ -80,7 +80,5 @@ jobs:
        github.event.pull_request.merged == true &&
        startsWith(github.event.pull_request.base.ref, 'release-snapshot/'))
 
-    uses: camaraproject/tooling/.github/workflows/release-automation-reusable.yml@ra-v1-rc
-    # with:
-    #   tooling_ref_override: "0123456789abcdef0123456789abcdef01234567"  # Optional break-glass SHA override (requires workflow file change)
+    uses: camaraproject/tooling/.github/workflows/release-automation-reusable.yml@v1-rc
     secrets: inherit
