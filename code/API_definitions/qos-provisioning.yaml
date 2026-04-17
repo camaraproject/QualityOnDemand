@@ -587,7 +587,6 @@ components:
       example: QCI_1_voice
       minLength: 3
       maxLength: 256
-      format: string
       pattern: "^[a-zA-Z0-9_.-]+$"
 
     CloudEvent:
