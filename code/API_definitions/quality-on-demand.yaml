@@ -764,6 +764,7 @@ components:
 
     CloudEvent:
       description: Event compliant with the CloudEvents specification
+      type: object
       required:
         - id
         - source

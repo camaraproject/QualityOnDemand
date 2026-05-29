@@ -591,6 +591,7 @@ components:
 
     CloudEvent:
       description: Event compliant with the CloudEvents specification
+      type: object
       required:
         - id
         - source
@@ -757,6 +758,7 @@ components:
         * `REQUESTED` - QoS profile assignment has been requested but is still being processed.
         * `AVAILABLE` - The requested QoS profile has been assigned to the device, and is active.
         * `UNAVAILABLE` - The QoS profile assignment request has been processed but is not active. `statusInfo` may provide additional information about the reason for the unavailability.
+      type: string
       enum:
         - REQUESTED
         - AVAILABLE
