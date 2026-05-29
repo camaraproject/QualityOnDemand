@@ -1,9 +1,8 @@
-# Release Automation Caller Workflow
+# CAMARA Release Automation — Caller Workflow
 #
-# This workflow template should be copied to .github/workflows/ in API repositories
-# that want to use the CAMARA release automation.
-#
-# Copy this file as: .github/workflows/release-automation.yml
+# Installed in API repositories by the CAMARA onboarding campaign
+# (camaraproject/project-administration). No modification needed;
+# all configuration is centralized in camaraproject/tooling.
 #
 # Triggers:
 # - Slash commands: /create-snapshot, /discard-snapshot, /delete-draft, /publish-release
@@ -68,7 +67,7 @@ permissions:
 jobs:
   release-automation:
     # Skip if:
-    # - issue_comment from a Bot (release automation bot comments, not human commands)
+    # - issue_comment from the RA bot itself (its own replies, to prevent self-triggering)
     # - issue_comment but not a release command or not on a release issue
     # - issues event but not a release issue
     # - pull_request but not merged or not to a snapshot branch
@@ -76,7 +75,7 @@ jobs:
       (github.event_name == 'push') ||
       github.event_name == 'workflow_dispatch' ||
       (github.event_name == 'issue_comment' &&
-       github.event.comment.user.type != 'Bot' &&
+       github.event.comment.user.login != 'camara-release-automation[bot]' &&
        contains(github.event.issue.labels.*.name, 'release-issue') &&
        (startsWith(github.event.comment.body, '/create-snapshot') ||
         startsWith(github.event.comment.body, '/discard-snapshot') ||
