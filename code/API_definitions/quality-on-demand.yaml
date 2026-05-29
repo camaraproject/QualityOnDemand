@@ -19,9 +19,6 @@ info:
     * **QOD service endpoint**:
     The URL pointing to the RESTful resource of the QoD API.
 
-    * **Authentication**:
-    Security access keys such as OAuth 2.0 client credentials used by client applications to invoke the QoD API.
-
     * **QoS profiles**:
     Latency, throughput or priority requirements of the application mapped to relevant QoS profile values. The set of QoS Profiles that an API provider is offering may be retrieved via the `qos-profiles` API (cf. https://github.com/camaraproject/QualityOnDemand/) or will be agreed during the onboarding with the API provider.
 
