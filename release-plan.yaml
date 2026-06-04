@@ -20,12 +20,12 @@ repository:
 
   # Release type being prepared (must be set before release can be triggered)
   # Options: none | pre-release-alpha | pre-release-rc | public-release | maintenance-release
-  target_release_type: none
+  target_release_type: pre-release-rc
 
 # Dependencies on Commonalities and ICM releases
 # Update per ReleaseManagement requirements for each release cycle
 dependencies:
-  commonalities_release: r4.1
+  commonalities_release: r4.3
   identity_consent_management_release: r4.1
 
 # APIs in this repository
@@ -34,7 +34,7 @@ dependencies:
 apis:
   - api_name: qos-profiles
     target_api_version: 1.2.0
-    target_api_status: alpha
+    target_api_status: rc
     main_contacts:
       - hdamker
       - eric-murray
@@ -42,7 +42,7 @@ apis:
       - jlurien
   - api_name: qos-provisioning
     target_api_version: 0.4.0
-    target_api_status: alpha
+    target_api_status: rc
     main_contacts:
       - hdamker
       - eric-murray
@@ -50,7 +50,7 @@ apis:
       - jlurien
   - api_name: quality-on-demand
     target_api_version: 1.2.0
-    target_api_status: alpha
+    target_api_status: rc
     main_contacts:
       - hdamker
       - eric-murray
