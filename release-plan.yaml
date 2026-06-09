@@ -26,7 +26,7 @@ repository:
 # Update per ReleaseManagement requirements for each release cycle
 dependencies:
   commonalities_release: r4.3
-  identity_consent_management_release: r4.1
+  identity_consent_management_release: r4.2
 
 # APIs in this repository
 # - api_name: kebab-case identifier (must be filename in code/API_definitions/)
