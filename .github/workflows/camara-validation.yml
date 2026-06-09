@@ -1,11 +1,10 @@
 # CAMARA Validation Framework — Caller Workflow
 #
-# Copy this file to .github/workflows/camara-validation.yml in your
-# API repository.  No modification needed — all configuration is
-# centralized in the tooling repository.
+# Installed in API repositories by the CAMARA onboarding campaign
+# (camaraproject/project-administration). No modification needed;
+# all configuration is centralized in camaraproject/tooling.
 #
-# This replaces the v0 pr_validation_caller.yml for repositories that
-# have opted into the v1 validation framework.
+# Replaces the legacy pr_validation_caller.yml (v0 validation).
 
 name: CAMARA Validation
 
