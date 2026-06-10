@@ -138,7 +138,7 @@ paths:
         **NOTES:**
         - In case of a `QOS_STATUS_CHANGED` event with `qosStatus` as `UNAVAILABLE` and `statusInfo` as `NETWORK_TERMINATED` the resources of the QoS session are not directly released, but will get deleted automatically at earliest 360 seconds after the event.
 
-          This behavior allows API consumers which are not receiving notification events but are polling to get the session information with the `qosStatus` `UNAVAILABLE` and `statusInfo` `NETWORK_TERMINATED`. Before a API consumer can attempt to create a new QoD session for the same device and flow period they must release the session resources with an explicit `delete` operation if not yet automatically deleted.
+          This behavior allows API consumers which are not receiving notification events but are polling to get the session information with the `qosStatus` `UNAVAILABLE` and `statusInfo` `NETWORK_TERMINATED`. Before a API consumer can attempt to create a new QoS session for the same device and flow period they must release the session resources with an explicit `delete` operation if not yet automatically deleted.
         - The access token may be either 2-legged or 3-legged. See "Identifying the device from the access token" for further information
           - When the API is invoked using a two-legged access token, the subject will be identified from the optional `device` object, which therefore MUST be provided.
           - When a three-legged access token is used however, this optional identifier MUST NOT be provided, as the subject will be uniquely identified from the access token.
@@ -331,7 +331,7 @@ paths:
       description: |
         Extend the overall session duration of an active QoS session (with qosStatus = AVAILABLE).
         The overall duration of the QoS session, including the additional extended duration, shall not exceed the maximum duration limit fixed for the QoS Profile. If the current duration plus the value of `requestedAdditionalDuration` exceeds the maximum limit, the new overall duration shall be capped to the maximum value allowed.
-        An example: For a QoS profile limited to a `maxDuration` of 50,000 seconds, a QoD session was originally created with duration 30,000 seconds. Before the session expires, the API consumer requests to extend the session by another 30,000 seconds:
+        An example: For a QoS profile limited to a `maxDuration` of 50,000 seconds, a QoS session was originally created with duration 30,000 seconds. Before the session expires, the API consumer requests to extend the session by another 30,000 seconds:
         - Previous duration: 30,000 seconds
         - Requested additional duration: 30,000 seconds
         - New overall session duration: 50,000 seconds (the maximum allowed)
@@ -486,7 +486,7 @@ components:
       format: uuid
 
     BaseSessionInfo:
-      description: Common attributes of a QoD session
+      description: Common attributes of a QoS session
       type: object
       properties:
         applicationServer:
