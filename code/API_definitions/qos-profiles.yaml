@@ -428,6 +428,7 @@ components:
           example: 12
           format: int32
           minimum: 1
+          maximum: 2147483647
         unit:
           $ref: "#/components/schemas/TimeUnitEnum"
 
@@ -482,6 +483,7 @@ components:
       type: array
       maxItems: 250
       items:
+        description: A country, and optionally the networks within that country, for which the API provider makes the QoS profile available
         type: object
         required:
           - countryName
