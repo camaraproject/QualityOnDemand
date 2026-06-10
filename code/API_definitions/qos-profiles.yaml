@@ -212,6 +212,9 @@ components:
             A description of the QoS profile.
           type: string
           maxLength: 1024
+          # Excludes control characters (C0 except TAB/LF/CR, DEL, C1) so that
+          # multiline descriptions remain valid
+          pattern: '^[^\u0000-\u0008\u000B\u000C\u000E-\u001F\u007F-\u009F]*$'
           example: "QoS profile for video streaming"
         status:
           $ref: "#/components/schemas/QosProfileStatusEnum"
