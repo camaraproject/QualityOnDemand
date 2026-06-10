@@ -501,6 +501,7 @@ components:
             items:
               description: The network identifier. For mobile networks, this is the PLMN Identifier (MCC + MNC), which is a 5 or 6 digit integer.
               type: string
+              pattern: '^[0-9]{5,6}$'
               maxLength: 6
               example: "23591"
             example: ["23591", "23415"]
