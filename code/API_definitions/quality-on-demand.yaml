@@ -218,7 +218,6 @@ paths:
               schema:
                 $ref: "#/components/schemas/SessionInfo"
               examples:
-              examples:
                 Example 1:
                   $ref: "#/components/examples/EXAMPLE_1_CREATION_RESPONSE_3-LEGGED_ACCESS_TOKEN_IPv4_SUBNET"
                 Example 2:
