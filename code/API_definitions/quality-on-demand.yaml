@@ -898,7 +898,7 @@ components:
           properties:
             ipAddresses:
               $ref: "#/components/schemas/ApplicationServerIPAddressList"
-        - type object
+        - type: object
           minProperties: 1
           properties:
             ipv4Address:
