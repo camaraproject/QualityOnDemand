@@ -902,32 +902,49 @@ components:
           - `ipv4Address`
           - `ipv6Address`
 
-        If more than one identifier is provided, the QoS profile shall apply to all application servers identified.
+        If multiple IP addresses are specified, the QoS profile shall apply to all application servers using any of these addresses by the identified device
 
       oneOf:
-        - type: object
-          required:
-            - ipAddresses
-          properties:
-            ipAddresses:
-              $ref: "#/components/schemas/ApplicationServerIPAddressList"
-        - type: object
-          minProperties: 1
-          properties:
-            ipv4Address:
-              $ref: "#/components/schemas/ApplicationServerIpv4Address"
-            ipv6Address:
-              $ref: "#/components/schemas/ApplicationServerIpv6Address"
+        - $ref: "#/components/schemas/ApplicationServerIpAddressList"
+        - $ref: "#/components/schemas/ApplicationServerIpAddressSubnets"
 
-    ApplicationServerIPAddressList:
+    ApplicationServerIpAddressSubnets:
+      description: An IPv4 and/or IPv6 subnet used by the application server
+      type: object
+      anyOf:
+        - required: [ipv4Address]
+        - required: [ipv6Address]
+      minProperties: 1
+      maxProperties: 2
+      additionalProperties: false
+      properties:
+        ipv4Address:
+          $ref: "#/components/schemas/ApplicationServerIpv4Address"
+        ipv6Address:
+          $ref: "#/components/schemas/ApplicationServerIpv6Address"
+
+    ApplicationServerIpAddressList:
+      description: A single property called ipAddresses which is a list of IPv4 and/or IPv6 addresses that may be used by the application server
+      type: object
+      required:
+        - ipAddresses
+      additionalProperties: false
+      properties:
+        ipAddresses:
+          $ref: "#/components/schemas/ApplicationServerIpAddressListType"
+
+    ApplicationServerIpAddressListType:
       description: A list of IPv4 and/or IPv6 addresses that may be used by the application server
       type: array
       minItems: 1
       maxItems: 16
       items:
-        description: An IP address that may be used by the application server
-        type: string
+        description: A single IP address that may be used by the application server
+        uniqueItems: true
         maxLength: 39
+        anyOf:
+          - $ref: "#/components/schemas/SingleIpv4Addr"
+          - $ref: "#/components/schemas/SingleIpv6Addr"
 
     NetworkAccessIdentifier:
       description: A public identifier addressing a subscription in a mobile network. In 3GPP terminology, it corresponds to the GPSI formatted with the External Identifier ({Local Identifier}@{Domain Identifier}). Unlike the telephone number, the network access identifier is not subjected to portability ruling in force, and is individually managed by each operator.
@@ -971,6 +988,12 @@ components:
       type: string
       format: ipv4
       example: "203.0.113.0"
+
+    SingleIpv6Addr:
+      description: A single IPv6 address with no subnet mask
+      type: string
+      format: ipv6
+      example: "2001:db8:85a3:8d3:1319:8a2e:370:7344"
 
     DeviceIpv6Address:
       description: |
@@ -1539,6 +1562,7 @@ components:
           ipAddresses:
             - "198.51.100.0"
             - "198.51.100.255"
+            - "2001:db8:85a3:8d3:1319:8a2e:370:7344"
         qosProfile: QOS_L
         duration: 3600
         sink: https://application-server.com/notifications
@@ -1551,6 +1575,7 @@ components:
           ipAddresses:
             - "198.51.100.0"
             - "198.51.100.255"
+            - "2001:db8:85a3:8d3:1319:8a2e:370:7344"
         qosProfile: QOS_L
         sink: https://application-server.com/notifications
         sessionId: 3fa85f64-5717-4562-b3fc-2c963f66afa6
