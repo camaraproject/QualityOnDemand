@@ -911,9 +911,6 @@ components:
     ApplicationServerIpAddressSubnets:
       description: An IPv4 and/or IPv6 subnet used by the application server
       type: object
-      anyOf:
-        - required: [ipv4Address]
-        - required: [ipv6Address]
       minProperties: 1
       maxProperties: 2
       additionalProperties: false
