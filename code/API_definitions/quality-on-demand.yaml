@@ -1547,7 +1547,7 @@ components:
       description: Example request using a 3-legged access token to identify the device and identifying the application server by IP address list
       value:
         applicationServer:
-          ipAddresses: ["198.51.100.0", "198.51.100.255", "2001:db8:85a3:8d3:1319:8a2e:370:7344"]
+          ipAddresses: ["198.51.100.0", "198.51.100.255"]
         qosProfile: QOS_L
         duration: 3600
         sink: https://application-server.com/notifications
@@ -1557,7 +1557,7 @@ components:
       description: Example response after a new QoS session has been created using a 3-legged access token (or possibly a single device identifier) when the application server was identified by IP address list
       value:
         applicationServer:
-          ipAddresses: ["198.51.100.0", "198.51.100.255", "2001:db8:85a3:8d3:1319:8a2e:370:7344"]
+          ipAddresses: ["198.51.100.0", "198.51.100.255"]
         qosProfile: QOS_L
         sink: https://application-server.com/notifications
         sessionId: 3fa85f64-5717-4562-b3fc-2c963f66afa6
