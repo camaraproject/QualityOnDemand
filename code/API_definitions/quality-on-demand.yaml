@@ -922,16 +922,17 @@ components:
     ApplicationServerIPAddressList:
       description: A list of IPv4 and/or IPv6 addresses that may be used by the application server
       type: array
+      minItems: 1
+      maxItems: 16
       items:
         description: An IP address that may be used by the application server
         type: string
         maxLength: 39
+
 #        anyOf:
 #          - format: ipv4
 #          - format: ipv6
 #      uniqueItems: true
-      minItems: 1
-      maxItems: 16
 
     NetworkAccessIdentifier:
       description: A public identifier addressing a subscription in a mobile network. In 3GPP terminology, it corresponds to the GPSI formatted with the External Identifier ({Local Identifier}@{Domain Identifier}). Unlike the telephone number, the network access identifier is not subjected to portability ruling in force, and is individually managed by each operator.
