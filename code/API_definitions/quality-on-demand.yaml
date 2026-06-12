@@ -926,10 +926,10 @@ components:
         description: An IP address that may be used by the application server
         type: string
         maxLength: 39
-        anyOf:
-          - format: ipv4
-          - format: ipv6
-      uniqueItems: true
+#        anyOf:
+#          - format: ipv4
+#          - format: ipv6
+#      uniqueItems: true
       minItems: 1
       maxItems: 16
 
@@ -984,13 +984,6 @@ components:
       type: string
       format: ipv6
       example: 2001:db8:85a3:8d3:1319:8a2e:370:7344
-
-    ApplicationServerDomainName:
-      type: string
-      format: hostname
-      example: "example.com"
-      description: |
-        The domain name used by the application server. The domain name must be resolvable using the DNS service provided by the network operator for devices connected to their network. It is expected that the domain name will usually be a fully qualified domain name (FQDN).
 
     ApplicationServerIpv4Address:
       type: string
