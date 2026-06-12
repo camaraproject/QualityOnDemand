@@ -896,7 +896,7 @@ components:
       oneOf:
         - type: object
           required:
-          - ipAddresses
+            - ipAddresses
           properties:
             ipAddresses:
               $ref: "#/components/schemas/ApplicationServerIPAddressList"
