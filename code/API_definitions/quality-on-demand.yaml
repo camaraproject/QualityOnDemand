@@ -28,7 +28,7 @@ info:
       Note: Network Access Identifier is defined for future use and will not be supported with this version of the API.
 
     * **Identifier for the application server**:
-    IPv4 and/or IPv6 address of the application server (application backend)
+    A list or subnet of IPv4 and/or IPv6 addresses used by the application server (application backend)
 
     * **App-Flow (between the application client and application server)**:
     The precise application data flow the API consumer wants to prioritize and have stable latency or throughput for. This flow is in the current API version determined by the identified device and the application server. And it can be further elaborated with details such as ports or port-ranges. Future version of the API might allow more detailed flow identification features.
@@ -151,11 +151,20 @@ paths:
         - $ref: "#/components/parameters/x-correlator"
       requestBody:
         description: Parameters to create a new session
+        required: true
         content:
           application/json:
             schema:
               $ref: "#/components/schemas/CreateSession"
-        required: true
+            examples:
+              Example 1:
+                $ref: "#/components/examples/EXAMPLE_1_CREATION_BODY_3-LEGGED_ACCESS_TOKEN_IPv4_SUBNET"
+              Example 2:
+                $ref: "#/components/examples/EXAMPLE_2_CREATION_BODY_3-LEGGED_ACCESS_TOKEN_IP_ADDRESS_LIST"
+              Example 3:
+                $ref: "#/components/examples/EXAMPLE_3_CREATION_BODY_2-LEGGED_ACCESS_TOKEN_IPv4_SUBNET"
+              Example 4:
+                $ref: "#/components/examples/EXAMPLE_4_CREATION_BODY_2-LEGGED_ACCESS_TOKEN_MULTIPLE_IDENTIFIERS_IPv4_SUBNET"
       callbacks:
         notifications:
           "{$request.body#/sink}":
@@ -207,10 +216,14 @@ paths:
               schema:
                 $ref: "#/components/schemas/SessionInfo"
               examples:
-                Successful Session Creation:
-                  $ref: "#/components/examples/SESSION_CREATION_EXAMPLE"
-                Successful Session Creation With Device Disambiguation:
-                  $ref: "#/components/examples/SESSION_CREATION_EXAMPLE_WITH_DEVICE_RESPONSE"
+                Example 1:
+                  $ref: "#/components/examples/EXAMPLE_1_CREATION_RESPONSE_3-LEGGED_ACCESS_TOKEN_IPv4_SUBNET"
+                Example 2:
+                  $ref: "#/components/examples/EXAMPLE_2_CREATION_RESPONSE_3-LEGGED_ACCESS_TOKEN_IP_ADDRESS_LIST"
+                Example 3:
+                  $ref: "#/components/examples/EXAMPLE_3_CREATION_RESPONSE_2-LEGGED_ACCESS_TOKEN_IPv4_SUBNET"
+                Example 4:
+                  $ref: "#/components/examples/EXAMPLE_4_CREATION_RESPONSE_2-LEGGED_ACCESS_TOKEN_MULTIPLE_IDENTIFIERS_IPv4_SUBNET"
         "400":
           $ref: "#/components/responses/CreateSessionBadRequest400"
         "401":
@@ -878,17 +891,54 @@ components:
       description: |
         A server hosting backend applications to deliver some business logic to clients.
 
-        The API consumer can choose to provide the below specified device identifiers:
+        The API consumer must identify the target application server either:
 
-        * `ipv4Address`
-        * `ipv6Address`
+        * by a list of individual IPv4 and/or IPv6 addresses:
+          - `ipAddresses`
+
+        * or by a single IPv4 subnet and/or single IPv6 subnet
+          - `ipv4Address`
+          - `ipv6Address`
+
+        If multiple IP addresses are specified, the QoS profile shall apply to all application servers using any of these addresses by the identified device
+
+      oneOf:
+        - $ref: "#/components/schemas/ApplicationServerIpAddressList"
+        - $ref: "#/components/schemas/ApplicationServerIpAddressSubnets"
+
+    ApplicationServerIpAddressSubnets:
+      description: An IPv4 and/or IPv6 subnet used by the application server
       type: object
+      minProperties: 1
+      maxProperties: 2
+      additionalProperties: false
       properties:
         ipv4Address:
           $ref: "#/components/schemas/ApplicationServerIpv4Address"
         ipv6Address:
           $ref: "#/components/schemas/ApplicationServerIpv6Address"
-      minProperties: 1
+
+    ApplicationServerIpAddressList:
+      description: A single property called ipAddresses which is a list of IPv4 and/or IPv6 addresses that may be used by the application server
+      type: object
+      required:
+        - ipAddresses
+      additionalProperties: false
+      properties:
+        ipAddresses:
+          $ref: "#/components/schemas/ApplicationServerIpAddressListType"
+
+    ApplicationServerIpAddressListType:
+      description: A list of IPv4 and/or IPv6 addresses that may be used by the application server
+      type: array
+      minItems: 1
+      maxItems: 16
+      items:
+        description: A single IP address that may be used by the application server
+        uniqueItems: true
+        anyOf:
+          - $ref: "#/components/schemas/SingleIpv4Addr"
+          - $ref: "#/components/schemas/SingleIpv6Addr"
 
     NetworkAccessIdentifier:
       description: A public identifier addressing a subscription in a mobile network. In 3GPP terminology, it corresponds to the GPSI formatted with the External Identifier ({Local Identifier}@{Domain Identifier}). Unlike the telephone number, the network access identifier is not subjected to portability ruling in force, and is individually managed by each operator.
@@ -930,8 +980,16 @@ components:
     SingleIpv4Addr:
       description: A single IPv4 address with no subnet mask
       type: string
+      maxLength: 15
       format: ipv4
       example: "203.0.113.0"
+
+    SingleIpv6Addr:
+      description: A single IPv6 address with no subnet mask
+      type: string
+      maxLength: 45
+      format: ipv6
+      example: "2001:db8:85a3:8d3:1319:8a2e:370:7344"
 
     DeviceIpv6Address:
       description: |
@@ -944,6 +1002,7 @@ components:
 
     ApplicationServerIpv4Address:
       type: string
+      maxLength: 18
       example: "198.51.100.0/24"
       description: |
         IPv4 address may be specified in form <address/mask> as:
@@ -953,6 +1012,7 @@ components:
 
     ApplicationServerIpv6Address:
       type: string
+      maxLength: 49
       example: "2001:db8:85a3:8d3:1319:8a2e:370:7344"
       description: |
         IPv6 address may be specified in form <address/mask> as:
@@ -1470,9 +1530,19 @@ components:
                 message: Rate limit reached.
 
   examples:
-    SESSION_CREATION_EXAMPLE:
-      summary: Successful session creation with device not included in response
-      description: Example response after a new QoS session has been created using a 3-legged access token, or possibly a single device identifier
+    EXAMPLE_1_CREATION_BODY_3-LEGGED_ACCESS_TOKEN_IPv4_SUBNET:
+      summary: Session creation example 1
+      description: Example request using a 3-legged access token to identify the device and identifying the application server by IPv4 subnet
+      value:
+        applicationServer:
+          ipv4Address: 198.51.100.0/24
+        qosProfile: QOS_L
+        duration: 3600
+        sink: https://application-server.com/notifications
+
+    EXAMPLE_1_CREATION_RESPONSE_3-LEGGED_ACCESS_TOKEN_IPv4_SUBNET:
+      summary: Successful session creation example 1
+      description: Example response after a new QoS session has been created using a 3-legged access token (or possibly a single device identifier) when the application server was identified by IPv4 subnet
       value:
         applicationServer:
           ipv4Address: 198.51.100.0/24
@@ -1482,12 +1552,81 @@ components:
         duration: 3600
         qosStatus: REQUESTED
 
-    SESSION_CREATION_EXAMPLE_WITH_DEVICE_RESPONSE:
-      summary: Successful session creation with device included in response
-      description: Example response after a new QoS session has been created using a 2-legged access token with multiple device identifiers, or possibly only a single device identifier
+    EXAMPLE_2_CREATION_BODY_3-LEGGED_ACCESS_TOKEN_IP_ADDRESS_LIST:
+      summary: Session creation example 2
+      description: Example request using a 3-legged access token to identify the device and identifying the application server by IP address list
+      value:
+        applicationServer:
+          ipAddresses:
+            - "198.51.100.0"
+            - "198.51.100.255"
+            - "2001:db8:85a3:8d3:1319:8a2e:370:7344"
+        qosProfile: QOS_L
+        duration: 3600
+        sink: https://application-server.com/notifications
+
+    EXAMPLE_2_CREATION_RESPONSE_3-LEGGED_ACCESS_TOKEN_IP_ADDRESS_LIST:
+      summary: Successful session creation example 2
+      description: Example response after a new QoS session has been created using a 3-legged access token (or possibly a single device identifier) when the application server was identified by IP address list
+      value:
+        applicationServer:
+          ipAddresses:
+            - "198.51.100.0"
+            - "198.51.100.255"
+            - "2001:db8:85a3:8d3:1319:8a2e:370:7344"
+        qosProfile: QOS_L
+        sink: https://application-server.com/notifications
+        sessionId: 3fa85f64-5717-4562-b3fc-2c963f66afa6
+        duration: 3600
+        qosStatus: REQUESTED
+
+    EXAMPLE_3_CREATION_BODY_2-LEGGED_ACCESS_TOKEN_IPv4_SUBNET:
+      summary: Session creation example 3
+      description: Example request using a 2-legged access token to identify the device and identifying the application server by IPv4 subnet
       value:
         device:
           phoneNumber: "+123456789"
+        applicationServer:
+          ipv4Address: 198.51.100.0/24
+        qosProfile: QOS_L
+        duration: 3600
+        sink: https://application-server.com/notifications
+
+    EXAMPLE_3_CREATION_RESPONSE_2-LEGGED_ACCESS_TOKEN_IPv4_SUBNET:
+      summary: Successful session creation example 3
+      description: Example response after a new QoS session has been created using a 2-legged access token with a single device identifier
+      value:
+        applicationServer:
+          ipv4Address: 198.51.100.0/24
+        qosProfile: QOS_L
+        sink: https://application-server.com/notifications
+        sessionId: 3fa85f64-5717-4562-b3fc-2c963f66afa6
+        duration: 3600
+        qosStatus: REQUESTED
+
+    EXAMPLE_4_CREATION_BODY_2-LEGGED_ACCESS_TOKEN_MULTIPLE_IDENTIFIERS_IPv4_SUBNET:
+      summary: Session creation example 4
+      description: Example request using a 2-legged access token with multiple device identifiers, and identifying the application server by IPv4 subnet
+      value:
+        device:
+          phoneNumber: "+123456789"
+          ipv4Address:
+            publicAddress: "203.0.113.0"
+            publicPort: 59765
+        applicationServer:
+          ipv4Address: 198.51.100.0/24
+        qosProfile: QOS_L
+        duration: 3600
+        sink: https://application-server.com/notifications
+
+    EXAMPLE_4_CREATION_RESPONSE_2-LEGGED_ACCESS_TOKEN_MULTIPLE_IDENTIFIERS_IPv4_SUBNET:
+      summary: Successful session creation example 4
+      description: Example response after a new QoS session has been created using a 2-legged access token indicating which device identifier is being used for the QoS session
+      value:
+        device:
+          ipv4Address:
+            publicAddress: "203.0.113.0"
+            publicPort: 59765
         applicationServer:
           ipv4Address: 198.51.100.0/24
         qosProfile: QOS_L
