@@ -153,11 +153,20 @@ paths:
         - $ref: "#/components/parameters/x-correlator"
       requestBody:
         description: Parameters to create a new session
+        required: true
         content:
           application/json:
             schema:
               $ref: "#/components/schemas/CreateSession"
-        required: true
+            examples:
+              Example 1:
+                $ref: "#/components/examples/EXAMPLE_1_CREATION_BODY_3-LEGGED_ACCESS_TOKEN_IPv4_SUBNET"
+              Example 2:
+                $ref: "#/components/examples/EXAMPLE_2_CREATION_BODY_3-LEGGED_ACCESS_TOKEN_IP_ADDRESS_LIST"
+              Example 3:
+                $ref: "#/components/examples/EXAMPLE_3_CREATION_BODY_2-LEGGED_ACCESS_TOKEN_IPv4_SUBNET"
+              Example 4:
+                $ref: "#/components/examples/EXAMPLE_4_CREATION_BODY_2-LEGGED_ACCESS_TOKEN_MULTIPLE_IDENTIFIERS_IPv4_SUBNET"
       callbacks:
         notifications:
           "{$request.body#/sink}":
@@ -209,12 +218,15 @@ paths:
               schema:
                 $ref: "#/components/schemas/SessionInfo"
               examples:
-                Successful_Session_Creation:
-                  $ref: "#/components/examples/SESSION_CREATION_EXAMPLE"
-                Successful_Session_Creation_Using_IP_Address_List:
-                  $ref: "#/components/examples/SESSION_CREATION_EXAMPLE_USING_IP_ADDRESS_LIST"
-                Successful_Session_Creation_With_Device_Disambiguation:
-                  $ref: "#/components/examples/SESSION_CREATION_EXAMPLE_WITH_DEVICE_RESPONSE"
+              examples:
+                Example 1:
+                  $ref: "#/components/examples/EXAMPLE_1_CREATION_RESPONSE_3-LEGGED_ACCESS_TOKEN_IPv4_SUBNET"
+                Example 2:
+                  $ref: "#/components/examples/EXAMPLE_2_CREATION_RESPONSE_3-LEGGED_ACCESS_TOKEN_IP_ADDRESS_LIST"
+                Example 3:
+                  $ref: "#/components/examples/EXAMPLE_3_CREATION_RESPONSE_2-LEGGED_ACCESS_TOKEN_IPv4_SUBNET"
+                Example 4:
+                  $ref: "#/components/examples/EXAMPLE_4_CREATION_RESPONSE_2-LEGGED_ACCESS_TOKEN_MULTIPLE_IDENTIFIERS_IPv4_SUBNET"
         "400":
           $ref: "#/components/responses/CreateSessionBadRequest400"
         "401":
@@ -1509,9 +1521,19 @@ components:
                 message: Rate limit reached.
 
   examples:
-    SESSION_CREATION_EXAMPLE:
-      summary: Successful session creation with device not included in response
-      description: Example response after a new QoS session has been created using a 3-legged access token, or possibly a single device identifier
+    EXAMPLE_1_CREATION_BODY_3-LEGGED_ACCESS_TOKEN_IPv4_SUBNET:
+      summary: Session creation example 1
+      description: Example request using a 3-legged access token to identify the device and identifying the application server by IPv4 subnet
+      value:
+        applicationServer:
+          ipv4Address: 198.51.100.0/24
+        qosProfile: QOS_L
+        duration: 3600
+        sink: https://application-server.com/notifications
+
+    EXAMPLE_1_CREATION_RESPONSE_3-LEGGED_ACCESS_TOKEN_IPv4_SUBNET:
+      summary: Successful session creation example 1
+      description: Example response after a new QoS session has been created using a 3-legged access token (or possibly a single device identifier) when the application server was identified by IPv4 subnet
       value:
         applicationServer:
           ipv4Address: 198.51.100.0/24
@@ -1521,24 +1543,75 @@ components:
         duration: 3600
         qosStatus: REQUESTED
 
-    SESSION_CREATION_EXAMPLE_USING_IP_ADDRESS_LIST:
-      summary: Successful session creation with device not included in response
-      description: Example response after a new QoS session has been created using a 3-legged access token, or possibly a single device identifier
+    EXAMPLE_2_CREATION_BODY_3-LEGGED_ACCESS_TOKEN_IP_ADDRESS_LIST:
+      summary: Session creation example 2
+      description: Example request using a 3-legged access token to identify the device and identifying the application server by IP address list
       value:
         applicationServer:
-          ipv4Addresses: ["198.51.100.0", "198.51.100.255", "2001:db8:85a3:8d3:1319:8a2e:370:7344"]
+          ipAddresses: ["198.51.100.0", "198.51.100.255", "2001:db8:85a3:8d3:1319:8a2e:370:7344"]
+        qosProfile: QOS_L
+        duration: 3600
+        sink: https://application-server.com/notifications
+
+    EXAMPLE_2_CREATION_RESPONSE_3-LEGGED_ACCESS_TOKEN_IP_ADDRESS_LIST:
+      summary: Successful session creation example 2
+      description: Example response after a new QoS session has been created using a 3-legged access token (or possibly a single device identifier) when the application server was identified by IP address list
+      value:
+        applicationServer:
+          ipAddresses: ["198.51.100.0", "198.51.100.255", "2001:db8:85a3:8d3:1319:8a2e:370:7344"]
         qosProfile: QOS_L
         sink: https://application-server.com/notifications
         sessionId: 3fa85f64-5717-4562-b3fc-2c963f66afa6
         duration: 3600
         qosStatus: REQUESTED
 
-    SESSION_CREATION_EXAMPLE_WITH_DEVICE_RESPONSE:
-      summary: Successful session creation with device included in response
-      description: Example response after a new QoS session has been created using a 2-legged access token with multiple device identifiers, or possibly only a single device identifier
+    EXAMPLE_3_CREATION_BODY_2-LEGGED_ACCESS_TOKEN_IPv4_SUBNET:
+      summary: Session creation example 3
+      description: Example request using a 2-legged access token to identify the device and identifying the application server by IPv4 subnet
       value:
         device:
           phoneNumber: "+123456789"
+        applicationServer:
+          ipv4Address: 198.51.100.0/24
+        qosProfile: QOS_L
+        duration: 3600
+        sink: https://application-server.com/notifications
+
+    EXAMPLE_3_CREATION_RESPONSE_2-LEGGED_ACCESS_TOKEN_IPv4_SUBNET:
+      summary: Successful session creation example 3
+      description: Example response after a new QoS session has been created using a 2-legged access token with a single device identifier
+      value:
+        applicationServer:
+          ipv4Address: 198.51.100.0/24
+        qosProfile: QOS_L
+        sink: https://application-server.com/notifications
+        sessionId: 3fa85f64-5717-4562-b3fc-2c963f66afa6
+        duration: 3600
+        qosStatus: REQUESTED
+
+    EXAMPLE_4_CREATION_BODY_2-LEGGED_ACCESS_TOKEN_MULTIPLE_IDENTIFIERS_IPv4_SUBNET:
+      summary: Session creation example 4
+      description: Example request using a 2-legged access token with multiple device identifiers, and identifying the application server by IPv4 subnet
+      value:
+        device:
+          phoneNumber: "+123456789"
+          ipv4Address:
+            publicAddress: "203.0.113.0"
+            publicPort: 59765
+        applicationServer:
+          ipv4Address: 198.51.100.0/24
+        qosProfile: QOS_L
+        duration: 3600
+        sink: https://application-server.com/notifications
+
+    EXAMPLE_4_CREATION_RESPONSE_2-LEGGED_ACCESS_TOKEN_MULTIPLE_IDENTIFIERS_IPv4_SUBNET:
+      summary: Successful session creation example 4
+      description: Example response after a new QoS session has been created using a 2-legged access token indicating which device identifier is being used for the QoS session
+      value:
+        device:
+          ipv4Address:
+            publicAddress: "203.0.113.0"
+            publicPort: 59765
         applicationServer:
           ipv4Address: 198.51.100.0/24
         qosProfile: QOS_L
