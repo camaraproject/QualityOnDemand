@@ -981,12 +981,14 @@ components:
     SingleIpv4Addr:
       description: A single IPv4 address with no subnet mask
       type: string
+      maxLength: 15
       format: ipv4
       example: "203.0.113.0"
 
     SingleIpv6Addr:
       description: A single IPv6 address with no subnet mask
       type: string
+      maxLength: 39
       format: ipv6
       example: "2001:db8:85a3:8d3:1319:8a2e:370:7344"
 
@@ -1001,6 +1003,7 @@ components:
 
     ApplicationServerIpv4Address:
       type: string
+      maxLength: 18
       example: "198.51.100.0/24"
       description: |
         IPv4 address may be specified in form <address/mask> as:
@@ -1010,6 +1013,7 @@ components:
 
     ApplicationServerIpv6Address:
       type: string
+      maxLength: 43
       example: "2001:db8:85a3:8d3:1319:8a2e:370:7344"
       description: |
         IPv6 address may be specified in form <address/mask> as:
