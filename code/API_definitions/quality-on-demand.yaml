@@ -891,16 +891,20 @@ components:
 
         If more than one identifier is provided, the QoS profile shall apply to all application servers identified.
 
-      type: object
-      properties:
-        oneOf:
-          - ipAddresses:
+      oneOf:
+        - type: object
+          required:
+          - ipAddresses
+          properties:
+            ipAddresses:
               $ref: "#/components/schemas/ApplicationServerIPAddressList"
-          - ipv4Address:
+        - type object
+          minProperties: 1
+          properties:
+            ipv4Address:
               $ref: "#/components/schemas/ApplicationServerIpv4Address"
             ipv6Address:
               $ref: "#/components/schemas/ApplicationServerIpv6Address"
-      minProperties: 1
 
     ApplicationServerIPAddressList:
       description: A list of IPv4 and/or IPv6 addresses that may be used by the application server
