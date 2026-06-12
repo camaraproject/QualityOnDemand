@@ -209,9 +209,11 @@ paths:
               schema:
                 $ref: "#/components/schemas/SessionInfo"
               examples:
-                Successful Session Creation:
+                Successful_Session_Creation:
                   $ref: "#/components/examples/SESSION_CREATION_EXAMPLE"
-                Successful Session Creation With Device Disambiguation:
+                Successful_Session_Creation_Using_IP_Address_List:
+                  $ref: "#/components/examples/SESSION_CREATION_EXAMPLE_USING_IP_ADDRESS_LIST"
+                Successful_Session_Creation_With_Device_Disambiguation:
                   $ref: "#/components/examples/SESSION_CREATION_EXAMPLE_WITH_DEVICE_RESPONSE"
         "400":
           $ref: "#/components/responses/CreateSessionBadRequest400"
@@ -912,6 +914,7 @@ components:
       items:
         description: An IP address that may be used by the application server
         type: string
+        maxLength: 39
         anyOf:
           - format: ipv4
           - format: ipv6
@@ -1512,6 +1515,18 @@ components:
       value:
         applicationServer:
           ipv4Address: 198.51.100.0/24
+        qosProfile: QOS_L
+        sink: https://application-server.com/notifications
+        sessionId: 3fa85f64-5717-4562-b3fc-2c963f66afa6
+        duration: 3600
+        qosStatus: REQUESTED
+
+    SESSION_CREATION_EXAMPLE_USING_IP_ADDRESS_LIST:
+      summary: Successful session creation with device not included in response
+      description: Example response after a new QoS session has been created using a 3-legged access token, or possibly a single device identifier
+      value:
+        applicationServer:
+          ipv4Addresses: ["198.51.100.0", "198.51.100.255", "2001:db8:85a3:8d3:1319:8a2e:370:7344"]
         qosProfile: QOS_L
         sink: https://application-server.com/notifications
         sessionId: 3fa85f64-5717-4562-b3fc-2c963f66afa6
