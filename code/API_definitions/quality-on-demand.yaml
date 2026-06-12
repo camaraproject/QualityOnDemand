@@ -880,31 +880,26 @@ components:
       description: |
         A server hosting backend applications to deliver some business logic to clients.
 
-        The API consumer must provide one or more of the following application server identifiers:
+        The API consumer must identify the target application server either:
 
-        * `domainName`
-          - The domain name that the device may use to connect to the application server
-        * `ipAddresses`
-          - A list of IPv4 and/or IPv6 addresses that may be used by the application server
-        * `ipv4Address`
-          - An IPv4 subnet
-        * `ipv6Address`
-          - An IPv6 subnet
+        * by a list of individual IPv4 and/or IPv6 addresses:
+          - `ipAddresses`
+
+        * or by a single IPv4 subnet and/or single IPv6 subnet
+          - `ipv4Address`
+          - `ipv6Address`
 
         If more than one identifier is provided, the QoS profile shall apply to all application servers identified.
 
-        If the API consumer specifies a domain name, the API provider shall resolve that domain name to a list of IP addresses using the DNS service that the network operator provides for devices connected to their network. The QoS profile shall apply to all traffic using these IP addresses, which may include traffic for a different domain name that shares one or more of these IP addresses. Note that if the application client on the device uses a different DNS service, there is no guarantee that the QoS profile will apply to the IP addresses returned by that service for the specified domain name.
-
       type: object
       properties:
-        domainName:
-          $ref: "#/components/schemas/ApplicationServerDomainName"
-        ipAddresses:
-          $ref: "#/components/schemas/ApplicationServerIPAddressList"
-        ipv4Address:
-          $ref: "#/components/schemas/ApplicationServerIpv4Address"
-        ipv6Address:
-          $ref: "#/components/schemas/ApplicationServerIpv6Address"
+        oneOf:
+          - ipAddresses:
+              $ref: "#/components/schemas/ApplicationServerIPAddressList"
+          - ipv4Address:
+              $ref: "#/components/schemas/ApplicationServerIpv4Address"
+            ipv6Address:
+              $ref: "#/components/schemas/ApplicationServerIpv6Address"
       minProperties: 1
 
     ApplicationServerIPAddressList:
