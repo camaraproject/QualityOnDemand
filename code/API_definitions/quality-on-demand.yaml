@@ -929,13 +929,13 @@ components:
           $ref: "#/components/schemas/ApplicationServerIpAddressListType"
 
     ApplicationServerIpAddressListType:
-      description: A list of IPv4 and/or IPv6 addresses that may be used by the application server
+      description: A list of unique IPv4 and/or IPv6 addresses that may be used by the application server
       type: array
       minItems: 1
       maxItems: 16
+      uniqueItems: true
       items:
         description: A single IP address that may be used by the application server
-        uniqueItems: true
         anyOf:
           - $ref: "#/components/schemas/SingleIpv4Addr"
           - $ref: "#/components/schemas/SingleIpv6Addr"
