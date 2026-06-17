@@ -900,7 +900,7 @@ components:
           - `ipv4Address`
           - `ipv6Address`
 
-        If multiple IP addresses are specified, the QoS profile shall apply to all application servers using any of these addresses by the identified device
+        If `ipAddresses` is specified, the QoS profile shall apply to traffic between the identified device and any of the listed application server IP addresses.
 
       oneOf:
         - $ref: "#/components/schemas/ApplicationServerIpAddressList"
