@@ -28,7 +28,7 @@ info:
       Note: Network Access Identifier is defined for future use and will not be supported with this version of the API.
 
     * **Identifier for the application server**:
-    A list or subnet of IPv4 and/or IPv6 addresses used by the application server (application backend)
+    A set of IPv4 and/or IPv6 addresses or subnets used by the application server (application backend)
 
     * **App-Flow (between the application client and application server)**:
     The precise application data flow the API consumer wants to prioritize and have stable latency or throughput for. This flow is in the current API version determined by the identified device and the application server. And it can be further elaborated with details such as ports or port-ranges. Future version of the API might allow more detailed flow identification features.
