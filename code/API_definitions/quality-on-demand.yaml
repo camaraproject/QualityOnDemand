@@ -267,7 +267,7 @@ paths:
                 SESSION_UNAVAILABLE:
                   $ref: '#/components/examples/SESSION_UNAVAILABLE_EXAMPLE'
         "400":
-          $ref: "#/components/responses/Generic400"
+          $ref: "#/components/responses/GetSessionBadRequest400"
         "401":
           $ref: "#/components/responses/Generic401"
         "403":
@@ -313,7 +313,7 @@ paths:
             x-correlator:
               $ref: '#/components/headers/x-correlator'
         "400":
-          $ref: "#/components/responses/Generic400"
+          $ref: "#/components/responses/DeleteSessionBadRequest400"
         "401":
           $ref: "#/components/responses/Generic401"
         "403":
@@ -1116,6 +1116,58 @@ components:
                 status: 400
                 code: QUALITY_ON_DEMAND.DURATION_OUT_OF_RANGE
                 message: The requested duration is out of the allowed range for the specific QoS profile
+
+    GetSessionBadRequest400:
+      description: Bad Request when retrieving a session
+      headers:
+        x-correlator:
+          $ref: "#/components/headers/x-correlator"
+      content:
+        application/json:
+          schema:
+            allOf:
+              - $ref: "#/components/schemas/ErrorInfo"
+              - type: object
+                properties:
+                  status:
+                    enum:
+                      - 400
+                  code:
+                    enum:
+                      - INVALID_ARGUMENT
+          examples:
+            GENERIC_400_INVALID_ARGUMENT:
+              description: Invalid Argument. Generic Syntax Exception
+              value:
+                status: 400
+                code: INVALID_ARGUMENT
+                message: Client specified an invalid argument, request body or query param.
+
+    DeleteSessionBadRequest400:
+      description: Bad Request when deleting a session
+      headers:
+        x-correlator:
+          $ref: "#/components/headers/x-correlator"
+      content:
+        application/json:
+          schema:
+            allOf:
+              - $ref: "#/components/schemas/ErrorInfo"
+              - type: object
+                properties:
+                  status:
+                    enum:
+                      - 400
+                  code:
+                    enum:
+                      - INVALID_ARGUMENT
+          examples:
+            GENERIC_400_INVALID_ARGUMENT:
+              description: Invalid Argument. Generic Syntax Exception
+              value:
+                status: 400
+                code: INVALID_ARGUMENT
+                message: Client specified an invalid argument, request body or query param.
 
     Generic400:
       description: Bad Request
