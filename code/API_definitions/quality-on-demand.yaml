@@ -66,21 +66,22 @@ info:
     In cases where personal data is processed by the API and users can exercise their rights through mechanisms such as opt-in and/or opt-out, the use of three-legged access tokens is mandatory. This ensures that the API remains in compliance with privacy regulations, upholding the principles of transparency and user-centric privacy-by-design.
     <!-- CAMARA:MANDATORY:authorization-and-authentication:END -->
 
+    <!-- CAMARA:MANDATORY:identifying-device-from-access-token:BEGIN -->
+
     # Identifying the device from the access token
 
     This API requires the API consumer to identify a device as the subject of the API as follows:
     - When the API is invoked using a two-legged access token, the subject will be identified from the optional `device` object, which therefore MUST be provided.
-
     - When a three-legged access token is used however, this optional identifier MUST NOT be provided, as the subject will be uniquely identified from the access token.
 
     This approach simplifies API usage for API consumers using a three-legged access token to invoke the API by relying on the information that is associated with the access token and was identified during the authentication process.
 
     ## Error handling:
+
     - If the subject cannot be identified from the access token and the optional `device` object is not included in the request, then the server will return an error with the `422 MISSING_IDENTIFIER` error code.
 
     - If the subject can be identified from the access token and the optional `device` object is also included in the request, then the server will return an error with the `422 UNNECESSARY_IDENTIFIER` error code. This will be the case even if the same device is identified by these two methods, as the server is unable to make this comparison.
-
-    - If the requested `qosProfile` exists but is currently not available for creating a session (e.g., its status is INACTIVE or DEPRECATED), then the server will return an error with the `422 QUALITY_ON_DEMAND.QOS_PROFILE_NOT_APPLICABLE` error code.
+    <!-- CAMARA:MANDATORY:identifying-device-from-access-token:END -->
 
     # Multi-SIM scenario handling
 
@@ -158,6 +159,7 @@ paths:
         - The access token may be either 2-legged or 3-legged. See "Identifying the device from the access token" for further information
           - When the API is invoked using a two-legged access token, the subject will be identified from the optional `device` object, which therefore MUST be provided.
           - When a three-legged access token is used however, this optional identifier MUST NOT be provided, as the subject will be uniquely identified from the access token.
+        - If the requested `qosProfile` exists but is currently not available for creating a session (e.g., its status is INACTIVE or DEPRECATED), then the server will return an error with the `422 QUALITY_ON_DEMAND.QOS_PROFILE_NOT_APPLICABLE` error code.
 
       operationId: createSession
       security:
@@ -215,7 +217,7 @@ paths:
                 "401":
                   $ref: "../common/CAMARA_common.yaml#/components/responses/Generic401"
                 "403":
-                  $ref: "#/components/responses/Generic403"
+                  $ref: "#/components/responses/PermissionDenied403"
                 "410":
                   $ref: "../common/CAMARA_common.yaml#/components/responses/Generic410"
               security:
@@ -245,7 +247,7 @@ paths:
         "401":
           $ref: "../common/CAMARA_common.yaml#/components/responses/Generic401"
         "403":
-          $ref: "#/components/responses/Generic403"
+          $ref: "#/components/responses/PermissionDenied403"
         "404":
           $ref: "../common/CAMARA_common.yaml#/components/responses/Generic404"
         "409":
@@ -300,9 +302,9 @@ paths:
         "401":
           $ref: "../common/CAMARA_common.yaml#/components/responses/Generic401"
         "403":
-          $ref: "#/components/responses/Generic403"
+          $ref: "#/components/responses/PermissionDenied403"
         "404":
-          $ref: "#/components/responses/Generic404"
+          $ref: "#/components/responses/NotFound404"
         "429":
           $ref: "../common/CAMARA_common.yaml#/components/responses/Generic429"
 
@@ -346,9 +348,9 @@ paths:
         "401":
           $ref: "../common/CAMARA_common.yaml#/components/responses/Generic401"
         "403":
-          $ref: "#/components/responses/Generic403"
+          $ref: "#/components/responses/PermissionDenied403"
         "404":
-          $ref: "#/components/responses/Generic404"
+          $ref: "#/components/responses/NotFound404"
         "429":
           $ref: "../common/CAMARA_common.yaml#/components/responses/Generic429"
 
@@ -409,9 +411,9 @@ paths:
         "401":
           $ref: "../common/CAMARA_common.yaml#/components/responses/Generic401"
         "403":
-          $ref: "#/components/responses/Generic403"
+          $ref: "#/components/responses/PermissionDenied403"
         "404":
-          $ref: "#/components/responses/Generic404"
+          $ref: "#/components/responses/NotFound404"
         "409":
           $ref: "#/components/responses/SessionStatusConflict409"
         "429":
@@ -466,7 +468,7 @@ paths:
         "401":
           $ref: "../common/CAMARA_common.yaml#/components/responses/Generic401"
         "403":
-          $ref: "#/components/responses/Generic403"
+          $ref: "#/components/responses/PermissionDenied403"
         "404":
           $ref: "../common/CAMARA_common.yaml#/components/responses/Generic404"
         "422":
@@ -598,13 +600,6 @@ components:
           required:
             - duration
 
-    Port:
-      description: TCP or UDP port number
-      type: integer
-      format: int32
-      minimum: 0
-      maximum: 65535
-
     PortsSpec:
       description: Specification of several TCP or UDP ports
       type: object
@@ -623,16 +618,16 @@ components:
               - to
             properties:
               from:
-                $ref: "#/components/schemas/Port"
+                $ref: "../common/CAMARA_common.yaml#/components/schemas/Port"
               to:
-                $ref: "#/components/schemas/Port"
+                $ref: "../common/CAMARA_common.yaml#/components/schemas/Port"
         ports:
           description: Array of TCP or UDP ports
           type: array
           minItems: 1
           maxItems: 65536
           items:
-            $ref: "#/components/schemas/Port"
+            $ref: "../common/CAMARA_common.yaml#/components/schemas/Port"
       example:
         ranges:
           - from: 5010
@@ -1010,7 +1005,7 @@ components:
                 code: INVALID_ARGUMENT
                 message: Client specified an invalid argument, request body or query param.
 
-    Generic403:
+    PermissionDenied403:
       description: Forbidden
       headers:
         x-correlator:
@@ -1036,7 +1031,7 @@ components:
                 code: PERMISSION_DENIED
                 message: Client does not have sufficient permissions to perform this action.
 
-    Generic404:
+    NotFound404:
       description: Not found
       headers:
         x-correlator:
