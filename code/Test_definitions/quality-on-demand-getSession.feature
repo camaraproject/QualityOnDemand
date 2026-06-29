@@ -66,6 +66,14 @@ Feature: CAMARA Quality On Demand API, vwip - Operation getSession
     And the response property "$.code" is "INVALID_ARGUMENT"
     And the response property "$.message" contains a user friendly text
 
+  @quality_on_demand_getSession_400.2_invalid_x-correlator
+  Scenario: Invalid x-correlator header
+    Given the header "x-correlator" does not comply with the schema at "#/components/schemas/XCorrelator"
+    When the request "getSession" is sent
+    Then the response status code is 400
+    And the response property "$.status" is 400
+    And the response property "$.code" is "INVALID_ARGUMENT"
+
   # Generic 401 errors
 
   @quality_on_demand_getSession_401.1_no_authorization_header
@@ -106,7 +114,7 @@ Feature: CAMARA Quality On Demand API, vwip - Operation getSession
 
   @quality_on_demand_getSession_403.1_missing_access_token_scope
   Scenario: Missing access token scope
-    Given the header "Authorization" is set to an access token that does not include scope quality-on-demand:sessions:read
+    Given the header "Authorization" is set to an access token that does not include scope "quality-on-demand:sessions:read"
     When the request "getSession" is sent
     Then the response status code is 403
     And the response header "x-correlator" has same value as the request header "x-correlator"
@@ -138,4 +146,18 @@ Feature: CAMARA Quality On Demand API, vwip - Operation getSession
     And the response header "Content-Type" is "application/json"
     And the response property "$.status" is 404
     And the response property "$.code" is "NOT_FOUND"
+    And the response property "$.message" contains a user friendly text
+
+  # Errors 429
+
+  @quality_on_demand_getSession_429.1_too_many_requests
+  # To test this scenario the environment has to be configured to reject requests reaching the threshold limit set.
+  Scenario: Request is rejected due to threshold policy
+    Given a valid request for "getSession"
+    And the header "Authorization" is set to a valid access token
+    And the threshold of requests has been reached
+    When the request "getSession" is sent
+    Then the response status code is 429
+    And the response property "$.status" is 429
+    And the response property "$.code" is "TOO_MANY_REQUESTS"
     And the response property "$.message" contains a user friendly text
