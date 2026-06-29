@@ -200,7 +200,7 @@ paths:
                 content:
                   application/cloudevents+json:
                     schema:
-                      $ref: "#/components/schemas/CloudEvent"
+                      $ref: "#/components/schemas/QosNotificationEvent"
                     examples:
                       QOS_STATUS_CHANGED_EXAMPLE:
                         $ref: "#/components/examples/QOS_STATUS_CHANGED_EXAMPLE"
@@ -482,10 +482,7 @@ components:
     openId:
       $ref: "../common/CAMARA_common.yaml#/components/securitySchemes/openId"
     notificationsBearerAuth:
-      description: Bearer authentication for notifications
-      type: http
-      scheme: bearer
-      bearerFormat: "{$request.body#sinkCredential.credentialType}"
+      $ref: "../common/CAMARA_event_common.yaml#/components/securitySchemes/notificationsBearerAuth"
 
   schemas:
     SessionId:
@@ -520,7 +517,7 @@ components:
         sinkCredential:
           description: A sink credential provides authentication or authorization information necessary to enable delivery of events to a target.
           allOf:
-            - $ref: "#/components/schemas/SinkCredential"
+            - $ref: "../common/CAMARA_event_common.yaml#/components/schemas/SinkCredential"
       required:
         - applicationServer
         - qosProfile
@@ -644,110 +641,6 @@ components:
           - 5060
           - 5070
 
-    SinkCredential:
-      type: object
-      properties:
-        credentialType:
-          type: string
-          enum:
-            - PLAIN
-            - ACCESSTOKEN
-            - REFRESHTOKEN
-          description: |
-            The type of the credential.
-            Note: Type of the credential - MUST be set to ACCESSTOKEN for now
-      discriminator:
-        propertyName: credentialType
-        mapping:
-          PLAIN: "#/components/schemas/PlainCredential"
-          ACCESSTOKEN: "#/components/schemas/AccessTokenCredential"
-          REFRESHTOKEN: "#/components/schemas/RefreshTokenCredential"
-      required:
-        - credentialType
-
-    PlainCredential:
-      type: object
-      description: A plain credential as a combination of an identifier and a secret. MUST not be used in this API version.
-      allOf:
-        - $ref: "#/components/schemas/SinkCredential"
-        - type: object
-          required:
-            - identifier
-            - secret
-          properties:
-            identifier:
-              description: The identifier might be an account or username.
-              type: string
-            secret:
-              description: The secret might be a password or passphrase.
-              type: string
-
-    AccessTokenCredential:
-      type: object
-      description: An access token credential.
-      allOf:
-        - $ref: "#/components/schemas/SinkCredential"
-        - type: object
-          properties:
-            accessToken:
-              description: REQUIRED. An access token is a previously acquired token granting access to the target resource.
-              type: string
-            accessTokenExpiresUtc:
-              type: string
-              format: date-time
-              description: |
-                REQUIRED. An absolute (UTC) timestamp at which the token shall be considered expired. Token expiration should occur
-                after the termination of the requested session, allowing the client to be notified of any changes during the
-                sessions's existence. If the token expires while the session is still active, the client will stop receiving notifications.
-                If the access token is a JWT and registered "exp" (Expiration Time) claim is present, the two expiry times should match.
-                It must follow [RFC 3339](https://datatracker.ietf.org/doc/html/rfc3339#section-5.6) and must have time zone.
-              example: "2023-07-03T12:27:08.312Z"
-            accessTokenType:
-              description: REQUIRED. Type of the access token (See [OAuth 2.0](https://tools.ietf.org/html/rfc6749#section-7.1)). For the current version of the API the type MUST be set to `Bearer`.
-              type: string
-              enum:
-                - bearer
-          required:
-            - accessToken
-            - accessTokenExpiresUtc
-            - accessTokenType
-
-    RefreshTokenCredential:
-      type: object
-      description: An access token credential with a refresh token. MUST not be used in this API version.
-      allOf:
-        - $ref: "#/components/schemas/SinkCredential"
-        - type: object
-          properties:
-            accessToken:
-              description: REQUIRED. An access token is a previously acquired token granting access to the target resource.
-              type: string
-            accessTokenExpiresUtc:
-              type: string
-              format: date-time
-              description: |
-                REQUIRED. An absolute UTC instant at which the token shall be considered expired.
-                If the access token is a JWT and registered "exp" (Expiration Time) claim is present, the two expiry times should match.
-                It must follow [RFC 3339](https://datatracker.ietf.org/doc/html/rfc3339#section-5.6) and must have time zone.
-            accessTokenType:
-              description: REQUIRED. Type of the access token (See [OAuth 2.0](https://tools.ietf.org/html/rfc6749#section-7.1)).
-              type: string
-              enum:
-                - bearer
-            refreshToken:
-              description: REQUIRED. An refresh token credential used to acquire access tokens.
-              type: string
-            refreshTokenEndpoint:
-              type: string
-              format: uri
-              description: REQUIRED. A URL at which the refresh token can be traded for an access token.
-      required:
-        - accessToken
-        - accessTokenExpiresUtc
-        - accessTokenType
-        - refreshToken
-        - refreshTokenEndpoint
-
     ExtendSessionDuration:
       description: Attributes required to extend the duration of an active session
       type: object
@@ -778,60 +671,38 @@ components:
       maxLength: 256
       pattern: "^[a-zA-Z0-9_.-]+$"
 
-    CloudEvent:
-      description: Event compliant with the CloudEvents specification
-      type: object
-      required:
-        - id
-        - source
-        - specversion
-        - type
-        - time
-      properties:
-        id:
-          description: Identifier of this event, that must be unique in the source context.
-          type: string
-        source:
-          description: Identifies the context in which an event happened in the specific provider implementation.
-          type: string
-          format: uri-reference
-        type:
-          description: The type of the event.
-          type: string
-          enum:
-            - "org.camaraproject.quality-on-demand.v1.qos-status-changed"
-        specversion:
-          description: Version of the specification to which this event conforms (must be 1.0 if it conforms to Cloudevents 1.0.2 version)
-          type: string
-          enum:
-            - '1.0'
-        datacontenttype:
-          description: 'media-type that describes the event payload encoding, must be "application/json" for CAMARA APIs'
-          type: string
-          enum:
-            - 'application/json'
-        data:
-          description: Event notification details payload, which depends on the event type
-          type: object
-        time:
-          description: |
-            Timestamp of when the occurrence happened. It must follow [RFC 3339](https://datatracker.ietf.org/doc/html/rfc3339#section-5.6) and must have time zone.
-          type: string
-          format: date-time
+    QosEventType:
+      type: string
+      description: |
+        Event type for QoD notifications, using the CAMARA reverse-DNS notation
+        `org.camaraproject.<api-name>.<event-version>.<event-name>`.
+      enum:
+        - org.camaraproject.quality-on-demand.v1.qos-status-changed
+
+    QosNotificationEvent:
+      description: |
+        QoD notification event group. Extends the common CloudEvent envelope and
+        constrains `type` to the event types defined by this API.
+      allOf:
+        - $ref: "../common/CAMARA_event_common.yaml#/components/schemas/CloudEvent"
+        - type: object
+          properties:
+            type:
+              $ref: "#/components/schemas/QosEventType"
       discriminator:
-        propertyName: 'type'
+        propertyName: type
         mapping:
           org.camaraproject.quality-on-demand.v1.qos-status-changed: "#/components/schemas/EventQosStatusChanged"
 
     EventQosStatusChanged:
       description: Event to notify a QoS status change
       allOf:
-        - $ref: "#/components/schemas/CloudEvent"
+        - $ref: "#/components/schemas/QosNotificationEvent"
         - type: object
           properties:
             data:
               type: object
-              description: Event details depending on the event type
+              description: Event details for a QoS status change
               required:
                 - sessionId
                 - qosStatus
@@ -1261,6 +1132,7 @@ components:
                       - MISSING_IDENTIFIER
                       - UNSUPPORTED_IDENTIFIER
                       - UNNECESSARY_IDENTIFIER
+                      - PRIVATE_KEY_JWT_NOT_CONFIGURED
                       - QUALITY_ON_DEMAND.QOS_PROFILE_NOT_APPLICABLE
           examples:
             GENERIC_422_SERVICE_NOT_APPLICABLE:
@@ -1287,6 +1159,12 @@ components:
                 status: 422
                 code: UNNECESSARY_IDENTIFIER
                 message: The device is already identified by the access token.
+            GENERIC_422_PRIVATE_KEY_JWT_NOT_CONFIGURED:
+              description: Private key JWT sink credential type is used but no configuration was pre-shared
+              value:
+                status: 422
+                code: PRIVATE_KEY_JWT_NOT_CONFIGURED
+                message: No JWK Set configured for PRIVATE_KEY_JWT authentication.
             QUALITY_ON_DEMAND_422_QOS_PROFILE_NOT_APPLICABLE:
               description: The requested QoS Profile exists but cannot be used to create a session.
               value:
