@@ -105,7 +105,7 @@ Feature: CAMARA QoS Provisioning API, vwip - Operation createQosAssignment
     Examples:
       | device_identifier                | oas_spec_schema                             |
       | $.device.phoneNumber             | /components/schemas/PhoneNumber             |
-      | $.device.ipv4Address             | /components/schemas/DeviceIpv4Addr          |
+      | $.device.ipv4Address             | /components/schemas/DeviceIpv4Address       |
       | $.device.ipv6Address             | /components/schemas/DeviceIpv6Address       |
       | $.device.networkAccessIdentifier | /components/schemas/NetworkAccessIdentifier |
 
@@ -197,16 +197,17 @@ Feature: CAMARA QoS Provisioning API, vwip - Operation createQosAssignment
     And the response property "$.code" is "INVALID_ARGUMENT"
     And the response property "$.message" contains a user friendly text
 
-  # PLAIN and REFRESHTOKEN are considered in the schema so INVALID_ARGUMENT is not expected
+  # PLAIN and REFRESHTOKEN were removed from the schema in r4.3; any value outside the
+  # ACCESSTOKEN / PRIVATE_KEY_JWT enum produces INVALID_ARGUMENT.
   @qos_provisioning_createQosAssignment_400.7_invalid_sink_credential
-  Scenario Outline: Invalid credential
+  Scenario Outline: Invalid credential type
     Given the request body property  "$.sinkCredential.credentialType" is set to "<unsupported_credential_type>"
     When the request "createQosAssignment" is sent
     Then the response status code is 400
     And the response header "x-correlator" has same value as the request header "x-correlator"
     And the response header "Content-Type" is "application/json"
     And the response property "$.status" is 400
-    And the response property "$.code" is "INVALID_CREDENTIAL"
+    And the response property "$.code" is "INVALID_ARGUMENT"
     And the response property "$.message" contains a user friendly text
 
     Examples:
@@ -238,6 +239,14 @@ Feature: CAMARA QoS Provisioning API, vwip - Operation createQosAssignment
     And the response property "$.status" is 400
     And the response property "$.code" is "INVALID_ARGUMENT"
     And the response property "$.message" contains a user friendly text
+
+  @qos_provisioning_createQosAssignment_400.10_invalid_x-correlator
+  Scenario: Invalid x-correlator header
+    Given the header "x-correlator" does not comply with the schema at "#/components/schemas/XCorrelator"
+    When the request "createQosAssignment" is sent
+    Then the response status code is 400
+    And the response property "$.status" is 400
+    And the response property "$.code" is "INVALID_ARGUMENT"
 
   # Generic 401 errors
 
@@ -279,7 +288,7 @@ Feature: CAMARA QoS Provisioning API, vwip - Operation createQosAssignment
 
   @qos_provisioning_createQosAssignment_403.1_missing_access_token_scope
   Scenario: Missing access token scope
-    Given the header "Authorization" is set to an access token that does not include scope qos-provisioning:qos-assignments:create
+    Given the header "Authorization" is set to an access token that does not include scope "qos-provisioning:qos-assignments:create"
     When the request "createQosAssignment" is sent
     Then the response status code is 403
     And the response header "x-correlator" has same value as the request header "x-correlator"
@@ -313,4 +322,18 @@ Feature: CAMARA QoS Provisioning API, vwip - Operation createQosAssignment
     And the response header "Content-Type" is "application/json"
     And the response property "$.status" is 422
     And the response property "$.code" is "QOS_PROVISIONING.QOS_PROFILE_NOT_APPLICABLE"
+    And the response property "$.message" contains a user friendly text
+
+  # Errors 429
+
+  @qos_provisioning_createQosAssignment_429.1_too_many_requests
+  # To test this scenario the environment has to be configured to reject requests reaching the threshold limit set.
+  Scenario: Request is rejected due to threshold policy
+    Given a valid request for "createQosAssignment"
+    And the header "Authorization" is set to a valid access token
+    And the threshold of requests has been reached
+    When the request "createQosAssignment" is sent
+    Then the response status code is 429
+    And the response property "$.status" is 429
+    And the response property "$.code" is "TOO_MANY_REQUESTS"
     And the response property "$.message" contains a user friendly text
