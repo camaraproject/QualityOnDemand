@@ -1690,8 +1690,8 @@ components:
         qosStatus: REQUESTED
 
     EXAMPLE_5_CREATION_BODY_3-LEGGED_ACCESS_TOKEN_IPv4_SUBNET_PORT_LIMITS:
-      summary: Session creation example 1
-      description: Example request using a 3-legged access token to identify the device and identifying the application server by IPv4 subnet
+      summary: Session creation example 5
+      description: Example request using a 3-legged access token to identify the device, an IPv4 subnet to identify the application server, and limiting the ports applicable to the enhanced flow
       value:
         applicationServer:
           ipv4Address: 198.51.100.0/24
@@ -1705,8 +1705,8 @@ components:
         sink: https://application-server.com/notifications
 
     EXAMPLE_5_CREATION_RESPONSE_3-LEGGED_ACCESS_TOKEN_IPv4_SUBNET_PORT_LIMITS:
-      summary: Successful session creation example 1
-      description: Example response after a new QoS session has been created using a 3-legged access token (or possibly a single device identifier) when the application server was identified by IPv4 subnet
+      summary: Successful session creation example 5
+      description: Example response after a new QoS session has been created using a 3-legged access token (or possibly a single device identifier) when the application server was identified by IPv4 subnet and the applicable device and application server ports were restricted
       value:
         applicationServer:
           ipv4Address: 198.51.100.0/24
