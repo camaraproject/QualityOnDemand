@@ -168,6 +168,9 @@ paths:
                 $ref: "#/components/examples/EXAMPLE_3_CREATION_BODY_2-LEGGED_ACCESS_TOKEN_IPv4_SUBNET"
               Example 4:
                 $ref: "#/components/examples/EXAMPLE_4_CREATION_BODY_2-LEGGED_ACCESS_TOKEN_MULTIPLE_IDENTIFIERS_IPv4_SUBNET"
+              Example 5:
+                $ref: "#/components/examples/EXAMPLE_5_CREATION_BODY_3-LEGGED_ACCESS_TOKEN_IPv4_SUBNET_PORT_LIMITS"
+
       callbacks:
         notifications:
           "{$request.body#/sink}":
@@ -227,6 +230,8 @@ paths:
                   $ref: "#/components/examples/EXAMPLE_3_CREATION_RESPONSE_2-LEGGED_ACCESS_TOKEN_IPv4_SUBNET"
                 Example 4:
                   $ref: "#/components/examples/EXAMPLE_4_CREATION_RESPONSE_2-LEGGED_ACCESS_TOKEN_MULTIPLE_IDENTIFIERS_IPv4_SUBNET"
+                Example 5:
+                  $ref: "#/components/examples/EXAMPLE_5_CREATION_RESPONSE_3-LEGGED_ACCESS_TOKEN_IPv4_SUBNET_PORT_LIMITS"
         "400":
           $ref: "#/components/responses/CreateSessionBadRequest400"
         "401":
@@ -507,7 +512,7 @@ components:
       properties:
         applicationServer:
           $ref: "#/components/schemas/ApplicationServer"
-        devicePorts:
+        devicePort:
           description: A single port used locally by the device for flows to which the requested QoS profile should apply. If omitted, then the qosProfile will apply to all flows between the device and the specified application server address and ports.
           allOf:
             - $ref: "#/components/schemas/Port"
@@ -1678,6 +1683,38 @@ components:
             publicPort: 59765
         applicationServer:
           ipv4Address: 198.51.100.0/24
+        qosProfile: QOS_L
+        sink: https://application-server.com/notifications
+        sessionId: 3fa85f64-5717-4562-b3fc-2c963f66afa6
+        duration: 3600
+        qosStatus: REQUESTED
+
+    EXAMPLE_5_CREATION_BODY_3-LEGGED_ACCESS_TOKEN_IPv4_SUBNET_PORT_LIMITS:
+      summary: Session creation example 1
+      description: Example request using a 3-legged access token to identify the device and identifying the application server by IPv4 subnet
+      value:
+        applicationServer:
+          ipv4Address: 198.51.100.0/24
+        devicePort: 62381
+        applicationServerPorts:
+          range:
+            from: 5010
+            to: 5020
+        qosProfile: QOS_L
+        duration: 3600
+        sink: https://application-server.com/notifications
+
+    EXAMPLE_5_CREATION_RESPONSE_3-LEGGED_ACCESS_TOKEN_IPv4_SUBNET_PORT_LIMITS:
+      summary: Successful session creation example 1
+      description: Example response after a new QoS session has been created using a 3-legged access token (or possibly a single device identifier) when the application server was identified by IPv4 subnet
+      value:
+        applicationServer:
+          ipv4Address: 198.51.100.0/24
+        devicePort: 62381
+        applicationServerPorts:
+          range:
+            from: 5010
+            to: 5020
         qosProfile: QOS_L
         sink: https://application-server.com/notifications
         sessionId: 3fa85f64-5717-4562-b3fc-2c963f66afa6
