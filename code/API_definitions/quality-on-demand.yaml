@@ -622,7 +622,7 @@ components:
       additionalProperties: false
       properties:
         range:
-          description: The range of TCP or UDP ports to be included
+          description: The range of TCP or UDP ports to be included in the enhanced flow
           type: object
           required:
             - from
@@ -637,7 +637,7 @@ components:
               from: 5010
               to: 5020
         port:
-          description: A single TCP or UDP port to be included
+          description: A single TCP or UDP port to be included in the enhanced flow
           allOf:
             - $ref: "#/components/schemas/Port"
 
