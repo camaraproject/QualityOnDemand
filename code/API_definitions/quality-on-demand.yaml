@@ -632,7 +632,6 @@ components:
               $ref: "#/components/schemas/Port"
             to:
               $ref: "#/components/schemas/Port"
-          example: '"range":{"from":5010,"to":5020}'
         port:
           description: A single TCP or UDP port to be included in the enhanced flow
           allOf:
