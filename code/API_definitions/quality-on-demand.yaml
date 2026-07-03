@@ -620,6 +620,10 @@ components:
       minProperties: 1
       maxProperties: 1
       additionalProperties: false
+      example: 
+        range:
+          from: 5010
+          to: 5020
       properties:
         range:
           description: The range of TCP or UDP ports to be included in the enhanced flow
