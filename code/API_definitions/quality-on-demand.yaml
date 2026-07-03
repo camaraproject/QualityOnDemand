@@ -614,23 +614,23 @@ components:
       type: object
       minProperties: 1
       maxProperties: 1
+      additionalProperties: false
       properties:
-        oneOf:
-          - range:
-              description: The Range of TCP or UDP ports to be included
-              type: object
-              required:
-                - from
-                - to
-              properties:
-                from:
-                  $ref: "#/components/schemas/Port"
-                to:
-                  $ref: "#/components/schemas/Port"
-          - port:
-              description: A single TCP or UDP port to be included
-              allOf:
-                - $ref: "#/components/schemas/Port"
+        range:
+          description: The Range of TCP or UDP ports to be included
+          type: object
+          required:
+            - from
+            - to
+          properties:
+            from:
+              $ref: "#/components/schemas/Port"
+            to:
+              $ref: "#/components/schemas/Port"
+        port:
+          description: A single TCP or UDP port to be included
+          allOf:
+            - $ref: "#/components/schemas/Port"
       examples:
         Example 1:
           description: A single port
