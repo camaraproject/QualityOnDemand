@@ -617,7 +617,7 @@ components:
       additionalProperties: false
       properties:
         range:
-          description: The Range of TCP or UDP ports to be included
+          description: The range of TCP or UDP ports to be included
           type: object
           required:
             - from
@@ -627,21 +627,14 @@ components:
               $ref: "#/components/schemas/Port"
             to:
               $ref: "#/components/schemas/Port"
+          example:
+            range:
+              from: 5010
+              to: 5020
         port:
           description: A single TCP or UDP port to be included
           allOf:
             - $ref: "#/components/schemas/Port"
-      examples:
-        Example 1:
-          description: A single port
-          value:
-            port: 5060
-        Example 2:
-          description: A single port range
-          value:
-            range:
-              from: 5010
-              to: 5020
 
     SinkCredential:
       type: object
