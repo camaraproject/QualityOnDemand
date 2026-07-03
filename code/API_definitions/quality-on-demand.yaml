@@ -620,7 +620,7 @@ components:
       minProperties: 1
       maxProperties: 1
       additionalProperties: false
-      example: 
+      example:
         range:
           from: 5010
           to: 5020
