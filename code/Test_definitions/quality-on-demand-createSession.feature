@@ -251,15 +251,17 @@ Feature: CAMARA Quality On Demand API, vwip - Operation createSession
       | $.applicationServerPorts.ports[*]    |
 
   # PLAIN and REFRESHTOKEN are considered in the schema so INVALID_ARGUMENT is not expected
-  @quality_on_demand_createSession_400.6_invalid_sink_credential
-  Scenario Outline: Invalid credential
+  # PLAIN and REFRESHTOKEN are no longer valid "credentialType" values in the common SinkCredential
+  # schema, so a request carrying them fails schema validation with INVALID_ARGUMENT.
+  @quality_on_demand_createSession_400.6_unsupported_sink_credential_type
+  Scenario Outline: Unsupported sinkCredential.credentialType value
     Given the request body property  "$.sinkCredential.credentialType" is set to "<unsupported_credential_type>"
     When the request "createSession" is sent
     Then the response status code is 400
     And the response header "x-correlator" has same value as the request header "x-correlator"
     And the response header "Content-Type" is "application/json"
     And the response property "$.status" is 400
-    And the response property "$.code" is "INVALID_CREDENTIAL"
+    And the response property "$.code" is "INVALID_ARGUMENT"
     And the response property "$.message" contains a user friendly text
 
     Examples:
@@ -388,6 +390,19 @@ Feature: CAMARA Quality On Demand API, vwip - Operation createSession
     And the response header "Content-Type" is "application/json"
     And the response property "$.status" is 422
     And the response property "$.code" is "QUALITY_ON_DEMAND.QOS_PROFILE_NOT_APPLICABLE"
+    And the response property "$.message" contains a user friendly text
+
+  @quality_on_demand_createSession_422.2_private_key_jwt_not_configured
+  Scenario: PRIVATE_KEY_JWT sink credential used but not pre-configured
+    Given a valid testing device supported by the service, identified by the token or provided in the request body
+    And the request body property "$.sinkCredential.credentialType" is set to "PRIVATE_KEY_JWT"
+    And no PRIVATE_KEY_JWT configuration has been pre-shared for the notification endpoint
+    When the request "createSession" is sent
+    Then the response status code is 422
+    And the response header "x-correlator" has same value as the request header "x-correlator"
+    And the response header "Content-Type" is "application/json"
+    And the response property "$.status" is 422
+    And the response property "$.code" is "PRIVATE_KEY_JWT_NOT_CONFIGURED"
     And the response property "$.message" contains a user friendly text
 
   # Errors 429
