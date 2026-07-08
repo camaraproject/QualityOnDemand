@@ -166,7 +166,7 @@ paths:
                 "401":
                   $ref: "#/components/responses/Generic401"
                 "403":
-                  $ref: "#/components/responses/Generic403"
+                  $ref: "#/components/responses/PermissionDenied403"
                 "410":
                   $ref: "#/components/responses/Generic410"
                 "429":
@@ -194,7 +194,7 @@ paths:
         "401":
           $ref: "#/components/responses/Generic401"
         "403":
-          $ref: "#/components/responses/Generic403"
+          $ref: "#/components/responses/PermissionDenied403"
         "404":
           $ref: "../common/CAMARA_common.yaml#/components/responses/Generic404"
         "409":
@@ -245,7 +245,7 @@ paths:
         "401":
           $ref: "#/components/responses/Generic401"
         "403":
-          $ref: "#/components/responses/Generic403"
+          $ref: "#/components/responses/PermissionDenied403"
         "404":
           $ref: "#/components/responses/NotFound404"
         "429":
@@ -294,7 +294,7 @@ paths:
         "401":
           $ref: "#/components/responses/Generic401"
         "403":
-          $ref: "#/components/responses/Generic403"
+          $ref: "#/components/responses/PermissionDenied403"
         "404":
           $ref: "#/components/responses/NotFound404"
         "429":
@@ -352,7 +352,7 @@ paths:
         "401":
           $ref: "#/components/responses/Generic401"
         "403":
-          $ref: "#/components/responses/Generic403"
+          $ref: "#/components/responses/PermissionDenied403"
         "404":
           $ref: "../common/CAMARA_common.yaml#/components/responses/Generic404"
         "422":
@@ -630,8 +630,31 @@ components:
     Generic401:
       $ref: '../common/CAMARA_common.yaml#/components/responses/Generic401'
 
-    Generic403:
-      $ref: '../common/CAMARA_common.yaml#/components/responses/Generic403'
+    PermissionDenied403:
+      description: Forbidden
+      headers:
+        x-correlator:
+          $ref: '../common/CAMARA_common.yaml#/components/headers/x-correlator'
+      content:
+        application/json:
+          schema:
+            allOf:
+              - $ref: '../common/CAMARA_common.yaml#/components/schemas/ErrorInfo'
+              - type: object
+                properties:
+                  status:
+                    enum:
+                      - 403
+                  code:
+                    enum:
+                      - PERMISSION_DENIED
+          examples:
+            GENERIC_403_PERMISSION_DENIED:
+              description: Permission denied. OAuth2 token access does not have the required scope or when the user fails operational security
+              value:
+                status: 403
+                code: PERMISSION_DENIED
+                message: Client does not have sufficient permissions to perform this action.
 
     NotFound404:
       description: Not found
