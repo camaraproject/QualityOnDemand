@@ -20,7 +20,7 @@ info:
       Note: Network Access Identifier is defined for future use and will not be supported with this version of the API.
 
     * **Notification URL and token**:
-    API consumers may provide a callback URL (`sink`) on which notifications about all status change events (eg. assignment termination) can be received from the API provider. This is an optional parameter. The notification will be sent as a CloudEvent compliant message. If `sink` is included, it is RECOMMENDED for the client to provide as well the `sinkCredential` property to protect the notification endpoint.
+    API consumers may provide a callback URL (`sink`) on which notifications about all status change events (eg. assignment termination) can be received from the API provider. This is an optional parameter. The notification will be sent as a CloudEvent compliant message. If `sink` is included, it is RECOMMENDED for the client to provide as well the `sinkCredential` property to protect the notification endpoint. If provided, `sinkCredential.credentialType` MUST be set to `ACCESSTOKEN` or `PRIVATE_KEY_JWT`.
 
     # Resources and Operations overview
     The API defines four operations:
