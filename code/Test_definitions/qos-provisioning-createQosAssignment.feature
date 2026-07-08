@@ -324,6 +324,19 @@ Feature: CAMARA QoS Provisioning API, vwip - Operation createQosAssignment
     And the response property "$.code" is "QOS_PROVISIONING.QOS_PROFILE_NOT_APPLICABLE"
     And the response property "$.message" contains a user friendly text
 
+  @qos_provisioning_createQosAssignment_422.2_private_key_jwt_not_configured
+  Scenario: PRIVATE_KEY_JWT sink credential used but not pre-configured
+    Given a valid testing device supported by the service, identified by the token or provided in the request body
+    And the request body property "$.sinkCredential.credentialType" is set to "PRIVATE_KEY_JWT"
+    And no PRIVATE_KEY_JWT configuration has been pre-shared for the notification endpoint
+    When the request "createQosAssignment" is sent
+    Then the response status code is 422
+    And the response header "x-correlator" has same value as the request header "x-correlator"
+    And the response header "Content-Type" is "application/json"
+    And the response property "$.status" is 422
+    And the response property "$.code" is "PRIVATE_KEY_JWT_NOT_CONFIGURED"
+    And the response property "$.message" contains a user friendly text
+
   # Errors 429
 
   @qos_provisioning_createQosAssignment_429.1_too_many_requests

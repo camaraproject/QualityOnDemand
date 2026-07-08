@@ -735,6 +735,7 @@ components:
                       - MISSING_IDENTIFIER
                       - UNSUPPORTED_IDENTIFIER
                       - UNNECESSARY_IDENTIFIER
+                      - PRIVATE_KEY_JWT_NOT_CONFIGURED
                       - QOS_PROVISIONING.QOS_PROFILE_NOT_APPLICABLE
           examples:
             GENERIC_422_SERVICE_NOT_APPLICABLE:
@@ -761,6 +762,12 @@ components:
                 status: 422
                 code: UNNECESSARY_IDENTIFIER
                 message: The device is already identified by the access token.
+            GENERIC_422_PRIVATE_KEY_JWT_NOT_CONFIGURED:
+              description: No JWK Set configured for PRIVATE_KEY_JWT authentication
+              value:
+                status: 422
+                code: PRIVATE_KEY_JWT_NOT_CONFIGURED
+                message: No JWK Set configured for PRIVATE_KEY_JWT authentication.
             QOS_PROVISIONING_422_QOS_PROFILE_NOT_APPLICABLE:
               description: The requested QoS Profile exists but cannot be used for the QoS assignment.
               value:
