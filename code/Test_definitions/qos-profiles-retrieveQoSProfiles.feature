@@ -208,20 +208,11 @@ Feature: CAMARA QoS Profiles API, vwip - Operation retrieveQoSProfiles
     And the response property "$.code" is "INVALID_ARGUMENT"
     And the response property "$.message" contains a user friendly text
 
-  @qos_profiles_retrieveQoSProfiles_400.03_empty_request_body
-  # It happens when the request body is an empty object while at least one property is required by the schema
-  # NOTE: Recommended value for "$.message" (NOT NORMATIVE) is "Missing mandatory parameter(s)"
-  Scenario: Empty object as request body
-    Given the request body is set to {}
-    When the request "retrieveQoSProfiles" is sent
-    Then the response status code is 400
-    And the response header "x-correlator" has same value as the request header "x-correlator"
-    And the response header "Content-Type" is "application/json"
-    And the response property "$.status" is 400
-    And the response property "$.code" is "INVALID_ARGUMENT"
-    And the response property "$.message" contains a user friendly text
+  # Scenario "empty_request_body" ({} => 400) does not apply to this operation:
+  # QosProfileDeviceRequest has no required properties, so an empty object is a
+  # valid request returning all profiles (see scenario 05_not_return_restricted_profiles)
 
-  @qos_profiles_retrieveQoSProfiles_400.04_invalid_x-correlator
+  @qos_profiles_retrieveQoSProfiles_400.03_invalid_x-correlator
   Scenario: Invalid x-correlator header
     Given the header "x-correlator" does not comply with the schema at "../common/CAMARA_common.yaml#/components/schemas/XCorrelator"
     When the request "retrieveQoSProfiles" is sent
