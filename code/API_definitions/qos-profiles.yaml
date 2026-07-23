@@ -106,7 +106,7 @@ paths:
             - qos-profiles:read
       operationId: retrieveQoSProfiles
       parameters:
-        - $ref: "#/components/parameters/x-correlator"
+        - $ref: "../common/CAMARA_common.yaml#/components/parameters/x-correlator"
       requestBody:
         description: Parameters to query QoS Profiles for a given device
         content:
@@ -119,7 +119,7 @@ paths:
           description: Contains information about QoS Profiles
           headers:
             x-correlator:
-              $ref: '#/components/headers/x-correlator'
+              $ref: "../common/CAMARA_common.yaml#/components/headers/x-correlator"
           content:
             application/json:
               schema:
@@ -164,13 +164,13 @@ paths:
           required: true
           schema:
             $ref: "#/components/schemas/QosProfileName"
-        - $ref: "#/components/parameters/x-correlator"
+        - $ref: "../common/CAMARA_common.yaml#/components/parameters/x-correlator"
       responses:
         "200":
           description: Contains information about QoS Profiles
           headers:
             x-correlator:
-              $ref: '#/components/headers/x-correlator'
+              $ref: "../common/CAMARA_common.yaml#/components/headers/x-correlator"
           content:
             application/json:
               schema:
@@ -190,14 +190,6 @@ components:
   securitySchemes:
     openId:
       $ref: "../common/CAMARA_common.yaml#/components/securitySchemes/openId"
-
-  parameters:
-    x-correlator:
-      $ref: "../common/CAMARA_common.yaml#/components/parameters/x-correlator"
-
-  headers:
-    x-correlator:
-      $ref: "../common/CAMARA_common.yaml#/components/headers/x-correlator"
 
   schemas:
     QosProfile:
@@ -528,7 +520,7 @@ components:
       description: Forbidden
       headers:
         x-correlator:
-          $ref: "#/components/headers/x-correlator"
+          $ref: "../common/CAMARA_common.yaml#/components/headers/x-correlator"
       content:
         application/json:
           schema:
@@ -554,7 +546,7 @@ components:
       description: Not found
       headers:
         x-correlator:
-          $ref: "#/components/headers/x-correlator"
+          $ref: "../common/CAMARA_common.yaml#/components/headers/x-correlator"
       content:
         application/json:
           schema:
@@ -583,7 +575,7 @@ components:
       description: Unprocessable Content
       headers:
         x-correlator:
-          $ref: "#/components/headers/x-correlator"
+          $ref: "../common/CAMARA_common.yaml#/components/headers/x-correlator"
       content:
         application/json:
           schema:
