@@ -29,7 +29,7 @@ Feature: CAMARA QoS Profiles API, vwip - Operation getQosProfile
     Then the response status code is 200
     And the response header "Content-Type" is "application/json"
     And the response header "x-correlator" has same value as the request header "x-correlator"
-    And each item of the response array complies with the OAS schema at "/components/schemas/QosProfile"
+    And the response body complies with the OAS schema at "/components/schemas/QosProfile"
     And the response property "$.name" value is equal to path param "name"
     # TBC: Add additional constraints, such as max* properties must be higher than min* equivalent properties, etc
 
