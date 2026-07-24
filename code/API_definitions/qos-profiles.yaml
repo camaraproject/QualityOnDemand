@@ -18,7 +18,6 @@ info:
     How QoS profiles are mapped to connectivity characteristics are subject to agreements between the API provider and the API consumer. Within the CAMARA project, you can find a sample for such a mapping of QoS profiles. [CAMARA QoS Profiles Mapping Table (REFERENCE DRAFT)](https://github.com/camaraproject/QualityOnDemand/blob/main/documentation/API_documentation/QoSProfile_Mapping_Table.md)
 
     <!-- CAMARA:MANDATORY:authorization-and-authentication:BEGIN -->
-    
     # Authorization and authentication
 
     The "Camara Security and Interoperability Profile" provides details of how an API consumer requests an access token. Please refer to Identity and Consent Management (https://github.com/camaraproject/IdentityAndConsentManagement/) for the released version of the profile.
@@ -50,7 +49,6 @@ info:
     - Check with the SIM provider whether a unique "secondary" phone number is already associated with each device, and use the secondary phone number to identify the intended device if available
 
     <!-- CAMARA:MANDATORY:additional-error-responses:BEGIN -->
-    
     # Additional CAMARA error responses
 
     The list of error codes in this API specification is not exhaustive. Therefore the API specification MAY not document some non-mandatory error statuses as indicated in `CAMARA API Design Guide`.
@@ -61,7 +59,6 @@ info:
     <!-- CAMARA:MANDATORY:additional-error-responses:END -->
 
     <!-- CAMARA:MANDATORY:request-body-strictness:BEGIN -->
-    
     # Request body strictness
 
     This API rejects requests with JSON request bodies that contain properties not declared in this specification, at any nesting level. Unknown properties result in a `400 INVALID_ARGUMENT` response.
