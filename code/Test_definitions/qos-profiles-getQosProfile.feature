@@ -66,6 +66,7 @@ Feature: CAMARA QoS Profiles API, vwip - Operation getQosProfile
     Then the response status code is 400
     And the response property "$.status" is 400
     And the response property "$.code" is "INVALID_ARGUMENT"
+    And the response property "$.message" contains a user friendly text
 
   # Service Error scenarios
 
