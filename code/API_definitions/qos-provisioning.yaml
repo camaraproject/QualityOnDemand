@@ -41,6 +41,7 @@ info:
     <!-- CAMARA:MANDATORY:authorization-and-authentication:END -->
 
     <!-- CAMARA:MANDATORY:identifying-device-from-access-token:BEGIN -->
+
     # Identifying the device from the access token
 
     This API requires the API consumer to identify a device as the subject of the API as follows:
