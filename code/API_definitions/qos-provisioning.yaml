@@ -132,7 +132,7 @@ paths:
 
       operationId: createQosAssignment
       parameters:
-        - $ref: "#/components/parameters/x-correlator"
+        - $ref: '../common/CAMARA_common.yaml#/components/parameters/x-correlator'
       requestBody:
         description: Parameters to assign a QoS profile to a device
         content:
@@ -151,7 +151,7 @@ paths:
                 Currently only `ASSIGNMENT_STATUS_CHANGED` event is defined.
               operationId: postQosAssignmentNotification
               parameters:
-                - $ref: "#/components/parameters/x-correlator"
+                - $ref: '../common/CAMARA_common.yaml#/components/parameters/x-correlator'
               requestBody:
                 required: true
                 content:
@@ -166,17 +166,17 @@ paths:
                   description: Successful notification
                   headers:
                     x-correlator:
-                      $ref: "#/components/headers/x-correlator"
+                      $ref: '../common/CAMARA_common.yaml#/components/headers/x-correlator'
                 "400":
-                  $ref: "#/components/responses/Generic400"
+                  $ref: '../common/CAMARA_common.yaml#/components/responses/Generic400'
                 "401":
-                  $ref: "#/components/responses/Generic401"
+                  $ref: '../common/CAMARA_common.yaml#/components/responses/Generic401'
                 "403":
                   $ref: "#/components/responses/PermissionDenied403"
                 "410":
-                  $ref: "#/components/responses/Generic410"
+                  $ref: '../common/CAMARA_common.yaml#/components/responses/Generic410'
                 "429":
-                  $ref: "#/components/responses/Generic429"
+                  $ref: '../common/CAMARA_common.yaml#/components/responses/Generic429'
               security:
                 - {}
                 - notificationsBearerAuth: []
@@ -185,7 +185,7 @@ paths:
           description: Assignment created
           headers:
             x-correlator:
-              $ref: "#/components/headers/x-correlator"
+              $ref: '../common/CAMARA_common.yaml#/components/headers/x-correlator'
           content:
             application/json:
               schema:
@@ -198,7 +198,7 @@ paths:
         "400":
           $ref: "#/components/responses/CreateAssignment400"
         "401":
-          $ref: "#/components/responses/Generic401"
+          $ref: '../common/CAMARA_common.yaml#/components/responses/Generic401'
         "403":
           $ref: "#/components/responses/PermissionDenied403"
         "404":
@@ -208,7 +208,7 @@ paths:
         "422":
           $ref: "#/components/responses/CreateAssignment422"
         "429":
-          $ref: "#/components/responses/Generic429"
+          $ref: '../common/CAMARA_common.yaml#/components/responses/Generic429'
       security:
         - openId:
             - "qos-provisioning:qos-assignments:create"
@@ -228,13 +228,13 @@ paths:
       operationId: getQosAssignmentById
       parameters:
         - $ref: "#/components/parameters/assignmentId"
-        - $ref: "#/components/parameters/x-correlator"
+        - $ref: '../common/CAMARA_common.yaml#/components/parameters/x-correlator'
       responses:
         "200":
           description: Returns information about certain assignment
           headers:
             x-correlator:
-              $ref: "#/components/headers/x-correlator"
+              $ref: '../common/CAMARA_common.yaml#/components/headers/x-correlator'
           content:
             application/json:
               schema:
@@ -247,15 +247,15 @@ paths:
                 ASSIGNMENT_AVAILABLE_WITHOUT_DEVICE:
                   $ref: "#/components/examples/ASSIGNMENT_AVAILABLE_WITHOUT_DEVICE"
         "400":
-          $ref: "#/components/responses/Generic400"
+          $ref: '../common/CAMARA_common.yaml#/components/responses/Generic400'
         "401":
-          $ref: "#/components/responses/Generic401"
+          $ref: '../common/CAMARA_common.yaml#/components/responses/Generic401'
         "403":
           $ref: "#/components/responses/PermissionDenied403"
         "404":
           $ref: "#/components/responses/NotFound404"
         "429":
-          $ref: "#/components/responses/Generic429"
+          $ref: '../common/CAMARA_common.yaml#/components/responses/Generic429'
       security:
         - openId:
             - "qos-provisioning:qos-assignments:read"
@@ -279,32 +279,32 @@ paths:
       operationId: revokeQosAssignment
       parameters:
         - $ref: "#/components/parameters/assignmentId"
-        - $ref: "#/components/parameters/x-correlator"
+        - $ref: '../common/CAMARA_common.yaml#/components/parameters/x-correlator'
       responses:
         "204":
           description: Assignment revoked
           headers:
             x-correlator:
-              $ref: "#/components/headers/x-correlator"
+              $ref: '../common/CAMARA_common.yaml#/components/headers/x-correlator'
         "202":
           description: Deletion request accepted to be processed. It applies for an async deletion process. `status` in the response will be `AVAILABLE` with `statusInfo` set to `DELETE_REQUESTED`.
           headers:
             x-correlator:
-              $ref: "#/components/headers/x-correlator"
+              $ref: '../common/CAMARA_common.yaml#/components/headers/x-correlator'
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/AssignmentInfo"
         "400":
-          $ref: "#/components/responses/Generic400"
+          $ref: '../common/CAMARA_common.yaml#/components/responses/Generic400'
         "401":
-          $ref: "#/components/responses/Generic401"
+          $ref: '../common/CAMARA_common.yaml#/components/responses/Generic401'
         "403":
           $ref: "#/components/responses/PermissionDenied403"
         "404":
           $ref: "#/components/responses/NotFound404"
         "429":
-          $ref: "#/components/responses/Generic429"
+          $ref: '../common/CAMARA_common.yaml#/components/responses/Generic429'
       security:
         - openId:
             - "qos-provisioning:qos-assignments:delete"
@@ -327,7 +327,7 @@ paths:
 
       operationId: getQosAssignmentByDevice
       parameters:
-        - $ref: "#/components/parameters/x-correlator"
+        - $ref: '../common/CAMARA_common.yaml#/components/parameters/x-correlator'
       requestBody:
         description: Parameters to retrieve an assignment record by device
         content:
@@ -341,7 +341,7 @@ paths:
 
           headers:
             x-correlator:
-              $ref: "#/components/headers/x-correlator"
+              $ref: '../common/CAMARA_common.yaml#/components/headers/x-correlator'
           content:
             application/json:
               schema:
@@ -354,17 +354,17 @@ paths:
                 ASSIGNMENT_AVAILABLE_WITHOUT_DEVICE:
                   $ref: "#/components/examples/ASSIGNMENT_AVAILABLE_WITHOUT_DEVICE"
         "400":
-          $ref: "#/components/responses/Generic400"
+          $ref: '../common/CAMARA_common.yaml#/components/responses/Generic400'
         "401":
-          $ref: "#/components/responses/Generic401"
+          $ref: '../common/CAMARA_common.yaml#/components/responses/Generic401'
         "403":
           $ref: "#/components/responses/PermissionDenied403"
         "404":
           $ref: "../common/CAMARA_common.yaml#/components/responses/Generic404"
         "422":
-          $ref: "#/components/responses/Generic422"
+          $ref: '../common/CAMARA_common.yaml#/components/responses/Generic422'
         "429":
-          $ref: "#/components/responses/Generic429"
+          $ref: '../common/CAMARA_common.yaml#/components/responses/Generic429'
       security:
         - openId:
             - "qos-provisioning:qos-assignments:read-by-device"
@@ -372,14 +372,9 @@ paths:
 components:
   securitySchemes:
     openId:
-      description: OpenID Connect authentication
-      type: openIdConnect
-      openIdConnectUrl: https://example.com/.well-known/openid-configuration
+      $ref: "../common/CAMARA_common.yaml#/components/securitySchemes/openId"
     notificationsBearerAuth:
-      description: Bearer authentication for notifications
-      type: http
-      scheme: bearer
-      bearerFormat: "{$request.body#/sinkCredential.credentialType}"
+      $ref: "../common/CAMARA_event_common.yaml#/components/securitySchemes/notificationsBearerAuth"
 
   parameters:
     assignmentId:
@@ -389,13 +384,6 @@ components:
       required: true
       schema:
         $ref: "#/components/schemas/AssignmentId"
-
-    x-correlator:
-      $ref: '../common/CAMARA_common.yaml#/components/parameters/x-correlator'
-
-  headers:
-    x-correlator:
-      $ref: '../common/CAMARA_common.yaml#/components/headers/x-correlator'
 
   schemas:
     AssignmentId:
@@ -560,14 +548,11 @@ components:
         - UNAVAILABLE
 
   responses:
-    Generic400:
-      $ref: '../common/CAMARA_common.yaml#/components/responses/Generic400'
-
     CreateAssignment400:
       description: Bad Request with additional errors for implicit notifications
       headers:
         x-correlator:
-          $ref: "#/components/headers/x-correlator"
+          $ref: '../common/CAMARA_common.yaml#/components/headers/x-correlator'
       content:
         application/json:
           schema:
@@ -614,9 +599,6 @@ components:
                 status: 400
                 code: INVALID_SINK
                 message: sink not valid for the specified protocol
-
-    Generic401:
-      $ref: '../common/CAMARA_common.yaml#/components/responses/Generic401'
 
     PermissionDenied403:
       description: Forbidden
@@ -674,7 +656,7 @@ components:
       description: Assignment conflict
       headers:
         x-correlator:
-          $ref: "#/components/headers/x-correlator"
+          $ref: '../common/CAMARA_common.yaml#/components/headers/x-correlator'
       content:
         application/json:
           schema:
@@ -696,17 +678,11 @@ components:
                 code: CONFLICT
                 message: There is another existing provisioning for the same device
 
-    Generic410:
-      $ref: '../common/CAMARA_common.yaml#/components/responses/Generic410'
-
-    Generic422:
-      $ref: '../common/CAMARA_common.yaml#/components/responses/Generic422'
-
     CreateAssignment422:
       description: Unprocessable Content
       headers:
         x-correlator:
-          $ref: "#/components/headers/x-correlator"
+          $ref: '../common/CAMARA_common.yaml#/components/headers/x-correlator'
       content:
         application/json:
           schema:
@@ -762,9 +738,6 @@ components:
                 status: 422
                 code: QOS_PROVISIONING.QOS_PROFILE_NOT_APPLICABLE
                 message: The requested QoS Profile is not compatible with the QoS Provisioning service.
-
-    Generic429:
-      $ref: '../common/CAMARA_common.yaml#/components/responses/Generic429'
 
   examples:
     ASSIGNMENT_CREATION_EXAMPLE:
