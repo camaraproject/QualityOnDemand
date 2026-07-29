@@ -369,7 +369,7 @@ Feature: CAMARA Quality On Demand API, vwip - Operation createSession
     And the response property "$.message" contains a user friendly text
 
   @quality_on_demand_createSession_400.14_duplicate_values_in_application_server_list
-  Scenario: Empty application server list
+  Scenario: Duplicate values in application server list
     Given the request body property "$.applicationServer.ipAddresses" exists
     And the number of items in request body array "$.applicationServer.ipAddresses[]" is greater than 1
     And at least two items in request body array "$.applicationServer.ipAddresses[]" have the same value
