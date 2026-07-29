@@ -92,6 +92,31 @@ Feature: CAMARA Quality On Demand API, vwip - Operation createSession
     And the response body complies with the OAS schema at "/components/schemas/SessionInfo"
     And the response property "$.device" does not exist
 
+  @quality_on_demand_createSession_04_1_application_server_subnets_provided
+  Scenario: Create QoS session for application server subnets
+    Given a valid testing device supported by the service, identified by the token or provided in the request body
+    And the request body properties "$.applicationServer.ipv4Address" and/or "$.applicationServer.ipv6Address" exist and have valid values
+    And the request body property "$.applicationServer.ipAddresses" does not exist
+    And the request property "$.qosProfile" is set to a valid QoS Profile as returned by QoS Profiles API
+    And the request body property "$.duration" is set to a valid duration for the selected QoS profile
+    When the request "createSession" is sent
+    Then the response status code is 201
+
+  @quality_on_demand_createSession_04_2_application_server_list_provided
+  Scenario: Create QoS session for application server list
+    Given a valid testing device supported by the service, identified by the token or provided in the request body
+    And the request body property "$.applicationServer.ipAddresses" exists
+    And the number of items in request body array "$.applicationServer.ipAddresses[]" is greater than 0
+    And the number of items in request body array "$.applicationServer.ipAddresses[]" is less than 17
+    And each item in request body array "$.applicationServer.ipAddresses[*]" is either a valid IPv4 or valid IPv6 address
+    And each item in request body array "$.applicationServer.ipAddresses[*]" is unique with no duplicated values
+    And the request body property "$.applicationServer.ipv4Address" does not exist
+    And the request body property "$.applicationServer.ipv6Address" does not exist
+    And the request property "$.qosProfile" is set to a valid QoS Profile as returned by QoS Profiles API
+    And the request body property "$.duration" is set to a valid duration for the selected QoS profile
+    When the request "createSession" is sent
+    Then the response status code is 201
+
   # Common error scenarios for management of input parameter device
 
   @quality_on_demand_createSession_C01.01_device_empty
@@ -311,6 +336,70 @@ Feature: CAMARA Quality On Demand API, vwip - Operation createSession
     Then the response status code is 400
     And the response property "$.status" is 400
     And the response property "$.code" is "INVALID_ARGUMENT"
+    And the response property "$.message" contains a user friendly text
+
+  @quality_on_demand_createSession_400.11_invalid_application_server
+  Scenario: Invalid application server specification
+    Given the request body properties "$.applicationServer.ipv4Address" and/or "$.applicationServer.ipv6Address" exist
+    And the request body property "$.applicationServer.ipAddresses" exists
+    When the request "createSession" is sent
+    Then the response status code is 400
+    And the response property "$.status" is 400
+    And the response property "$.code" is "INVALID_ARGUMENT"
+    And the response property "$.message" contains a user friendly text
+
+  @quality_on_demand_createSession_400.12_empty_application_server_list
+  Scenario: Empty application server list
+    Given the request body property "$.applicationServer.ipAddresses" exists
+    And the number of items in request body array "$.applicationServer.ipAddresses[]" is equal to 0
+    When the request "createSession" is sent
+    Then the response status code is 400
+    And the response property "$.status" is 400
+    And the response property "$.code" is "INVALID_ARGUMENT"
+    And the response property "$.message" contains a user friendly text
+
+  @quality_on_demand_createSession_400.13_application_server_list_is_too_large
+  Scenario: Application server list is too large
+    Given the request body property "$.applicationServer.ipAddresses" exists
+    And the number of items in request body array "$.applicationServer.ipAddresses[]" is greater than 16
+    When the request "createSession" is sent
+    Then the response status code is 400
+    And the response property "$.status" is 400
+    And the response property "$.code" is "INVALID_ARGUMENT"
+    And the response property "$.message" contains a user friendly text
+
+  @quality_on_demand_createSession_400.14_duplicate_values_in_application_server_list
+  Scenario: Empty application server list
+    Given the request body property "$.applicationServer.ipAddresses" exists
+    And the number of items in request body array "$.applicationServer.ipAddresses[]" is greater than 1
+    And at least two items in request body array "$.applicationServer.ipAddresses[]" have the same value
+    When the request "createSession" is sent
+    Then the response status code is 400
+    And the response property "$.status" is 400
+    And the response property "$.code" is "INVALID_ARGUMENT"
+    And the response property "$.message" contains a user friendly text
+
+  @quality_on_demand_createSession_400.15_invalid_values_in_application_server_list
+  Scenario: Invalid values in application server list
+    Given the request body property "$.applicationServer.ipAddresses" exists
+    And the number of items in request body array "$.applicationServer.ipAddresses[]" is greater than 0
+    And at least one item in request body array "$.applicationServer.ipAddresses[*]" is not a valid single IPv4 or IPv6 address
+    When the request "createSession" is sent
+    Then the response status code is 400
+    And the response property "$.status" is 400
+    And the response property "$.code" is "INVALID_ARGUMENT"
+    And the response property "$.message" contains a user friendly text
+
+  @quality_on_demand_createSession_400.16_subnet_in_application_server_list
+  Scenario: Subnet specified in application server list
+    Given the request body property "$.applicationServer.ipAddresses" exists
+    And the number of items in request body array "$.applicationServer.ipAddresses[]" is greater than 0
+    And at least one item in request body array "$.applicationServer.ipAddresses[*]" contains the character '/'
+    When the request "createSession" is sent
+    Then the response status code is 400
+    And the response property "$.status" is 400
+    And the response property "$.code" is "INVALID_ARGUMENT"
+    And the response property "$.message" contains a user friendly text
 
   # Generic 401 errors
 
