@@ -1,7 +1,0 @@
-sources:
-- repository: Commonalities
-  release: r4.3
-  files:
-    CAMARA_common.yaml: 73895974478c1d8fffd2ba7b7a6553eec1a145b1
-    CAMARA_event_common.yaml: 42e72db4f3e8562b93b54b6182c40afb2b850d48
-    info-description-templates.yaml: 1c7928d2cf51c70b8cdea7b4e5fdbaa75f7d984b

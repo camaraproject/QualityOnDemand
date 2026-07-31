@@ -86,19 +86,13 @@ info:
 
     This API rejects requests with JSON request bodies that contain properties not declared in this specification, at any nesting level. Unknown properties result in a `400 INVALID_ARGUMENT` response.
     <!-- CAMARA:MANDATORY:request-body-strictness:END -->
-
   license:
     name: Apache 2.0
     url: https://www.apache.org/licenses/LICENSE-2.0.html
-  version: wip
+  version: 0.4.0-rc.1
   x-camara-commonalities: 0.8.0
-
-externalDocs:
-  description: Project documentation at CAMARA
-  url: https://github.com/camaraproject/QualityOnDemand
-
 servers:
-  - url: "{apiRoot}/qos-provisioning/vwip"
+  - url: '{apiRoot}/qos-provisioning/v0.4rc1'
     variables:
       apiRoot:
         default: http://localhost:9091
@@ -106,7 +100,9 @@ servers:
 tags:
   - name: QoS Assignment
     description: Manage the permanent assignment of a QoS profile to a device
-
+externalDocs:
+  description: Project documentation at CAMARA
+  url: https://github.com/camaraproject/QualityOnDemand
 paths:
   /qos-assignments:
     post:
@@ -129,20 +125,19 @@ paths:
         - The access token may be either 2-legged or 3-legged. See "Identifying the device from the access token" for further information
           - When the API is invoked using a two-legged access token, the subject will be identified from the optional `device` object, which therefore MUST be provided.
           - When a three-legged access token is used however, this optional identifier MUST NOT be provided, as the subject will be uniquely identified from the access token.
-
       operationId: createQosAssignment
       parameters:
-        - $ref: '../common/CAMARA_common.yaml#/components/parameters/x-correlator'
+        - $ref: '#/components/parameters/x-correlator'
       requestBody:
         description: Parameters to assign a QoS profile to a device
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/CreateAssignment"
+              $ref: '#/components/schemas/CreateAssignment'
         required: true
       callbacks:
         notifications:
-          "{$request.body#/sink}":
+          '{$request.body#/sink}':
             post:
               summary: Assignment notifications callback
               description: |
@@ -151,68 +146,67 @@ paths:
                 Currently only `ASSIGNMENT_STATUS_CHANGED` event is defined.
               operationId: postQosAssignmentNotification
               parameters:
-                - $ref: '../common/CAMARA_common.yaml#/components/parameters/x-correlator'
+                - $ref: '#/components/parameters/x-correlator'
               requestBody:
                 required: true
                 content:
                   application/cloudevents+json:
                     schema:
-                      $ref: "#/components/schemas/QosProvisioningNotificationEvent"
+                      $ref: '#/components/schemas/QosProvisioningNotificationEvent'
                     examples:
                       ASSIGNMENT_STATUS_CHANGED_EXAMPLE:
-                        $ref: "#/components/examples/ASSIGNMENT_STATUS_CHANGED_EXAMPLE"
+                        $ref: '#/components/examples/ASSIGNMENT_STATUS_CHANGED_EXAMPLE'
               responses:
-                "204":
+                '204':
                   description: Successful notification
                   headers:
                     x-correlator:
-                      $ref: '../common/CAMARA_common.yaml#/components/headers/x-correlator'
-                "400":
-                  $ref: '../common/CAMARA_common.yaml#/components/responses/Generic400'
-                "401":
-                  $ref: '../common/CAMARA_common.yaml#/components/responses/Generic401'
-                "403":
-                  $ref: "#/components/responses/PermissionDenied403"
-                "410":
-                  $ref: '../common/CAMARA_common.yaml#/components/responses/Generic410'
-                "429":
-                  $ref: '../common/CAMARA_common.yaml#/components/responses/Generic429'
+                      $ref: '#/components/headers/x-correlator'
+                '400':
+                  $ref: '#/components/responses/Generic400'
+                '401':
+                  $ref: '#/components/responses/Generic401'
+                '403':
+                  $ref: '#/components/responses/PermissionDenied403'
+                '410':
+                  $ref: '#/components/responses/Generic410'
+                '429':
+                  $ref: '#/components/responses/Generic429'
               security:
                 - {}
                 - notificationsBearerAuth: []
       responses:
-        "201":
+        '201':
           description: Assignment created
           headers:
             x-correlator:
-              $ref: '../common/CAMARA_common.yaml#/components/headers/x-correlator'
+              $ref: '#/components/headers/x-correlator'
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/AssignmentInfo"
+                $ref: '#/components/schemas/AssignmentInfo'
               examples:
                 Successful QoS Profile Assignment Creation:
-                  $ref: "#/components/examples/ASSIGNMENT_CREATION_EXAMPLE"
+                  $ref: '#/components/examples/ASSIGNMENT_CREATION_EXAMPLE'
                 Successful QoS Profile Assignment Creation with Device in the response:
-                  $ref: "#/components/examples/ASSIGNMENT_CREATION_EXAMPLE_WITH_DEVICE_RESPONSE"
-        "400":
-          $ref: "#/components/responses/CreateAssignment400"
-        "401":
-          $ref: '../common/CAMARA_common.yaml#/components/responses/Generic401'
-        "403":
-          $ref: "#/components/responses/PermissionDenied403"
-        "404":
-          $ref: "../common/CAMARA_common.yaml#/components/responses/Generic404"
-        "409":
-          $ref: "#/components/responses/AssignmentConflict409"
-        "422":
-          $ref: "#/components/responses/CreateAssignment422"
-        "429":
-          $ref: '../common/CAMARA_common.yaml#/components/responses/Generic429'
+                  $ref: '#/components/examples/ASSIGNMENT_CREATION_EXAMPLE_WITH_DEVICE_RESPONSE'
+        '400':
+          $ref: '#/components/responses/CreateAssignment400'
+        '401':
+          $ref: '#/components/responses/Generic401'
+        '403':
+          $ref: '#/components/responses/PermissionDenied403'
+        '404':
+          $ref: '#/components/responses/Generic404'
+        '409':
+          $ref: '#/components/responses/AssignmentConflict409'
+        '422':
+          $ref: '#/components/responses/CreateAssignment422'
+        '429':
+          $ref: '#/components/responses/Generic429'
       security:
         - openId:
-            - "qos-provisioning:qos-assignments:create"
-
+            - qos-provisioning:qos-assignments:create
   /qos-assignments/{assignmentId}:
     get:
       tags:
@@ -227,39 +221,38 @@ paths:
         - The QoS profile assignment must have been created by the same API consumer given in the access token.
       operationId: getQosAssignmentById
       parameters:
-        - $ref: "#/components/parameters/assignmentId"
-        - $ref: '../common/CAMARA_common.yaml#/components/parameters/x-correlator'
+        - $ref: '#/components/parameters/assignmentId'
+        - $ref: '#/components/parameters/x-correlator'
       responses:
-        "200":
+        '200':
           description: Returns information about certain assignment
           headers:
             x-correlator:
-              $ref: '../common/CAMARA_common.yaml#/components/headers/x-correlator'
+              $ref: '#/components/headers/x-correlator'
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/AssignmentInfo"
+                $ref: '#/components/schemas/AssignmentInfo'
               examples:
                 ASSIGNMENT_AVAILABLE:
-                  $ref: "#/components/examples/ASSIGNMENT_AVAILABLE"
+                  $ref: '#/components/examples/ASSIGNMENT_AVAILABLE'
                 ASSIGNMENT_UNAVAILABLE:
-                  $ref: "#/components/examples/ASSIGNMENT_UNAVAILABLE"
+                  $ref: '#/components/examples/ASSIGNMENT_UNAVAILABLE'
                 ASSIGNMENT_AVAILABLE_WITHOUT_DEVICE:
-                  $ref: "#/components/examples/ASSIGNMENT_AVAILABLE_WITHOUT_DEVICE"
-        "400":
-          $ref: '../common/CAMARA_common.yaml#/components/responses/Generic400'
-        "401":
-          $ref: '../common/CAMARA_common.yaml#/components/responses/Generic401'
-        "403":
-          $ref: "#/components/responses/PermissionDenied403"
-        "404":
-          $ref: "#/components/responses/NotFound404"
-        "429":
-          $ref: '../common/CAMARA_common.yaml#/components/responses/Generic429'
+                  $ref: '#/components/examples/ASSIGNMENT_AVAILABLE_WITHOUT_DEVICE'
+        '400':
+          $ref: '#/components/responses/Generic400'
+        '401':
+          $ref: '#/components/responses/Generic401'
+        '403':
+          $ref: '#/components/responses/PermissionDenied403'
+        '404':
+          $ref: '#/components/responses/NotFound404'
+        '429':
+          $ref: '#/components/responses/Generic429'
       security:
         - openId:
-            - "qos-provisioning:qos-assignments:read"
-
+            - qos-provisioning:qos-assignments:read
     delete:
       tags:
         - QoS Assignment
@@ -278,37 +271,36 @@ paths:
         - The QoS profile assignment must have been created by the same API consumer given in the access token.
       operationId: revokeQosAssignment
       parameters:
-        - $ref: "#/components/parameters/assignmentId"
-        - $ref: '../common/CAMARA_common.yaml#/components/parameters/x-correlator'
+        - $ref: '#/components/parameters/assignmentId'
+        - $ref: '#/components/parameters/x-correlator'
       responses:
-        "204":
-          description: Assignment revoked
-          headers:
-            x-correlator:
-              $ref: '../common/CAMARA_common.yaml#/components/headers/x-correlator'
-        "202":
+        '202':
           description: Deletion request accepted to be processed. It applies for an async deletion process. `status` in the response will be `AVAILABLE` with `statusInfo` set to `DELETE_REQUESTED`.
           headers:
             x-correlator:
-              $ref: '../common/CAMARA_common.yaml#/components/headers/x-correlator'
+              $ref: '#/components/headers/x-correlator'
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/AssignmentInfo"
-        "400":
-          $ref: '../common/CAMARA_common.yaml#/components/responses/Generic400'
-        "401":
-          $ref: '../common/CAMARA_common.yaml#/components/responses/Generic401'
-        "403":
-          $ref: "#/components/responses/PermissionDenied403"
-        "404":
-          $ref: "#/components/responses/NotFound404"
-        "429":
-          $ref: '../common/CAMARA_common.yaml#/components/responses/Generic429'
+                $ref: '#/components/schemas/AssignmentInfo'
+        '204':
+          description: Assignment revoked
+          headers:
+            x-correlator:
+              $ref: '#/components/headers/x-correlator'
+        '400':
+          $ref: '#/components/responses/Generic400'
+        '401':
+          $ref: '#/components/responses/Generic401'
+        '403':
+          $ref: '#/components/responses/PermissionDenied403'
+        '404':
+          $ref: '#/components/responses/NotFound404'
+        '429':
+          $ref: '#/components/responses/Generic429'
       security:
         - openId:
-            - "qos-provisioning:qos-assignments:delete"
-
+            - qos-provisioning:qos-assignments:delete
   /retrieve-qos-assignment:
     post:
       tags:
@@ -324,58 +316,61 @@ paths:
         - The QoS profile assignment must have been created by the same API consumer given in the access token.
         - If no QoS profile assignment is found for the device, an error response 404 is returned with code "NOT_FOUND".
         - This call uses the POST method instead of GET to comply with the [CAMARA Commonalities guidelines](https://github.com/camaraproject/Commonalities/blob/r3.3/documentation/CAMARA-API-Design-Guide.md#65-post-or-get-for-transferring-sensitive-or-complex-data) for sending sensitive or complex data in API calls. Since the device field may contain personally identifiable information, it should not be sent via GET.
-
       operationId: getQosAssignmentByDevice
       parameters:
-        - $ref: '../common/CAMARA_common.yaml#/components/parameters/x-correlator'
+        - $ref: '#/components/parameters/x-correlator'
       requestBody:
         description: Parameters to retrieve an assignment record by device
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/RetrieveAssignmentByDevice"
+              $ref: '#/components/schemas/RetrieveAssignmentByDevice'
         required: true
       responses:
-        "200":
+        '200':
           description: Returns information about the QoS profile assignment for the device.
-
           headers:
             x-correlator:
-              $ref: '../common/CAMARA_common.yaml#/components/headers/x-correlator'
+              $ref: '#/components/headers/x-correlator'
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/AssignmentInfo"
+                $ref: '#/components/schemas/AssignmentInfo'
               examples:
                 ASSIGNMENT_AVAILABLE:
-                  $ref: "#/components/examples/ASSIGNMENT_AVAILABLE"
+                  $ref: '#/components/examples/ASSIGNMENT_AVAILABLE'
                 ASSIGNMENT_UNAVAILABLE:
-                  $ref: "#/components/examples/ASSIGNMENT_UNAVAILABLE"
+                  $ref: '#/components/examples/ASSIGNMENT_UNAVAILABLE'
                 ASSIGNMENT_AVAILABLE_WITHOUT_DEVICE:
-                  $ref: "#/components/examples/ASSIGNMENT_AVAILABLE_WITHOUT_DEVICE"
-        "400":
-          $ref: '../common/CAMARA_common.yaml#/components/responses/Generic400'
-        "401":
-          $ref: '../common/CAMARA_common.yaml#/components/responses/Generic401'
-        "403":
-          $ref: "#/components/responses/PermissionDenied403"
-        "404":
-          $ref: "../common/CAMARA_common.yaml#/components/responses/Generic404"
-        "422":
-          $ref: '../common/CAMARA_common.yaml#/components/responses/Generic422'
-        "429":
-          $ref: '../common/CAMARA_common.yaml#/components/responses/Generic429'
+                  $ref: '#/components/examples/ASSIGNMENT_AVAILABLE_WITHOUT_DEVICE'
+        '400':
+          $ref: '#/components/responses/Generic400'
+        '401':
+          $ref: '#/components/responses/Generic401'
+        '403':
+          $ref: '#/components/responses/PermissionDenied403'
+        '404':
+          $ref: '#/components/responses/Generic404'
+        '422':
+          $ref: '#/components/responses/Generic422'
+        '429':
+          $ref: '#/components/responses/Generic429'
       security:
         - openId:
-            - "qos-provisioning:qos-assignments:read-by-device"
-
+            - qos-provisioning:qos-assignments:read-by-device
 components:
   securitySchemes:
     openId:
-      $ref: "../common/CAMARA_common.yaml#/components/securitySchemes/openId"
+      type: openIdConnect
+      openIdConnectUrl: https://example.com/.well-known/openid-configuration
+      description: OpenID Connect authentication via discovery metadata.
     notificationsBearerAuth:
-      $ref: "../common/CAMARA_event_common.yaml#/components/securitySchemes/notificationsBearerAuth"
-
+      type: http
+      scheme: bearer
+      bearerFormat: '{$request.body#/sinkCredential.credentialType}'
+      description: |
+        Bearer token for notification delivery. Token format is determined
+        by `sinkCredential.credentialType` in the subscription request.
   parameters:
     assignmentId:
       name: assignmentId
@@ -383,81 +378,80 @@ components:
       description: Identifier of the assignment record for the QoS profile assignment, that was created by the `createQosAssignment` operation
       required: true
       schema:
-        $ref: "#/components/schemas/AssignmentId"
-
+        $ref: '#/components/schemas/AssignmentId'
+    x-correlator:
+      name: x-correlator
+      in: header
+      description: Correlation id for the different services
+      schema:
+        $ref: '#/components/schemas/XCorrelator'
   schemas:
     AssignmentId:
       description: Identifier of the assignment record for the QoS profile assignment, that was created by the `createQosAssignment` operation
       type: string
       format: uuid
       maxLength: 36
-
     BaseAssignmentInfo:
       description: Common attributes of the assignment record for a QoS profile assignment
       type: object
       properties:
         device:
-          $ref: '../common/CAMARA_common.yaml#/components/schemas/Device'
+          $ref: '#/components/schemas/Device'
         qosProfile:
-          $ref: "#/components/schemas/QosProfileName"
+          $ref: '#/components/schemas/QosProfileName'
         sink:
           type: string
           format: uri
           maxLength: 2048
           pattern: ^https:\/\/.+$
           description: The address to which events shall be delivered using the selected protocol.
-          example: "https://endpoint.example.com/sink"
+          example: https://endpoint.example.com/sink
         sinkCredential:
-          $ref: '../common/CAMARA_event_common.yaml#/components/schemas/SinkCredential'
+          $ref: '#/components/schemas/SinkCredential'
       required:
         - qosProfile
-
     AssignmentInfo:
       description: |
         Information about a QoS profile assignment returned in responses.
         Optional device object only to be returned if provided in `createQosAssignment`. If more than one type of device identifier was provided, only one identifier will be returned (at implementation choice and with the original value provided in assignQosProfile).
         Please note that IP addresses of devices can change and get reused, so the original values may no longer identify the same device. They identified the device at the time the QoS profile assignment was created.
-
       allOf:
         - type: object
           properties:
             device:
-              $ref: '../common/CAMARA_common.yaml#/components/schemas/DeviceResponse'
-        - $ref: "#/components/schemas/BaseAssignmentInfo"
+              $ref: '#/components/schemas/DeviceResponse'
+        - $ref: '#/components/schemas/BaseAssignmentInfo'
         - type: object
           properties:
             assignmentId:
-              $ref: "#/components/schemas/AssignmentId"
+              $ref: '#/components/schemas/AssignmentId'
             startedAt:
               description: Date and time when the QoS profile assignment became "AVAILABLE". Not to be returned when `status` is "REQUESTED". It must follow [RFC 3339](https://datatracker.ietf.org/doc/html/rfc3339#section-5.6) and must have time zone.
               type: string
               format: date-time
               maxLength: 64
-              example: "2024-06-01T12:00:00Z"
+              example: '2024-06-01T12:00:00Z'
             status:
-              $ref: "#/components/schemas/Status"
+              $ref: '#/components/schemas/Status'
             statusInfo:
-              $ref: "#/components/schemas/StatusInfo"
+              $ref: '#/components/schemas/StatusInfo'
           required:
             - assignmentId
             - status
-
     CreateAssignment:
       description: Attributes to request a new QoS profile assignment
       allOf:
         - type: object
           properties:
             device:
-              $ref: '../common/CAMARA_common.yaml#/components/schemas/Device'
-        - $ref: "#/components/schemas/BaseAssignmentInfo"
-
+              $ref: '#/components/schemas/Device'
+        - $ref: '#/components/schemas/BaseAssignmentInfo'
     RetrieveAssignmentByDevice:
       description: Attributes to look for a QoS profile assignment
       type: object
       properties:
         device:
-          $ref: '../common/CAMARA_common.yaml#/components/schemas/Device'
-
+          $ref: '#/components/schemas/Device'
     QosProfileName:
       description: |
         A unique name for identifying a specific QoS profile.
@@ -471,31 +465,28 @@ components:
       example: QCI_1_voice
       minLength: 3
       maxLength: 256
-      pattern: "^[a-zA-Z0-9_.-]+$"
-
+      pattern: ^[a-zA-Z0-9_.-]+$
     QosProvisioningEventType:
       description: The type identifier for QoS provisioning status-change events.
       type: string
       enum:
-        - "org.camaraproject.qos-provisioning.v0.status-changed"
-
+        - org.camaraproject.qos-provisioning.v0.status-changed
     QosProvisioningNotificationEvent:
       description: Event compliant with the CloudEvents specification
       allOf:
-        - $ref: '../common/CAMARA_event_common.yaml#/components/schemas/CloudEvent'
+        - $ref: '#/components/schemas/CloudEvent'
         - type: object
           properties:
             type:
               $ref: '#/components/schemas/QosProvisioningEventType'
       discriminator:
-        propertyName: "type"
+        propertyName: type
         mapping:
-          org.camaraproject.qos-provisioning.v0.status-changed: "#/components/schemas/EventStatusChanged"
-
+          org.camaraproject.qos-provisioning.v0.status-changed: '#/components/schemas/EventStatusChanged'
     EventStatusChanged:
       description: Event to notify a QoS provisioning status change
       allOf:
-        - $ref: "#/components/schemas/QosProvisioningNotificationEvent"
+        - $ref: '#/components/schemas/QosProvisioningNotificationEvent'
         - type: object
           properties:
             data:
@@ -506,25 +497,22 @@ components:
                 - status
               properties:
                 assignmentId:
-                  $ref: "#/components/schemas/AssignmentId"
+                  $ref: '#/components/schemas/AssignmentId'
                 status:
-                  $ref: "#/components/schemas/StatusChanged"
+                  $ref: '#/components/schemas/StatusChanged'
                 statusInfo:
-                  $ref: "#/components/schemas/StatusInfo"
+                  $ref: '#/components/schemas/StatusInfo'
           required:
             - data
-
     StatusInfo:
       description: |
         Reason for the new `status`:
         * `NETWORK_TERMINATED` - Network terminated the QoS profile assignment
         * `DELETE_REQUESTED` - User requested the deletion of the QoS profile assignment
-
       type: string
       enum:
         - NETWORK_TERMINATED
         - DELETE_REQUESTED
-
     Status:
       description: |
         The current status of the requested QoS profile assignment. The status can be one of the following:
@@ -536,7 +524,6 @@ components:
         - REQUESTED
         - AVAILABLE
         - UNAVAILABLE
-
     StatusChanged:
       description: |
         The current status of a requested or previously available QoS profile assignment. Applicable values in the event are:
@@ -546,18 +533,271 @@ components:
       enum:
         - AVAILABLE
         - UNAVAILABLE
+    XCorrelator:
+      type: string
+      description: Correlator string, UUID format recommended but any string matching the pattern can be used
+      pattern: ^[a-zA-Z0-9-_:;.\/<>{}]{0,256}$
+      maxLength: 256
+      example: b4333c46-49c0-4f62-80d7-f0ef930f1c46
+    PhoneNumber:
+      description: A public identifier addressing a telephone subscription. In mobile networks it corresponds to the MSISDN (Mobile Station International Subscriber Directory Number). In order to be globally unique it has to be formatted in international format, according to E.164 standard, prefixed with '+'.
+      type: string
+      pattern: ^\+[1-9][0-9]{4,14}$
+      maxLength: 16
+      example: '+123456789'
+    NetworkAccessIdentifier:
+      description: A public identifier addressing a subscription in a mobile network. In 3GPP terminology, it corresponds to the GPSI formatted with the External Identifier ({Local Identifier}@{Domain Identifier}). Unlike the telephone number, the network access identifier is not subjected to portability ruling in force, and is individually managed by each operator.
+      type: string
+      maxLength: 2048
+      example: 123456789@example.com
+    SingleIpv4Address:
+      description: A single IPv4 address with no subnet mask
+      type: string
+      format: ipv4
+      maxLength: 15
+      example: 84.125.93.10
+    Port:
+      description: TCP or UDP port number
+      type: integer
+      format: int32
+      minimum: 1
+      maximum: 65535
+    DeviceIpv4Address:
+      type: object
+      description: |
+        The device should be identified by either the public (observed) IP address and port as seen by the application server, or the private (local) and any public (observed) IP addresses in use by the device (this information can be obtained by various means, for example from some DNS servers).
 
+        If the allocated and observed IP addresses are the same (i.e. NAT is not in use) then  the same address should be specified for both publicAddress and privateAddress.
+
+        If NAT64 is in use, the device should be identified by its publicAddress and publicPort, or separately by its allocated IPv6 address (field ipv6Address of the Device object)
+
+        In all cases, publicAddress must be specified, along with at least one of either privateAddress or publicPort, dependent upon which is known. In general, mobile devices cannot be identified by their public IPv4 address alone.
+      properties:
+        publicAddress:
+          $ref: '#/components/schemas/SingleIpv4Address'
+        privateAddress:
+          $ref: '#/components/schemas/SingleIpv4Address'
+        publicPort:
+          $ref: '#/components/schemas/Port'
+      anyOf:
+        - required:
+            - publicAddress
+            - privateAddress
+        - required:
+            - publicAddress
+            - publicPort
+      example:
+        publicAddress: 84.125.93.10
+        publicPort: 59765
+    DeviceIpv6Address:
+      description: |
+        The device should be identified by the observed IPv6 address, or by any single IPv6 address from within the subnet allocated to the device (e.g. adding ::0 to the /64 prefix).
+      type: string
+      format: ipv6
+      maxLength: 45
+      example: 2001:db8:85a3:8d3:1319:8a2e:370:7344
+    Device:
+      description: |
+        End-user equipment able to connect to a mobile network. Examples of devices include smartphones or IoT sensors/actuators.
+            The developer can choose to provide the below specified device identifiers:
+            * `ipv4Address`
+            * `ipv6Address`
+            * `phoneNumber`
+            * `networkAccessIdentifier`
+            NOTE1: the network operator might support only a subset of these options. The API Consumer can provide multiple identifiers to ensure compatibility across different network operators. In this case, the API Provider will use one of the identifiers for the API logic without performing any matching checks among the provided identifiers.
+            NOTE2: as for this Commonalities release, we are enforcing that the networkAccessIdentifier is only part of the schema for future-proofing, and CAMARA does not currently allow its use. After the CAMARA meta-release work is concluded and the relevant issues are resolved, its use will need to be explicitly documented in the guidelines.
+      type: object
+      properties:
+        phoneNumber:
+          $ref: '#/components/schemas/PhoneNumber'
+        networkAccessIdentifier:
+          $ref: '#/components/schemas/NetworkAccessIdentifier'
+        ipv4Address:
+          $ref: '#/components/schemas/DeviceIpv4Address'
+        ipv6Address:
+          $ref: '#/components/schemas/DeviceIpv6Address'
+      minProperties: 1
+    SinkCredential:
+      description: A sink credential provides authentication or authorization information necessary to enable delivery of events to a target.
+      type: object
+      properties:
+        credentialType:
+          type: string
+          enum:
+            - ACCESSTOKEN
+            - PRIVATE_KEY_JWT
+          description: |
+            The type of the credential - MUST be set to ACCESSTOKEN or PRIVATE_KEY_JWT for now
+      discriminator:
+        propertyName: credentialType
+        mapping:
+          ACCESSTOKEN: '#/components/schemas/AccessTokenCredential'
+          PRIVATE_KEY_JWT: '#/components/schemas/PrivateKeyJWTCredential'
+      required:
+        - credentialType
+    AccessTokenCredential:
+      type: object
+      description: An access token credential. This type of credential is meant to be used by API Consumers that have limited capabilities to handle authorization requests.
+      allOf:
+        - $ref: '#/components/schemas/SinkCredential'
+        - type: object
+          properties:
+            accessToken:
+              description: REQUIRED. An access token is a token granting access to the target resource.
+              type: string
+              maxLength: 4096
+              writeOnly: true
+            accessTokenExpiresUtc:
+              type: string
+              format: date-time
+              maxLength: 64
+              description: |
+                REQUIRED. An absolute (UTC) timestamp at which the token shall be considered expired.
+                In the case of an ACCESS_TOKEN_EXPIRED termination reason, implementation should notify the client before the expiration date.
+                If the access token is a JWT and registered "exp" (Expiration Time) claim is present, the two expiry times should match.
+                It must follow [RFC 3339](https://datatracker.ietf.org/doc/html/rfc3339#section-5.6) and must have time zone.
+              example: '2023-07-03T12:27:08.312Z'
+            accessTokenType:
+              description: REQUIRED. Type of the access token (See [OAuth 2.0](https://tools.ietf.org/html/rfc6749#section-7.1)).
+              type: string
+              writeOnly: true
+              enum:
+                - bearer
+          required:
+            - accessToken
+            - accessTokenExpiresUtc
+            - accessTokenType
+    PrivateKeyJWTCredential:
+      type: object
+      description: Use PRIVATE_KEY_JWT to get an access token. This type of credential is to be used by clients that have an authorization server.
+      allOf:
+        - $ref: '#/components/schemas/SinkCredential'
+        - type: object
+          properties:
+            clientId:
+              description: The client ID used to authenticate when requesting an access token using PRIVATE_KEY_JWT.
+              type: string
+              maxLength: 128
+              writeOnly: true
+            tokenUri:
+              description: The URI where to request an access token using PRIVATE_KEY_JWT.
+              type: string
+              format: uri
+              maxLength: 2048
+              pattern: ^https:\/\/.+$
+              writeOnly: true
+            jwksUri:
+              description: The URI used to request the public key to verify that the JWT assertion was signed by PRIVATE_KEY_JWT.
+              type: string
+              format: uri
+              maxLength: 2048
+              pattern: ^https:\/\/.+$
+              readOnly: true
+    DeviceResponse:
+      description: |
+        An identifier for the end-user equipment able to connect to the network that the response refers to. This parameter is only returned when the API consumer includes the `device` parameter in their request (i.e. they are using a two-legged access token), and is relevant when more than one device identifier is specified, as only one of those device identifiers is allowed in the response.
+
+        If the API consumer provides more than one device identifier in their request, and this schema is included in the response definition, the API provider MUST use it to return a single identifier which is the one they are using to fulfil the request, even if the identifiers do not match the same device. API provider does not perform any logic to validate/correlate that the indicated device identifiers match the same device. No error should be returned if the identifiers are otherwise valid to prevent API consumers correlating different identifiers with a given end user.
+      allOf:
+        - $ref: '#/components/schemas/Device'
+        - maxProperties: 1
+    ErrorInfo:
+      type: object
+      description: A structured error response providing details about a failed request, including the HTTP status code, an error code, and a human-readable message
+      required:
+        - status
+        - code
+        - message
+      properties:
+        status:
+          type: integer
+          format: int32
+          minimum: 100
+          maximum: 599
+          description: HTTP response status code
+        code:
+          type: string
+          maxLength: 96
+          description: A human-readable code to describe the error
+        message:
+          type: string
+          maxLength: 512
+          description: A human-readable description of what the event represents
+    Source:
+      type: string
+      format: uri-reference
+      minLength: 1
+      maxLength: 2048
+      description: |
+        Identifies the context in which an event happened - be a non-empty `URI-reference` like:
+        - URI with a DNS authority:
+          * https://github.com/cloudevents
+          * mailto:cncf-wg-serverless@lists.cncf.io
+        - Universally-unique URN with a UUID:
+          * urn:uuid:6e8bc430-9c3a-11d9-9669-0800200c9a66
+        - Application-specific identifier:
+          * /cloudevents/spec/pull/123
+          * 1-555-123-4567
+      example: https://notificationSendServer12.example.com
+    DateTime:
+      type: string
+      format: date-time
+      maxLength: 64
+      description: Timestamp. It must follow [RFC 3339](https://datatracker.ietf.org/doc/html/rfc3339#section-5.6) and must have time zone.
+      example: '2018-04-05T17:31:00Z'
+    CloudEvent:
+      type: object
+      description: |
+        CloudEvents 1.0 specification envelope.
+        This schema is the stable base for all CAMARA event notifications.
+        It imposes no constraints on `type` values or `data` structure —
+        those concerns belong to the API-specific and lifecycle group schemas.
+      required:
+        - id
+        - source
+        - specversion
+        - type
+        - time
+      properties:
+        id:
+          type: string
+          maxLength: 256
+          description: Identifier of this event, unique within the source context.
+        source:
+          $ref: '#/components/schemas/Source'
+        type:
+          type: string
+          maxLength: 512
+          description: |
+            Identifies the event type. CAMARA APIs use reverse-DNS notation:
+            `org.camaraproject.<api-name>.<event-version>.<event-name>`
+            The api-name segment makes each type globally unique across API groups.
+        specversion:
+          type: string
+          description: Version of the specification to which this event conforms (must be 1.0 if it conforms to cloudevents 1.0.2 version)
+          enum:
+            - '1.0'
+        datacontenttype:
+          type: string
+          description: media-type that describes the event payload encoding, must be "application/json" for CAMARA APIs
+          enum:
+            - application/json
+        data:
+          type: object
+          description: Event details payload. Structure is defined by each concrete event schema.
+        time:
+          $ref: '#/components/schemas/DateTime'
   responses:
     CreateAssignment400:
       description: Bad Request with additional errors for implicit notifications
       headers:
         x-correlator:
-          $ref: '../common/CAMARA_common.yaml#/components/headers/x-correlator'
+          $ref: '#/components/headers/x-correlator'
       content:
         application/json:
           schema:
             allOf:
-              - $ref: '../common/CAMARA_common.yaml#/components/schemas/ErrorInfo'
+              - $ref: '#/components/schemas/ErrorInfo'
               - type: object
                 properties:
                   status:
@@ -599,17 +839,16 @@ components:
                 status: 400
                 code: INVALID_SINK
                 message: sink not valid for the specified protocol
-
     PermissionDenied403:
       description: Forbidden
       headers:
         x-correlator:
-          $ref: '../common/CAMARA_common.yaml#/components/headers/x-correlator'
+          $ref: '#/components/headers/x-correlator'
       content:
         application/json:
           schema:
             allOf:
-              - $ref: '../common/CAMARA_common.yaml#/components/schemas/ErrorInfo'
+              - $ref: '#/components/schemas/ErrorInfo'
               - type: object
                 properties:
                   status:
@@ -625,17 +864,16 @@ components:
                 status: 403
                 code: PERMISSION_DENIED
                 message: Client does not have sufficient permissions to perform this action.
-
     NotFound404:
       description: Not found
       headers:
         x-correlator:
-          $ref: '../common/CAMARA_common.yaml#/components/headers/x-correlator'
+          $ref: '#/components/headers/x-correlator'
       content:
         application/json:
           schema:
             allOf:
-              - $ref: '../common/CAMARA_common.yaml#/components/schemas/ErrorInfo'
+              - $ref: '#/components/schemas/ErrorInfo'
               - type: object
                 properties:
                   status:
@@ -651,17 +889,16 @@ components:
                 status: 404
                 code: NOT_FOUND
                 message: The specified resource is not found.
-
     AssignmentConflict409:
       description: Assignment conflict
       headers:
         x-correlator:
-          $ref: '../common/CAMARA_common.yaml#/components/headers/x-correlator'
+          $ref: '#/components/headers/x-correlator'
       content:
         application/json:
           schema:
             allOf:
-              - $ref: '../common/CAMARA_common.yaml#/components/schemas/ErrorInfo'
+              - $ref: '#/components/schemas/ErrorInfo'
               - type: object
                 properties:
                   status:
@@ -677,17 +914,16 @@ components:
                 status: 409
                 code: CONFLICT
                 message: There is another existing provisioning for the same device
-
     CreateAssignment422:
       description: Unprocessable Content
       headers:
         x-correlator:
-          $ref: '../common/CAMARA_common.yaml#/components/headers/x-correlator'
+          $ref: '#/components/headers/x-correlator'
       content:
         application/json:
           schema:
             allOf:
-              - $ref: '../common/CAMARA_common.yaml#/components/schemas/ErrorInfo'
+              - $ref: '#/components/schemas/ErrorInfo'
               - type: object
                 properties:
                   status:
@@ -738,7 +974,198 @@ components:
                 status: 422
                 code: QOS_PROVISIONING.QOS_PROFILE_NOT_APPLICABLE
                 message: The requested QoS Profile is not compatible with the QoS Provisioning service.
-
+    Generic401:
+      description: Unauthorized
+      headers:
+        x-correlator:
+          $ref: '#/components/headers/x-correlator'
+      content:
+        application/json:
+          schema:
+            allOf:
+              - $ref: '#/components/schemas/ErrorInfo'
+              - type: object
+                properties:
+                  status:
+                    enum:
+                      - 401
+                  code:
+                    enum:
+                      - UNAUTHENTICATED
+          examples:
+            GENERIC_401_UNAUTHENTICATED:
+              description: Request cannot be authenticated and a new authentication is required
+              value:
+                status: 401
+                code: UNAUTHENTICATED
+                message: Request not authenticated due to missing, invalid, or expired credentials. A new authentication is required.
+    Generic404:
+      description: Not found
+      headers:
+        x-correlator:
+          $ref: '#/components/headers/x-correlator'
+      content:
+        application/json:
+          schema:
+            allOf:
+              - $ref: '#/components/schemas/ErrorInfo'
+              - type: object
+                properties:
+                  status:
+                    enum:
+                      - 404
+                  code:
+                    enum:
+                      - NOT_FOUND
+                      - IDENTIFIER_NOT_FOUND
+          examples:
+            GENERIC_404_NOT_FOUND:
+              description: Resource is not found
+              value:
+                status: 404
+                code: NOT_FOUND
+                message: The specified resource is not found.
+            GENERIC_404_IDENTIFIER_NOT_FOUND:
+              description: Some identifier cannot be matched to a device
+              value:
+                status: 404
+                code: IDENTIFIER_NOT_FOUND
+                message: Device identifier not found.
+    Generic429:
+      description: Too Many Requests
+      headers:
+        x-correlator:
+          $ref: '#/components/headers/x-correlator'
+      content:
+        application/json:
+          schema:
+            allOf:
+              - $ref: '#/components/schemas/ErrorInfo'
+              - type: object
+                properties:
+                  status:
+                    enum:
+                      - 429
+                  code:
+                    enum:
+                      - QUOTA_EXCEEDED
+                      - TOO_MANY_REQUESTS
+          examples:
+            GENERIC_429_QUOTA_EXCEEDED:
+              description: Request is rejected due to exceeding a business quota limit
+              value:
+                status: 429
+                code: QUOTA_EXCEEDED
+                message: Out of resource quota.
+            GENERIC_429_TOO_MANY_REQUESTS:
+              description: Access to the API has been temporarily blocked due to rate or spike arrest limits being reached
+              value:
+                status: 429
+                code: TOO_MANY_REQUESTS
+                message: Rate limit reached.
+    Generic400:
+      description: Bad Request
+      headers:
+        x-correlator:
+          $ref: '#/components/headers/x-correlator'
+      content:
+        application/json:
+          schema:
+            allOf:
+              - $ref: '#/components/schemas/ErrorInfo'
+              - type: object
+                properties:
+                  status:
+                    enum:
+                      - 400
+                  code:
+                    enum:
+                      - INVALID_ARGUMENT
+                      - OUT_OF_RANGE
+          examples:
+            GENERIC_400_INVALID_ARGUMENT:
+              description: Invalid Argument. Generic Syntax Exception
+              value:
+                status: 400
+                code: INVALID_ARGUMENT
+                message: Client specified an invalid argument, request body or query param.
+            GENERIC_400_OUT_OF_RANGE:
+              description: Out of Range. Specific Syntax Exception used when a given field has a pre-defined range or a invalid filter criteria combination is requested
+              value:
+                status: 400
+                code: OUT_OF_RANGE
+                message: Client specified an invalid range.
+    Generic410:
+      description: Gone
+      headers:
+        x-correlator:
+          $ref: '#/components/headers/x-correlator'
+      content:
+        application/json:
+          schema:
+            allOf:
+              - $ref: '#/components/schemas/ErrorInfo'
+              - type: object
+                properties:
+                  status:
+                    enum:
+                      - 410
+                  code:
+                    enum:
+                      - GONE
+          examples:
+            GENERIC_410_GONE:
+              description: Use in notifications flow to allow API Consumer to indicate that its callback is no longer available
+              value:
+                status: 410
+                code: GONE
+                message: Access to the target resource is no longer available.
+    Generic422:
+      description: Unprocessable Content
+      headers:
+        x-correlator:
+          $ref: '#/components/headers/x-correlator'
+      content:
+        application/json:
+          schema:
+            allOf:
+              - $ref: '#/components/schemas/ErrorInfo'
+              - type: object
+                properties:
+                  status:
+                    enum:
+                      - 422
+                  code:
+                    enum:
+                      - SERVICE_NOT_APPLICABLE
+                      - MISSING_IDENTIFIER
+                      - UNSUPPORTED_IDENTIFIER
+                      - UNNECESSARY_IDENTIFIER
+          examples:
+            GENERIC_422_SERVICE_NOT_APPLICABLE:
+              description: Service not applicable for the provided identifier
+              value:
+                status: 422
+                code: SERVICE_NOT_APPLICABLE
+                message: The service is not available for the provided identifier.
+            GENERIC_422_MISSING_IDENTIFIER:
+              description: An identifier is not included in the request and the device or phone number identification cannot be derived from the 3-legged access token
+              value:
+                status: 422
+                code: MISSING_IDENTIFIER
+                message: The device cannot be identified.
+            GENERIC_422_UNSUPPORTED_IDENTIFIER:
+              description: None of the provided identifiers is supported by the implementation
+              value:
+                status: 422
+                code: UNSUPPORTED_IDENTIFIER
+                message: The identifier provided is not supported.
+            GENERIC_422_UNNECESSARY_IDENTIFIER:
+              description: An explicit identifier is provided when a device or phone number has already been identified from the access token
+              value:
+                status: 422
+                code: UNNECESSARY_IDENTIFIER
+                message: The device is already identified by the access token.
   examples:
     ASSIGNMENT_CREATION_EXAMPLE:
       summary: Successful assignment creation without device in the assignment details
@@ -748,35 +1175,32 @@ components:
         sink: https://application-server.com/callback
         assignmentId: 3fa85f64-5717-4562-b3fc-2c963f66afa6
         status: REQUESTED
-
     ASSIGNMENT_CREATION_EXAMPLE_WITH_DEVICE_RESPONSE:
       summary: Successful assignment creation with device in the assignment details
       description: Example response after a new QoS profile assignment has been created using a 2-legged access token with multiple device identifiers, or possibly only a single device identifier
       value:
         device:
-          phoneNumber: "+123456789"
+          phoneNumber: '+123456789'
         qosProfile: QOS_L
         sink: https://application-server.com/callback
         assignmentId: 3fa85f64-5717-4562-b3fc-2c963f66afa6
         status: REQUESTED
-
     ASSIGNMENT_AVAILABLE:
       summary: QoS assignment status is available with device in the assignment details
       description: The QoS profile assignment has become available, and the device to which the assignment applies is included in the assignment details
       value:
         device:
-          phoneNumber: "+123456789"
+          phoneNumber: '+123456789'
         qosProfile: QOS_L
         sink: https://application-server.com/callback
         sinkCredential:
           credentialType: ACCESSTOKEN
-          accessToken: "eyJhbGciOiJIUzI1NiIsInR..."
-          accessTokenExpiresUtc: "2024-12-01T12:00:00Z"
+          accessToken: eyJhbGciOiJIUzI1NiIsInR...
+          accessTokenExpiresUtc: '2024-12-01T12:00:00Z'
           accessTokenType: bearer
         assignmentId: 3fa85f64-5717-4562-b3fc-2c963f66afa6
-        startedAt: "2024-05-12T17:32:01Z"
+        startedAt: '2024-05-12T17:32:01Z'
         status: AVAILABLE
-
     ASSIGNMENT_UNAVAILABLE:
       summary: QoD provisioning status is unavailable
       description: The asssignment could not be created or is not active anymore
@@ -785,14 +1209,13 @@ components:
         sink: https://application-server.com/callback
         sinkCredential:
           credentialType: ACCESSTOKEN
-          accessToken: "eyJhbGciOiJIUzI1NiIsInR..."
-          accessTokenExpiresUtc: "2024-12-01T12:00:00Z"
+          accessToken: eyJhbGciOiJIUzI1NiIsInR...
+          accessTokenExpiresUtc: '2024-12-01T12:00:00Z'
           accessTokenType: bearer
         assignmentId: 3fa85f64-5717-4562-b3fc-2c963f66afa6
-        startedAt: "2024-05-12T17:32:01Z"
+        startedAt: '2024-05-12T17:32:01Z'
         status: UNAVAILABLE
         statusInfo: NETWORK_TERMINATED
-
     ASSIGNMENT_AVAILABLE_WITHOUT_DEVICE:
       summary: QoS assignment status is available
       description: Device is optional in responses and must not be provided if it was not provided in the request
@@ -801,23 +1224,27 @@ components:
         sink: https://application-server.com/callback
         sinkCredential:
           credentialType: ACCESSTOKEN
-          accessToken: "eyJhbGciOiJIUzI1NiIsInR..."
-          accessTokenExpiresUtc: "2024-12-01T12:00:00Z"
+          accessToken: eyJhbGciOiJIUzI1NiIsInR...
+          accessTokenExpiresUtc: '2024-12-01T12:00:00Z'
           accessTokenType: bearer
         assignmentId: 3fa85f64-5717-4562-b3fc-2c963f66afa6
-        startedAt: "2024-05-12T17:32:01Z"
+        startedAt: '2024-05-12T17:32:01Z'
         status: AVAILABLE
-
     ASSIGNMENT_STATUS_CHANGED_EXAMPLE:
       description: Assignment status changed
       summary: Cloud event example for QoD assignment status change to UNAVAILABLE due to NETWORK_TERMINATED
       value:
         id: 83a0d986-0866-4f38-b8c0-fc65bfcda452
         source: https://api.example.com/qos-provisioning/v0.4/qos-assignments/123e4567-e89b-12d3-a456-426614174000
-        specversion: "1.0"
+        specversion: '1.0'
         type: org.camaraproject.qos-provisioning.v0.status-changed
-        time: "2021-12-12T00:00:00Z"
+        time: '2021-12-12T00:00:00Z'
         data:
           assignmentId: 123e4567-e89b-12d3-a456-426614174000
           status: UNAVAILABLE
           statusInfo: NETWORK_TERMINATED
+  headers:
+    x-correlator:
+      description: Correlation id for the different services
+      schema:
+        $ref: '#/components/schemas/XCorrelator'
