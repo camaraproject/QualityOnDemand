@@ -101,11 +101,18 @@ Changes documented below are compared to version 1.1.0.
 
 ### Changed
 
-* N/A
+* Aligned the API and its test definitions with CAMARA Commonalities r4.3 (0.8.0) by @RandyLevensalor in https://github.com/camaraproject/QualityOnDemand/pull/575
+  * Common definitions are reused via `$ref` into `code/common/CAMARA_common.yaml` (`openId`, `x-correlator`, `Device`, `ErrorInfo`, and the generic 400/401/404/429 error responses); the 403, 404 and 422 responses of this API remain local code subsets, as the common definitions list codes that cannot occur here
+  * Added the mandatory `info.description` sections (authorization and authentication, additional error responses, request body strictness) and set `x-camara-commonalities` to `0.8.0`
+  * Added `maxLength` and `maxItems` constraints to `QosProfile.description`, `Availability` and its `networks` array, `countryName`, and the `retrieveQoSProfiles` 200 response array
+  * Aligned both test definition files with the r4.3 sample service template and added `429` and invalid `x-correlator` scenarios
+* Aligned the API documentation to use a single term for the API consumer by @tlohmar in https://github.com/camaraproject/QualityOnDemand/pull/547
+* Used the term `QoS Session` systematically throughout the API description by @tlohmar in https://github.com/camaraproject/QualityOnDemand/pull/574
 
 ### Fixed
 
-* N/A
+* Corrected the `targetMinDownstreamRate` description by @tlohmar in https://github.com/camaraproject/QualityOnDemand/pull/543
+* Removed the redundant `format: string` from the `QosProfileName` schema by @eric-murray in https://github.com/camaraproject/QualityOnDemand/pull/549
 
 ### Removed
 
@@ -124,23 +131,33 @@ Changes documented below are compared to version 0.3.0.
 
 ### Breaking changes
 
-* N/A
+* The sink credential model is narrowed from `PLAIN`, `ACCESSTOKEN`, `REFRESHTOKEN` to `ACCESSTOKEN`, `PRIVATE_KEY_JWT`, following `SinkCredential` in `CAMARA_event_common.yaml` of Commonalities r4.3, by @jlurien in https://github.com/camaraproject/QualityOnDemand/pull/580
+  * Listed for awareness: the `PLAIN` and `REFRESHTOKEN` values, and the `PlainCredential` and `RefreshTokenCredential` schemas, were part of the published 0.3.0 schema and are no longer accepted.
+  * A previously compliant API consumer is not affected. The 0.3.0 definition already stated that `sinkCredential.credentialType` MUST be set to `ACCESSTOKEN`, so no well-behaving client sent the removed values. Assessed against the previous public API contract, as required by the CAMARA API Design Guide, the change does not restrict well-behaving clients.
 
 ### Added
 
-* N/A
+* Added the `PRIVATE_KEY_JWT` sink credential type and the corresponding `PRIVATE_KEY_JWT_NOT_CONFIGURED` 422 error code by @jlurien in https://github.com/camaraproject/QualityOnDemand/pull/580
 
 ### Changed
 
-* N/A
+* Aligned the API and its test plan with CAMARA Commonalities r4.3 (0.8.0) by @jlurien in https://github.com/camaraproject/QualityOnDemand/pull/580
+  * `Device`, `DeviceResponse`, `ErrorInfo`, the `x-correlator` parameter and header, and the generic error responses are reused via `$ref` into `code/common/CAMARA_common.yaml`; the API-specific `CreateAssignment400`, `AssignmentConflict409` and `CreateAssignment422` responses remain local
+  * `CloudEvent`, `SinkCredential` and `AccessTokenCredential` are reused via `$ref` into `code/common/CAMARA_event_common.yaml`, with the event expressed as a CloudEvent subtype carrying its own event type enum
+  * Added the mandatory `info.description` sections (authorization and authentication, additional error responses, request body strictness) and set `x-camara-commonalities` to `0.8.0`
+  * Added `maxLength` constraints to `AssignmentId`, `BaseAssignmentInfo.sink` and `AssignmentInfo.startedAt`
+* Aligned the API documentation to use a single term for the API consumer by @tlohmar in https://github.com/camaraproject/QualityOnDemand/pull/547
 
 ### Fixed
 
-* N/A
+* Corrected the required property of `EventStatusChanged.data` from `qosStatus` to `status`, matching the actual property name, by @jlurien in https://github.com/camaraproject/QualityOnDemand/pull/580
+* Added the missing `type` on the `CloudEvent` and `Status` schemas by @hdamker in https://github.com/camaraproject/QualityOnDemand/pull/555
+* Removed the redundant `format: string` from schemas by @eric-murray in https://github.com/camaraproject/QualityOnDemand/pull/549
+* Corrected the typo "ssignment" to "assignment" by @Kevsy in https://github.com/camaraproject/QualityOnDemand/pull/515
 
 ### Removed
 
-* N/A
+* Removed the `PlainCredential` and `RefreshTokenCredential` schemas and the `PLAIN` and `REFRESHTOKEN` credential types by @jlurien in https://github.com/camaraproject/QualityOnDemand/pull/580 (see breaking changes above)
 
 ## quality-on-demand 1.2.0-rc.3
 
@@ -155,23 +172,40 @@ Changes documented below are compared to version 1.1.0.
 
 ### Breaking changes
 
-* N/A
+* The sink credential model is narrowed from `PLAIN`, `ACCESSTOKEN`, `REFRESHTOKEN` to `ACCESSTOKEN`, `PRIVATE_KEY_JWT`, following `SinkCredential` in `CAMARA_event_common.yaml` of Commonalities r4.3, by @hdamker in https://github.com/camaraproject/QualityOnDemand/pull/579
+  * Listed for awareness: the `PLAIN` and `REFRESHTOKEN` values, and the `PlainCredential` and `RefreshTokenCredential` schemas, were part of the published 1.1.0 schema and are no longer accepted.
+  * A previously compliant API consumer is not affected. The 1.1.0 definition already stated that `sinkCredential.credentialType` MUST be set to `ACCESSTOKEN`, so no well-behaving client sent the removed values. Assessed against the previous public API contract, as required by the CAMARA API Design Guide, the change does not restrict well-behaving clients.
 
 ### Added
 
-* N/A
+* Allowed application servers to be identified by a list of single IPv4 and IPv6 addresses, in addition to a contiguous set of addresses within a subnet, by @eric-murray in https://github.com/camaraproject/QualityOnDemand/pull/522
+* Added the `PRIVATE_KEY_JWT` sink credential type and the corresponding `PRIVATE_KEY_JWT_NOT_CONFIGURED` 422 error code on `createSession` by @hdamker in https://github.com/camaraproject/QualityOnDemand/pull/579
 
 ### Changed
 
-* N/A
+* Aligned the API and its test definitions with CAMARA Commonalities r4.3 (0.8.0) by @hdamker in https://github.com/camaraproject/QualityOnDemand/pull/579
+  * `openId`, `x-correlator`, `Device`, `DeviceResponse`, `ErrorInfo` and the generic error responses are reused via `$ref` into `code/common/`; the API-specific code subset error responses remain local
+  * Added the mandatory `info.description` sections (authorization and authentication, additional error responses, request body strictness) and set `x-camara-commonalities` to `0.8.0`
+  * Added `maxLength`, `maxItems`, `minimum`, `maximum`, `format` and `pattern` constraints to the remaining local schemas. `duration` intentionally keeps no API level maximum, as the limit is the `maxDuration` of the QoS Profile
+  * Aligned the QoS status change notifications to the CloudEvents model, consuming the shared `CloudEvent` and `SinkCredential` from `code/common/CAMARA_event_common.yaml`
+  * The `sinkCredential.credentialType` enum is narrowed to `ACCESSTOKEN` and `PRIVATE_KEY_JWT` (see breaking changes above)
+  * `Port` now references the common schema with `minimum: 1`; the previous local copy allowed `0`, which is not a usable flow port. Assessed against the previous public API contract, this makes a domain-limited bound machine-readable and rejects no request a well-behaving client would send
+  * Aligned the five test definition files, adding `429` and invalid `x-correlator` scenarios
+* Added dedicated 400 error responses for `getSession` and `deleteSession`, so that error codes which cannot occur on those operations are no longer documented, by @maxl2287 in https://github.com/camaraproject/QualityOnDemand/pull/578
+* Clarified that `createSession` may return `201` with `qosStatus` `UNAVAILABLE` and `statusInfo` `NETWORK_TERMINATED` when the network determines during session creation that the requested QoS cannot be provided, and broadened the `NETWORK_TERMINATED` description accordingly, by @hdamker in https://github.com/camaraproject/QualityOnDemand/pull/576
+* Aligned the API documentation to use a single term for the API consumer by @tlohmar in https://github.com/camaraproject/QualityOnDemand/pull/547
+* Used the term `QoS Session` systematically throughout the API description by @tlohmar in https://github.com/camaraproject/QualityOnDemand/pull/574
+* Removed a redundant sentence on authentication, which is covered by the dedicated section, by @AxelNennker in https://github.com/camaraproject/QualityOnDemand/pull/551
 
 ### Fixed
 
-* N/A
+* Added explicit response examples for the extend session endpoint by @mohdfarhanakram in https://github.com/camaraproject/QualityOnDemand/pull/538
+* Added the missing `type` on the `CloudEvent` and `Status` schemas by @hdamker in https://github.com/camaraproject/QualityOnDemand/pull/555
+* Removed the redundant `format: string` from schemas by @eric-murray in https://github.com/camaraproject/QualityOnDemand/pull/549
 
 ### Removed
 
-* N/A
+* Removed the `PlainCredential` and `RefreshTokenCredential` schemas and the `PLAIN` and `REFRESHTOKEN` credential types by @hdamker in https://github.com/camaraproject/QualityOnDemand/pull/579 (see breaking changes above)
 
 **Full Changelog**: https://github.com/camaraproject/QualityOnDemand/compare/r3.2...r4.1
 
