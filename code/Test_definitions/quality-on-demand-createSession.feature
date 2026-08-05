@@ -106,10 +106,10 @@ Feature: CAMARA Quality On Demand API, vwip - Operation createSession
   Scenario: Create QoS session for application server list
     Given a valid testing device supported by the service, identified by the token or provided in the request body
     And the request body property "$.applicationServer.ipAddresses" exists
-    And the number of items in request body array "$.applicationServer.ipAddresses[]" is greater than 0
-    And the number of items in request body array "$.applicationServer.ipAddresses[]" is less than 17
-    And each item in request body array "$.applicationServer.ipAddresses[*]" is either a valid IPv4 or valid IPv6 address
-    And each item in request body array "$.applicationServer.ipAddresses[*]" is unique with no duplicated values
+    And the number of items in request body array "$.applicationServer.ipAddresses" is greater than 0
+    And the number of items in request body array "$.applicationServer.ipAddresses" is less than 17
+    And each item within request body array "$.applicationServer.ipAddresses" is either a valid IPv4 or valid IPv6 address
+    And each item within request body array "$.applicationServer.ipAddresses" is unique with no duplicated values
     And the request body property "$.applicationServer.ipv4Address" does not exist
     And the request body property "$.applicationServer.ipv6Address" does not exist
     And the request property "$.qosProfile" is set to a valid QoS Profile as returned by QoS Profiles API
@@ -351,7 +351,7 @@ Feature: CAMARA Quality On Demand API, vwip - Operation createSession
   @quality_on_demand_createSession_400.12_empty_application_server_list
   Scenario: Empty application server list
     Given the request body property "$.applicationServer.ipAddresses" exists
-    And the number of items in request body array "$.applicationServer.ipAddresses[]" is equal to 0
+    And the number of items in request body array "$.applicationServer.ipAddresses" is equal to 0
     When the request "createSession" is sent
     Then the response status code is 400
     And the response property "$.status" is 400
@@ -361,7 +361,7 @@ Feature: CAMARA Quality On Demand API, vwip - Operation createSession
   @quality_on_demand_createSession_400.13_application_server_list_is_too_large
   Scenario: Application server list is too large
     Given the request body property "$.applicationServer.ipAddresses" exists
-    And the number of items in request body array "$.applicationServer.ipAddresses[]" is greater than 16
+    And the number of items in request body array "$.applicationServer.ipAddresses" is greater than 16
     When the request "createSession" is sent
     Then the response status code is 400
     And the response property "$.status" is 400
@@ -371,8 +371,8 @@ Feature: CAMARA Quality On Demand API, vwip - Operation createSession
   @quality_on_demand_createSession_400.14_duplicate_values_in_application_server_list
   Scenario: Duplicate values in application server list
     Given the request body property "$.applicationServer.ipAddresses" exists
-    And the number of items in request body array "$.applicationServer.ipAddresses[]" is greater than 1
-    And at least two items in request body array "$.applicationServer.ipAddresses[]" have the same value
+    And the number of items in request body array "$.applicationServer.ipAddresses" is greater than 1
+    And at least two items within request body array "$.applicationServer.ipAddresses" have the same value
     When the request "createSession" is sent
     Then the response status code is 400
     And the response property "$.status" is 400
@@ -382,8 +382,8 @@ Feature: CAMARA Quality On Demand API, vwip - Operation createSession
   @quality_on_demand_createSession_400.15_invalid_values_in_application_server_list
   Scenario: Invalid values in application server list
     Given the request body property "$.applicationServer.ipAddresses" exists
-    And the number of items in request body array "$.applicationServer.ipAddresses[]" is greater than 0
-    And at least one item in request body array "$.applicationServer.ipAddresses[*]" is not a valid single IPv4 or IPv6 address
+    And the number of items in request body array "$.applicationServer.ipAddresses" is greater than 0
+    And at least one item within request body array "$.applicationServer.ipAddresses" is not a valid single IPv4 or IPv6 address
     When the request "createSession" is sent
     Then the response status code is 400
     And the response property "$.status" is 400
@@ -393,8 +393,8 @@ Feature: CAMARA Quality On Demand API, vwip - Operation createSession
   @quality_on_demand_createSession_400.16_subnet_in_application_server_list
   Scenario: Subnet specified in application server list
     Given the request body property "$.applicationServer.ipAddresses" exists
-    And the number of items in request body array "$.applicationServer.ipAddresses[]" is greater than 0
-    And at least one item in request body array "$.applicationServer.ipAddresses[*]" contains the character '/'
+    And the number of items in request body array "$.applicationServer.ipAddresses" is greater than 0
+    And at least one item within request body array "$.applicationServer.ipAddresses" contains the character '/'
     When the request "createSession" is sent
     Then the response status code is 400
     And the response property "$.status" is 400
