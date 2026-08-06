@@ -507,7 +507,7 @@ components:
         devicePort:
           description: A single port used locally by the device for flows to which the requested QoS profile should apply. If omitted, then the qosProfile will apply to all flows between the device and the specified application server address and ports.
           allOf:
-            - $ref: "#/components/schemas/Port"
+            - $ref: "../common/CAMARA_event_common.yaml#/components/schemas/Port"
         applicationServerPorts:
           description: A list of single ports or port ranges on the application server. If omitted, then the qosProfile will apply to all flows between the specified device ports and the specified application server address(es).
           allOf:
