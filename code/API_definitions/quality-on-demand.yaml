@@ -624,13 +624,13 @@ components:
             - to
           properties:
             from:
-              $ref: "#/components/schemas/Port"
+              $ref: "../common/CAMARA_common.yaml#/components/schemas/Port"
             to:
-              $ref: "#/components/schemas/Port"
+              $ref: "../common/CAMARA_common.yaml#/components/schemas/Port"
         port:
           description: A single TCP or UDP port to be included in the enhanced flow
           allOf:
-            - $ref: "#/components/schemas/Port"
+            - $ref: "../common/CAMARA_common.yaml#/components/schemas/Port"
 
     ExtendSessionDuration:
       description: Attributes required to extend the duration of an active session
