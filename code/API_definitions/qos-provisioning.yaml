@@ -189,7 +189,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/AssignmentInfo"
+                $ref: "#/components/schemas/AssignmentInfoWithDevice"
               examples:
                 Successful QoS Profile Assignment Creation:
                   $ref: "#/components/examples/ASSIGNMENT_CREATION_EXAMPLE"
@@ -345,7 +345,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/AssignmentInfo"
+                $ref: "#/components/schemas/AssignmentInfoWithDevice"
               examples:
                 ASSIGNMENT_AVAILABLE:
                   $ref: "#/components/examples/ASSIGNMENT_AVAILABLE"
@@ -419,10 +419,6 @@ components:
         Please note that IP addresses of devices can change and get reused, so the original values may no longer identify the same device. They identified the device at the time the QoS profile assignment was created.
 
       allOf:
-        - type: object
-          properties:
-            device:
-              $ref: '../common/CAMARA_common.yaml#/components/schemas/DeviceResponse'
         - $ref: "#/components/schemas/BaseAssignmentInfo"
         - type: object
           properties:
@@ -441,6 +437,15 @@ components:
           required:
             - assignmentId
             - status
+
+    AssignmentInfoWithDevice:
+      description: Assignment information plus an optional `device` property, which is only required to allow the API consumer to disambiguate which device identifier applies when more than one identifier is provided in the request.
+      allOf:
+        - type: object
+          properties:
+            device:
+              $ref: '../common/CAMARA_common.yaml#/components/schemas/DeviceResponse'
+        - $ref: "#/components/schemas/AssignmentInfo"
 
     CreateAssignment:
       description: Attributes to request a new QoS profile assignment
