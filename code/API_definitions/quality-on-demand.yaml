@@ -594,7 +594,7 @@ components:
             - duration
 
     CreateSessionResponse:
-      description: Session information following successful creation of a session. The `device` property is only required to allow the API consumer to disambiguate the device identifier in the request when more than one identifier is provided.
+        description: Session information plus an optional `device` property, which is only required to allow the API consumer to disambiguate which device identifier applies when more than one identifier is provided in the request.
       allOf:
         - $ref: "#/components/schemas/BaseSessionInfo"
         - type: object
@@ -854,7 +854,16 @@ components:
       description: QoS session information for a given device
       type: array
       items:
-        $ref: "#/components/schemas/SessionInfo"
+        description: Session information plus an optional `device` property, which is only required to allow the API consumer to disambiguate which device identifier applies when more than one identifier is provided in the request.
+        allOf:
+          - $ref: "#/components/schemas/SessionInfo"
+          - type: object
+              properties:
+                device:
+                  description: Disambiguates the device to which the session applies when multiple device identifiers were provided
+                  allOf:
+                    - $ref: "../common/CAMARA_common.yaml#/components/schemas/DeviceResponse"
+                    - example: {"phoneNumber": "+123456789"}
       minItems: 0
       maxItems: 100
 
