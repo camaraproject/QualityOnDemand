@@ -244,8 +244,6 @@ paths:
                   $ref: "#/components/examples/ASSIGNMENT_AVAILABLE"
                 ASSIGNMENT_UNAVAILABLE:
                   $ref: "#/components/examples/ASSIGNMENT_UNAVAILABLE"
-                ASSIGNMENT_AVAILABLE_WITHOUT_DEVICE:
-                  $ref: "#/components/examples/ASSIGNMENT_AVAILABLE_WITHOUT_DEVICE"
         "400":
           $ref: '../common/CAMARA_common.yaml#/components/responses/Generic400'
         "401":
@@ -763,23 +761,6 @@ components:
         assignmentId: 3fa85f64-5717-4562-b3fc-2c963f66afa6
         status: REQUESTED
 
-    ASSIGNMENT_AVAILABLE:
-      summary: QoS assignment status is available with device in the assignment details
-      description: The QoS profile assignment has become available, and the device to which the assignment applies is included in the assignment details
-      value:
-        device:
-          phoneNumber: "+123456789"
-        qosProfile: QOS_L
-        sink: https://application-server.com/callback
-        sinkCredential:
-          credentialType: ACCESSTOKEN
-          accessToken: "eyJhbGciOiJIUzI1NiIsInR..."
-          accessTokenExpiresUtc: "2024-12-01T12:00:00Z"
-          accessTokenType: bearer
-        assignmentId: 3fa85f64-5717-4562-b3fc-2c963f66afa6
-        startedAt: "2024-05-12T17:32:01Z"
-        status: AVAILABLE
-
     ASSIGNMENT_UNAVAILABLE:
       summary: QoD provisioning status is unavailable
       description: The asssignment could not be created or is not active anymore
@@ -788,15 +769,13 @@ components:
         sink: https://application-server.com/callback
         sinkCredential:
           credentialType: ACCESSTOKEN
-          accessToken: "eyJhbGciOiJIUzI1NiIsInR..."
           accessTokenExpiresUtc: "2024-12-01T12:00:00Z"
-          accessTokenType: bearer
         assignmentId: 3fa85f64-5717-4562-b3fc-2c963f66afa6
         startedAt: "2024-05-12T17:32:01Z"
         status: UNAVAILABLE
         statusInfo: NETWORK_TERMINATED
 
-    ASSIGNMENT_AVAILABLE_WITHOUT_DEVICE:
+    ASSIGNMENT_AVAILABLE:
       summary: QoS assignment status is available
       description: Device is optional in responses and must not be provided if it was not provided in the request
       value:
@@ -804,9 +783,7 @@ components:
         sink: https://application-server.com/callback
         sinkCredential:
           credentialType: ACCESSTOKEN
-          accessToken: "eyJhbGciOiJIUzI1NiIsInR..."
           accessTokenExpiresUtc: "2024-12-01T12:00:00Z"
-          accessTokenType: bearer
         assignmentId: 3fa85f64-5717-4562-b3fc-2c963f66afa6
         startedAt: "2024-05-12T17:32:01Z"
         status: AVAILABLE
