@@ -595,6 +595,7 @@ components:
 
     CreateSessionResponse:
       description: Session information following successful creation of a session. The `device` property is only required to allow the API consumer to disambiguate the device identifier in the request when more than one identifier is provided.
+      allOf:
         - $ref: "#/components/schemas/BaseSessionInfo"
         - type: object
           properties:
