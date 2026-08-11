@@ -140,7 +140,7 @@ paths:
         "403":
           $ref: "#/components/responses/Generic403"
         "404":
-          $ref: "#/components/responses/GenericDevice404"
+          $ref: "#/components/responses/RetrieveQosProfilesNotFound404"
         "422":
           $ref: "#/components/responses/Generic422"
         "429":
@@ -185,7 +185,7 @@ paths:
         "403":
           $ref: "#/components/responses/Generic403"
         "404":
-          $ref: "#/components/responses/Generic404"
+          $ref: "#/components/responses/NotFound404"
         "429":
           $ref: "#/components/responses/Generic429"
 
@@ -545,7 +545,7 @@ components:
                 code: PERMISSION_DENIED
                 message: Client does not have sufficient permissions to perform this action.
 
-    Generic404:
+    NotFound404:
       description: Not found
       headers:
         x-correlator:
@@ -571,8 +571,38 @@ components:
                 code: NOT_FOUND
                 message: The specified resource is not found.
 
-    GenericDevice404:
-      $ref: "../common/CAMARA_common.yaml#/components/responses/Generic404"
+    RetrieveQosProfilesNotFound404:
+      description: Not found
+      headers:
+        x-correlator:
+          $ref: "../common/CAMARA_common.yaml#/components/headers/x-correlator"
+      content:
+        application/json:
+          schema:
+            allOf:
+              - $ref: "#/components/schemas/ErrorInfo"
+              - type: object
+                properties:
+                  status:
+                    enum:
+                      - 404
+                  code:
+                    enum:
+                      - NOT_FOUND
+                      - IDENTIFIER_NOT_FOUND
+          examples:
+            GENERIC_404_NOT_FOUND:
+              description: Resource is not found
+              value:
+                status: 404
+                code: NOT_FOUND
+                message: The specified resource is not found.
+            GENERIC_404_IDENTIFIER_NOT_FOUND:
+              description: Some identifier cannot be matched to a device
+              value:
+                status: 404
+                code: IDENTIFIER_NOT_FOUND
+                message: Device identifier not found.
 
     Generic422:
       description: Unprocessable Content
