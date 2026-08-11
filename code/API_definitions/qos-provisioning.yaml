@@ -396,8 +396,6 @@ components:
       description: Common attributes of the assignment record for a QoS profile assignment
       type: object
       properties:
-        device:
-          $ref: '../common/CAMARA_common.yaml#/components/schemas/Device'
         qosProfile:
           $ref: "#/components/schemas/QosProfileName"
         sink:
