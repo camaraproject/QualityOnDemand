@@ -232,7 +232,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/CreateSessionResponse"
+                $ref: "#/components/schemas/SessionInfoWithDevice"
               examples:
                 Example 1:
                   $ref: "#/components/examples/EXAMPLE_1_CREATION_RESPONSE_3-LEGGED_ACCESS_TOKEN_IPv4_SUBNET"
@@ -572,6 +572,18 @@ components:
             - duration
             - qosStatus
 
+    SessionInfoWithDevice:
+      description: Session information plus an optional `device` property, which is only required to allow the API consumer to disambiguate which device identifier applies when more than one identifier is provided in the request.
+      allOf:
+        - $ref: "#/components/schemas/BaseSessionInfo"
+        - type: object
+          properties:
+            device:
+              description: Disambiguates the device to which the session applies when multiple device identifiers were provided
+              allOf:
+                - $ref: "../common/CAMARA_common.yaml#/components/schemas/DeviceResponse"
+                - example: {"phoneNumber": "+123456789"}
+
     CreateSession:
       description: Attributes required to create a session
       allOf:
@@ -592,18 +604,6 @@ components:
               example: 3600
           required:
             - duration
-
-    CreateSessionResponse:
-      description: Session information plus an optional `device` property, which is only required to allow the API consumer to disambiguate which device identifier applies when more than one identifier is provided in the request.
-      allOf:
-        - $ref: "#/components/schemas/BaseSessionInfo"
-        - type: object
-          properties:
-            device:
-              description: Disambiguates the device to which the session applies when multiple device identifiers were provided
-              allOf:
-                - $ref: "../common/CAMARA_common.yaml#/components/schemas/DeviceResponse"
-                - example: {"phoneNumber": "+123456789"}
 
     PortsSpec:
       description: Specification of several TCP or UDP ports
@@ -854,16 +854,7 @@ components:
       description: QoS session information for a given device
       type: array
       items:
-        description: Session information plus an optional `device` property, which is only required to allow the API consumer to disambiguate which device identifier applies when more than one identifier is provided in the request.
-        allOf:
-          - $ref: "#/components/schemas/SessionInfo"
-          - type: object
-            properties:
-              device:
-                description: Disambiguates the device to which the session applies when multiple device identifiers were provided
-                allOf:
-                  - $ref: "../common/CAMARA_common.yaml#/components/schemas/DeviceResponse"
-                  - example: {"phoneNumber": "+123456789"}
+        $ref: "#/components/schemas/SessionInfoWithDevice"
       minItems: 0
       maxItems: 100
 
