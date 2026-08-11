@@ -350,7 +350,7 @@ paths:
                 ASSIGNMENT_UNAVAILABLE:
                   $ref: "#/components/examples/ASSIGNMENT_UNAVAILABLE"
                 ASSIGNMENT_AVAILABLE_WITHOUT_DEVICE:
-                  $ref: "#/components/examples/ASSIGNMENT_AVAILABLE_WITHOUT_DEVICE"
+                  $ref: "#/components/examples/ASSIGNMENT_AVAILABLE_WITH_DEVICE"
         "400":
           $ref: '../common/CAMARA_common.yaml#/components/responses/Generic400'
         "401":
@@ -779,6 +779,21 @@ components:
       summary: QoS assignment status is available
       description: Device is optional in responses and must not be provided if it was not provided in the request
       value:
+        qosProfile: QOS_M
+        sink: https://application-server.com/callback
+        sinkCredential:
+          credentialType: ACCESSTOKEN
+          accessTokenExpiresUtc: "2024-12-01T12:00:00Z"
+        assignmentId: 3fa85f64-5717-4562-b3fc-2c963f66afa6
+        startedAt: "2024-05-12T17:32:01Z"
+        status: AVAILABLE
+
+    ASSIGNMENT_AVAILABLE_WITH_DEVICE:
+      summary: QoS assignment status is available
+      description: Device is optional in responses and must not be provided if it was not provided in the request
+      value:
+        device:
+          phoneNumber: "+123456789"
         qosProfile: QOS_M
         sink: https://application-server.com/callback
         sinkCredential:
