@@ -232,7 +232,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/SessionInfo"
+                $ref: "#/components/schemas/CreateSessionResponse"
               examples:
                 Example 1:
                   $ref: "#/components/examples/EXAMPLE_1_CREATION_RESPONSE_3-LEGGED_ACCESS_TOKEN_IPv4_SUBNET"
@@ -530,13 +530,6 @@ components:
         Note that the device object is defined as optional and will only to be returned if provided in createSession. If more than one type of device identifier was provided, only one identifier will be returned (at implementation choice and with the original value provided in createSession).
         Please note that IP addresses of devices can change and get reused, so the original values may no longer identify the same device. They identified the device at the time of session creation.
       allOf:
-        - type: object
-          properties:
-            device:
-              description: Disambiguates the device to which the session applies when multiple device identifiers were provided
-              allOf:
-                - $ref: "../common/CAMARA_common.yaml#/components/schemas/DeviceResponse"
-                - example: {"phoneNumber": "+123456789"}
         - $ref: "#/components/schemas/BaseSessionInfo"
         - type: object
           properties:
@@ -599,6 +592,17 @@ components:
               example: 3600
           required:
             - duration
+
+    CreateSessionResponse:
+      description: Session information following successful creation of a session. The `device` property is only required to allow the API consumer to disambiguate the device identifier in the request when more than one identifier is provided.
+        - $ref: "#/components/schemas/BaseSessionInfo"
+        - type: object
+          properties:
+            device:
+              description: Disambiguates the device to which the session applies when multiple device identifiers were provided
+              allOf:
+                - $ref: "../common/CAMARA_common.yaml#/components/schemas/DeviceResponse"
+                - example: {"phoneNumber": "+123456789"}
 
     PortsSpec:
       description: Specification of several TCP or UDP ports
