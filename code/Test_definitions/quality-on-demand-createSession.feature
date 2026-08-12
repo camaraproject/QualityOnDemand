@@ -95,7 +95,7 @@ Feature: CAMARA Quality On Demand API, vwip - Operation createSession
   @quality_on_demand_createSession_04_1_application_server_subnets_provided
   Scenario: Create QoS session for application server subnets
     Given a valid testing device supported by the service, identified by the token or provided in the request body
-    And the request body properties "$.applicationServer.ipv4Address" and/or "$.applicationServer.ipv6Address" exist and have valid values
+    And the request body properties "$.applicationServer.ipv4Address" and/or "$.applicationServer.ipv6Address" exist and have valid values which include a subnet mask
     And the request body property "$.applicationServer.ipAddresses" does not exist
     And the request property "$.qosProfile" is set to a valid QoS Profile as returned by QoS Profiles API
     And the request body property "$.duration" is set to a valid duration for the selected QoS profile
