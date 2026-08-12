@@ -108,7 +108,7 @@ Feature: CAMARA Quality On Demand API, vwip - Operation createSession
     And the request body property "$.applicationServer.ipAddresses" exists
     And the number of items in request body array "$.applicationServer.ipAddresses" is greater than 0
     And the number of items in request body array "$.applicationServer.ipAddresses" is less than 17
-    And each item within request body array "$.applicationServer.ipAddresses" is either a valid IPv4 or valid IPv6 address
+    And each item within request body array "$.applicationServer.ipAddresses" is either a valid IPv4 address or valid IPv6 address
     And each item within request body array "$.applicationServer.ipAddresses" is unique with no duplicated values
     And the request body property "$.applicationServer.ipv4Address" does not exist
     And the request body property "$.applicationServer.ipv6Address" does not exist
@@ -383,7 +383,7 @@ Feature: CAMARA Quality On Demand API, vwip - Operation createSession
   Scenario: Invalid values in application server list
     Given the request body property "$.applicationServer.ipAddresses" exists
     And the number of items in request body array "$.applicationServer.ipAddresses" is greater than 0
-    And at least one item within request body array "$.applicationServer.ipAddresses" is not a valid single IPv4 or IPv6 address
+    And at least one item within request body array "$.applicationServer.ipAddresses" is not a valid single IPv4 address or single IPv6 address
     When the request "createSession" is sent
     Then the response status code is 400
     And the response property "$.status" is 400
