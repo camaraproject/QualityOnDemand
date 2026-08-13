@@ -307,7 +307,7 @@ components:
 
     AccessTokenCredential:
       type: object
-      description: An access token credential. This type of credential is meant to be used by API Consumers that have limited capabilities to handle authorization requests.
+      description: An access token credential. This type of credential is meant to be used by API consumers that have limited capabilities to handle authorization requests.
       allOf:
         - $ref: "#/components/schemas/SinkCredential"
         - type: object
