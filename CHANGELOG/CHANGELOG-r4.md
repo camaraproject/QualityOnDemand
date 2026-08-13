@@ -159,6 +159,7 @@ Changes documented below are compared to version 0.3.0.
 * Removed the redundant `format: string` from the `QosProfileName` schema by @eric-murray in https://github.com/camaraproject/QualityOnDemand/pull/549
 * Corrected the typo "ssignment" to "assignment" by @Kevsy in https://github.com/camaraproject/QualityOnDemand/pull/515
 * Standardized on the term `API consumer` (replacing `developer`) throughout the API description by @tlohmar in https://github.com/camaraproject/QualityOnDemand/pull/547
+* Corrected the `externalDocs.description` wording by @hdamker in https://github.com/camaraproject/QualityOnDemand/pull/595
 
 ### Removed
 
