@@ -137,7 +137,7 @@ components:
             * `ipv6Address`
             * `phoneNumber`
             * `networkAccessIdentifier`
-            NOTE1: the network operator might support only a subset of these options. The API Consumer can provide multiple identifiers to ensure compatibility across different network operators. In this case, the API Provider will use one of the identifiers for the API logic without performing any matching checks among the provided identifiers.
+            NOTE1: the network operator might support only a subset of these options. The API consumer can provide multiple identifiers to ensure compatibility across different network operators. In this case, the API Provider will use one of the identifiers for the API logic without performing any matching checks among the provided identifiers.
             NOTE2: as for this Commonalities release, we are enforcing that the networkAccessIdentifier is only part of the schema for future-proofing, and CAMARA does not currently allow its use. After the CAMARA meta-release work is concluded and the relevant issues are resolved, its use will need to be explicitly documented in the guidelines.
       type: object
       properties:
@@ -664,7 +664,7 @@ components:
                       - GONE
           examples:
             GENERIC_410_GONE:
-              description: Use in notifications flow to allow API Consumer to indicate that its callback is no longer available
+              description: Use in notifications flow to allow API consumer to indicate that its callback is no longer available
               value:
                 status: 410
                 code: GONE
