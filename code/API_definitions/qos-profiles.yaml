@@ -25,19 +25,19 @@ info:
 
     The specific authorization flows to be used will be agreed upon during the onboarding process, happening between the API consumer and the API provider, taking into account the declared purpose for accessing the API, whilst also being subject to the prevailing legal framework dictated by local legislation.
 
-    In cases where personal data is processed by the API and users can exercise their rights through mechanisms such as opt-in and/or opt-out, the use of three-legged access tokens is mandatory. This ensures that the API remains in compliance with privacy regulations, upholding the principles of transparency and user-centric privacy-by-design.
+    In cases where personal data is processed by the API and users can exercise their rights through mechanisms such as opt-in and/or opt-out, the use of 3-legged access tokens is mandatory. This ensures that the API remains in compliance with privacy regulations, upholding the principles of transparency and user-centric privacy-by-design.
     <!-- CAMARA:MANDATORY:authorization-and-authentication:END -->
 
     # Identifying the device from the access token
 
-    The two operations defined by this API (`getQosProfile` and `retrieveQoSProfiles`) both allow the API consumer to use a three-legged access token to specify a target device as a query filter. When provided, only profiles available to the specified target device will be returned. Additionally, when a two-legged access token is used, the operation `retrieveQoSProfiles` allows the API consumer to optionally specify the target device in the request body.
+    The two operations defined by this API (`getQosProfile` and `retrieveQoSProfiles`) both allow the API consumer to use a 3-legged access token to specify a target device as a query filter. When provided, only profiles available to the specified target device will be returned. Additionally, when a two-legged access token is used, the operation `retrieveQoSProfiles` allows the API consumer to optionally specify the target device in the request body.
 
     Hence, for the `retrieveQoSProfiles` operation:
     - When invoked using a two-legged access token, the optional input device object will be used as filter if present.
 
-    - When invoked using a three-legged access token, this optional identifier in the request body MUST NOT be provided, as the device to filter will be uniquely identified from the access token.
+    - When invoked using a 3-legged access token, this optional identifier in the request body MUST NOT be provided, as the device to filter will be uniquely identified from the access token.
 
-    This approach simplifies API usage for API consumers using a three-legged access token to invoke the API by relying on the information that is associated with the access token and was identified during the authentication process.
+    This approach simplifies API usage for API consumers using a 3-legged access token to invoke the API by relying on the information that is associated with the access token and was identified during the authentication process.
 
     ## Error handling:
     - If the device can be identified from the access token and the optional `device` object is also included in the request, then the server will return an error with the `422 UNNECESSARY_IDENTIFIER` error code. This will be the case even if the same device is identified by these two methods, as the server is unable to make this comparison.
