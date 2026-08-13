@@ -275,7 +275,7 @@ The API definition(s) are based on
 
 Version 1.0.0 provides the QoS Sessions endpoints from v0.11.1, and is aligned with Commonalities 0.5 and Identity and Consent Management 0.3. 
 
-**There are breaking changes compared to v0.11.1.**: the API use has been simplified for API consumers using a three-legged access token to invoke the API. In these cases the optional `device` parameter MUST NOT be provided, as the subject will be uniquely identified from the access token. In this context also some error response codes have been renamed or replaced to comply with Commonalities 0.5. With the change to a stable API version also the version of the event type has been changed to v1 in org.camaraproject.quality-on-demand.v1.qos-status-changed 
+**There are breaking changes compared to v0.11.1.**: the API use has been simplified for API consumers using a 3-legged access token to invoke the API. In these cases the optional `device` parameter MUST NOT be provided, as the subject will be uniquely identified from the access token. In this context also some error response codes have been renamed or replaced to comply with Commonalities 0.5. With the change to a stable API version also the version of the event type has been changed to v1 in org.camaraproject.quality-on-demand.v1.qos-status-changed 
 
 - API definition **with inline documentation**:
   - [View it on ReDoc](https://redocly.github.io/redoc/?url=https://raw.githubusercontent.com/camaraproject/QualityOnDemand/r2.2/code/API_definitions/quality-on-demand.yaml&nocors)
@@ -308,7 +308,7 @@ Version 1.0.0 provides the QoS Sessions endpoints from v0.11.1, and is aligned w
 
 qos-profiles 1.0.0 provides the QoS Profiles endpoints from v0.11.1, and is aligned with Commonalities 0.5 and Identity and Consent Management 0.3. 
 
-**There are breaking changes compared to v0.11.1.**: the API use has been simplified for API consumers using a three-legged access token to invoke the API. In these cases the optional `device` parameter MUST NOT be provided, as the subject will be uniquely identified from the access token. In this context also some error response codes have been renamed or replaced to comply with Commonalities 0.5.
+**There are breaking changes compared to v0.11.1.**: the API use has been simplified for API consumers using a 3-legged access token to invoke the API. In these cases the optional `device` parameter MUST NOT be provided, as the subject will be uniquely identified from the access token. In this context also some error response codes have been renamed or replaced to comply with Commonalities 0.5.
 
 - API definition **with inline documentation**:
   - [View it on ReDoc](https://redocly.github.io/redoc/?url=https://raw.githubusercontent.com/camaraproject/QualityOnDemand/r2.2/code/API_definitions/qos-profiles.yaml&nocors)
@@ -340,7 +340,7 @@ qos-profiles 1.0.0 provides the QoS Profiles endpoints from v0.11.1, and is alig
 
 **qod-provisioning v0.2.0 is the public release of the version 0.2.0 of the API**
 
-**There are breaking changes compared to v0.1.1.**: the API use has been simplified for API consumers using a three-legged access token to invoke the API. In these cases the optional `device` parameter MUST NOT be provided, as the subject will be uniquely identified from the access token. In this context also some error response codes have been renamed or replaced to comply with Commonalities 0.5.
+**There are breaking changes compared to v0.1.1.**: the API use has been simplified for API consumers using a 3-legged access token to invoke the API. In these cases the optional `device` parameter MUST NOT be provided, as the subject will be uniquely identified from the access token. In this context also some error response codes have been renamed or replaced to comply with Commonalities 0.5.
 
 - API definition **with inline documentation**:
   - [View it on ReDoc](https://redocly.github.io/redoc/?url=https://raw.githubusercontent.com/camaraproject/QualityOnDemand/r2.2/code/API_definitions/qod-provisioning.yaml&nocors)
@@ -388,7 +388,7 @@ The API definition(s) are based on
 
 Version 1.0.0 provides the QoS Sessions endpoints from v0.11.1, and is aligned with Commonalities 0.5 and Identity and Consent Management 0.3. 
 
-**There are breaking changes compared to v0.11.1.**: the API use has been simplified for API consumers using a three-legged access token to invoke the API. In these cases the optional `device` parameter MUST NOT be provided, as the subject will be uniquely identified from the access token. In this context also some error response codes have been renamed or replaced to comply with Commonalities 0.5. With the change to a stable API version also the version of the event type has been changed to v1 in org.camaraproject.quality-on-demand.v1.qos-status-changed 
+**There are breaking changes compared to v0.11.1.**: the API use has been simplified for API consumers using a 3-legged access token to invoke the API. In these cases the optional `device` parameter MUST NOT be provided, as the subject will be uniquely identified from the access token. In this context also some error response codes have been renamed or replaced to comply with Commonalities 0.5. With the change to a stable API version also the version of the event type has been changed to v1 in org.camaraproject.quality-on-demand.v1.qos-status-changed 
 
 - API definition **with inline documentation**:
   - [View it on ReDoc](https://redocly.github.io/redoc/?url=https://raw.githubusercontent.com/camaraproject/QualityOnDemand/r2.1/code/API_definitions/quality-on-demand.yaml&nocors)
@@ -420,7 +420,7 @@ Version 1.0.0 provides the QoS Sessions endpoints from v0.11.1, and is aligned w
 
 qos-profiles 1.0.0 provides the QoS Profiles endpoints from v0.11.1, ..., and is aligned with Commonalities 0.5 and Identity and Consent Management 0.3. 
 
-**There are breaking changes compared to v0.11.1.**: the API use has been simplified for API consumers using a three-legged access token to invoke the API. In these cases the optional `device` parameter MUST NOT be provided, as the subject will be uniquely identified from the access token. In this context also some error response codes have been renamed or replaced to comply with Commonalities 0.5.
+**There are breaking changes compared to v0.11.1.**: the API use has been simplified for API consumers using a 3-legged access token to invoke the API. In these cases the optional `device` parameter MUST NOT be provided, as the subject will be uniquely identified from the access token. In this context also some error response codes have been renamed or replaced to comply with Commonalities 0.5.
 
 - API definition **with inline documentation**:
   - [View it on ReDoc](https://redocly.github.io/redoc/?url=https://raw.githubusercontent.com/camaraproject/QualityOnDemand/r2.1/code/API_definitions/qos-profiles.yaml&nocors)
@@ -451,7 +451,7 @@ qos-profiles 1.0.0 provides the QoS Profiles endpoints from v0.11.1, ..., and is
 
 **qod-provisioning v0.2.0-rc.1 is the release candidate of the version 0.2.0 of the API**
 
-**There are breaking changes compared to v0.1.1.**: the API use has been simplified for API consumers using a three-legged access token to invoke the API. In these cases the optional `device` parameter MUST NOT be provided, as the subject will be uniquely identified from the access token. In this context also some error response codes have been renamed or replaced to comply with Commonalities 0.5.
+**There are breaking changes compared to v0.1.1.**: the API use has been simplified for API consumers using a 3-legged access token to invoke the API. In these cases the optional `device` parameter MUST NOT be provided, as the subject will be uniquely identified from the access token. In this context also some error response codes have been renamed or replaced to comply with Commonalities 0.5.
 
 - API definition **with inline documentation**:
   - [View it on ReDoc](https://redocly.github.io/redoc/?url=https://raw.githubusercontent.com/camaraproject/QualityOnDemand/r2.1/code/API_definitions/qod-provisioning.yaml&nocors)
