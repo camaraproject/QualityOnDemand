@@ -36,7 +36,7 @@ authorization-and-authentication:
 
     The specific authorization flows to be used will be agreed upon during the onboarding process, happening between the API consumer and the API provider, taking into account the declared purpose for accessing the API, whilst also being subject to the prevailing legal framework dictated by local legislation.
 
-    In cases where personal data is processed by the API and users can exercise their rights through mechanisms such as opt-in and/or opt-out, the use of three-legged access tokens is mandatory. This ensures that the API remains in compliance with privacy regulations, upholding the principles of transparency and user-centric privacy-by-design.
+    In cases where personal data is processed by the API and users can exercise their rights through mechanisms such as opt-in and/or opt-out, the use of 3-legged access tokens is mandatory. This ensures that the API remains in compliance with privacy regulations, upholding the principles of transparency and user-centric privacy-by-design.
     <!-- CAMARA:MANDATORY:authorization-and-authentication:END -->
 
 # Universal - mandatory in every CAMARA API.
@@ -68,7 +68,7 @@ request-body-strictness:
     <!-- CAMARA:MANDATORY:request-body-strictness:END -->
 
 # Opt-in - applicable to APIs where the subject of an operation can be
-# identified either implicitly from a three-legged access token or explicitly
+# identified either implicitly from a 3-legged access token or explicitly
 # from a `device` object. Mutually exclusive with `identifying-phone-number-from-access-token`.
 # Source:
 #   Commonalities/documentation/CAMARA-API-Design-Guide.md Appendix A,
@@ -80,9 +80,9 @@ identifying-device-from-access-token:
 
     This API requires the API consumer to identify a device as the subject of the API as follows:
     - When the API is invoked using a two-legged access token, the subject will be identified from the optional `device` object, which therefore MUST be provided.
-    - When a three-legged access token is used however, this optional identifier MUST NOT be provided, as the subject will be uniquely identified from the access token.
+    - When a 3-legged access token is used however, this optional identifier MUST NOT be provided, as the subject will be uniquely identified from the access token.
 
-    This approach simplifies API usage for API consumers using a three-legged access token to invoke the API by relying on the information that is associated with the access token and was identified during the authentication process.
+    This approach simplifies API usage for API consumers using a 3-legged access token to invoke the API by relying on the information that is associated with the access token and was identified during the authentication process.
 
     ## Error handling:
 
@@ -92,7 +92,7 @@ identifying-device-from-access-token:
     <!-- CAMARA:MANDATORY:identifying-device-from-access-token:END -->
 
 # Opt-in - applicable to APIs where the subject of an operation can be
-# identified either implicitly from a three-legged access token or explicitly
+# identified either implicitly from a 3-legged access token or explicitly
 # from a `phoneNumber` field. Mutually exclusive with `identifying-device-from-access-token`.
 # Source:
 #   Commonalities/documentation/CAMARA-API-Design-Guide.md Appendix A,
@@ -104,9 +104,9 @@ identifying-phone-number-from-access-token:
 
     This API requires the API consumer to identify a phone number as the subject of the API as follows:
     - When the API is invoked using a two-legged access token, the subject will be identified from the optional `phoneNumber` field, which therefore MUST be provided.
-    - When a three-legged access token is used however, this optional identifier MUST NOT be provided, as the subject will be uniquely identified from the access token.
+    - When a 3-legged access token is used however, this optional identifier MUST NOT be provided, as the subject will be uniquely identified from the access token.
 
-    This approach simplifies API usage for API consumers using a three-legged access token to invoke the API by relying on the information that is associated with the access token and was identified during the authentication process.
+    This approach simplifies API usage for API consumers using a 3-legged access token to invoke the API by relying on the information that is associated with the access token and was identified during the authentication process.
 
     ## Error handling:
 
