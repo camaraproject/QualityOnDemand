@@ -38,7 +38,7 @@ info:
 
     The specific authorization flows to be used will be agreed upon during the onboarding process, happening between the API consumer and the API provider, taking into account the declared purpose for accessing the API, whilst also being subject to the prevailing legal framework dictated by local legislation.
 
-    In cases where personal data is processed by the API and users can exercise their rights through mechanisms such as opt-in and/or opt-out, the use of three-legged access tokens is mandatory. This ensures that the API remains in compliance with privacy regulations, upholding the principles of transparency and user-centric privacy-by-design.
+    In cases where personal data is processed by the API and users can exercise their rights through mechanisms such as opt-in and/or opt-out, the use of 3-legged access tokens is mandatory. This ensures that the API remains in compliance with privacy regulations, upholding the principles of transparency and user-centric privacy-by-design.
     <!-- CAMARA:MANDATORY:authorization-and-authentication:END -->
 
     <!-- CAMARA:MANDATORY:identifying-device-from-access-token:BEGIN -->
@@ -47,9 +47,9 @@ info:
 
     This API requires the API consumer to identify a device as the subject of the API as follows:
     - When the API is invoked using a two-legged access token, the subject will be identified from the optional `device` object, which therefore MUST be provided.
-    - When a three-legged access token is used however, this optional identifier MUST NOT be provided, as the subject will be uniquely identified from the access token.
+    - When a 3-legged access token is used however, this optional identifier MUST NOT be provided, as the subject will be uniquely identified from the access token.
 
-    This approach simplifies API usage for API consumers using a three-legged access token to invoke the API by relying on the information that is associated with the access token and was identified during the authentication process.
+    This approach simplifies API usage for API consumers using a 3-legged access token to invoke the API by relying on the information that is associated with the access token and was identified during the authentication process.
 
     ## Error handling:
 
@@ -128,7 +128,7 @@ paths:
         This behavior allows API consumers that are not receiving notification events but are polling, to get the QoS profile assignment status information. Before a client can attempt to create a new QoS profile assignment for the same device, they must release the previous assignment resources with an explicit `delete` operation if not yet automatically deleted.
         - The access token may be either 2-legged or 3-legged. See "Identifying the device from the access token" for further information
           - When the API is invoked using a two-legged access token, the subject will be identified from the optional `device` object, which therefore MUST be provided.
-          - When a three-legged access token is used however, this optional identifier MUST NOT be provided, as the subject will be uniquely identified from the access token.
+          - When a 3-legged access token is used however, this optional identifier MUST NOT be provided, as the subject will be uniquely identified from the access token.
 
       operationId: createQosAssignment
       parameters:
@@ -320,7 +320,7 @@ paths:
         **NOTES:**
         - The access token may be either 2-legged or 3-legged. See "Identifying the device from the access token" for further information
           - When the API is invoked using a two-legged access token, the subject will be identified from the optional `device` object, which therefore MUST be provided.
-          - When a three-legged access token is used however, this optional identifier MUST NOT be provided, as the subject will be uniquely identified from the access token.
+          - When a 3-legged access token is used however, this optional identifier MUST NOT be provided, as the subject will be uniquely identified from the access token.
         - The QoS profile assignment must have been created by the same API consumer given in the access token.
         - If no QoS profile assignment is found for the device, an error response 404 is returned with code "NOT_FOUND".
         - This call uses the POST method instead of GET to comply with the [CAMARA Commonalities guidelines](https://github.com/camaraproject/Commonalities/blob/r3.3/documentation/CAMARA-API-Design-Guide.md#65-post-or-get-for-transferring-sensitive-or-complex-data) for sending sensitive or complex data in API calls. Since the device field may contain personally identifiable information, it should not be sent via GET.
