@@ -15,7 +15,7 @@ info:
     - Discover the available QoS profiles for a specific device
     - Retrieve the characteristics of a specific QoS profile by name
 
-    How QoS profiles are mapped to connectivity characteristics are subject to agreements between the API provider and the API consumer. Within the CAMARA project, you can find a sample for such a mapping of QoS profiles. [CAMARA QoS Profiles Mapping Table (REFERENCE DRAFT)](https://github.com/camaraproject/QualityOnDemand/blob/main/documentation/API_documentation/QoSProfile_Mapping_Table.md)
+    How QoS profiles are mapped to connectivity characteristics are subject to agreements between the API provider and the API consumer. Within the CAMARA project, you can find a sample for such a mapping of QoS profiles. [CAMARA QoS Profiles Mapping Table (REFERENCE DRAFT)](https://github.com/camaraproject/QualityOnDemand/blob/r4.1/documentation/API_documentation/QoSProfile_Mapping_Table.md)
 
     <!-- CAMARA:MANDATORY:authorization-and-authentication:BEGIN -->
 
@@ -66,29 +66,23 @@ info:
 
     This API rejects requests with JSON request bodies that contain properties not declared in this specification, at any nesting level. Unknown properties result in a `400 INVALID_ARGUMENT` response.
     <!-- CAMARA:MANDATORY:request-body-strictness:END -->
-
   license:
     name: Apache 2.0
     url: https://www.apache.org/licenses/LICENSE-2.0.html
-  version: wip
+  version: 1.2.0-rc.3
   x-camara-commonalities: 0.8.0
-
-
-externalDocs:
-  description: Product documentation at CAMARA
-  url: https://github.com/camaraproject/QualityOnDemand
-
 servers:
-  - url: "{apiRoot}/qos-profiles/vwip"
+  - url: '{apiRoot}/qos-profiles/v1rc3'
     variables:
       apiRoot:
         default: http://localhost:9091
         description: API root, defined by the service provider, e.g. `api.example.com` or `api.example.com/somepath`
-
 tags:
   - name: QoS Profiles
     description: Manage QoS Profiles
-
+externalDocs:
+  description: Product documentation at CAMARA
+  url: https://github.com/camaraproject/QualityOnDemand
 paths:
   /retrieve-qos-profiles:
     post:
@@ -103,60 +97,57 @@ paths:
         - If the access token is 2-legged and a device filter is provided, all returned QoS Profiles will be available to that device. If multiple device identifiers are provided within the device property, only QoS Profiles available to the device identifier chosen by the implementation will be returned, even if the identifiers do not match the same device. API provider does not perform any logic to validate/correlate that the indicated device identifiers match the same device. No error should be returned if the identifiers are otherwise valid to prevent API consumers correlating different identifiers with a given end user.
         - This call uses the POST method instead of GET to comply with the CAMARA Commonalities guidelines for sending sensitive or complex data in API calls. Since the device field may contain personally identifiable information, it should not be sent via GET. Additionally, this call may include complex data structures.
           [CAMARA API Design Guidelines](https://github.com/camaraproject/Commonalities/blob/r3.3/documentation/API-design-guidelines.md#post-or-get-for-transferring-sensitive-or-complex-data)
-
       security:
         - openId:
             - qos-profiles:read
       operationId: retrieveQoSProfiles
       parameters:
-        - $ref: "../common/CAMARA_common.yaml#/components/parameters/x-correlator"
+        - $ref: '#/components/parameters/x-correlator'
       requestBody:
         description: Parameters to query QoS Profiles for a given device
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/QosProfileDeviceRequest"
+              $ref: '#/components/schemas/QosProfileDeviceRequest'
         required: true
       responses:
-        "200":
+        '200':
           description: Contains information about QoS Profiles
           headers:
             x-correlator:
-              $ref: "../common/CAMARA_common.yaml#/components/headers/x-correlator"
+              $ref: '#/components/headers/x-correlator'
           content:
             application/json:
               schema:
                 type: array
                 maxItems: 100
                 items:
-                  $ref: "#/components/schemas/QosProfile"
+                  $ref: '#/components/schemas/QosProfile'
               examples:
                 List of QoS Profiles:
-                  $ref: "#/components/examples/LIST_OF_QOS_PROFILES"
-        "400":
-          $ref: "#/components/responses/Generic400"
-        "401":
-          $ref: "#/components/responses/Generic401"
-        "403":
-          $ref: "#/components/responses/Generic403"
-        "404":
-          $ref: "#/components/responses/RetrieveQosProfilesNotFound404"
-        "422":
-          $ref: "#/components/responses/Generic422"
-        "429":
-          $ref: "#/components/responses/Generic429"
-
+                  $ref: '#/components/examples/LIST_OF_QOS_PROFILES'
+        '400':
+          $ref: '#/components/responses/Generic400'
+        '401':
+          $ref: '#/components/responses/Generic401'
+        '403':
+          $ref: '#/components/responses/Generic403'
+        '404':
+          $ref: '#/components/responses/RetrieveQosProfilesNotFound404'
+        '422':
+          $ref: '#/components/responses/Generic422'
+        '429':
+          $ref: '#/components/responses/Generic429'
   /qos-profiles/{name}:
     get:
       tags:
         - QoS Profiles
-      summary: "Get QoS Profile for a given name"
+      summary: Get QoS Profile for a given name
       operationId: getQosProfile
       description: |
         Returns a QoS Profile that matches the given name.
 
         The access token may be either a 2-legged or 3-legged access token. If the access token is 3-legged, a QoS Profile is only returned if available to all subjects associated with the access token.
-
       security:
         - openId:
             - qos-profiles:read
@@ -166,34 +157,34 @@ paths:
           description: Qos Profile name
           required: true
           schema:
-            $ref: "#/components/schemas/QosProfileName"
-        - $ref: "../common/CAMARA_common.yaml#/components/parameters/x-correlator"
+            $ref: '#/components/schemas/QosProfileName'
+        - $ref: '#/components/parameters/x-correlator'
       responses:
-        "200":
+        '200':
           description: Contains information about QoS Profiles
           headers:
             x-correlator:
-              $ref: "../common/CAMARA_common.yaml#/components/headers/x-correlator"
+              $ref: '#/components/headers/x-correlator'
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/QosProfile"
-        "400":
-          $ref: "#/components/responses/Generic400"
-        "401":
-          $ref: "#/components/responses/Generic401"
-        "403":
-          $ref: "#/components/responses/Generic403"
-        "404":
-          $ref: "#/components/responses/NotFound404"
-        "429":
-          $ref: "#/components/responses/Generic429"
-
+                $ref: '#/components/schemas/QosProfile'
+        '400':
+          $ref: '#/components/responses/Generic400'
+        '401':
+          $ref: '#/components/responses/Generic401'
+        '403':
+          $ref: '#/components/responses/Generic403'
+        '404':
+          $ref: '#/components/responses/NotFound404'
+        '429':
+          $ref: '#/components/responses/Generic429'
 components:
   securitySchemes:
     openId:
-      $ref: "../common/CAMARA_common.yaml#/components/securitySchemes/openId"
-
+      type: openIdConnect
+      openIdConnectUrl: https://example.com/.well-known/openid-configuration
+      description: OpenID Connect authentication via discovery metadata.
   schemas:
     QosProfile:
       description: |
@@ -201,18 +192,16 @@ components:
       type: object
       properties:
         name:
-          $ref: "#/components/schemas/QosProfileName"
+          $ref: '#/components/schemas/QosProfileName'
         description:
           description: |
             A description of the QoS profile.
           type: string
           maxLength: 1024
-          # Excludes control characters (C0 except TAB/LF/CR, DEL, C1) so that
-          # multiline descriptions remain valid
-          pattern: '^[^\u0000-\u0008\u000B\u000C\u000E-\u001F\u007F-\u009F]*$'
-          example: "QoS profile for video streaming"
+          pattern: ^[^\u0000-\u0008\u000B\u000C\u000E-\u001F\u007F-\u009F]*$
+          example: QoS profile for video streaming
         status:
-          $ref: "#/components/schemas/QosProfileStatusEnum"
+          $ref: '#/components/schemas/QosProfileStatusEnum'
         countryAvailability:
           description: |
             A list of countries, and optionally networks, for which the API provider makes the profile available.
@@ -220,7 +209,7 @@ components:
             - When there is no device filter, availability for a given country means that the QoS profile may be available to some devices connected to the listed networks in that country (or to the API provider’s default network if none are listed). However, this does not imply that the profile is available to all devices, or that a particular device will be able to use the profile across all listed countries or networks. In particular, the response does not provide enough information to determine availability for roaming for specific devices; consumers should query the API with a specific device identifier to get definitive availability.
             - If this field is not present in the QoS profile, no assumption can be made about the availability of the profile in any given country or for any given network
           allOf:
-            - $ref: "#/components/schemas/Availability"
+            - $ref: '#/components/schemas/Availability'
         targetMinUpstreamRate:
           description: |
             This is the target minimum upload speed for the QoS profile.
@@ -228,18 +217,18 @@ components:
             Please note that this is a target value—the network might not always be able to provide this rate under all conditions.
             It helps ensure that applications like video calls or live streaming perform consistently.
           allOf:
-            - $ref: "#/components/schemas/Rate"
+            - $ref: '#/components/schemas/Rate'
         maxUpstreamRate:
           description: |
             The maximum best effort data
           allOf:
-            - $ref: "#/components/schemas/Rate"
+            - $ref: '#/components/schemas/Rate'
         maxUpstreamBurstRate:
           description: |
             When defined, this is the maximum upstream burst rate for the QoS profile, that will enable
             the network to burst data at a higher rate than the maxUpstreamRate for a period of time.
           allOf:
-            - $ref: "#/components/schemas/Rate"
+            - $ref: '#/components/schemas/Rate'
         targetMinDownstreamRate:
           description: |
             This is the target minimum download speed for the QoS profile.
@@ -247,12 +236,12 @@ components:
             Please note that this is a target value—the network might not always be able to provide this rate under all conditions.
             It helps ensure that applications like video calls or live streaming perform consistently.
           allOf:
-            - $ref: "#/components/schemas/Rate"
+            - $ref: '#/components/schemas/Rate'
         maxDownstreamRate:
           description: |
             The maximum best effort rate
           allOf:
-            - $ref: "#/components/schemas/Rate"
+            - $ref: '#/components/schemas/Rate'
         maxDownstreamBurstRate:
           description: |
             When defined, this is the maximum downstream burst rate for the QoS profile, that will enable
@@ -261,18 +250,18 @@ components:
             For instance, when a user is streaming a video, the network can burst data at a higher rate
             to fill the buffer, and then return to the maxUpstreamRate once the buffer is full.
           allOf:
-            - $ref: "#/components/schemas/Rate"
+            - $ref: '#/components/schemas/Rate'
         minDuration:
           description: |
             The shortest time period that this profile can be deployed.
           allOf:
-            - $ref: "#/components/schemas/Duration"
+            - $ref: '#/components/schemas/Duration'
         maxDuration:
           description: |
             The maximum time period that this profile can be deployed.
             Overall session duration must not exceed this value. This includes the initial requested duration plus any extensions.
           allOf:
-            - $ref: "#/components/schemas/Duration"
+            - $ref: '#/components/schemas/Duration'
         priority:
           type: integer
           example: 20
@@ -295,7 +284,7 @@ components:
             The end-to-end or round trip latency will be about two times this value plus the latency not controlled
             by the operator
           allOf:
-            - $ref: "#/components/schemas/Duration"
+            - $ref: '#/components/schemas/Duration'
         jitter:
           description: |
             The jitter requirement aims to limit the maximum variation in round-trip
@@ -305,7 +294,7 @@ components:
             using TCP). This requirement helps maintain consistent latency, essential
             for real-time applications such as VoIP, video calls, and gaming.
           allOf:
-            - $ref: "#/components/schemas/Duration"
+            - $ref: '#/components/schemas/Duration'
         packetErrorLossRate:
           type: integer
           description: |
@@ -340,7 +329,6 @@ components:
 
             - **mixed-queue**:
               A shared queue that can handle both L4S and traditional traffic, offering a balance between ultra-low latency for L4S flows and compatibility with non-L4S flows.
-
           externalDocs:
             description: For more details, refer to the L4S standard.
             url: https://datatracker.ietf.org/doc/rfc9330/
@@ -374,20 +362,19 @@ components:
             | Standard              |  DF(CS0)  |           0          |        000000       |        0        | Undifferentiated applications - also:                                |
             |                       |           |                      |                     |                 | Microsoft QOSTrafficTypeBestEffort                                   |
           enum:
-            - microsoft_voice                # Microsoft QOSTrafficTypeVoice or Control
-            - microsoft_audio_video          # Microsoft QOSTrafficTypeExcellentEffort or AudioVideo
-            - real_time_interactive          # Video conferencing and interactive gaming
-            - multimedia_streaming           # Streaming video or audio on demand
-            - broadcast_video                # Broadcast TV and live events
-            - low_latency_data               # Client/server transactions Web-based ordering
-            - high_throughput_data           # Store and forward applications
-            - low_priority_data              # Low-priority background traffic
-            - standard                       # Default traffic class
+            - microsoft_voice
+            - microsoft_audio_video
+            - real_time_interactive
+            - multimedia_streaming
+            - broadcast_video
+            - low_latency_data
+            - high_throughput_data
+            - low_priority_data
+            - standard
           example: real_time_interactive
       required:
         - name
         - status
-
     QosProfileName:
       description: |
         A unique name for identifying a specific QoS profile.
@@ -400,8 +387,7 @@ components:
       example: voice
       minLength: 3
       maxLength: 256
-      pattern: "^[a-zA-Z0-9_.-]+$"
-
+      pattern: ^[a-zA-Z0-9_.-]+$
     Rate:
       description: Specification of rate
       type: object
@@ -414,8 +400,7 @@ components:
           minimum: 0
           maximum: 1024
         unit:
-          $ref: "#/components/schemas/RateUnitEnum"
-
+          $ref: '#/components/schemas/RateUnitEnum'
     Duration:
       description: Specification of duration
       type: object
@@ -428,8 +413,7 @@ components:
           minimum: 1
           maximum: 2147483647
         unit:
-          $ref: "#/components/schemas/TimeUnitEnum"
-
+          $ref: '#/components/schemas/TimeUnitEnum'
     TimeUnitEnum:
       description: Units of time
       type: string
@@ -441,7 +425,6 @@ components:
         - Milliseconds
         - Microseconds
         - Nanoseconds
-
     QosProfileStatusEnum:
       description: |
         The current status of the QoS Profile
@@ -453,7 +436,6 @@ components:
         - ACTIVE
         - INACTIVE
         - DEPRECATED
-
     RateUnitEnum:
       description: Units of rate
       type: string
@@ -463,19 +445,17 @@ components:
         - Mbps
         - Gbps
         - Tbps
-
     QosProfileDeviceRequest:
       description: |
         Request object for QoS Profiles for a given device
       type: object
       properties:
         device:
-          $ref: "#/components/schemas/Device"
+          $ref: '#/components/schemas/Device'
         name:
-          $ref: "#/components/schemas/QosProfileName"
+          $ref: '#/components/schemas/QosProfileName'
         status:
           $ref: '#/components/schemas/QosProfileStatusEnum'
-
     Availability:
       description: A list of countries, and optionally networks, for which the API provider makes the profile available
       type: array
@@ -491,7 +471,7 @@ components:
             type: string
             pattern: ^[A-Z]{2}$
             maxLength: 2
-            example: "GB"
+            example: GB
           networks:
             description: A list of networks within the country for which the QoS profile is available from the API provider
             type: array
@@ -499,36 +479,199 @@ components:
             items:
               description: The network identifier. For mobile networks, this is the PLMN Identifier (MCC + MNC), which is a 5 or 6 digit integer.
               type: string
-              pattern: '^[0-9]{5,6}$'
+              pattern: ^[0-9]{5,6}$
               maxLength: 6
-              example: "23591"
-            example: ["23591", "23415"]
-        example: {"countryName": "GB", "networks": ["23591", "23415"]}
-      example: [{"countryName": "GB", "networks": ["23591", "23415"]}, {"countryName": "DE", "networks": ["26202"]}]
-
+              example: '23591'
+            example:
+              - '23591'
+              - '23415'
+        example:
+          countryName: GB
+          networks:
+            - '23591'
+            - '23415'
+      example:
+        - countryName: GB
+          networks:
+            - '23591'
+            - '23415'
+        - countryName: DE
+          networks:
+            - '26202'
     Device:
-      $ref: "../common/CAMARA_common.yaml#/components/schemas/Device"
-
+      description: |
+        End-user equipment able to connect to a mobile network. Examples of devices include smartphones or IoT sensors/actuators.
+            The developer can choose to provide the below specified device identifiers:
+            * `ipv4Address`
+            * `ipv6Address`
+            * `phoneNumber`
+            * `networkAccessIdentifier`
+            NOTE1: the network operator might support only a subset of these options. The API Consumer can provide multiple identifiers to ensure compatibility across different network operators. In this case, the API Provider will use one of the identifiers for the API logic without performing any matching checks among the provided identifiers.
+            NOTE2: as for this Commonalities release, we are enforcing that the networkAccessIdentifier is only part of the schema for future-proofing, and CAMARA does not currently allow its use. After the CAMARA meta-release work is concluded and the relevant issues are resolved, its use will need to be explicitly documented in the guidelines.
+      type: object
+      properties:
+        phoneNumber:
+          $ref: '#/components/schemas/PhoneNumber'
+        networkAccessIdentifier:
+          $ref: '#/components/schemas/NetworkAccessIdentifier'
+        ipv4Address:
+          $ref: '#/components/schemas/DeviceIpv4Address'
+        ipv6Address:
+          $ref: '#/components/schemas/DeviceIpv6Address'
+      minProperties: 1
     ErrorInfo:
-      $ref: "../common/CAMARA_common.yaml#/components/schemas/ErrorInfo"
+      type: object
+      description: A structured error response providing details about a failed request, including the HTTP status code, an error code, and a human-readable message
+      required:
+        - status
+        - code
+        - message
+      properties:
+        status:
+          type: integer
+          format: int32
+          minimum: 100
+          maximum: 599
+          description: HTTP response status code
+        code:
+          type: string
+          maxLength: 96
+          description: A human-readable code to describe the error
+        message:
+          type: string
+          maxLength: 512
+          description: A human-readable description of what the event represents
+    XCorrelator:
+      type: string
+      description: Correlator string, UUID format recommended but any string matching the pattern can be used
+      pattern: ^[a-zA-Z0-9-_:;.\/<>{}]{0,256}$
+      maxLength: 256
+      example: b4333c46-49c0-4f62-80d7-f0ef930f1c46
+    PhoneNumber:
+      description: A public identifier addressing a telephone subscription. In mobile networks it corresponds to the MSISDN (Mobile Station International Subscriber Directory Number). In order to be globally unique it has to be formatted in international format, according to E.164 standard, prefixed with '+'.
+      type: string
+      pattern: ^\+[1-9][0-9]{4,14}$
+      maxLength: 16
+      example: '+123456789'
+    NetworkAccessIdentifier:
+      description: A public identifier addressing a subscription in a mobile network. In 3GPP terminology, it corresponds to the GPSI formatted with the External Identifier ({Local Identifier}@{Domain Identifier}). Unlike the telephone number, the network access identifier is not subjected to portability ruling in force, and is individually managed by each operator.
+      type: string
+      maxLength: 2048
+      example: 123456789@example.com
+    SingleIpv4Address:
+      description: A single IPv4 address with no subnet mask
+      type: string
+      format: ipv4
+      maxLength: 15
+      example: 84.125.93.10
+    Port:
+      description: TCP or UDP port number
+      type: integer
+      format: int32
+      minimum: 1
+      maximum: 65535
+    DeviceIpv4Address:
+      type: object
+      description: |
+        The device should be identified by either the public (observed) IP address and port as seen by the application server, or the private (local) and any public (observed) IP addresses in use by the device (this information can be obtained by various means, for example from some DNS servers).
 
+        If the allocated and observed IP addresses are the same (i.e. NAT is not in use) then  the same address should be specified for both publicAddress and privateAddress.
+
+        If NAT64 is in use, the device should be identified by its publicAddress and publicPort, or separately by its allocated IPv6 address (field ipv6Address of the Device object)
+
+        In all cases, publicAddress must be specified, along with at least one of either privateAddress or publicPort, dependent upon which is known. In general, mobile devices cannot be identified by their public IPv4 address alone.
+      properties:
+        publicAddress:
+          $ref: '#/components/schemas/SingleIpv4Address'
+        privateAddress:
+          $ref: '#/components/schemas/SingleIpv4Address'
+        publicPort:
+          $ref: '#/components/schemas/Port'
+      anyOf:
+        - required:
+            - publicAddress
+            - privateAddress
+        - required:
+            - publicAddress
+            - publicPort
+      example:
+        publicAddress: 84.125.93.10
+        publicPort: 59765
+    DeviceIpv6Address:
+      description: |
+        The device should be identified by the observed IPv6 address, or by any single IPv6 address from within the subnet allocated to the device (e.g. adding ::0 to the /64 prefix).
+      type: string
+      format: ipv6
+      maxLength: 45
+      example: 2001:db8:85a3:8d3:1319:8a2e:370:7344
   responses:
     Generic400:
-      $ref: "../common/CAMARA_common.yaml#/components/responses/Generic400"
-
-    Generic401:
-      $ref: "../common/CAMARA_common.yaml#/components/responses/Generic401"
-
-    Generic403:
-      description: Forbidden
+      description: Bad Request
       headers:
         x-correlator:
-          $ref: "../common/CAMARA_common.yaml#/components/headers/x-correlator"
+          $ref: '#/components/headers/x-correlator'
       content:
         application/json:
           schema:
             allOf:
-              - $ref: "#/components/schemas/ErrorInfo"
+              - $ref: '#/components/schemas/ErrorInfo'
+              - type: object
+                properties:
+                  status:
+                    enum:
+                      - 400
+                  code:
+                    enum:
+                      - INVALID_ARGUMENT
+                      - OUT_OF_RANGE
+          examples:
+            GENERIC_400_INVALID_ARGUMENT:
+              description: Invalid Argument. Generic Syntax Exception
+              value:
+                status: 400
+                code: INVALID_ARGUMENT
+                message: Client specified an invalid argument, request body or query param.
+            GENERIC_400_OUT_OF_RANGE:
+              description: Out of Range. Specific Syntax Exception used when a given field has a pre-defined range or a invalid filter criteria combination is requested
+              value:
+                status: 400
+                code: OUT_OF_RANGE
+                message: Client specified an invalid range.
+    Generic401:
+      description: Unauthorized
+      headers:
+        x-correlator:
+          $ref: '#/components/headers/x-correlator'
+      content:
+        application/json:
+          schema:
+            allOf:
+              - $ref: '#/components/schemas/ErrorInfo'
+              - type: object
+                properties:
+                  status:
+                    enum:
+                      - 401
+                  code:
+                    enum:
+                      - UNAUTHENTICATED
+          examples:
+            GENERIC_401_UNAUTHENTICATED:
+              description: Request cannot be authenticated and a new authentication is required
+              value:
+                status: 401
+                code: UNAUTHENTICATED
+                message: Request not authenticated due to missing, invalid, or expired credentials. A new authentication is required.
+    Generic403:
+      description: Forbidden
+      headers:
+        x-correlator:
+          $ref: '#/components/headers/x-correlator'
+      content:
+        application/json:
+          schema:
+            allOf:
+              - $ref: '#/components/schemas/ErrorInfo'
               - type: object
                 properties:
                   status:
@@ -544,17 +687,16 @@ components:
                 status: 403
                 code: PERMISSION_DENIED
                 message: Client does not have sufficient permissions to perform this action.
-
     NotFound404:
       description: Not found
       headers:
         x-correlator:
-          $ref: "../common/CAMARA_common.yaml#/components/headers/x-correlator"
+          $ref: '#/components/headers/x-correlator'
       content:
         application/json:
           schema:
             allOf:
-              - $ref: "#/components/schemas/ErrorInfo"
+              - $ref: '#/components/schemas/ErrorInfo'
               - type: object
                 properties:
                   status:
@@ -570,17 +712,16 @@ components:
                 status: 404
                 code: NOT_FOUND
                 message: The specified resource is not found.
-
     RetrieveQosProfilesNotFound404:
       description: Not found
       headers:
         x-correlator:
-          $ref: "../common/CAMARA_common.yaml#/components/headers/x-correlator"
+          $ref: '#/components/headers/x-correlator'
       content:
         application/json:
           schema:
             allOf:
-              - $ref: "#/components/schemas/ErrorInfo"
+              - $ref: '#/components/schemas/ErrorInfo'
               - type: object
                 properties:
                   status:
@@ -603,17 +744,16 @@ components:
                 status: 404
                 code: IDENTIFIER_NOT_FOUND
                 message: Device identifier not found.
-
     Generic422:
       description: Unprocessable Content
       headers:
         x-correlator:
-          $ref: "../common/CAMARA_common.yaml#/components/headers/x-correlator"
+          $ref: '#/components/headers/x-correlator'
       content:
         application/json:
           schema:
             allOf:
-              - $ref: "#/components/schemas/ErrorInfo"
+              - $ref: '#/components/schemas/ErrorInfo'
               - type: object
                 properties:
                   status:
@@ -643,36 +783,76 @@ components:
                 status: 422
                 code: UNNECESSARY_IDENTIFIER
                 message: The device is already identified by the access token.
-
     Generic429:
-      $ref: "../common/CAMARA_common.yaml#/components/responses/Generic429"
-
+      description: Too Many Requests
+      headers:
+        x-correlator:
+          $ref: '#/components/headers/x-correlator'
+      content:
+        application/json:
+          schema:
+            allOf:
+              - $ref: '#/components/schemas/ErrorInfo'
+              - type: object
+                properties:
+                  status:
+                    enum:
+                      - 429
+                  code:
+                    enum:
+                      - QUOTA_EXCEEDED
+                      - TOO_MANY_REQUESTS
+          examples:
+            GENERIC_429_QUOTA_EXCEEDED:
+              description: Request is rejected due to exceeding a business quota limit
+              value:
+                status: 429
+                code: QUOTA_EXCEEDED
+                message: Out of resource quota.
+            GENERIC_429_TOO_MANY_REQUESTS:
+              description: Access to the API has been temporarily blocked due to rate or spike arrest limits being reached
+              value:
+                status: 429
+                code: TOO_MANY_REQUESTS
+                message: Rate limit reached.
   examples:
     LIST_OF_QOS_PROFILES:
       summary: A list of QoS profiles with a single entry
       description: Example response when requesting a list of QoS profiles
       value:
-        - name: "voice"
-          description: "QoS profile for high-quality interactive voice"
-          status: "ACTIVE"
+        - name: voice
+          description: QoS profile for high-quality interactive voice
+          status: ACTIVE
           targetMinUpstreamRate:
             value: 100
-            unit: "kbps"
+            unit: kbps
           targetMinDownstreamRate:
             value: 100
-            unit: "kbps"
+            unit: kbps
           minDuration:
             value: 1
-            unit: "Days"
+            unit: Days
           maxDuration:
             value: 10
-            unit: "Days"
+            unit: Days
           priority: 10
           packetDelayBudget:
             value: 50
-            unit: "Milliseconds"
+            unit: Milliseconds
           jitter:
             value: 5
-            unit: "Milliseconds"
+            unit: Milliseconds
           packetErrorLossRate: 3
-          l4sQueueType: "non-l4s-queue"
+          l4sQueueType: non-l4s-queue
+  parameters:
+    x-correlator:
+      name: x-correlator
+      in: header
+      description: Correlation id for the different services
+      schema:
+        $ref: '#/components/schemas/XCorrelator'
+  headers:
+    x-correlator:
+      description: Correlation id for the different services
+      schema:
+        $ref: '#/components/schemas/XCorrelator'

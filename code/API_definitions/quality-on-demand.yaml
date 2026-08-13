@@ -10,7 +10,7 @@ info:
 
     The QoD API offers the API consumers the capability to request for stable latency (reduced jitter) or throughput for some specified application data flows between application clients (within a user device) and application servers (backend services). The API consumer has a pre-defined set of Quality of Service (QoS) profiles which they could choose from depending on their latency or throughput requirements.
 
-    ![QoD API Overview](https://raw.githubusercontent.com/camaraproject/QualityOnDemand/main/documentation/API_documentation/resources/QoD_latency_overview.PNG)
+    ![QoD API Overview](https://raw.githubusercontent.com/camaraproject/QualityOnDemand/r4.1/documentation/API_documentation/resources/QoD_latency_overview.PNG)
 
     The usage of the API is based on QoS session resources, which can be created (based on available QoS profiles), queried and deleted. The deletion of a requested session can be triggered by the API consumer or can be triggered automatically once the QoS session has reached its limit.
 
@@ -53,7 +53,7 @@ info:
 
     Following diagram shows the interaction between different components
 
-    ![QoD Management API](https://raw.githubusercontent.com/camaraproject/QualityOnDemand/main/documentation/API_documentation/resources/QoD_details.PNG)
+    ![QoD Management API](https://raw.githubusercontent.com/camaraproject/QualityOnDemand/r4.1/documentation/API_documentation/resources/QoD_details.PNG)
 
     <!-- CAMARA:MANDATORY:authorization-and-authentication:BEGIN -->
 
@@ -109,28 +109,23 @@ info:
 
     This API rejects requests with JSON request bodies that contain properties not declared in this specification, at any nesting level. Unknown properties result in a `400 INVALID_ARGUMENT` response.
     <!-- CAMARA:MANDATORY:request-body-strictness:END -->
-
   license:
     name: Apache 2.0
     url: https://www.apache.org/licenses/LICENSE-2.0.html
-  version: wip
+  version: 1.2.0-rc.3
   x-camara-commonalities: 0.8.0
-
-externalDocs:
-  description: Product documentation at CAMARA
-  url: https://github.com/camaraproject/QualityOnDemand
-
 servers:
-  - url: "{apiRoot}/quality-on-demand/vwip"
+  - url: '{apiRoot}/quality-on-demand/v1rc3'
     variables:
       apiRoot:
         default: http://localhost:9091
         description: API root, defined by the service provider, e.g. `api.example.com` or `api.example.com/somepath`
-
 tags:
   - name: QoS Sessions
     description: Manage QoS sessions
-
+externalDocs:
+  description: Product documentation at CAMARA
+  url: https://github.com/camaraproject/QualityOnDemand
 paths:
   /sessions:
     post:
@@ -160,103 +155,101 @@ paths:
           - When the API is invoked using a two-legged access token, the subject will be identified from the optional `device` object, which therefore MUST be provided.
           - When a three-legged access token is used however, this optional identifier MUST NOT be provided, as the subject will be uniquely identified from the access token.
         - If the requested `qosProfile` exists but is currently not available for creating a session (e.g., its status is INACTIVE or DEPRECATED), then the server will return an error with the `422 QUALITY_ON_DEMAND.QOS_PROFILE_NOT_APPLICABLE` error code.
-
       operationId: createSession
       security:
         - openId:
             - quality-on-demand:sessions:create
       parameters:
-        - $ref: "../common/CAMARA_common.yaml#/components/parameters/x-correlator"
+        - $ref: '#/components/parameters/x-correlator'
       requestBody:
         description: Parameters to create a new session
         required: true
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/CreateSession"
+              $ref: '#/components/schemas/CreateSession'
             examples:
               Example 1:
-                $ref: "#/components/examples/EXAMPLE_1_CREATION_BODY_3-LEGGED_ACCESS_TOKEN_IPv4_SUBNET"
+                $ref: '#/components/examples/EXAMPLE_1_CREATION_BODY_3-LEGGED_ACCESS_TOKEN_IPv4_SUBNET'
               Example 2:
-                $ref: "#/components/examples/EXAMPLE_2_CREATION_BODY_3-LEGGED_ACCESS_TOKEN_IP_ADDRESS_LIST"
+                $ref: '#/components/examples/EXAMPLE_2_CREATION_BODY_3-LEGGED_ACCESS_TOKEN_IP_ADDRESS_LIST'
               Example 3:
-                $ref: "#/components/examples/EXAMPLE_3_CREATION_BODY_2-LEGGED_ACCESS_TOKEN_IPv4_SUBNET"
+                $ref: '#/components/examples/EXAMPLE_3_CREATION_BODY_2-LEGGED_ACCESS_TOKEN_IPv4_SUBNET'
               Example 4:
-                $ref: "#/components/examples/EXAMPLE_4_CREATION_BODY_2-LEGGED_ACCESS_TOKEN_MULTIPLE_IDENTIFIERS_IPv4_SUBNET"
+                $ref: '#/components/examples/EXAMPLE_4_CREATION_BODY_2-LEGGED_ACCESS_TOKEN_MULTIPLE_IDENTIFIERS_IPv4_SUBNET'
       callbacks:
         notifications:
-          "{$request.body#/sink}":
+          '{$request.body#/sink}':
             post:
               tags:
                 - Session notifications callback
-              summary: "Session notifications callback"
+              summary: Session notifications callback
               description: |
                 Important: this endpoint is to be implemented by the API consumer.
                 The API provider will call this endpoint whenever any QoS session change (e.g. network termination) related event occurs.
                 Currently only QOS_STATUS_CHANGED event is defined.
               operationId: postNotification
               parameters:
-                - $ref: "../common/CAMARA_common.yaml#/components/parameters/x-correlator"
+                - $ref: '#/components/parameters/x-correlator'
               requestBody:
                 required: true
                 content:
                   application/cloudevents+json:
                     schema:
-                      $ref: "#/components/schemas/QosNotificationEvent"
+                      $ref: '#/components/schemas/QosNotificationEvent'
                     examples:
                       QOS_STATUS_CHANGED_EXAMPLE:
-                        $ref: "#/components/examples/QOS_STATUS_CHANGED_EXAMPLE"
+                        $ref: '#/components/examples/QOS_STATUS_CHANGED_EXAMPLE'
               responses:
-                "204":
+                '204':
                   description: Successful notification
                   headers:
                     x-correlator:
-                      $ref: "../common/CAMARA_common.yaml#/components/headers/x-correlator"
-                "400":
-                  $ref: "../common/CAMARA_common.yaml#/components/responses/Generic400"
-                "401":
-                  $ref: "../common/CAMARA_common.yaml#/components/responses/Generic401"
-                "403":
-                  $ref: "#/components/responses/PermissionDenied403"
-                "410":
-                  $ref: "../common/CAMARA_common.yaml#/components/responses/Generic410"
+                      $ref: '#/components/headers/x-correlator'
+                '400':
+                  $ref: '#/components/responses/Generic400'
+                '401':
+                  $ref: '#/components/responses/Generic401'
+                '403':
+                  $ref: '#/components/responses/PermissionDenied403'
+                '410':
+                  $ref: '#/components/responses/Generic410'
               security:
                 - {}
                 - notificationsBearerAuth: []
       responses:
-        "201":
+        '201':
           description: Session created
           headers:
             x-correlator:
-              $ref: "../common/CAMARA_common.yaml#/components/headers/x-correlator"
+              $ref: '#/components/headers/x-correlator'
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/SessionInfo"
+                $ref: '#/components/schemas/SessionInfo'
               examples:
                 Example 1:
-                  $ref: "#/components/examples/EXAMPLE_1_CREATION_RESPONSE_3-LEGGED_ACCESS_TOKEN_IPv4_SUBNET"
+                  $ref: '#/components/examples/EXAMPLE_1_CREATION_RESPONSE_3-LEGGED_ACCESS_TOKEN_IPv4_SUBNET'
                 Example 2:
-                  $ref: "#/components/examples/EXAMPLE_2_CREATION_RESPONSE_3-LEGGED_ACCESS_TOKEN_IP_ADDRESS_LIST"
+                  $ref: '#/components/examples/EXAMPLE_2_CREATION_RESPONSE_3-LEGGED_ACCESS_TOKEN_IP_ADDRESS_LIST'
                 Example 3:
-                  $ref: "#/components/examples/EXAMPLE_3_CREATION_RESPONSE_2-LEGGED_ACCESS_TOKEN_IPv4_SUBNET"
+                  $ref: '#/components/examples/EXAMPLE_3_CREATION_RESPONSE_2-LEGGED_ACCESS_TOKEN_IPv4_SUBNET'
                 Example 4:
-                  $ref: "#/components/examples/EXAMPLE_4_CREATION_RESPONSE_2-LEGGED_ACCESS_TOKEN_MULTIPLE_IDENTIFIERS_IPv4_SUBNET"
-        "400":
-          $ref: "#/components/responses/CreateSessionBadRequest400"
-        "401":
-          $ref: "../common/CAMARA_common.yaml#/components/responses/Generic401"
-        "403":
-          $ref: "#/components/responses/PermissionDenied403"
-        "404":
-          $ref: "../common/CAMARA_common.yaml#/components/responses/Generic404"
-        "409":
-          $ref: "#/components/responses/SessionInConflict409"
-        "422":
-          $ref: "#/components/responses/CreateSessionUnprocessableEntity422"
-        "429":
-          $ref: "../common/CAMARA_common.yaml#/components/responses/Generic429"
-
+                  $ref: '#/components/examples/EXAMPLE_4_CREATION_RESPONSE_2-LEGGED_ACCESS_TOKEN_MULTIPLE_IDENTIFIERS_IPv4_SUBNET'
+        '400':
+          $ref: '#/components/responses/CreateSessionBadRequest400'
+        '401':
+          $ref: '#/components/responses/Generic401'
+        '403':
+          $ref: '#/components/responses/PermissionDenied403'
+        '404':
+          $ref: '#/components/responses/Generic404'
+        '409':
+          $ref: '#/components/responses/SessionInConflict409'
+        '422':
+          $ref: '#/components/responses/CreateSessionUnprocessableEntity422'
+        '429':
+          $ref: '#/components/responses/Generic429'
   /sessions/{sessionId}:
     get:
       tags:
@@ -269,7 +262,6 @@ paths:
         - The access token may be either 2-legged or 3-legged.
         - If a 3-legged access token is used, the end user (and device) associated with the session must also be associated with the access token.
         - The session must have been created by the same API client given in the access token
-
       operationId: getSession
       security:
         - openId:
@@ -280,34 +272,33 @@ paths:
           description: Session ID that was obtained from the createSession operation
           required: true
           schema:
-            $ref: "#/components/schemas/SessionId"
-        - $ref: "../common/CAMARA_common.yaml#/components/parameters/x-correlator"
+            $ref: '#/components/schemas/SessionId'
+        - $ref: '#/components/parameters/x-correlator'
       responses:
-        "200":
+        '200':
           description: Contains information about active session
           headers:
             x-correlator:
-              $ref: "../common/CAMARA_common.yaml#/components/headers/x-correlator"
+              $ref: '#/components/headers/x-correlator'
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/SessionInfo"
+                $ref: '#/components/schemas/SessionInfo'
               examples:
                 SESSION_AVAILABLE:
                   $ref: '#/components/examples/SESSION_AVAILABLE_EXAMPLE'
                 SESSION_UNAVAILABLE:
                   $ref: '#/components/examples/SESSION_UNAVAILABLE_EXAMPLE'
-        "400":
-          $ref: "#/components/responses/GetSessionBadRequest400"
-        "401":
-          $ref: "../common/CAMARA_common.yaml#/components/responses/Generic401"
-        "403":
-          $ref: "#/components/responses/PermissionDenied403"
-        "404":
-          $ref: "#/components/responses/NotFound404"
-        "429":
-          $ref: "../common/CAMARA_common.yaml#/components/responses/Generic429"
-
+        '400':
+          $ref: '#/components/responses/GetSessionBadRequest400'
+        '401':
+          $ref: '#/components/responses/Generic401'
+        '403':
+          $ref: '#/components/responses/PermissionDenied403'
+        '404':
+          $ref: '#/components/responses/NotFound404'
+        '429':
+          $ref: '#/components/responses/Generic429'
     delete:
       tags:
         - QoS Sessions
@@ -324,7 +315,6 @@ paths:
         - The access token may be either 2-legged or 3-legged.
         - If a 3-legged access token is used, the subject associated with the session must also be associated with the access token.
         - The session must must have been created by the same API consumer given in the access token
-
       operationId: deleteSession
       security:
         - openId:
@@ -335,30 +325,29 @@ paths:
           description: Session ID that was obtained from the createSession operation
           required: true
           schema:
-            $ref: "#/components/schemas/SessionId"
-        - $ref: "../common/CAMARA_common.yaml#/components/parameters/x-correlator"
+            $ref: '#/components/schemas/SessionId'
+        - $ref: '#/components/parameters/x-correlator'
       responses:
-        "204":
+        '204':
           description: Session deleted
           headers:
             x-correlator:
-              $ref: "../common/CAMARA_common.yaml#/components/headers/x-correlator"
-        "400":
-          $ref: "#/components/responses/DeleteSessionBadRequest400"
-        "401":
-          $ref: "../common/CAMARA_common.yaml#/components/responses/Generic401"
-        "403":
-          $ref: "#/components/responses/PermissionDenied403"
-        "404":
-          $ref: "#/components/responses/NotFound404"
-        "429":
-          $ref: "../common/CAMARA_common.yaml#/components/responses/Generic429"
-
+              $ref: '#/components/headers/x-correlator'
+        '400':
+          $ref: '#/components/responses/DeleteSessionBadRequest400'
+        '401':
+          $ref: '#/components/responses/Generic401'
+        '403':
+          $ref: '#/components/responses/PermissionDenied403'
+        '404':
+          $ref: '#/components/responses/NotFound404'
+        '429':
+          $ref: '#/components/responses/Generic429'
   /sessions/{sessionId}/extend:
     post:
       tags:
         - QoS Sessions
-      summary: "Extend the duration of an active session"
+      summary: Extend the duration of an active session
       description: |
         Extend the overall session duration of an active QoS session (with qosStatus = AVAILABLE).
         The overall duration of the QoS session, including the additional extended duration, shall not exceed the maximum duration limit fixed for the QoS Profile. If the current duration plus the value of `requestedAdditionalDuration` exceeds the maximum limit, the new overall duration shall be capped to the maximum value allowed.
@@ -371,7 +360,6 @@ paths:
         - The access token may be either 2-legged or 3-legged.
         - If a 3-legged access token is used, the subject associated with the session must also be associated with the access token.
         - The session must must have been created by the same API consumer given in the access token
-
       operationId: extendQosSessionDuration
       security:
         - openId:
@@ -382,43 +370,42 @@ paths:
           description: Session ID that was obtained from the createSession operation
           required: true
           schema:
-            $ref: "#/components/schemas/SessionId"
-        - $ref: "../common/CAMARA_common.yaml#/components/parameters/x-correlator"
+            $ref: '#/components/schemas/SessionId'
+        - $ref: '#/components/parameters/x-correlator'
       requestBody:
         description: Parameters to extend the duration of an active session
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/ExtendSessionDuration"
+              $ref: '#/components/schemas/ExtendSessionDuration'
         required: true
       responses:
-        "200":
+        '200':
           description: Contains information about active session
           headers:
             x-correlator:
-              $ref: "../common/CAMARA_common.yaml#/components/headers/x-correlator"
+              $ref: '#/components/headers/x-correlator'
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/SessionInfo"
+                $ref: '#/components/schemas/SessionInfo'
               examples:
                 SESSION_EXTENDED:
-                  $ref: "#/components/examples/SESSION_EXTENDED_EXAMPLE"
+                  $ref: '#/components/examples/SESSION_EXTENDED_EXAMPLE'
                 SESSION_EXTENDED_WITH_DEVICE_RESPONSE:
-                  $ref: "#/components/examples/SESSION_EXTENDED_EXAMPLE_WITH_DEVICE_RESPONSE"
-        "400":
-          $ref: "#/components/responses/GenericExtendSessionDuration400"
-        "401":
-          $ref: "../common/CAMARA_common.yaml#/components/responses/Generic401"
-        "403":
-          $ref: "#/components/responses/PermissionDenied403"
-        "404":
-          $ref: "#/components/responses/NotFound404"
-        "409":
-          $ref: "#/components/responses/SessionStatusConflict409"
-        "429":
-          $ref: "../common/CAMARA_common.yaml#/components/responses/Generic429"
-
+                  $ref: '#/components/examples/SESSION_EXTENDED_EXAMPLE_WITH_DEVICE_RESPONSE'
+        '400':
+          $ref: '#/components/responses/GenericExtendSessionDuration400'
+        '401':
+          $ref: '#/components/responses/Generic401'
+        '403':
+          $ref: '#/components/responses/PermissionDenied403'
+        '404':
+          $ref: '#/components/responses/NotFound404'
+        '409':
+          $ref: '#/components/responses/SessionStatusConflict409'
+        '429':
+          $ref: '#/components/responses/Generic429'
   /retrieve-sessions:
     post:
       tags:
@@ -435,95 +422,97 @@ paths:
         - If no QoS session is found for the requested device, an empty array is returned.
         - This call uses the POST method instead of GET to comply with the CAMARA Commonalities guidelines for sending sensitive or complex data in API calls. Since the device field may contain personally identifiable information, it should not be sent via GET.
           [CAMARA API Design Guidelines](https://github.com/camaraproject/Commonalities/blob/r3.3/documentation/CAMARA-API-Design-Guide.md#65-post-or-get-for-transferring-sensitive-or-complex-data)
-
       operationId: retrieveSessionsByDevice
       parameters:
-        - $ref: "../common/CAMARA_common.yaml#/components/parameters/x-correlator"
+        - $ref: '#/components/parameters/x-correlator'
       requestBody:
         description: Parameters to get QoS session information by device
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/RetrieveSessionsInput"
+              $ref: '#/components/schemas/RetrieveSessionsInput'
         required: true
       responses:
-        "200":
+        '200':
           description: Returns the QoS sessions information for a given device. A device may have multiple sessions, thus the response is an array. An empty array is returned if no sessions are found.
           headers:
             x-correlator:
-              $ref: "../common/CAMARA_common.yaml#/components/headers/x-correlator"
+              $ref: '#/components/headers/x-correlator'
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/RetrieveSessionsOutput"
+                $ref: '#/components/schemas/RetrieveSessionsOutput'
               examples:
                 RETRIEVE_SESSIONS_ONE_ITEM:
-                  $ref: "#/components/examples/RETRIEVE_SESSIONS_EXAMPLE"
+                  $ref: '#/components/examples/RETRIEVE_SESSIONS_EXAMPLE'
                 RETRIEVE_SESSIONS_ONE_ITEM_WITH_DEVICE_DISAMBIGUATION_REQUIRED:
-                  $ref: "#/components/examples/RETRIEVE_SESSIONS_EXAMPLE_WITH_DEVICE_RESPONSE"
+                  $ref: '#/components/examples/RETRIEVE_SESSIONS_EXAMPLE_WITH_DEVICE_RESPONSE'
                 RETRIEVE_SESSIONS_NO_ITEMS:
-                  $ref: "#/components/examples/RETRIEVE_SESSIONS_EMPTY_EXAMPLE"
-        "400":
-          $ref: "../common/CAMARA_common.yaml#/components/responses/Generic400"
-        "401":
-          $ref: "../common/CAMARA_common.yaml#/components/responses/Generic401"
-        "403":
-          $ref: "#/components/responses/PermissionDenied403"
-        "404":
-          $ref: "../common/CAMARA_common.yaml#/components/responses/Generic404"
-        "422":
-          $ref: "../common/CAMARA_common.yaml#/components/responses/Generic422"
-        "429":
-          $ref: "../common/CAMARA_common.yaml#/components/responses/Generic429"
+                  $ref: '#/components/examples/RETRIEVE_SESSIONS_EMPTY_EXAMPLE'
+        '400':
+          $ref: '#/components/responses/Generic400'
+        '401':
+          $ref: '#/components/responses/Generic401'
+        '403':
+          $ref: '#/components/responses/PermissionDenied403'
+        '404':
+          $ref: '#/components/responses/Generic404'
+        '422':
+          $ref: '#/components/responses/Generic422'
+        '429':
+          $ref: '#/components/responses/Generic429'
       security:
         - openId:
-            - "quality-on-demand:sessions:retrieve-by-device"
-
+            - quality-on-demand:sessions:retrieve-by-device
 components:
   securitySchemes:
     openId:
-      $ref: "../common/CAMARA_common.yaml#/components/securitySchemes/openId"
+      type: openIdConnect
+      openIdConnectUrl: https://example.com/.well-known/openid-configuration
+      description: OpenID Connect authentication via discovery metadata.
     notificationsBearerAuth:
-      $ref: "../common/CAMARA_event_common.yaml#/components/securitySchemes/notificationsBearerAuth"
-
+      type: http
+      scheme: bearer
+      bearerFormat: '{$request.body#/sinkCredential.credentialType}'
+      description: |
+        Bearer token for notification delivery. Token format is determined
+        by `sinkCredential.credentialType` in the subscription request.
   schemas:
     SessionId:
       description: Session ID in UUID format
       type: string
       format: uuid
       maxLength: 36
-
     BaseSessionInfo:
       description: Common attributes of a QoS session
       type: object
       properties:
         applicationServer:
-          $ref: "#/components/schemas/ApplicationServer"
+          $ref: '#/components/schemas/ApplicationServer'
         devicePorts:
           description: The ports used locally by the device for flows to which the requested QoS profile should apply. If omitted, then the qosProfile will apply to all flows between the device and the specified application server address and ports
           allOf:
-            - $ref: "#/components/schemas/PortsSpec"
+            - $ref: '#/components/schemas/PortsSpec'
         applicationServerPorts:
           description: A list of single ports or port ranges on the application server
           allOf:
-            - $ref: "#/components/schemas/PortsSpec"
+            - $ref: '#/components/schemas/PortsSpec'
         qosProfile:
-          $ref: "#/components/schemas/QosProfileName"
+          $ref: '#/components/schemas/QosProfileName'
         sink:
           type: string
           format: uri
           maxLength: 2048
           pattern: ^https:\/\/.+$
           description: The address to which events about all status changes of the session (e.g. session termination) shall be delivered using the selected protocol.
-          example: "https://endpoint.example.com/sink"
+          example: https://endpoint.example.com/sink
         sinkCredential:
           description: A sink credential provides authentication or authorization information necessary to enable delivery of events to a target.
           allOf:
-            - $ref: "../common/CAMARA_event_common.yaml#/components/schemas/SinkCredential"
+            - $ref: '#/components/schemas/SinkCredential'
       required:
         - applicationServer
         - qosProfile
-
     SessionInfo:
       description: |
         Session related information returned in responses.
@@ -535,13 +524,14 @@ components:
             device:
               description: Disambiguates the device to which the session applies when multiple device identifiers were provided
               allOf:
-                - $ref: "../common/CAMARA_common.yaml#/components/schemas/DeviceResponse"
-                - example: {"phoneNumber": "+123456789"}
-        - $ref: "#/components/schemas/BaseSessionInfo"
+                - $ref: '#/components/schemas/DeviceResponse'
+                - example:
+                    phoneNumber: '+123456789'
+        - $ref: '#/components/schemas/BaseSessionInfo'
         - type: object
           properties:
             sessionId:
-              $ref: "#/components/schemas/SessionId"
+              $ref: '#/components/schemas/SessionId'
             duration:
               description: |
                 Session duration in seconds. Implementations can grant the requested session duration or set a different duration, based on network policies or conditions.
@@ -558,7 +548,7 @@ components:
               type: string
               format: date-time
               maxLength: 64
-              example: "2024-06-01T12:00:00Z"
+              example: '2024-06-01T12:00:00Z'
             expiresAt:
               description: |
                 Date and time of the QoS session expiration. It must follow [RFC 3339](https://datatracker.ietf.org/doc/html/rfc3339#section-5.6) and must have time zone.
@@ -569,24 +559,23 @@ components:
               type: string
               format: date-time
               maxLength: 64
-              example: "2024-06-01T13:00:00Z"
+              example: '2024-06-01T13:00:00Z'
             qosStatus:
-              $ref: "#/components/schemas/QosStatus"
+              $ref: '#/components/schemas/QosStatus'
             statusInfo:
-              $ref: "#/components/schemas/StatusInfo"
+              $ref: '#/components/schemas/StatusInfo'
           required:
             - sessionId
             - duration
             - qosStatus
-
     CreateSession:
       description: Attributes required to create a session
       allOf:
         - type: object
           properties:
             device:
-              $ref: "../common/CAMARA_common.yaml#/components/schemas/Device"
-        - $ref: "#/components/schemas/BaseSessionInfo"
+              $ref: '#/components/schemas/Device'
+        - $ref: '#/components/schemas/BaseSessionInfo'
         - type: object
           properties:
             duration:
@@ -599,7 +588,6 @@ components:
               example: 3600
           required:
             - duration
-
     PortsSpec:
       description: Specification of several TCP or UDP ports
       type: object
@@ -618,16 +606,16 @@ components:
               - to
             properties:
               from:
-                $ref: "../common/CAMARA_common.yaml#/components/schemas/Port"
+                $ref: '#/components/schemas/Port'
               to:
-                $ref: "../common/CAMARA_common.yaml#/components/schemas/Port"
+                $ref: '#/components/schemas/Port'
         ports:
           description: Array of TCP or UDP ports
           type: array
           minItems: 1
           maxItems: 65536
           items:
-            $ref: "../common/CAMARA_common.yaml#/components/schemas/Port"
+            $ref: '#/components/schemas/Port'
       example:
         ranges:
           - from: 5010
@@ -635,7 +623,6 @@ components:
         ports:
           - 5060
           - 5070
-
     ExtendSessionDuration:
       description: Attributes required to extend the duration of an active session
       type: object
@@ -650,7 +637,6 @@ components:
           example: 1800
       required:
         - requestedAdditionalDuration
-
     QosProfileName:
       description: |
         A unique name for identifying a specific QoS profile.
@@ -664,8 +650,7 @@ components:
       example: voice
       minLength: 3
       maxLength: 256
-      pattern: "^[a-zA-Z0-9_.-]+$"
-
+      pattern: ^[a-zA-Z0-9_.-]+$
     QosEventType:
       type: string
       description: |
@@ -673,26 +658,24 @@ components:
         `org.camaraproject.<api-name>.<event-version>.<event-name>`.
       enum:
         - org.camaraproject.quality-on-demand.v1.qos-status-changed
-
     QosNotificationEvent:
       description: |
         QoD notification event group. Extends the common CloudEvent envelope and
         constrains `type` to the event types defined by this API.
       allOf:
-        - $ref: "../common/CAMARA_event_common.yaml#/components/schemas/CloudEvent"
+        - $ref: '#/components/schemas/CloudEvent'
         - type: object
           properties:
             type:
-              $ref: "#/components/schemas/QosEventType"
+              $ref: '#/components/schemas/QosEventType'
       discriminator:
         propertyName: type
         mapping:
-          org.camaraproject.quality-on-demand.v1.qos-status-changed: "#/components/schemas/EventQosStatusChanged"
-
+          org.camaraproject.quality-on-demand.v1.qos-status-changed: '#/components/schemas/EventQosStatusChanged'
     EventQosStatusChanged:
       description: Event to notify a QoS status change
       allOf:
-        - $ref: "#/components/schemas/QosNotificationEvent"
+        - $ref: '#/components/schemas/QosNotificationEvent'
         - type: object
           properties:
             data:
@@ -703,27 +686,24 @@ components:
                 - qosStatus
               properties:
                 sessionId:
-                  $ref: "#/components/schemas/SessionId"
+                  $ref: '#/components/schemas/SessionId'
                 qosStatus:
-                  $ref: "#/components/schemas/EventQosStatus"
+                  $ref: '#/components/schemas/EventQosStatus'
                 statusInfo:
-                  $ref: "#/components/schemas/StatusInfo"
+                  $ref: '#/components/schemas/StatusInfo'
           required:
             - data
-
     StatusInfo:
       description: |
         Reason for the new `qosStatus`. Currently `statusInfo` is only applicable when `qosStatus` is 'UNAVAILABLE'.
         * `DURATION_EXPIRED` - Session terminated due to requested duration expired
         * `NETWORK_TERMINATED` - Network terminated the session before the requested duration expired, or determined during session creation that the requested QoS session cannot be provided
         * `DELETE_REQUESTED`- User requested the deletion of the session before the requested duration expired
-
       type: string
       enum:
         - DURATION_EXPIRED
         - NETWORK_TERMINATED
         - DELETE_REQUESTED
-
     ApplicationServer:
       description: |
         A server hosting backend applications to deliver some business logic to clients.
@@ -738,11 +718,9 @@ components:
           - `ipv6Address`
 
         If `ipAddresses` is specified, the QoS profile shall apply to traffic between the identified device and any of the listed application server IP addresses.
-
       oneOf:
-        - $ref: "#/components/schemas/ApplicationServerIpAddressList"
-        - $ref: "#/components/schemas/ApplicationServerIpAddressSubnets"
-
+        - $ref: '#/components/schemas/ApplicationServerIpAddressList'
+        - $ref: '#/components/schemas/ApplicationServerIpAddressSubnets'
     ApplicationServerIpAddressSubnets:
       description: An IPv4 and/or IPv6 subnet used by the application server
       type: object
@@ -751,10 +729,9 @@ components:
       additionalProperties: false
       properties:
         ipv4Address:
-          $ref: "#/components/schemas/ApplicationServerIpv4Address"
+          $ref: '#/components/schemas/ApplicationServerIpv4Address'
         ipv6Address:
-          $ref: "#/components/schemas/ApplicationServerIpv6Address"
-
+          $ref: '#/components/schemas/ApplicationServerIpv6Address'
     ApplicationServerIpAddressList:
       description: A single property called ipAddresses which is a list of IPv4 and/or IPv6 addresses that may be used by the application server
       type: object
@@ -763,8 +740,7 @@ components:
       additionalProperties: false
       properties:
         ipAddresses:
-          $ref: "#/components/schemas/ApplicationServerIpAddressListType"
-
+          $ref: '#/components/schemas/ApplicationServerIpAddressListType'
     ApplicationServerIpAddressListType:
       description: A list of unique IPv4 and/or IPv6 addresses that may be used by the application server
       type: array
@@ -774,39 +750,35 @@ components:
       items:
         description: A single IP address that may be used by the application server
         anyOf:
-          - $ref: "#/components/schemas/SingleIpv4Addr"
-          - $ref: "#/components/schemas/SingleIpv6Addr"
-
+          - $ref: '#/components/schemas/SingleIpv4Addr'
+          - $ref: '#/components/schemas/SingleIpv6Addr'
     SingleIpv4Addr:
       description: A single IPv4 address with no subnet mask
       type: string
       maxLength: 15
       format: ipv4
-      example: "203.0.113.0"
-
+      example: 203.0.113.0
     SingleIpv6Addr:
       description: A single IPv6 address with no subnet mask
       type: string
       maxLength: 45
       format: ipv6
-      example: "2001:db8:85a3:8d3:1319:8a2e:370:7344"
-
+      example: 2001:db8:85a3:8d3:1319:8a2e:370:7344
     ApplicationServerIpv4Address:
       type: string
       maxLength: 18
-      pattern: '^([01]?[0-9]?[0-9]|2[0-4][0-9]|25[0-5])(\.([01]?[0-9]?[0-9]|2[0-4][0-9]|25[0-5])){3}(\/(3[0-2]|[12]?[0-9]))?$'
-      example: "198.51.100.0/24"
+      pattern: ^([01]?[0-9]?[0-9]|2[0-4][0-9]|25[0-5])(\.([01]?[0-9]?[0-9]|2[0-4][0-9]|25[0-5])){3}(\/(3[0-2]|[12]?[0-9]))?$
+      example: 198.51.100.0/24
       description: |
         IPv4 address may be specified in form <address/mask> as:
           - address - an IPv4 number in dotted-quad form 1.2.3.4. Only this exact IP number will match the flow control rule.
           - address/mask - an IP number as above with a mask width of the form 1.2.3.4/24.
             In this case, all IP numbers from 1.2.3.0 to 1.2.3.255 will match. The bit width MUST be valid for the IP version.
-
     ApplicationServerIpv6Address:
       type: string
       maxLength: 49
-      pattern: '^[0-9a-fA-F:.]+(\/(12[0-8]|1[0-1][0-9]|[1-9]?[0-9]))?$'
-      example: "2001:db8:85a3:8d3:1319:8a2e:370:7344"
+      pattern: ^[0-9a-fA-F:.]+(\/(12[0-8]|1[0-1][0-9]|[1-9]?[0-9]))?$
+      example: 2001:db8:85a3:8d3:1319:8a2e:370:7344
       description: |
         IPv6 address may be specified in form <address/mask> as:
           - address - The /128 subnet is optional for single addresses:
@@ -815,7 +787,6 @@ components:
           - address/mask - an IP v6 number with a mask:
             - 2001:db8:85a3:8d3::0/64
             - 2001:db8:85a3:8d3::/64
-
     QosStatus:
       description: |
         The current status of the requested QoS session. The status can be one of the following:
@@ -827,7 +798,6 @@ components:
         - REQUESTED
         - AVAILABLE
         - UNAVAILABLE
-
     EventQosStatus:
       description: |
         The current status of a requested or previously available session. Applicable values in the event are:
@@ -837,33 +807,284 @@ components:
       enum:
         - AVAILABLE
         - UNAVAILABLE
-
     RetrieveSessionsInput:
       description: Parameters to get QoS session information by device
       type: object
       properties:
         device:
-          $ref: "../common/CAMARA_common.yaml#/components/schemas/Device"
-
+          $ref: '#/components/schemas/Device'
     RetrieveSessionsOutput:
       description: QoS session information for a given device
       type: array
       items:
-        $ref: "#/components/schemas/SessionInfo"
+        $ref: '#/components/schemas/SessionInfo'
       minItems: 0
       maxItems: 100
+    XCorrelator:
+      type: string
+      description: Correlator string, UUID format recommended but any string matching the pattern can be used
+      pattern: ^[a-zA-Z0-9-_:;.\/<>{}]{0,256}$
+      maxLength: 256
+      example: b4333c46-49c0-4f62-80d7-f0ef930f1c46
+    PhoneNumber:
+      description: A public identifier addressing a telephone subscription. In mobile networks it corresponds to the MSISDN (Mobile Station International Subscriber Directory Number). In order to be globally unique it has to be formatted in international format, according to E.164 standard, prefixed with '+'.
+      type: string
+      pattern: ^\+[1-9][0-9]{4,14}$
+      maxLength: 16
+      example: '+123456789'
+    NetworkAccessIdentifier:
+      description: A public identifier addressing a subscription in a mobile network. In 3GPP terminology, it corresponds to the GPSI formatted with the External Identifier ({Local Identifier}@{Domain Identifier}). Unlike the telephone number, the network access identifier is not subjected to portability ruling in force, and is individually managed by each operator.
+      type: string
+      maxLength: 2048
+      example: 123456789@example.com
+    SingleIpv4Address:
+      description: A single IPv4 address with no subnet mask
+      type: string
+      format: ipv4
+      maxLength: 15
+      example: 84.125.93.10
+    Port:
+      description: TCP or UDP port number
+      type: integer
+      format: int32
+      minimum: 1
+      maximum: 65535
+    DeviceIpv4Address:
+      type: object
+      description: |
+        The device should be identified by either the public (observed) IP address and port as seen by the application server, or the private (local) and any public (observed) IP addresses in use by the device (this information can be obtained by various means, for example from some DNS servers).
 
+        If the allocated and observed IP addresses are the same (i.e. NAT is not in use) then  the same address should be specified for both publicAddress and privateAddress.
+
+        If NAT64 is in use, the device should be identified by its publicAddress and publicPort, or separately by its allocated IPv6 address (field ipv6Address of the Device object)
+
+        In all cases, publicAddress must be specified, along with at least one of either privateAddress or publicPort, dependent upon which is known. In general, mobile devices cannot be identified by their public IPv4 address alone.
+      properties:
+        publicAddress:
+          $ref: '#/components/schemas/SingleIpv4Address'
+        privateAddress:
+          $ref: '#/components/schemas/SingleIpv4Address'
+        publicPort:
+          $ref: '#/components/schemas/Port'
+      anyOf:
+        - required:
+            - publicAddress
+            - privateAddress
+        - required:
+            - publicAddress
+            - publicPort
+      example:
+        publicAddress: 84.125.93.10
+        publicPort: 59765
+    DeviceIpv6Address:
+      description: |
+        The device should be identified by the observed IPv6 address, or by any single IPv6 address from within the subnet allocated to the device (e.g. adding ::0 to the /64 prefix).
+      type: string
+      format: ipv6
+      maxLength: 45
+      example: 2001:db8:85a3:8d3:1319:8a2e:370:7344
+    Device:
+      description: |
+        End-user equipment able to connect to a mobile network. Examples of devices include smartphones or IoT sensors/actuators.
+            The developer can choose to provide the below specified device identifiers:
+            * `ipv4Address`
+            * `ipv6Address`
+            * `phoneNumber`
+            * `networkAccessIdentifier`
+            NOTE1: the network operator might support only a subset of these options. The API Consumer can provide multiple identifiers to ensure compatibility across different network operators. In this case, the API Provider will use one of the identifiers for the API logic without performing any matching checks among the provided identifiers.
+            NOTE2: as for this Commonalities release, we are enforcing that the networkAccessIdentifier is only part of the schema for future-proofing, and CAMARA does not currently allow its use. After the CAMARA meta-release work is concluded and the relevant issues are resolved, its use will need to be explicitly documented in the guidelines.
+      type: object
+      properties:
+        phoneNumber:
+          $ref: '#/components/schemas/PhoneNumber'
+        networkAccessIdentifier:
+          $ref: '#/components/schemas/NetworkAccessIdentifier'
+        ipv4Address:
+          $ref: '#/components/schemas/DeviceIpv4Address'
+        ipv6Address:
+          $ref: '#/components/schemas/DeviceIpv6Address'
+      minProperties: 1
+    SinkCredential:
+      description: A sink credential provides authentication or authorization information necessary to enable delivery of events to a target.
+      type: object
+      properties:
+        credentialType:
+          type: string
+          enum:
+            - ACCESSTOKEN
+            - PRIVATE_KEY_JWT
+          description: |
+            The type of the credential - MUST be set to ACCESSTOKEN or PRIVATE_KEY_JWT for now
+      discriminator:
+        propertyName: credentialType
+        mapping:
+          ACCESSTOKEN: '#/components/schemas/AccessTokenCredential'
+          PRIVATE_KEY_JWT: '#/components/schemas/PrivateKeyJWTCredential'
+      required:
+        - credentialType
+    AccessTokenCredential:
+      type: object
+      description: An access token credential. This type of credential is meant to be used by API Consumers that have limited capabilities to handle authorization requests.
+      allOf:
+        - $ref: '#/components/schemas/SinkCredential'
+        - type: object
+          properties:
+            accessToken:
+              description: REQUIRED. An access token is a token granting access to the target resource.
+              type: string
+              maxLength: 4096
+              writeOnly: true
+            accessTokenExpiresUtc:
+              type: string
+              format: date-time
+              maxLength: 64
+              description: |
+                REQUIRED. An absolute (UTC) timestamp at which the token shall be considered expired.
+                In the case of an ACCESS_TOKEN_EXPIRED termination reason, implementation should notify the client before the expiration date.
+                If the access token is a JWT and registered "exp" (Expiration Time) claim is present, the two expiry times should match.
+                It must follow [RFC 3339](https://datatracker.ietf.org/doc/html/rfc3339#section-5.6) and must have time zone.
+              example: '2023-07-03T12:27:08.312Z'
+            accessTokenType:
+              description: REQUIRED. Type of the access token (See [OAuth 2.0](https://tools.ietf.org/html/rfc6749#section-7.1)).
+              type: string
+              writeOnly: true
+              enum:
+                - bearer
+          required:
+            - accessToken
+            - accessTokenExpiresUtc
+            - accessTokenType
+    PrivateKeyJWTCredential:
+      type: object
+      description: Use PRIVATE_KEY_JWT to get an access token. This type of credential is to be used by clients that have an authorization server.
+      allOf:
+        - $ref: '#/components/schemas/SinkCredential'
+        - type: object
+          properties:
+            clientId:
+              description: The client ID used to authenticate when requesting an access token using PRIVATE_KEY_JWT.
+              type: string
+              maxLength: 128
+              writeOnly: true
+            tokenUri:
+              description: The URI where to request an access token using PRIVATE_KEY_JWT.
+              type: string
+              format: uri
+              maxLength: 2048
+              pattern: ^https:\/\/.+$
+              writeOnly: true
+            jwksUri:
+              description: The URI used to request the public key to verify that the JWT assertion was signed by PRIVATE_KEY_JWT.
+              type: string
+              format: uri
+              maxLength: 2048
+              pattern: ^https:\/\/.+$
+              readOnly: true
+    DeviceResponse:
+      description: |
+        An identifier for the end-user equipment able to connect to the network that the response refers to. This parameter is only returned when the API consumer includes the `device` parameter in their request (i.e. they are using a two-legged access token), and is relevant when more than one device identifier is specified, as only one of those device identifiers is allowed in the response.
+
+        If the API consumer provides more than one device identifier in their request, and this schema is included in the response definition, the API provider MUST use it to return a single identifier which is the one they are using to fulfil the request, even if the identifiers do not match the same device. API provider does not perform any logic to validate/correlate that the indicated device identifiers match the same device. No error should be returned if the identifiers are otherwise valid to prevent API consumers correlating different identifiers with a given end user.
+      allOf:
+        - $ref: '#/components/schemas/Device'
+        - maxProperties: 1
+    ErrorInfo:
+      type: object
+      description: A structured error response providing details about a failed request, including the HTTP status code, an error code, and a human-readable message
+      required:
+        - status
+        - code
+        - message
+      properties:
+        status:
+          type: integer
+          format: int32
+          minimum: 100
+          maximum: 599
+          description: HTTP response status code
+        code:
+          type: string
+          maxLength: 96
+          description: A human-readable code to describe the error
+        message:
+          type: string
+          maxLength: 512
+          description: A human-readable description of what the event represents
+    Source:
+      type: string
+      format: uri-reference
+      minLength: 1
+      maxLength: 2048
+      description: |
+        Identifies the context in which an event happened - be a non-empty `URI-reference` like:
+        - URI with a DNS authority:
+          * https://github.com/cloudevents
+          * mailto:cncf-wg-serverless@lists.cncf.io
+        - Universally-unique URN with a UUID:
+          * urn:uuid:6e8bc430-9c3a-11d9-9669-0800200c9a66
+        - Application-specific identifier:
+          * /cloudevents/spec/pull/123
+          * 1-555-123-4567
+      example: https://notificationSendServer12.example.com
+    DateTime:
+      type: string
+      format: date-time
+      maxLength: 64
+      description: Timestamp. It must follow [RFC 3339](https://datatracker.ietf.org/doc/html/rfc3339#section-5.6) and must have time zone.
+      example: '2018-04-05T17:31:00Z'
+    CloudEvent:
+      type: object
+      description: |
+        CloudEvents 1.0 specification envelope.
+        This schema is the stable base for all CAMARA event notifications.
+        It imposes no constraints on `type` values or `data` structure —
+        those concerns belong to the API-specific and lifecycle group schemas.
+      required:
+        - id
+        - source
+        - specversion
+        - type
+        - time
+      properties:
+        id:
+          type: string
+          maxLength: 256
+          description: Identifier of this event, unique within the source context.
+        source:
+          $ref: '#/components/schemas/Source'
+        type:
+          type: string
+          maxLength: 512
+          description: |
+            Identifies the event type. CAMARA APIs use reverse-DNS notation:
+            `org.camaraproject.<api-name>.<event-version>.<event-name>`
+            The api-name segment makes each type globally unique across API groups.
+        specversion:
+          type: string
+          description: Version of the specification to which this event conforms (must be 1.0 if it conforms to cloudevents 1.0.2 version)
+          enum:
+            - '1.0'
+        datacontenttype:
+          type: string
+          description: media-type that describes the event payload encoding, must be "application/json" for CAMARA APIs
+          enum:
+            - application/json
+        data:
+          type: object
+          description: Event details payload. Structure is defined by each concrete event schema.
+        time:
+          $ref: '#/components/schemas/DateTime'
   responses:
     CreateSessionBadRequest400:
       description: Bad Request when creating a session
       headers:
         x-correlator:
-          $ref: "../common/CAMARA_common.yaml#/components/headers/x-correlator"
+          $ref: '#/components/headers/x-correlator'
       content:
         application/json:
           schema:
             allOf:
-              - $ref: "../common/CAMARA_common.yaml#/components/schemas/ErrorInfo"
+              - $ref: '#/components/schemas/ErrorInfo'
               - type: object
                 properties:
                   status:
@@ -912,17 +1133,16 @@ components:
                 status: 400
                 code: INVALID_SINK
                 message: sink not valid for the specified protocol
-
     GenericExtendSessionDuration400:
       description: Bad Request
       headers:
         x-correlator:
-          $ref: "../common/CAMARA_common.yaml#/components/headers/x-correlator"
+          $ref: '#/components/headers/x-correlator'
       content:
         application/json:
           schema:
             allOf:
-              - $ref: "../common/CAMARA_common.yaml#/components/schemas/ErrorInfo"
+              - $ref: '#/components/schemas/ErrorInfo'
               - type: object
                 properties:
                   status:
@@ -952,17 +1172,16 @@ components:
                 status: 400
                 code: QUALITY_ON_DEMAND.DURATION_OUT_OF_RANGE
                 message: The requested duration is out of the allowed range for the specific QoS profile
-
     GetSessionBadRequest400:
       description: Bad Request when retrieving a session
       headers:
         x-correlator:
-          $ref: "../common/CAMARA_common.yaml#/components/headers/x-correlator"
+          $ref: '#/components/headers/x-correlator'
       content:
         application/json:
           schema:
             allOf:
-              - $ref: "../common/CAMARA_common.yaml#/components/schemas/ErrorInfo"
+              - $ref: '#/components/schemas/ErrorInfo'
               - type: object
                 properties:
                   status:
@@ -978,17 +1197,16 @@ components:
                 status: 400
                 code: INVALID_ARGUMENT
                 message: Client specified an invalid argument, request body or query param.
-
     DeleteSessionBadRequest400:
       description: Bad Request when deleting a session
       headers:
         x-correlator:
-          $ref: "../common/CAMARA_common.yaml#/components/headers/x-correlator"
+          $ref: '#/components/headers/x-correlator'
       content:
         application/json:
           schema:
             allOf:
-              - $ref: "../common/CAMARA_common.yaml#/components/schemas/ErrorInfo"
+              - $ref: '#/components/schemas/ErrorInfo'
               - type: object
                 properties:
                   status:
@@ -1004,17 +1222,16 @@ components:
                 status: 400
                 code: INVALID_ARGUMENT
                 message: Client specified an invalid argument, request body or query param.
-
     PermissionDenied403:
       description: Forbidden
       headers:
         x-correlator:
-          $ref: "../common/CAMARA_common.yaml#/components/headers/x-correlator"
+          $ref: '#/components/headers/x-correlator'
       content:
         application/json:
           schema:
             allOf:
-              - $ref: "../common/CAMARA_common.yaml#/components/schemas/ErrorInfo"
+              - $ref: '#/components/schemas/ErrorInfo'
               - type: object
                 properties:
                   status:
@@ -1030,17 +1247,16 @@ components:
                 status: 403
                 code: PERMISSION_DENIED
                 message: Client does not have sufficient permissions to perform this action.
-
     NotFound404:
       description: Not found
       headers:
         x-correlator:
-          $ref: "../common/CAMARA_common.yaml#/components/headers/x-correlator"
+          $ref: '#/components/headers/x-correlator'
       content:
         application/json:
           schema:
             allOf:
-              - $ref: "../common/CAMARA_common.yaml#/components/schemas/ErrorInfo"
+              - $ref: '#/components/schemas/ErrorInfo'
               - type: object
                 properties:
                   status:
@@ -1056,17 +1272,16 @@ components:
                 status: 404
                 code: NOT_FOUND
                 message: The specified resource is not found.
-
     SessionInConflict409:
       description: Conflict
       headers:
         x-correlator:
-          $ref: "../common/CAMARA_common.yaml#/components/headers/x-correlator"
+          $ref: '#/components/headers/x-correlator'
       content:
         application/json:
           schema:
             allOf:
-              - $ref: "../common/CAMARA_common.yaml#/components/schemas/ErrorInfo"
+              - $ref: '#/components/schemas/ErrorInfo'
               - type: object
                 properties:
                   status:
@@ -1079,17 +1294,16 @@ components:
             status: 409
             code: CONFLICT
             message: Conflict with an existing session for the same device.
-
     SessionStatusConflict409:
       description: Conflict
       headers:
         x-correlator:
-          $ref: "../common/CAMARA_common.yaml#/components/headers/x-correlator"
+          $ref: '#/components/headers/x-correlator'
       content:
         application/json:
           schema:
             allOf:
-              - $ref: "../common/CAMARA_common.yaml#/components/schemas/ErrorInfo"
+              - $ref: '#/components/schemas/ErrorInfo'
               - type: object
                 properties:
                   status:
@@ -1105,17 +1319,16 @@ components:
                 status: 409
                 code: QUALITY_ON_DEMAND.SESSION_EXTENSION_NOT_ALLOWED
                 message: Extending the session duration is not allowed in the current state ({qosStatus}). The session must be in the AVAILABLE state.
-
     CreateSessionUnprocessableEntity422:
       description: Unprocessable Content
       headers:
         x-correlator:
-          $ref: "../common/CAMARA_common.yaml#/components/headers/x-correlator"
+          $ref: '#/components/headers/x-correlator'
       content:
         application/json:
           schema:
             allOf:
-              - $ref: "../common/CAMARA_common.yaml#/components/schemas/ErrorInfo"
+              - $ref: '#/components/schemas/ErrorInfo'
               - type: object
                 properties:
                   status:
@@ -1166,7 +1379,198 @@ components:
                 status: 422
                 code: QUALITY_ON_DEMAND.QOS_PROFILE_NOT_APPLICABLE
                 message: The requested QoS Profile is currently not available for session creation.
-
+    Generic401:
+      description: Unauthorized
+      headers:
+        x-correlator:
+          $ref: '#/components/headers/x-correlator'
+      content:
+        application/json:
+          schema:
+            allOf:
+              - $ref: '#/components/schemas/ErrorInfo'
+              - type: object
+                properties:
+                  status:
+                    enum:
+                      - 401
+                  code:
+                    enum:
+                      - UNAUTHENTICATED
+          examples:
+            GENERIC_401_UNAUTHENTICATED:
+              description: Request cannot be authenticated and a new authentication is required
+              value:
+                status: 401
+                code: UNAUTHENTICATED
+                message: Request not authenticated due to missing, invalid, or expired credentials. A new authentication is required.
+    Generic404:
+      description: Not found
+      headers:
+        x-correlator:
+          $ref: '#/components/headers/x-correlator'
+      content:
+        application/json:
+          schema:
+            allOf:
+              - $ref: '#/components/schemas/ErrorInfo'
+              - type: object
+                properties:
+                  status:
+                    enum:
+                      - 404
+                  code:
+                    enum:
+                      - NOT_FOUND
+                      - IDENTIFIER_NOT_FOUND
+          examples:
+            GENERIC_404_NOT_FOUND:
+              description: Resource is not found
+              value:
+                status: 404
+                code: NOT_FOUND
+                message: The specified resource is not found.
+            GENERIC_404_IDENTIFIER_NOT_FOUND:
+              description: Some identifier cannot be matched to a device
+              value:
+                status: 404
+                code: IDENTIFIER_NOT_FOUND
+                message: Device identifier not found.
+    Generic429:
+      description: Too Many Requests
+      headers:
+        x-correlator:
+          $ref: '#/components/headers/x-correlator'
+      content:
+        application/json:
+          schema:
+            allOf:
+              - $ref: '#/components/schemas/ErrorInfo'
+              - type: object
+                properties:
+                  status:
+                    enum:
+                      - 429
+                  code:
+                    enum:
+                      - QUOTA_EXCEEDED
+                      - TOO_MANY_REQUESTS
+          examples:
+            GENERIC_429_QUOTA_EXCEEDED:
+              description: Request is rejected due to exceeding a business quota limit
+              value:
+                status: 429
+                code: QUOTA_EXCEEDED
+                message: Out of resource quota.
+            GENERIC_429_TOO_MANY_REQUESTS:
+              description: Access to the API has been temporarily blocked due to rate or spike arrest limits being reached
+              value:
+                status: 429
+                code: TOO_MANY_REQUESTS
+                message: Rate limit reached.
+    Generic400:
+      description: Bad Request
+      headers:
+        x-correlator:
+          $ref: '#/components/headers/x-correlator'
+      content:
+        application/json:
+          schema:
+            allOf:
+              - $ref: '#/components/schemas/ErrorInfo'
+              - type: object
+                properties:
+                  status:
+                    enum:
+                      - 400
+                  code:
+                    enum:
+                      - INVALID_ARGUMENT
+                      - OUT_OF_RANGE
+          examples:
+            GENERIC_400_INVALID_ARGUMENT:
+              description: Invalid Argument. Generic Syntax Exception
+              value:
+                status: 400
+                code: INVALID_ARGUMENT
+                message: Client specified an invalid argument, request body or query param.
+            GENERIC_400_OUT_OF_RANGE:
+              description: Out of Range. Specific Syntax Exception used when a given field has a pre-defined range or a invalid filter criteria combination is requested
+              value:
+                status: 400
+                code: OUT_OF_RANGE
+                message: Client specified an invalid range.
+    Generic410:
+      description: Gone
+      headers:
+        x-correlator:
+          $ref: '#/components/headers/x-correlator'
+      content:
+        application/json:
+          schema:
+            allOf:
+              - $ref: '#/components/schemas/ErrorInfo'
+              - type: object
+                properties:
+                  status:
+                    enum:
+                      - 410
+                  code:
+                    enum:
+                      - GONE
+          examples:
+            GENERIC_410_GONE:
+              description: Use in notifications flow to allow API Consumer to indicate that its callback is no longer available
+              value:
+                status: 410
+                code: GONE
+                message: Access to the target resource is no longer available.
+    Generic422:
+      description: Unprocessable Content
+      headers:
+        x-correlator:
+          $ref: '#/components/headers/x-correlator'
+      content:
+        application/json:
+          schema:
+            allOf:
+              - $ref: '#/components/schemas/ErrorInfo'
+              - type: object
+                properties:
+                  status:
+                    enum:
+                      - 422
+                  code:
+                    enum:
+                      - SERVICE_NOT_APPLICABLE
+                      - MISSING_IDENTIFIER
+                      - UNSUPPORTED_IDENTIFIER
+                      - UNNECESSARY_IDENTIFIER
+          examples:
+            GENERIC_422_SERVICE_NOT_APPLICABLE:
+              description: Service not applicable for the provided identifier
+              value:
+                status: 422
+                code: SERVICE_NOT_APPLICABLE
+                message: The service is not available for the provided identifier.
+            GENERIC_422_MISSING_IDENTIFIER:
+              description: An identifier is not included in the request and the device or phone number identification cannot be derived from the 3-legged access token
+              value:
+                status: 422
+                code: MISSING_IDENTIFIER
+                message: The device cannot be identified.
+            GENERIC_422_UNSUPPORTED_IDENTIFIER:
+              description: None of the provided identifiers is supported by the implementation
+              value:
+                status: 422
+                code: UNSUPPORTED_IDENTIFIER
+                message: The identifier provided is not supported.
+            GENERIC_422_UNNECESSARY_IDENTIFIER:
+              description: An explicit identifier is provided when a device or phone number has already been identified from the access token
+              value:
+                status: 422
+                code: UNNECESSARY_IDENTIFIER
+                message: The device is already identified by the access token.
   examples:
     EXAMPLE_1_CREATION_BODY_3-LEGGED_ACCESS_TOKEN_IPv4_SUBNET:
       summary: Session creation example 1
@@ -1177,7 +1581,6 @@ components:
         qosProfile: QOS_L
         duration: 3600
         sink: https://application-server.com/notifications
-
     EXAMPLE_1_CREATION_RESPONSE_3-LEGGED_ACCESS_TOKEN_IPv4_SUBNET:
       summary: Successful session creation example 1
       description: Example response after a new QoS session has been created using a 3-legged access token (or possibly a single device identifier) when the application server was identified by IPv4 subnet
@@ -1189,47 +1592,43 @@ components:
         sessionId: 3fa85f64-5717-4562-b3fc-2c963f66afa6
         duration: 3600
         qosStatus: REQUESTED
-
     EXAMPLE_2_CREATION_BODY_3-LEGGED_ACCESS_TOKEN_IP_ADDRESS_LIST:
       summary: Session creation example 2
       description: Example request using a 3-legged access token to identify the device and identifying the application server by IP address list
       value:
         applicationServer:
           ipAddresses:
-            - "198.51.100.0"
-            - "198.51.100.255"
-            - "2001:db8:85a3:8d3:1319:8a2e:370:7344"
+            - 198.51.100.0
+            - 198.51.100.255
+            - 2001:db8:85a3:8d3:1319:8a2e:370:7344
         qosProfile: QOS_L
         duration: 3600
         sink: https://application-server.com/notifications
-
     EXAMPLE_2_CREATION_RESPONSE_3-LEGGED_ACCESS_TOKEN_IP_ADDRESS_LIST:
       summary: Successful session creation example 2
       description: Example response after a new QoS session has been created using a 3-legged access token (or possibly a single device identifier) when the application server was identified by IP address list
       value:
         applicationServer:
           ipAddresses:
-            - "198.51.100.0"
-            - "198.51.100.255"
-            - "2001:db8:85a3:8d3:1319:8a2e:370:7344"
+            - 198.51.100.0
+            - 198.51.100.255
+            - 2001:db8:85a3:8d3:1319:8a2e:370:7344
         qosProfile: QOS_L
         sink: https://application-server.com/notifications
         sessionId: 3fa85f64-5717-4562-b3fc-2c963f66afa6
         duration: 3600
         qosStatus: REQUESTED
-
     EXAMPLE_3_CREATION_BODY_2-LEGGED_ACCESS_TOKEN_IPv4_SUBNET:
       summary: Session creation example 3
       description: Example request using a 2-legged access token to identify the device and identifying the application server by IPv4 subnet
       value:
         device:
-          phoneNumber: "+123456789"
+          phoneNumber: '+123456789'
         applicationServer:
           ipv4Address: 198.51.100.0/24
         qosProfile: QOS_L
         duration: 3600
         sink: https://application-server.com/notifications
-
     EXAMPLE_3_CREATION_RESPONSE_2-LEGGED_ACCESS_TOKEN_IPv4_SUBNET:
       summary: Successful session creation example 3
       description: Example response after a new QoS session has been created using a 2-legged access token with a single device identifier
@@ -1241,29 +1640,27 @@ components:
         sessionId: 3fa85f64-5717-4562-b3fc-2c963f66afa6
         duration: 3600
         qosStatus: REQUESTED
-
     EXAMPLE_4_CREATION_BODY_2-LEGGED_ACCESS_TOKEN_MULTIPLE_IDENTIFIERS_IPv4_SUBNET:
       summary: Session creation example 4
       description: Example request using a 2-legged access token with multiple device identifiers, and identifying the application server by IPv4 subnet
       value:
         device:
-          phoneNumber: "+123456789"
+          phoneNumber: '+123456789'
           ipv4Address:
-            publicAddress: "203.0.113.0"
+            publicAddress: 203.0.113.0
             publicPort: 59765
         applicationServer:
           ipv4Address: 198.51.100.0/24
         qosProfile: QOS_L
         duration: 3600
         sink: https://application-server.com/notifications
-
     EXAMPLE_4_CREATION_RESPONSE_2-LEGGED_ACCESS_TOKEN_MULTIPLE_IDENTIFIERS_IPv4_SUBNET:
       summary: Successful session creation example 4
       description: Example response after a new QoS session has been created using a 2-legged access token indicating which device identifier is being used for the QoS session
       value:
         device:
           ipv4Address:
-            publicAddress: "203.0.113.0"
+            publicAddress: 203.0.113.0
             publicPort: 59765
         applicationServer:
           ipv4Address: 198.51.100.0/24
@@ -1272,7 +1669,6 @@ components:
         sessionId: 3fa85f64-5717-4562-b3fc-2c963f66afa6
         duration: 3600
         qosStatus: REQUESTED
-
     SESSION_AVAILABLE_EXAMPLE:
       summary: QoS session status is available
       description: QoS session info when status is available
@@ -1283,10 +1679,9 @@ components:
         qosProfile: QOS_L
         sink: https://application-server.com/notifications
         sessionId: 3fa85f64-5717-4562-b3fc-2c963f66afa6
-        startedAt: "2024-06-01T12:00:00Z"
-        expiresAt: "2024-06-01T13:00:00Z"
+        startedAt: '2024-06-01T12:00:00Z'
+        expiresAt: '2024-06-01T13:00:00Z'
         qosStatus: AVAILABLE
-
     SESSION_UNAVAILABLE_EXAMPLE:
       summary: QoS session is unavailable
       description: QoS session info when status is unavailable due to network termination
@@ -1297,25 +1692,23 @@ components:
         qosProfile: QOS_L
         sink: https://application-server.com/notifications
         sessionId: 3fa85f64-5717-4562-b3fc-2c963f66afa6
-        startedAt: "2024-06-01T12:00:00Z"
-        expiresAt: "2024-06-01T12:40:28Z"
+        startedAt: '2024-06-01T12:00:00Z'
+        expiresAt: '2024-06-01T12:40:28Z'
         qosStatus: UNAVAILABLE
         statusInfo: NETWORK_TERMINATED
-
     QOS_STATUS_CHANGED_EXAMPLE:
       summary: QoS status changed
       description: Cloud event example for QoS status change to UNAVAILABLE due to DURATION_EXPIRED
       value:
         id: 83a0d986-0866-4f38-b8c0-fc65bfcda452
-        source: 'https://api.example.com/qod/v1/sessions/123e4567-e89b-12d3-a456-426614174000'
+        source: https://api.example.com/qod/v1/sessions/123e4567-e89b-12d3-a456-426614174000
         specversion: '1.0'
-        type: "org.camaraproject.quality-on-demand.v1.qos-status-changed"
+        type: org.camaraproject.quality-on-demand.v1.qos-status-changed
         time: '2024-06-01T13:00:00Z'
         data:
-          sessionId: '123e4567-e89b-12d3-a456-426614174000'
-          qosStatus: 'UNAVAILABLE'
-          statusInfo: 'DURATION_EXPIRED'
-
+          sessionId: 123e4567-e89b-12d3-a456-426614174000
+          qosStatus: UNAVAILABLE
+          statusInfo: DURATION_EXPIRED
     RETRIEVE_SESSIONS_EXAMPLE:
       summary: List of QoS sessions for the specified device
       description: A single QoS session for the specified device is available
@@ -1326,26 +1719,24 @@ components:
           sink: https://application-server.com/notifications
           sessionId: 3fa85f64-5717-4562-b3fc-2c963f66afa6
           duration: 3600
-          startedAt: "2024-06-01T12:00:00Z"
-          expiresAt: "2024-06-01T13:00:00Z"
+          startedAt: '2024-06-01T12:00:00Z'
+          expiresAt: '2024-06-01T13:00:00Z'
           qosStatus: AVAILABLE
-
     RETRIEVE_SESSIONS_EXAMPLE_WITH_DEVICE_RESPONSE:
       summary: List of QoS sessions for a specified device with the device in the response
       description: A single QoS session for the device is available and the device to which the session applies is included in the response
       value:
         - device:
-            phoneNumber: "+123456789"
+            phoneNumber: '+123456789'
           applicationServer:
             ipv4Address: 0.0.0.0/0
           qosProfile: QOS_L
           sink: https://application-server.com/notifications
           sessionId: 3fa85f64-5717-4562-b3fc-2c963f66afa6
           duration: 3600
-          startedAt: "2024-06-01T12:00:00Z"
-          expiresAt: "2024-06-01T13:00:00Z"
+          startedAt: '2024-06-01T12:00:00Z'
+          expiresAt: '2024-06-01T13:00:00Z'
           qosStatus: AVAILABLE
-
     SESSION_EXTENDED_EXAMPLE:
       summary: Successful session extension with device not included in response
       description: Example response after the duration of an active QoS session has been extended using a 3-legged access token, or possibly a single device identifier. The session remains AVAILABLE with updated duration and expiresAt values.
@@ -1356,27 +1747,37 @@ components:
         sink: https://application-server.com/notifications
         sessionId: 3fa85f64-5717-4562-b3fc-2c963f66afa6
         duration: 5400
-        startedAt: "2024-06-01T12:00:00Z"
-        expiresAt: "2024-06-01T13:30:00Z"
+        startedAt: '2024-06-01T12:00:00Z'
+        expiresAt: '2024-06-01T13:30:00Z'
         qosStatus: AVAILABLE
-
     SESSION_EXTENDED_EXAMPLE_WITH_DEVICE_RESPONSE:
       summary: Successful session extension with device included in response
       description: Example response after the duration of an active QoS session has been extended using a 2-legged access token with multiple device identifiers, or possibly only a single device identifier. The session remains AVAILABLE with updated duration and expiresAt values.
       value:
         device:
-          phoneNumber: "+123456789"
+          phoneNumber: '+123456789'
         applicationServer:
           ipv4Address: 198.51.100.0/24
         qosProfile: QOS_L
         sink: https://application-server.com/notifications
         sessionId: 3fa85f64-5717-4562-b3fc-2c963f66afa6
         duration: 5400
-        startedAt: "2024-06-01T12:00:00Z"
-        expiresAt: "2024-06-01T13:30:00Z"
+        startedAt: '2024-06-01T12:00:00Z'
+        expiresAt: '2024-06-01T13:30:00Z'
         qosStatus: AVAILABLE
-
     RETRIEVE_SESSIONS_EMPTY_EXAMPLE:
       summary: No sessions found for the device
       description: An empty array is returned when no sessions are found for the device
       value: []
+  parameters:
+    x-correlator:
+      name: x-correlator
+      in: header
+      description: Correlation id for the different services
+      schema:
+        $ref: '#/components/schemas/XCorrelator'
+  headers:
+    x-correlator:
+      description: Correlation id for the different services
+      schema:
+        $ref: '#/components/schemas/XCorrelator'
