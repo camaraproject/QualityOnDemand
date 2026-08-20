@@ -183,6 +183,9 @@ paths:
                 $ref: "#/components/examples/EXAMPLE_3_CREATION_BODY_2-LEGGED_ACCESS_TOKEN_IPv4_SUBNET"
               Example 4:
                 $ref: "#/components/examples/EXAMPLE_4_CREATION_BODY_2-LEGGED_ACCESS_TOKEN_MULTIPLE_IDENTIFIERS_IPv4_SUBNET"
+              Example 5:
+                $ref: "#/components/examples/EXAMPLE_5_CREATION_BODY_3-LEGGED_ACCESS_TOKEN_IPv4_SUBNET_PORT_LIMITS"
+
       callbacks:
         notifications:
           "{$request.body#/sink}":
@@ -242,6 +245,8 @@ paths:
                   $ref: "#/components/examples/EXAMPLE_3_CREATION_RESPONSE_2-LEGGED_ACCESS_TOKEN_IPv4_SUBNET"
                 Example 4:
                   $ref: "#/components/examples/EXAMPLE_4_CREATION_RESPONSE_2-LEGGED_ACCESS_TOKEN_MULTIPLE_IDENTIFIERS_IPv4_SUBNET"
+                Example 5:
+                  $ref: "#/components/examples/EXAMPLE_5_CREATION_RESPONSE_3-LEGGED_ACCESS_TOKEN_IPv4_SUBNET_PORT_LIMITS"
         "400":
           $ref: "#/components/responses/CreateSessionBadRequest400"
         "401":
@@ -499,12 +504,12 @@ components:
       properties:
         applicationServer:
           $ref: "#/components/schemas/ApplicationServer"
-        devicePorts:
-          description: The ports used locally by the device for flows to which the requested QoS profile should apply. If omitted, then the qosProfile will apply to all flows between the device and the specified application server address and ports
+        devicePort:
+          description: A single port used locally by the device for flows to which the requested QoS profile should apply. If omitted, then the qosProfile will apply to all flows between the device and the specified application server address and ports.
           allOf:
-            - $ref: "#/components/schemas/PortsSpec"
+            - $ref: "../common/CAMARA_common.yaml#/components/schemas/Port"
         applicationServerPorts:
-          description: A list of single ports or port ranges on the application server
+          description: A list of single ports or port ranges on the application server. If omitted, then the qosProfile will apply to all flows between the specified device ports and the specified application server address(es).
           allOf:
             - $ref: "#/components/schemas/PortsSpec"
         qosProfile:
@@ -601,40 +606,31 @@ components:
             - duration
 
     PortsSpec:
-      description: Specification of several TCP or UDP ports
+      description: Specification of TCP or UDP ports, either as a single port or single range of ports
       type: object
       minProperties: 1
-      properties:
-        ranges:
-          description: Range of TCP or UDP ports
-          type: array
-          minItems: 1
-          maxItems: 65536
-          items:
-            description: A single range of TCP or UDP ports, specified by its first and last port (inclusive)
-            type: object
-            required:
-              - from
-              - to
-            properties:
-              from:
-                $ref: "../common/CAMARA_common.yaml#/components/schemas/Port"
-              to:
-                $ref: "../common/CAMARA_common.yaml#/components/schemas/Port"
-        ports:
-          description: Array of TCP or UDP ports
-          type: array
-          minItems: 1
-          maxItems: 65536
-          items:
-            $ref: "../common/CAMARA_common.yaml#/components/schemas/Port"
+      maxProperties: 1
+      additionalProperties: false
       example:
-        ranges:
-          - from: 5010
-            to: 5020
-        ports:
-          - 5060
-          - 5070
+        range:
+          from: 5010
+          to: 5020
+      properties:
+        range:
+          description: The range of TCP or UDP ports to be included in the enhanced flow
+          type: object
+          required:
+            - from
+            - to
+          properties:
+            from:
+              $ref: "../common/CAMARA_common.yaml#/components/schemas/Port"
+            to:
+              $ref: "../common/CAMARA_common.yaml#/components/schemas/Port"
+        port:
+          description: A single TCP or UDP port to be included in the enhanced flow
+          allOf:
+            - $ref: "../common/CAMARA_common.yaml#/components/schemas/Port"
 
     ExtendSessionDuration:
       description: Attributes required to extend the duration of an active session
@@ -1267,6 +1263,38 @@ components:
             publicPort: 59765
         applicationServer:
           ipv4Address: 198.51.100.0/24
+        qosProfile: QOS_L
+        sink: https://application-server.com/notifications
+        sessionId: 3fa85f64-5717-4562-b3fc-2c963f66afa6
+        duration: 3600
+        qosStatus: REQUESTED
+
+    EXAMPLE_5_CREATION_BODY_3-LEGGED_ACCESS_TOKEN_IPv4_SUBNET_PORT_LIMITS:
+      summary: Session creation example 5
+      description: Example request using a 3-legged access token to identify the device, an IPv4 subnet to identify the application server, and limiting the ports applicable to the enhanced flow
+      value:
+        applicationServer:
+          ipv4Address: 198.51.100.0/24
+        devicePort: 62381
+        applicationServerPorts:
+          range:
+            from: 5010
+            to: 5020
+        qosProfile: QOS_L
+        duration: 3600
+        sink: https://application-server.com/notifications
+
+    EXAMPLE_5_CREATION_RESPONSE_3-LEGGED_ACCESS_TOKEN_IPv4_SUBNET_PORT_LIMITS:
+      summary: Successful session creation example 5
+      description: Example response after a new QoS session has been created using a 3-legged access token (or possibly a single device identifier) when the application server was identified by IPv4 subnet and the applicable device and application server ports were restricted
+      value:
+        applicationServer:
+          ipv4Address: 198.51.100.0/24
+        devicePort: 62381
+        applicationServerPorts:
+          range:
+            from: 5010
+            to: 5020
         qosProfile: QOS_L
         sink: https://application-server.com/notifications
         sessionId: 3fa85f64-5717-4562-b3fc-2c963f66afa6
