@@ -350,7 +350,7 @@ components:
 
             **NOTE**: serviceClass is experimental and could change or be removed in a future release.
 
-            The name of a Service Class, representing a QoS Profile designed to provide optimized behavior for a specific application type. While DSCP values are commonly associated with Service Classes, their use may vary across network segments and may not be applied throughout the entire end-to-end QoS session. This aligns with the serviceClass concept used in HomeDevicesQoQ for consistent terminology.
+            The name of a Service Class, representing a QoS Profile designed to provide optimized behavior for a specific application type. While DSCP values are commonly associated with Service Classes, their use may vary across network segments and may not be applied throughout the entire end-to-end QoS session.
 
             Service classes define specific QoS behaviors that map to DSCP (Differentiated Services Code Point) values or Microsoft QoS traffic types.
 
@@ -360,7 +360,7 @@ components:
 
             **Supported Service Classes**:
 
-            | Service Class Name    | DSCP Name | DSCP value (decimal) | DCSP value (binary) | Microsoft Value | Application Examples                                                 |
+            | Service Class Name    | DSCP Name | DSCP value (decimal) | DSCP value (binary) | Microsoft Value | Application Examples                                                 |
             |-----------------------|-----------|----------------------|---------------------|-----------------|----------------------------------------------------------------------|
             | Microsoft Voice       |    CS7    |          56          |        111000       |       4,5       | Microsoft QOSTrafficTypeVoice and QOSTrafficTypeControl              |
             | Microsoft Audio/Video |    CS5    |          40          |        101000       |       2,3       | Microsoft QOSTrafficTypeExcellentEffort and QOSTrafficTypeAudioVideo |
@@ -487,7 +487,7 @@ components:
           - countryName
         properties:
           countryName:
-            description: The two letter ISO 3166-2 country code for the country in which the QoS profile is available in at least one network
+            description: The two letter ISO 3166-1 alpha-2 country code for the country in which the QoS profile is available in at least one network
             type: string
             pattern: ^[A-Z]{2}$
             maxLength: 2
