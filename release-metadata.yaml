@@ -2,7 +2,7 @@ repository:
   repository_name: QualityOnDemand
   release_tag: r4.1
   release_type: pre-release-rc
-  release_date: null
+  release_date: '2026-08-20T10:09:30Z'
   src_commit_sha: 61fc7f9bfdf51d5544d1b8227d2be8fb77239047
 apis:
 - api_name: qos-profiles
