@@ -189,7 +189,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/AssignmentInfo"
+                $ref: "#/components/schemas/AssignmentInfoWithDevice"
               examples:
                 Successful QoS Profile Assignment Creation:
                   $ref: "#/components/examples/ASSIGNMENT_CREATION_EXAMPLE"
@@ -244,8 +244,6 @@ paths:
                   $ref: "#/components/examples/ASSIGNMENT_AVAILABLE"
                 ASSIGNMENT_UNAVAILABLE:
                   $ref: "#/components/examples/ASSIGNMENT_UNAVAILABLE"
-                ASSIGNMENT_AVAILABLE_WITHOUT_DEVICE:
-                  $ref: "#/components/examples/ASSIGNMENT_AVAILABLE_WITHOUT_DEVICE"
         "400":
           $ref: '../common/CAMARA_common.yaml#/components/responses/Generic400'
         "401":
@@ -345,14 +343,14 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/AssignmentInfo"
+                $ref: "#/components/schemas/AssignmentInfoWithDevice"
               examples:
                 ASSIGNMENT_AVAILABLE:
                   $ref: "#/components/examples/ASSIGNMENT_AVAILABLE"
                 ASSIGNMENT_UNAVAILABLE:
                   $ref: "#/components/examples/ASSIGNMENT_UNAVAILABLE"
                 ASSIGNMENT_AVAILABLE_WITHOUT_DEVICE:
-                  $ref: "#/components/examples/ASSIGNMENT_AVAILABLE_WITHOUT_DEVICE"
+                  $ref: "#/components/examples/ASSIGNMENT_AVAILABLE_WITH_DEVICE"
         "400":
           $ref: '../common/CAMARA_common.yaml#/components/responses/Generic400'
         "401":
@@ -396,8 +394,6 @@ components:
       description: Common attributes of the assignment record for a QoS profile assignment
       type: object
       properties:
-        device:
-          $ref: '../common/CAMARA_common.yaml#/components/schemas/Device'
         qosProfile:
           $ref: "#/components/schemas/QosProfileName"
         sink:
@@ -419,10 +415,6 @@ components:
         Please note that IP addresses of devices can change and get reused, so the original values may no longer identify the same device. They identified the device at the time the QoS profile assignment was created.
 
       allOf:
-        - type: object
-          properties:
-            device:
-              $ref: '../common/CAMARA_common.yaml#/components/schemas/DeviceResponse'
         - $ref: "#/components/schemas/BaseAssignmentInfo"
         - type: object
           properties:
@@ -441,6 +433,15 @@ components:
           required:
             - assignmentId
             - status
+
+    AssignmentInfoWithDevice:
+      description: Assignment information plus an optional `device` property, which is only required to allow the API consumer to disambiguate which device identifier applies when more than one identifier is provided in the request.
+      allOf:
+        - type: object
+          properties:
+            device:
+              $ref: '../common/CAMARA_common.yaml#/components/schemas/DeviceResponse'
+        - $ref: "#/components/schemas/AssignmentInfo"
 
     CreateAssignment:
       description: Attributes to request a new QoS profile assignment
@@ -760,23 +761,6 @@ components:
         assignmentId: 3fa85f64-5717-4562-b3fc-2c963f66afa6
         status: REQUESTED
 
-    ASSIGNMENT_AVAILABLE:
-      summary: QoS assignment status is available with device in the assignment details
-      description: The QoS profile assignment has become available, and the device to which the assignment applies is included in the assignment details
-      value:
-        device:
-          phoneNumber: "+123456789"
-        qosProfile: QOS_L
-        sink: https://application-server.com/callback
-        sinkCredential:
-          credentialType: ACCESSTOKEN
-          accessToken: "eyJhbGciOiJIUzI1NiIsInR..."
-          accessTokenExpiresUtc: "2024-12-01T12:00:00Z"
-          accessTokenType: bearer
-        assignmentId: 3fa85f64-5717-4562-b3fc-2c963f66afa6
-        startedAt: "2024-05-12T17:32:01Z"
-        status: AVAILABLE
-
     ASSIGNMENT_UNAVAILABLE:
       summary: QoD provisioning status is unavailable
       description: The asssignment could not be created or is not active anymore
@@ -785,15 +769,13 @@ components:
         sink: https://application-server.com/callback
         sinkCredential:
           credentialType: ACCESSTOKEN
-          accessToken: "eyJhbGciOiJIUzI1NiIsInR..."
           accessTokenExpiresUtc: "2024-12-01T12:00:00Z"
-          accessTokenType: bearer
         assignmentId: 3fa85f64-5717-4562-b3fc-2c963f66afa6
         startedAt: "2024-05-12T17:32:01Z"
         status: UNAVAILABLE
         statusInfo: NETWORK_TERMINATED
 
-    ASSIGNMENT_AVAILABLE_WITHOUT_DEVICE:
+    ASSIGNMENT_AVAILABLE:
       summary: QoS assignment status is available
       description: Device is optional in responses and must not be provided if it was not provided in the request
       value:
@@ -801,9 +783,22 @@ components:
         sink: https://application-server.com/callback
         sinkCredential:
           credentialType: ACCESSTOKEN
-          accessToken: "eyJhbGciOiJIUzI1NiIsInR..."
           accessTokenExpiresUtc: "2024-12-01T12:00:00Z"
-          accessTokenType: bearer
+        assignmentId: 3fa85f64-5717-4562-b3fc-2c963f66afa6
+        startedAt: "2024-05-12T17:32:01Z"
+        status: AVAILABLE
+
+    ASSIGNMENT_AVAILABLE_WITH_DEVICE:
+      summary: QoS assignment status is available
+      description: Device is optional in responses and must not be provided if it was not provided in the request
+      value:
+        device:
+          phoneNumber: "+123456789"
+        qosProfile: QOS_M
+        sink: https://application-server.com/callback
+        sinkCredential:
+          credentialType: ACCESSTOKEN
+          accessTokenExpiresUtc: "2024-12-01T12:00:00Z"
         assignmentId: 3fa85f64-5717-4562-b3fc-2c963f66afa6
         startedAt: "2024-05-12T17:32:01Z"
         status: AVAILABLE
