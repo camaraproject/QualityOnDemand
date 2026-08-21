@@ -30,9 +30,9 @@ info:
 
     # Identifying the device from the access token
 
-    The two operations defined by this API (`getQosProfile` and `retrieveQoSProfiles`) both allow the API consumer to use a three-legged access token to specify a target device as a query filter. When provided, only profiles available to the specified target device will be returned. Additionally, when a two-legged access token is used, the operation `retrieveQoSProfiles` allows the API consumer to optionally specify the target device in the request body.
+    The two operations defined by this API (`getQosProfile` and `retrieveQosProfiles`) both allow the API consumer to use a three-legged access token to specify a target device as a query filter. When provided, only profiles available to the specified target device will be returned. Additionally, when a two-legged access token is used, the operation `retrieveQosProfiles` allows the API consumer to optionally specify the target device in the request body.
 
-    Hence, for the `retrieveQoSProfiles` operation:
+    Hence, for the `retrieveQosProfiles` operation:
     - When invoked using a two-legged access token, the optional input device object will be used as filter if present.
 
     - When invoked using a three-legged access token, this optional identifier in the request body MUST NOT be provided, as the device to filter will be uniquely identified from the access token.
@@ -107,7 +107,7 @@ paths:
       security:
         - openId:
             - qos-profiles:read
-      operationId: retrieveQoSProfiles
+      operationId: retrieveQosProfiles
       parameters:
         - $ref: "../common/CAMARA_common.yaml#/components/parameters/x-correlator"
       requestBody:
