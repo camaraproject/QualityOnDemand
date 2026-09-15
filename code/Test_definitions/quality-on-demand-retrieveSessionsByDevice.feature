@@ -20,7 +20,7 @@ Feature: CAMARA Quality On Demand API, vwip - Operation retrieveSessionsByDevice
     And the header "Authorization" is set to a valid access token
     And the header "x-correlator" complies with the schema at "#/components/schemas/XCorrelator"
     # Properties not explicitly overwritten in the Scenarios can take any values compliant with the schema
-    And the request body is set by default to a request body compliant with the schema at "/components/schemas/RetrieveSessionsInput"
+    And the request body is set by default to a request body compliant with the schema at "#/components/schemas/RetrieveSessionsInput"
 
   # Success scenarios
 
@@ -32,7 +32,7 @@ Feature: CAMARA Quality On Demand API, vwip - Operation retrieveSessionsByDevice
     And the response header "Content-Type" is "application/json"
     And the response header "x-correlator" has same value as the request header "x-correlator"
     # The response has to comply with the generic response schema which is part of the spec
-    And the response body complies with the OAS schema at "/components/schemas/RetrieveSessionsOutput"
+    And the response body complies with the OAS schema at "#/components/schemas/RetrieveSessionsOutput"
     # Additionally any success response has to comply with some constraints beyond the schema compliance
     And in all items in the response, property "device" exists only if provided for createSession and with the same value
     And in all items in the response, property "applicationServer" has the same value as in the request body
@@ -78,11 +78,11 @@ Feature: CAMARA Quality On Demand API, vwip - Operation retrieveSessionsByDevice
     And the response property "$.message" contains a user friendly text
 
     Examples:
-      | device_identifier                | oas_spec_schema                             |
-      | $.device.phoneNumber             | /components/schemas/PhoneNumber             |
-      | $.device.ipv4Address             | /components/schemas/DeviceIpv4Address       |
-      | $.device.ipv6Address             | /components/schemas/DeviceIpv6Address       |
-      | $.device.networkAccessIdentifier | /components/schemas/NetworkAccessIdentifier |
+      | device_identifier                | oas_spec_schema                              |
+      | $.device.phoneNumber             | #/components/schemas/PhoneNumber             |
+      | $.device.ipv4Address             | #/components/schemas/DeviceIpv4Address       |
+      | $.device.ipv6Address             | #/components/schemas/DeviceIpv6Address       |
+      | $.device.networkAccessIdentifier | #/components/schemas/NetworkAccessIdentifier |
 
   # This scenario may happen e.g. with 2-legged access tokens, which do not identify a single device.
   @quality_on_demand_retrieveSessionsByDevice_C01.03_device_not_found
@@ -141,7 +141,7 @@ Feature: CAMARA Quality On Demand API, vwip - Operation retrieveSessionsByDevice
 
   @quality_on_demand_retrieveSessionsByDevice_400.1_schema_not_compliant
   Scenario: Invalid Argument. Generic Syntax Exception
-    Given the request body is set to any value which is not compliant with the schema at "/components/schemas/RetrieveSessionsInput"
+    Given the request body is set to any value which is not compliant with the schema at "#/components/schemas/RetrieveSessionsInput"
     When the request "retrieveSessionsByDevice" is sent
     Then the response status code is 400
     And the response header "x-correlator" has same value as the request header "x-correlator"

@@ -21,7 +21,7 @@ Feature: CAMARA Quality On Demand API, vwip - Operation createSession
     And the header "Authorization" is set to a valid access token
     And the header "x-correlator" complies with the schema at "#/components/schemas/XCorrelator"
     # Properties not explicitly overwritten in the Scenarios can take any values compliant with the schema
-    And the request body is set by default to a request body compliant with the schema at "/components/schemas/CreateSession"
+    And the request body is set by default to a request body compliant with the schema at "#/components/schemas/CreateSession"
 
   # Success scenarios
 
@@ -37,7 +37,7 @@ Feature: CAMARA Quality On Demand API, vwip - Operation createSession
     And the response header "Content-Type" is "application/json"
     And the response header "x-correlator" has the same value as the request header "x-correlator"
     # The response has to comply with the generic response schema which is part of the spec
-    And the response body complies with the OAS schema at "/components/schemas/SessionInfo"
+    And the response body complies with the OAS schema at "#/components/schemas/SessionInfo"
     # Additionally, any success response has to comply with some constraints beyond the schema compliance
     And the response property "<property>" matches the rule: <condition>
 
@@ -73,7 +73,7 @@ Feature: CAMARA Quality On Demand API, vwip - Operation createSession
     Then an event is received at the address of the request property "$.sink"
     And the event header "Authorization" is set to "Bearer " + the value of the request property "$.sinkCredential.accessToken"
     And the event header "Content-Type" is set to "application/cloudevents+json"
-    And the event body complies with the OAS schema at "/components/schemas/EventQosStatusChanged"
+    And the event body complies with the OAS schema at "#/components/schemas/EventQosStatusChanged"
     And the event body property "$.id" is unique
     And the event body property "$.type" is set to "org.camaraproject.qod.v1.qos-status-changed"
     And the event body property "$.data.sessionId" has the same value as createSession response property "$.sessionId"
@@ -89,7 +89,7 @@ Feature: CAMARA Quality On Demand API, vwip - Operation createSession
     Then the response status code is 201
     And the response header "Content-Type" is "application/json"
     And the response header "x-correlator" has same value as the request header "x-correlator"
-    And the response body complies with the OAS schema at "/components/schemas/SessionInfo"
+    And the response body complies with the OAS schema at "#/components/schemas/SessionInfo"
     And the response property "$.device" does not exist
 
   @quality_on_demand_createSession_04_1_application_server_subnets_provided
@@ -203,7 +203,7 @@ Feature: CAMARA Quality On Demand API, vwip - Operation createSession
 
   @quality_on_demand_createSession_400.1_schema_not_compliant
   Scenario: Invalid Argument. Generic Syntax Exception
-    Given the request body is set to any value which is not compliant with the schema at "/components/schemas/CreateSession"
+    Given the request body is set to any value which is not compliant with the schema at "#/components/schemas/CreateSession"
     When the request "createSession" is sent
     Then the response status code is 400
     And the response header "x-correlator" has same value as the request header "x-correlator"
