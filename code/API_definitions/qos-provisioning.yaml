@@ -168,15 +168,15 @@ paths:
                     x-correlator:
                       $ref: '../common/CAMARA_common.yaml#/components/headers/x-correlator'
                 "400":
-                  $ref: '../common/CAMARA_common.yaml#/components/responses/Generic400'
+                  $ref: '../common/CAMARA_common.yaml#/components/responses/BadRequestWithRange400'
                 "401":
-                  $ref: '../common/CAMARA_common.yaml#/components/responses/Generic401'
+                  $ref: '../common/CAMARA_common.yaml#/components/responses/Unauthenticated401'
                 "403":
-                  $ref: "#/components/responses/PermissionDenied403"
+                  $ref: "../common/CAMARA_common.yaml#/components/responses/PermissionDenied403"
                 "410":
-                  $ref: '../common/CAMARA_common.yaml#/components/responses/Generic410'
+                  $ref: '../common/CAMARA_event_common.yaml#/components/responses/SinkGone410'
                 "429":
-                  $ref: '../common/CAMARA_common.yaml#/components/responses/Generic429'
+                  $ref: "#/components/responses/TooManyRequests429"
               security:
                 - {}
                 - notificationsBearerAuth: []
@@ -198,17 +198,17 @@ paths:
         "400":
           $ref: "#/components/responses/CreateAssignment400"
         "401":
-          $ref: '../common/CAMARA_common.yaml#/components/responses/Generic401'
+          $ref: '../common/CAMARA_common.yaml#/components/responses/Unauthenticated401'
         "403":
-          $ref: "#/components/responses/PermissionDenied403"
+          $ref: "../common/CAMARA_common.yaml#/components/responses/PermissionDenied403"
         "404":
-          $ref: "../common/CAMARA_common.yaml#/components/responses/Generic404"
+          $ref: "#/components/responses/DeviceNotFound404"
         "409":
           $ref: "#/components/responses/AssignmentConflict409"
         "422":
           $ref: "#/components/responses/CreateAssignment422"
         "429":
-          $ref: '../common/CAMARA_common.yaml#/components/responses/Generic429'
+          $ref: "#/components/responses/TooManyRequests429"
       security:
         - openId:
             - "qos-provisioning:qos-assignments:create"
@@ -247,15 +247,15 @@ paths:
                 ASSIGNMENT_AVAILABLE_WITHOUT_DEVICE:
                   $ref: "#/components/examples/ASSIGNMENT_AVAILABLE_WITHOUT_DEVICE"
         "400":
-          $ref: '../common/CAMARA_common.yaml#/components/responses/Generic400'
+          $ref: '../common/CAMARA_common.yaml#/components/responses/BadRequestWithRange400'
         "401":
-          $ref: '../common/CAMARA_common.yaml#/components/responses/Generic401'
+          $ref: '../common/CAMARA_common.yaml#/components/responses/Unauthenticated401'
         "403":
-          $ref: "#/components/responses/PermissionDenied403"
+          $ref: "../common/CAMARA_common.yaml#/components/responses/PermissionDenied403"
         "404":
-          $ref: "#/components/responses/NotFound404"
+          $ref: "../common/CAMARA_common.yaml#/components/responses/NotFound404"
         "429":
-          $ref: '../common/CAMARA_common.yaml#/components/responses/Generic429'
+          $ref: "#/components/responses/TooManyRequests429"
       security:
         - openId:
             - "qos-provisioning:qos-assignments:read"
@@ -296,15 +296,15 @@ paths:
               schema:
                 $ref: "#/components/schemas/AssignmentInfo"
         "400":
-          $ref: '../common/CAMARA_common.yaml#/components/responses/Generic400'
+          $ref: '../common/CAMARA_common.yaml#/components/responses/BadRequestWithRange400'
         "401":
-          $ref: '../common/CAMARA_common.yaml#/components/responses/Generic401'
+          $ref: '../common/CAMARA_common.yaml#/components/responses/Unauthenticated401'
         "403":
-          $ref: "#/components/responses/PermissionDenied403"
+          $ref: "../common/CAMARA_common.yaml#/components/responses/PermissionDenied403"
         "404":
-          $ref: "#/components/responses/NotFound404"
+          $ref: "../common/CAMARA_common.yaml#/components/responses/NotFound404"
         "429":
-          $ref: '../common/CAMARA_common.yaml#/components/responses/Generic429'
+          $ref: "#/components/responses/TooManyRequests429"
       security:
         - openId:
             - "qos-provisioning:qos-assignments:delete"
@@ -354,17 +354,17 @@ paths:
                 ASSIGNMENT_AVAILABLE_WITHOUT_DEVICE:
                   $ref: "#/components/examples/ASSIGNMENT_AVAILABLE_WITHOUT_DEVICE"
         "400":
-          $ref: '../common/CAMARA_common.yaml#/components/responses/Generic400'
+          $ref: '../common/CAMARA_common.yaml#/components/responses/BadRequestWithRange400'
         "401":
-          $ref: '../common/CAMARA_common.yaml#/components/responses/Generic401'
+          $ref: '../common/CAMARA_common.yaml#/components/responses/Unauthenticated401'
         "403":
-          $ref: "#/components/responses/PermissionDenied403"
+          $ref: "../common/CAMARA_common.yaml#/components/responses/PermissionDenied403"
         "404":
-          $ref: "../common/CAMARA_common.yaml#/components/responses/Generic404"
+          $ref: "#/components/responses/DeviceNotFound404"
         "422":
-          $ref: '../common/CAMARA_common.yaml#/components/responses/Generic422'
+          $ref: '../common/CAMARA_common.yaml#/components/responses/DeviceIdentifier422'
         "429":
-          $ref: '../common/CAMARA_common.yaml#/components/responses/Generic429'
+          $ref: "#/components/responses/TooManyRequests429"
       security:
         - openId:
             - "qos-provisioning:qos-assignments:read-by-device"
@@ -401,12 +401,9 @@ components:
         qosProfile:
           $ref: "#/components/schemas/QosProfileName"
         sink:
-          type: string
-          format: uri
-          maxLength: 2048
-          pattern: ^https:\/\/.+$
           description: The address to which events shall be delivered using the selected protocol.
-          example: "https://endpoint.example.com/sink"
+          allOf:
+            - $ref: "../common/CAMARA_event_common.yaml#/components/schemas/Sink"
         sinkCredential:
           $ref: '../common/CAMARA_event_common.yaml#/components/schemas/SinkCredential'
       required:
@@ -572,61 +569,17 @@ components:
                       - INVALID_SINK
           examples:
             GENERIC_400_INVALID_ARGUMENT:
-              description: Invalid Argument. Generic Syntax Exception
-              value:
-                status: 400
-                code: INVALID_ARGUMENT
-                message: Client specified an invalid argument, request body or query param.
+              $ref: '../common/CAMARA_common.yaml#/components/examples/GENERIC_400_INVALID_ARGUMENT'
             GENERIC_400_OUT_OF_RANGE:
-              description: Out of Range. Specific Syntax Exception used when a given field has a pre-defined range or a invalid filter criteria combination is requested
-              value:
-                status: 400
-                code: OUT_OF_RANGE
-                message: Client specified an invalid range.
+              $ref: '../common/CAMARA_common.yaml#/components/examples/GENERIC_400_OUT_OF_RANGE'
             GENERIC_400_INVALID_CREDENTIAL:
-              value:
-                status: 400
-                code: INVALID_CREDENTIAL
-                message: Only Access token is supported
+              $ref: '../common/CAMARA_event_common.yaml#/components/examples/GENERIC_400_INVALID_CREDENTIAL'
             GENERIC_400_INVALID_TOKEN:
-              value:
-                status: 400
-                code: INVALID_TOKEN
-                message: Only bearer token is supported
+              $ref: '../common/CAMARA_event_common.yaml#/components/examples/GENERIC_400_INVALID_TOKEN'
             GENERIC_400_INVALID_SINK:
-              description: Invalid sink value
-              value:
-                status: 400
-                code: INVALID_SINK
-                message: sink not valid for the specified protocol
+              $ref: '../common/CAMARA_event_common.yaml#/components/examples/GENERIC_400_INVALID_SINK'
 
-    PermissionDenied403:
-      description: Forbidden
-      headers:
-        x-correlator:
-          $ref: '../common/CAMARA_common.yaml#/components/headers/x-correlator'
-      content:
-        application/json:
-          schema:
-            allOf:
-              - $ref: '../common/CAMARA_common.yaml#/components/schemas/ErrorInfo'
-              - type: object
-                properties:
-                  status:
-                    enum:
-                      - 403
-                  code:
-                    enum:
-                      - PERMISSION_DENIED
-          examples:
-            GENERIC_403_PERMISSION_DENIED:
-              description: Permission denied. OAuth2 token access does not have the required scope or when the user fails operational security
-              value:
-                status: 403
-                code: PERMISSION_DENIED
-                message: Client does not have sufficient permissions to perform this action.
-
-    NotFound404:
+    DeviceNotFound404:
       description: Not found
       headers:
         x-correlator:
@@ -644,13 +597,37 @@ components:
                   code:
                     enum:
                       - NOT_FOUND
+                      - IDENTIFIER_NOT_FOUND
           examples:
             GENERIC_404_NOT_FOUND:
-              description: Resource is not found
-              value:
-                status: 404
-                code: NOT_FOUND
-                message: The specified resource is not found.
+              $ref: '../common/CAMARA_common.yaml#/components/examples/GENERIC_404_NOT_FOUND'
+            GENERIC_404_IDENTIFIER_NOT_FOUND:
+              $ref: '../common/CAMARA_common.yaml#/components/examples/GENERIC_404_IDENTIFIER_NOT_FOUND'
+
+    TooManyRequests429:
+      description: Too Many Requests
+      headers:
+        x-correlator:
+          $ref: '../common/CAMARA_common.yaml#/components/headers/x-correlator'
+      content:
+        application/json:
+          schema:
+            allOf:
+              - $ref: '../common/CAMARA_common.yaml#/components/schemas/ErrorInfo'
+              - type: object
+                properties:
+                  status:
+                    enum:
+                      - 429
+                  code:
+                    enum:
+                      - TOO_MANY_REQUESTS
+                      - QUOTA_EXCEEDED
+          examples:
+            GENERIC_429_TOO_MANY_REQUESTS:
+              $ref: '../common/CAMARA_common.yaml#/components/examples/GENERIC_429_TOO_MANY_REQUESTS'
+            GENERIC_429_QUOTA_EXCEEDED:
+              $ref: '../common/CAMARA_common.yaml#/components/examples/GENERIC_429_QUOTA_EXCEEDED'
 
     AssignmentConflict409:
       description: Assignment conflict
@@ -703,35 +680,15 @@ components:
                       - QOS_PROVISIONING.QOS_PROFILE_NOT_APPLICABLE
           examples:
             GENERIC_422_SERVICE_NOT_APPLICABLE:
-              description: Service not applicable for the provided identifier
-              value:
-                status: 422
-                code: SERVICE_NOT_APPLICABLE
-                message: The service is not available for the provided identifier.
-            GENERIC_422_MISSING_IDENTIFIER:
-              description: An identifier is not included in the request and the device or phone number identification cannot be derived from the access token
-              value:
-                status: 422
-                code: MISSING_IDENTIFIER
-                message: The device cannot be identified.
-            GENERIC_422_UNSUPPORTED_IDENTIFIER:
-              description: None of the provided identifiers is supported by the implementation
-              value:
-                status: 422
-                code: UNSUPPORTED_IDENTIFIER
-                message: The identifier provided is not supported.
-            GENERIC_422_UNNECESSARY_IDENTIFIER:
-              description: An explicit identifier is provided when a device or phone number has already been identified from the access token
-              value:
-                status: 422
-                code: UNNECESSARY_IDENTIFIER
-                message: The device is already identified by the access token.
+              $ref: '../common/CAMARA_common.yaml#/components/examples/GENERIC_422_SERVICE_NOT_APPLICABLE'
+            GENERIC_422_MISSING_IDENTIFIER_DEVICE:
+              $ref: '../common/CAMARA_common.yaml#/components/examples/GENERIC_422_MISSING_IDENTIFIER_DEVICE'
+            GENERIC_422_UNSUPPORTED_IDENTIFIER_DEVICE:
+              $ref: '../common/CAMARA_common.yaml#/components/examples/GENERIC_422_UNSUPPORTED_IDENTIFIER_DEVICE'
+            GENERIC_422_UNNECESSARY_IDENTIFIER_DEVICE:
+              $ref: '../common/CAMARA_common.yaml#/components/examples/GENERIC_422_UNNECESSARY_IDENTIFIER_DEVICE'
             GENERIC_422_PRIVATE_KEY_JWT_NOT_CONFIGURED:
-              description: No JWK Set configured for PRIVATE_KEY_JWT authentication
-              value:
-                status: 422
-                code: PRIVATE_KEY_JWT_NOT_CONFIGURED
-                message: No JWK Set configured for PRIVATE_KEY_JWT authentication.
+              $ref: '../common/CAMARA_event_common.yaml#/components/examples/GENERIC_422_PRIVATE_KEY_JWT_NOT_CONFIGURED'
             QOS_PROVISIONING_422_QOS_PROFILE_NOT_APPLICABLE:
               description: The requested QoS Profile exists but cannot be used for the QoS assignment.
               value:
