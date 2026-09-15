@@ -19,7 +19,7 @@ Feature: CAMARA QoS Provisioning API, vwip - Operation createQosAssignment
     And the header "Authorization" is set to a valid access token
     And the header "x-correlator" complies with the schema at "#/components/schemas/XCorrelator"
     # Properties not explicitly overwritten in the Scenarios can take any values compliant with the schema
-    And the request body is set by default to a request body compliant with the schema at "/components/schemas/CreateAssignment"
+    And the request body is set by default to a request body compliant with the schema at "#/components/schemas/CreateAssignment"
 
   # Success scenarios
 
@@ -33,7 +33,7 @@ Feature: CAMARA QoS Provisioning API, vwip - Operation createQosAssignment
     And the response header "x-correlator" has same value as the request header "x-correlator"
     And the response header "Content-Type" is "application/json"
     # The response has to comply with the generic response schema which is part of the spec
-    And the response body complies with the OAS schema at "/components/schemas/AssignmentInfo"
+    And the response body complies with the OAS schema at "#/components/schemas/AssignmentInfo"
     # Additionally any success response has to comply with some constraints beyond the schema compliance
     And the response property "$.device" exists only if provided in the request body and with the same value
     And the response property "$.qosProfile" has the same value as in the request body
@@ -62,7 +62,7 @@ Feature: CAMARA QoS Provisioning API, vwip - Operation createQosAssignment
     Then an event is received at the address of the request property "$.sink"
     And the event header "Authorization" is set to "Bearer " + the value of the request property "$.sinkCredential.accessToken"
     And the event header "Content-Type" is set to "application/cloudevents+json"
-    And the event body complies with the OAS schema at "/components/schemas/EventStatusChanged"
+    And the event body complies with the OAS schema at "#/components/schemas/EventStatusChanged"
     And the event body property "$.id" is unique
     And the event body property "$.type" is set to "org.camaraproject.qos-provisioning.v0.status-changed"
     And the event body property "$.data.assignmentId" has the same value as createQosAssignment response property "$.assignmentId"
@@ -77,7 +77,7 @@ Feature: CAMARA QoS Provisioning API, vwip - Operation createQosAssignment
     Then the response status code is 201
     And the response header "x-correlator" has same value as the request header "x-correlator"
     And the response header "Content-Type" is "application/json"
-    And the response body complies with the OAS schema at "/components/schemas/AssignmentInfo"
+    And the response body complies with the OAS schema at "#/components/schemas/AssignmentInfo"
     And the response property "$.device" does not exist
 
   # Common error scenarios for management of input parameter device
@@ -166,7 +166,7 @@ Feature: CAMARA QoS Provisioning API, vwip - Operation createQosAssignment
 
   @qos_provisioning_createQosAssignment_400.1_schema_not_compliant
   Scenario: Invalid Argument. Generic Syntax Exception
-    Given the request body is set to any value which is not compliant with the schema at "/components/schemas/CreateAssignment"
+    Given the request body is set to any value which is not compliant with the schema at "#/components/schemas/CreateAssignment"
     When the request "createQosAssignment" is sent
     Then the response status code is 400
     And the response header "x-correlator" has same value as the request header "x-correlator"
