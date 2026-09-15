@@ -13,11 +13,13 @@ Incubating API Repository to evolve and maintain the definitions and documentati
 
 * API Repository [wiki page](https://lf-camaraproject.atlassian.net/wiki/x/XCPe)
 
+> [!NOTE]
+> The `qos-profiles` API has been carved out into its own repository, [QoSProfiles](https://github.com/camaraproject/QoSProfiles). Released versions up to `qos-profiles` `1.2.0-rc.3` remain available here; for further development please use the new repository. `quality-on-demand` and `qos-provisioning` are unaffected and continue here.
+
 ## Scope
 
 * Service APIs for “Quality on Demand” (see APIBacklog.md)
 * The Service APIs provide the API consumer with the ability to:
-  * retrieve the possible quality options (profiles) from the network (qos-profiles)
   * set the quality for a connection of a mobile device or a home device within the access network
     * dynamically, for a selected session of a specific duration (quality-on-demand)
     * provisioned, applying the same quality each time the device connects to the network (qod-provisioning)
