@@ -7,12 +7,14 @@ info:
     reusable data types.
 
     API repositories place this file in `code/common/` and reference schemas
-    via `$ref: "../common/CAMARA_common.yaml#/components/schemas/<SchemaName>"`.
+    via `$ref: "../common/CAMARA_common.yaml#/components/schemas/<SchemaName>"`,
+    and error responses and examples via the corresponding
+    `#/components/responses/...` and `#/components/examples/...` pointers.
   license:
     name: Apache 2.0
     url: https://www.apache.org/licenses/LICENSE-2.0.html
   version: wip
-  x-camara-commonalities: 0.8.0
+  x-camara-commonalities: 0.9.0
 
 components:
   securitySchemes:
@@ -78,7 +80,7 @@ components:
       name: perPage
       in: query
       description: >
-        Number of subscriptions to return per page.
+        Number of resources to return per page.
         Values outside the allowed range are rejected with `400 INVALID_ARGUMENT`.
       required: false
       schema:
@@ -91,6 +93,15 @@ components:
       pattern: ^[a-zA-Z0-9-_:;.\/<>{}]{0,256}$
       maxLength: 256
       example: "b4333c46-49c0-4f62-80d7-f0ef930f1c46"
+
+    Date:
+      type: string
+      description: The date, using [RFC 3339](https://datatracker.ietf.org/doc/html/rfc3339#section-5.6) full-date format "YYYY-MM-DD"
+      format: date
+      minLength: 10
+      maxLength: 10
+      example: "2023-07-03"
+
     DateTime:
       type: string
       format: date-time
@@ -205,6 +216,13 @@ components:
       maxLength: 15
       example: "84.125.93.10"
 
+    SingleIpv6Address:
+      description: A single IPv6 address with no subnet mask
+      type: string
+      format: ipv6
+      maxLength: 45
+      example: "2001:db8:85a3:8d3:1319:8a2e:370:7344"
+
     Port:
       description: TCP or UDP port number
       type: integer
@@ -215,10 +233,8 @@ components:
     DeviceIpv6Address:
       description: |
         The device should be identified by the observed IPv6 address, or by any single IPv6 address from within the subnet allocated to the device (e.g. adding ::0 to the /64 prefix).
-      type: string
-      format: ipv6
-      maxLength: 45
-      example: 2001:db8:85a3:8d3:1319:8a2e:370:7344
+      allOf:
+        - $ref: "#/components/schemas/SingleIpv6Address"
 
     Area:
       description: Base schema for all areas
@@ -356,44 +372,311 @@ components:
       description: Total number of pages. Equals ceil(totalCount / perPage). MAY be omitted where totalCount is omitted.
       example: 5
   responses:
-    #######################################################
-    #######################################################
-    # ERROR RESPONSE SCHEMA TEMPLATE
-    #   - Objective: Make normative error `status` and `code` values
-    #   - Schema Template rationale:
-    #     - The `allOf` in content.application/json.schema allows a combination of both the generic ErrorInfo schema and the specific schema for this error response,
-    #       which validates that `status` and `code` have only the specified values.
-    #       This `allOf` is used without discriminator because it does not imply any hierarchy between the models, just 2 schemas that must be independently validated.
-    #######################################################
-    #    ErrorResponseSchema:
-    #      ...
-    #      content:
-    #        application/json:
-    #          schema:
-    #            allOf:
-    #              - $ref: '#/components/schemas/ErrorInfo'
-    #              - type: object
-    #                properties:
-    #                  status:
-    #                    enum:
-    #                      - <status>
-    #                  code:
-    #                    enum:
-    #                      - <code1>
-    #                      - <code2>
-    #          examples:
-    #            ExampleKey1:
-    #              value:
-    #                status: <status>
-    #                code: <code1>
-    #                message: <message1>
-    #            ExampleKey2:
-    #              value:
-    #                status: <status>
-    #                code: <code2>
-    #                message: <message2>
-    #######################################################
-    #######################################################
+    # ─────────────────────────────────────────────────────────────────────────
+    # CAMARA error responses — catalogue
+    #
+    # Minimal, directly referenceable error responses. Each response contains
+    # only error codes that every referencing API can return. Subscription and
+    # notification specific error responses are defined in
+    # CAMARA_event_common.yaml.
+    #
+    # For each HTTP status, an intro block in `components/examples` (at the
+    # end of this file) lists the referenceable response(s) and all example
+    # ingredients available for local response definitions.
+    #
+    # APIs that return API-specific error codes, or a code combination not
+    # covered by this catalogue, define the error response locally — combining
+    # the ErrorInfo schema with a local restriction of `status` and `code` to
+    # exactly the codes the API can return — and reference the shared examples:
+    #   $ref: "../common/CAMARA_common.yaml#/components/examples/<EXAMPLE_NAME>"
+    # A complete, copy-ready locally defined response is demonstrated in the
+    # API templates (artifacts/api-templates/sample-service.yaml) — use it as
+    # the skeleton for codes or combinations this catalogue does not cover.
+    #
+    # Statuses that are not documented by default (405, 406, 412, 415, 5xx —
+    # see the CAMARA API Design Guide) have no referenceable response; their
+    # canonical examples remain available for APIs with a justified use case.
+    # ─────────────────────────────────────────────────────────────────────────
+
+    BadRequest400:
+      description: Bad Request
+      headers:
+        x-correlator:
+          $ref: "#/components/headers/x-correlator"
+      content:
+        application/json:
+          schema:
+            allOf:
+              - $ref: "#/components/schemas/ErrorInfo"
+              - type: object
+                properties:
+                  status:
+                    enum:
+                      - 400
+                  code:
+                    enum:
+                      - INVALID_ARGUMENT
+          examples:
+            GENERIC_400_INVALID_ARGUMENT:
+              $ref: "#/components/examples/GENERIC_400_INVALID_ARGUMENT"
+
+    # 400 variant for APIs with range-restricted fields or filter criteria
+    BadRequestWithRange400:
+      description: Bad Request
+      headers:
+        x-correlator:
+          $ref: "#/components/headers/x-correlator"
+      content:
+        application/json:
+          schema:
+            allOf:
+              - $ref: "#/components/schemas/ErrorInfo"
+              - type: object
+                properties:
+                  status:
+                    enum:
+                      - 400
+                  code:
+                    enum:
+                      - INVALID_ARGUMENT
+                      - OUT_OF_RANGE
+          examples:
+            GENERIC_400_INVALID_ARGUMENT:
+              $ref: "#/components/examples/GENERIC_400_INVALID_ARGUMENT"
+            GENERIC_400_OUT_OF_RANGE:
+              $ref: "#/components/examples/GENERIC_400_OUT_OF_RANGE"
+
+    Unauthenticated401:
+      description: Unauthorized
+      headers:
+        x-correlator:
+          $ref: "#/components/headers/x-correlator"
+      content:
+        application/json:
+          schema:
+            allOf:
+              - $ref: "#/components/schemas/ErrorInfo"
+              - type: object
+                properties:
+                  status:
+                    enum:
+                      - 401
+                  code:
+                    enum:
+                      - UNAUTHENTICATED
+          examples:
+            GENERIC_401_UNAUTHENTICATED:
+              $ref: "#/components/examples/GENERIC_401_UNAUTHENTICATED"
+
+    PermissionDenied403:
+      description: Forbidden
+      headers:
+        x-correlator:
+          $ref: "#/components/headers/x-correlator"
+      content:
+        application/json:
+          schema:
+            allOf:
+              - $ref: "#/components/schemas/ErrorInfo"
+              - type: object
+                properties:
+                  status:
+                    enum:
+                      - 403
+                  code:
+                    enum:
+                      - PERMISSION_DENIED
+          examples:
+            GENERIC_403_PERMISSION_DENIED:
+              $ref: "#/components/examples/GENERIC_403_PERMISSION_DENIED"
+
+    # 404 for resource-oriented operations (resource addressed by path or query)
+    NotFound404:
+      description: Not found
+      headers:
+        x-correlator:
+          $ref: "#/components/headers/x-correlator"
+      content:
+        application/json:
+          schema:
+            allOf:
+              - $ref: "#/components/schemas/ErrorInfo"
+              - type: object
+                properties:
+                  status:
+                    enum:
+                      - 404
+                  code:
+                    enum:
+                      - NOT_FOUND
+          examples:
+            GENERIC_404_NOT_FOUND:
+              $ref: "#/components/examples/GENERIC_404_NOT_FOUND"
+
+    # 404 for APIs identifying their subject by device or phone number
+    IdentifierNotFound404:
+      description: Not found
+      headers:
+        x-correlator:
+          $ref: "#/components/headers/x-correlator"
+      content:
+        application/json:
+          schema:
+            allOf:
+              - $ref: "#/components/schemas/ErrorInfo"
+              - type: object
+                properties:
+                  status:
+                    enum:
+                      - 404
+                  code:
+                    enum:
+                      - IDENTIFIER_NOT_FOUND
+          examples:
+            GENERIC_404_IDENTIFIER_NOT_FOUND:
+              $ref: "#/components/examples/GENERIC_404_IDENTIFIER_NOT_FOUND"
+
+    # 409 for resource-creating operations; for subscription creation see
+    # CreateSubscriptionConflict409 in CAMARA_event_common.yaml
+    AlreadyExists409:
+      description: Conflict
+      headers:
+        x-correlator:
+          $ref: "#/components/headers/x-correlator"
+      content:
+        application/json:
+          schema:
+            allOf:
+              - $ref: "#/components/schemas/ErrorInfo"
+              - type: object
+                properties:
+                  status:
+                    enum:
+                      - 409
+                  code:
+                    enum:
+                      - ALREADY_EXISTS
+          examples:
+            GENERIC_409_ALREADY_EXISTS:
+              $ref: "#/components/examples/GENERIC_409_ALREADY_EXISTS"
+
+    # 422 for APIs identifying their subject with the Device object
+    DeviceIdentifier422:
+      description: Unprocessable Content
+      headers:
+        x-correlator:
+          $ref: "#/components/headers/x-correlator"
+      content:
+        application/json:
+          schema:
+            allOf:
+              - $ref: "#/components/schemas/ErrorInfo"
+              - type: object
+                properties:
+                  status:
+                    enum:
+                      - 422
+                  code:
+                    enum:
+                      - SERVICE_NOT_APPLICABLE
+                      - MISSING_IDENTIFIER
+                      - UNSUPPORTED_IDENTIFIER
+                      - UNNECESSARY_IDENTIFIER
+          examples:
+            GENERIC_422_SERVICE_NOT_APPLICABLE:
+              $ref: "#/components/examples/GENERIC_422_SERVICE_NOT_APPLICABLE"
+            GENERIC_422_MISSING_IDENTIFIER_DEVICE:
+              $ref: "#/components/examples/GENERIC_422_MISSING_IDENTIFIER_DEVICE"
+            GENERIC_422_UNSUPPORTED_IDENTIFIER_DEVICE:
+              $ref: "#/components/examples/GENERIC_422_UNSUPPORTED_IDENTIFIER_DEVICE"
+            GENERIC_422_UNNECESSARY_IDENTIFIER_DEVICE:
+              $ref: "#/components/examples/GENERIC_422_UNNECESSARY_IDENTIFIER_DEVICE"
+
+    # 422 for APIs identifying their subject with a phoneNumber field
+    PhoneNumberIdentifier422:
+      description: Unprocessable Content
+      headers:
+        x-correlator:
+          $ref: "#/components/headers/x-correlator"
+      content:
+        application/json:
+          schema:
+            allOf:
+              - $ref: "#/components/schemas/ErrorInfo"
+              - type: object
+                properties:
+                  status:
+                    enum:
+                      - 422
+                  code:
+                    enum:
+                      - SERVICE_NOT_APPLICABLE
+                      - MISSING_IDENTIFIER
+                      - UNNECESSARY_IDENTIFIER
+          examples:
+            GENERIC_422_SERVICE_NOT_APPLICABLE:
+              $ref: "#/components/examples/GENERIC_422_SERVICE_NOT_APPLICABLE"
+            GENERIC_422_MISSING_IDENTIFIER_PHONE_NUMBER:
+              $ref: "#/components/examples/GENERIC_422_MISSING_IDENTIFIER_PHONE_NUMBER"
+            GENERIC_422_UNNECESSARY_IDENTIFIER_PHONE_NUMBER:
+              $ref: "#/components/examples/GENERIC_422_UNNECESSARY_IDENTIFIER_PHONE_NUMBER"
+
+    TooManyRequests429:
+      description: Too Many Requests
+      headers:
+        x-correlator:
+          $ref: "#/components/headers/x-correlator"
+      content:
+        application/json:
+          schema:
+            allOf:
+              - $ref: "#/components/schemas/ErrorInfo"
+              - type: object
+                properties:
+                  status:
+                    enum:
+                      - 429
+                  code:
+                    enum:
+                      - TOO_MANY_REQUESTS
+          examples:
+            GENERIC_429_TOO_MANY_REQUESTS:
+              $ref: "#/components/examples/GENERIC_429_TOO_MANY_REQUESTS"
+
+    # ─────────────────────────────────────────────────────────────────────────
+    # DEPRECATED error responses
+    #
+    # The Generic* responses below are DEPRECATED as of Commonalities 0.9.0
+    # and are planned for removal — or downgrade to a commented-out reference —
+    # in the next meta-release cycle. They bundle error codes that do not apply
+    # to every referencing API; new and realigning API versions use the
+    # catalogue responses above, or define error responses locally from the
+    # shared examples.
+    #
+    # Replacements:
+    #   Generic400 → BadRequestWithRange400 (or BadRequest400)
+    #   Generic401 → Unauthenticated401
+    #   Generic403 → PermissionDenied403
+    #   Generic404 → NotFound404 and/or IdentifierNotFound404
+    #   Generic409 → AlreadyExists409; CreateSubscriptionConflict409
+    #                (CAMARA_event_common.yaml) for subscription creation;
+    #                local definition from the ABORTED / INCOMPATIBLE_STATE
+    #                examples otherwise
+    #   Generic410 → SinkGone410 (CAMARA_event_common.yaml) in notification
+    #                callbacks; local definition from GENERIC_410_GONE otherwise
+    #   Generic422 → DeviceIdentifier422 or PhoneNumberIdentifier422
+    #   Generic429 → TooManyRequests429
+    #   Generic405, Generic406, Generic412, Generic415, Generic5xx →
+    #                local definition from the corresponding examples
+    #                (statuses not documented by default)
+    #
+    # Content below is frozen apart from two bug fixes:
+    #   - INVALID_TOKEN_CONTEXT removed from Generic403
+    #     (https://github.com/camaraproject/Commonalities/issues/662)
+    #   - deprecated code CONFLICT removed from Generic409
+    # ─────────────────────────────────────────────────────────────────────────
+
+    # DEPRECATED — use BadRequestWithRange400 (or BadRequest400) instead
     Generic400:
       description: Bad Request
       headers:
@@ -433,6 +716,7 @@ components:
                 #     status: 400
                 #     code: "{{SPECIFIC_CODE}}"
                 #     message: Message for specific code
+    # DEPRECATED — use Unauthenticated401 instead
     Generic401:
       description: Unauthorized
       headers:
@@ -458,6 +742,7 @@ components:
                 status: 401
                 code: UNAUTHENTICATED
                 message: Request not authenticated due to missing, invalid, or expired credentials. A new authentication is required.
+    # DEPRECATED — use PermissionDenied403 instead
     Generic403:
       description: Forbidden
       headers:
@@ -476,7 +761,11 @@ components:
                   code:
                     enum:
                       - PERMISSION_DENIED
-                      - INVALID_TOKEN_CONTEXT
+                      # INVALID_TOKEN_CONTEXT removed: it applies only to the few
+                      # APIs whose scope allows confirming the match between a
+                      # supplied identity and the access token; those APIs define
+                      # the code and its example locally.
+                      # - INVALID_TOKEN_CONTEXT
                       # - "{{SPECIFIC_CODE}}" - API-specific codes added if needed
           examples:
             GENERIC_403_PERMISSION_DENIED:
@@ -485,19 +774,15 @@ components:
                 status: 403
                 code: PERMISSION_DENIED
                 message: Client does not have sufficient permissions to perform this action.
-            GENERIC_403_INVALID_TOKEN_CONTEXT:
-              description: Reflect some inconsistency between information in some field of the API and the related OAuth2 Token
-              value:
-                status: 403
-                code: INVALID_TOKEN_CONTEXT
-                # message: "{{field}} is not consistent with access token."
-                message: "Request body is not consistent with access token."
+                # GENERIC_403_INVALID_TOKEN_CONTEXT removed together with the
+                # INVALID_TOKEN_CONTEXT code
                 # GENERIC_403_{{SPECIFIC_CODE}}:
                 #   description: Indicate a Business Logic condition that forbids a process not attached to a specific field in the context of the API
                 #   value:
                 #     status: 403
                 #     code: "{{SPECIFIC_CODE}}"
                 #     message: Message for specific code
+    # DEPRECATED — use NotFound404 and/or IdentifierNotFound404 instead
     Generic404:
       description: Not found
       headers:
@@ -537,6 +822,7 @@ components:
                 #     status: 404
                 #     code: "{{SPECIFIC_CODE}}"
                 #     message: Message for specific code
+    # DEPRECATED — define locally from GENERIC_405_METHOD_NOT_ALLOWED if needed
     Generic405:
       description: Method Not Allowed
       headers:
@@ -562,6 +848,7 @@ components:
                 status: 405
                 code: METHOD_NOT_ALLOWED
                 message: The requested method is not allowed/supported on the target resource.
+    # DEPRECATED — define locally from GENERIC_406_NOT_ACCEPTABLE if needed
     Generic406:
       description: Not Acceptable
       headers:
@@ -587,6 +874,8 @@ components:
                 status: 406
                 code: NOT_ACCEPTABLE
                 message: The server cannot produce a response matching the content requested by the client through `Accept-*` headers.
+    # DEPRECATED — use AlreadyExists409 or a local definition; for subscription
+    # creation see CreateSubscriptionConflict409 in CAMARA_event_common.yaml
     Generic409:
       description: Conflict
       headers:
@@ -606,7 +895,7 @@ components:
                     enum:
                       - ABORTED
                       - ALREADY_EXISTS
-                      - CONFLICT
+                      # deprecated code CONFLICT removed
                       - INCOMPATIBLE_STATE
                       # - "{{SPECIFIC_CODE}}" - API-specific codes added if needed
           examples:
@@ -622,15 +911,6 @@ components:
                 status: 409
                 code: ALREADY_EXISTS
                 message: The resource that a client tried to create already exists.
-            GENERIC_409_CONFLICT:
-              ###################################
-              # This Error Code is DEPRECATED
-              ###################################
-              description: Duplication of an existing resource
-              value:
-                status: 409
-                code: CONFLICT
-                message: A specified resource duplicate entry found.
             GENERIC_409_INCOMPATIBLE_STATE:
               description: |
                 The status of the referenced resource is not compatible.
@@ -644,6 +924,8 @@ components:
                 #     status: 409
                 #     code: "{{SPECIFIC_CODE}}"
                 #     message: Message for specific code
+    # DEPRECATED — use SinkGone410 (CAMARA_event_common.yaml) or a local
+    # definition instead
     Generic410:
       description: Gone
       headers:
@@ -669,6 +951,7 @@ components:
                 status: 410
                 code: GONE
                 message: Access to the target resource is no longer available.
+    # DEPRECATED — define locally from GENERIC_412_FAILED_PRECONDITION if needed
     Generic412:
       description: Failed precondition
       headers:
@@ -694,6 +977,7 @@ components:
                 status: 412
                 code: FAILED_PRECONDITION
                 message: Request cannot be executed in the current system state.
+    # DEPRECATED — define locally from GENERIC_415_UNSUPPORTED_MEDIA_TYPE if needed
     Generic415:
       description: Unsupported Media Type
       headers:
@@ -719,6 +1003,7 @@ components:
                 status: 415
                 code: UNSUPPORTED_MEDIA_TYPE
                 message: The server refuses to accept the request because the payload format is in an unsupported format.
+    # DEPRECATED — use DeviceIdentifier422 or PhoneNumberIdentifier422 instead
     Generic422:
       description: Unprocessable Content
       headers:
@@ -749,7 +1034,7 @@ components:
                 code: SERVICE_NOT_APPLICABLE
                 message: The service is not available for the provided identifier.
             GENERIC_422_MISSING_IDENTIFIER:
-              description: An identifier is not included in the request and the device or phone number identification cannot be derived from the 3-legged access token
+              description: An identifier is not included in the request and the device or phone number identification cannot be derived from the access token
               value:
                 status: 422
                 code: MISSING_IDENTIFIER
@@ -772,6 +1057,7 @@ components:
                 #     status: 422
                 #     code: "{{SPECIFIC_CODE}}"
                 #     message: Message for specific code
+    # DEPRECATED — use TooManyRequests429 instead
     Generic429:
       description: Too Many Requests
       headers:
@@ -804,6 +1090,7 @@ components:
                 status: 429
                 code: TOO_MANY_REQUESTS
                 message: Rate limit reached.
+    # DEPRECATED — define locally from GENERIC_500_INTERNAL if needed
     Generic500:
       description: Internal Server Error
       headers:
@@ -829,6 +1116,7 @@ components:
                 status: 500
                 code: INTERNAL
                 message: Unknown server error. Typically a server bug.
+    # DEPRECATED — define locally from GENERIC_501_NOT_IMPLEMENTED if needed
     Generic501:
       description: Not Implemented
       headers:
@@ -854,6 +1142,7 @@ components:
                 status: 501
                 code: NOT_IMPLEMENTED
                 message: This functionality is not implemented yet.
+    # DEPRECATED — define locally from GENERIC_502_BAD_GATEWAY if needed
     Generic502:
       description: Bad Gateway
       headers:
@@ -879,6 +1168,7 @@ components:
                 status: 502
                 code: BAD_GATEWAY
                 message: An upstream internal service cannot be reached.
+    # DEPRECATED — define locally from GENERIC_503_UNAVAILABLE if needed
     Generic503:
       description: Service Unavailable
       headers:
@@ -904,6 +1194,7 @@ components:
                 status: 503
                 code: UNAVAILABLE
                 message: Service Unavailable.
+    # DEPRECATED — define locally from GENERIC_504_TIMEOUT if needed
     Generic504:
       description: Gateway Timeout
       headers:
@@ -929,3 +1220,244 @@ components:
                 status: 504
                 code: TIMEOUT
                 message: Request timeout exceeded.
+
+  examples:
+    # ─────────────────────────────────────────────────────────────────────────
+    # Error examples — reusable ingredients
+    #
+    # Canonical examples for the CAMARA error codes. The catalogue responses
+    # above reference them, and locally defined error responses in APIs
+    # reference them the same way (see the intro of `responses`), keeping the
+    # error wording consistent across CAMARA APIs.
+    #
+    # Each status intro below lists the referenceable generic response(s) —
+    # in this file or in CAMARA_event_common.yaml — and the example
+    # ingredients available for local response definitions.
+    # ─────────────────────────────────────────────────────────────────────────
+
+    # ── 400 Bad Request ──────────────────────────────────────────────────────
+    # Responses: BadRequest400, BadRequestWithRange400; for subscription
+    #   creation: CreateSubscriptionBadRequest400 and SubscriptionIdRequired400
+    #   (CAMARA_event_common.yaml)
+    # Examples: GENERIC_400_INVALID_ARGUMENT, GENERIC_400_OUT_OF_RANGE
+    GENERIC_400_INVALID_ARGUMENT:
+      description: Invalid Argument. Generic Syntax Exception
+      value:
+        status: 400
+        code: INVALID_ARGUMENT
+        message: Client specified an invalid argument, request body or query param.
+    GENERIC_400_OUT_OF_RANGE:
+      description: Out of Range. Specific Syntax Exception used when a given field has a pre-defined range or a invalid filter criteria combination is requested
+      value:
+        status: 400
+        code: OUT_OF_RANGE
+        message: Client specified an invalid range.
+
+    # ── 401 Unauthorized ─────────────────────────────────────────────────────
+    # Responses: Unauthenticated401
+    # Examples: GENERIC_401_UNAUTHENTICATED
+    GENERIC_401_UNAUTHENTICATED:
+      description: Request cannot be authenticated and a new authentication is required
+      value:
+        status: 401
+        code: UNAUTHENTICATED
+        message: Request not authenticated due to missing, invalid, or expired credentials. A new authentication is required.
+
+    # ── 403 Forbidden ────────────────────────────────────────────────────────
+    # Responses: PermissionDenied403; for subscriptions:
+    #   SubscriptionPermissionDenied403 (CAMARA_event_common.yaml)
+    # Examples: GENERIC_403_PERMISSION_DENIED
+    # Note: INVALID_TOKEN_CONTEXT deliberately has no shared example — the few
+    #   APIs whose scope allows confirming an identity match define the code
+    #   and its example locally.
+    GENERIC_403_PERMISSION_DENIED:
+      description: Permission denied. OAuth2 token access does not have the required scope or when the user fails operational security
+      value:
+        status: 403
+        code: PERMISSION_DENIED
+        message: Client does not have sufficient permissions to perform this action.
+
+    # ── 404 Not Found ────────────────────────────────────────────────────────
+    # Responses: NotFound404, IdentifierNotFound404
+    # Examples: GENERIC_404_NOT_FOUND, GENERIC_404_IDENTIFIER_NOT_FOUND
+    GENERIC_404_NOT_FOUND:
+      description: Resource is not found
+      value:
+        status: 404
+        code: NOT_FOUND
+        message: The specified resource is not found.
+    GENERIC_404_IDENTIFIER_NOT_FOUND:
+      description: The identifier cannot be matched to a device or phone number
+      value:
+        status: 404
+        code: IDENTIFIER_NOT_FOUND
+        message: The identifier is not found.
+
+    # ── 405 Method Not Allowed (not documented by default) ───────────────────
+    # Responses: none — define locally if a use case justifies documenting it
+    # Examples: GENERIC_405_METHOD_NOT_ALLOWED
+    GENERIC_405_METHOD_NOT_ALLOWED:
+      description: Invalid HTTP verb used with a given endpoint
+      value:
+        status: 405
+        code: METHOD_NOT_ALLOWED
+        message: The requested method is not allowed/supported on the target resource.
+
+    # ── 406 Not Acceptable (not documented by default) ───────────────────────
+    # Responses: none — define locally if a use case justifies documenting it
+    # Examples: GENERIC_406_NOT_ACCEPTABLE
+    GENERIC_406_NOT_ACCEPTABLE:
+      description: API Server does not accept the media type (`Accept-*` header) indicated by API client
+      value:
+        status: 406
+        code: NOT_ACCEPTABLE
+        message: The server cannot produce a response matching the content requested by the client through `Accept-*` headers.
+
+    # ── 409 Conflict ─────────────────────────────────────────────────────────
+    # Responses: AlreadyExists409; for subscription creation:
+    #   CreateSubscriptionConflict409 (CAMARA_event_common.yaml)
+    # Examples: GENERIC_409_ALREADY_EXISTS, GENERIC_409_ABORTED,
+    #   GENERIC_409_INCOMPATIBLE_STATE (the deprecated code CONFLICT is removed)
+    GENERIC_409_ALREADY_EXISTS:
+      description: Trying to create an existing resource
+      value:
+        status: 409
+        code: ALREADY_EXISTS
+        message: The resource that a client tried to create already exists.
+    GENERIC_409_ABORTED:
+      description: The resource is undergoing modification by another process
+      value:
+        status: 409
+        code: ABORTED
+        message: Resource is being modified by another operation. Please wait, and retry if appropriate.
+    GENERIC_409_INCOMPATIBLE_STATE:
+      description: The status of the referenced resource is not compatible
+      value:
+        status: 409
+        code: INCOMPATIBLE_STATE
+        message: Resource must be in AVAILABLE state to extend. Current state is UNAVAILABLE.
+
+    # ── 410 Gone ─────────────────────────────────────────────────────────────
+    # Responses: SinkGone410 (CAMARA_event_common.yaml) for notification
+    #   callbacks; define locally for a direct resource-gone use case
+    # Examples: GENERIC_410_GONE
+    GENERIC_410_GONE:
+      description: Use in notifications flow to allow API Consumer to indicate that its callback is no longer available
+      value:
+        status: 410
+        code: GONE
+        message: Access to the target resource is no longer available.
+
+    # ── 412 Precondition Failed (not documented by default) ──────────────────
+    # Responses: none — define locally if a use case justifies documenting it
+    # Examples: GENERIC_412_FAILED_PRECONDITION
+    GENERIC_412_FAILED_PRECONDITION:
+      description: Indication by the API Server that the request cannot be processed in current system state
+      value:
+        status: 412
+        code: FAILED_PRECONDITION
+        message: Request cannot be executed in the current system state.
+
+    # ── 415 Unsupported Media Type (not documented by default) ───────────────
+    # Responses: none — define locally if a use case justifies documenting it
+    # Examples: GENERIC_415_UNSUPPORTED_MEDIA_TYPE
+    GENERIC_415_UNSUPPORTED_MEDIA_TYPE:
+      description: Payload format of the request is in an unsupported format by the Server. Should not happen
+      value:
+        status: 415
+        code: UNSUPPORTED_MEDIA_TYPE
+        message: The server refuses to accept the request because the payload format is in an unsupported format.
+
+    # ── 422 Unprocessable Content ────────────────────────────────────────────
+    # Responses: DeviceIdentifier422, PhoneNumberIdentifier422; for
+    #   subscription creation: CreateSubscriptionDevice422 and
+    #   CreateSubscriptionPhoneNumber422 (CAMARA_event_common.yaml)
+    # Examples: GENERIC_422_SERVICE_NOT_APPLICABLE (subject-neutral) and the
+    #   identifier examples in device / phone number wording variants
+    GENERIC_422_SERVICE_NOT_APPLICABLE:
+      description: Service not applicable for the provided identifier
+      value:
+        status: 422
+        code: SERVICE_NOT_APPLICABLE
+        message: The service is not available for the provided identifier.
+    GENERIC_422_MISSING_IDENTIFIER_DEVICE:
+      description: The device identifier is not included in the request and the device cannot be derived from the access token
+      value:
+        status: 422
+        code: MISSING_IDENTIFIER
+        message: The device cannot be identified.
+    GENERIC_422_UNSUPPORTED_IDENTIFIER_DEVICE:
+      description: None of the provided device identifiers is supported by the implementation
+      value:
+        status: 422
+        code: UNSUPPORTED_IDENTIFIER
+        message: The identifier provided is not supported.
+    GENERIC_422_UNNECESSARY_IDENTIFIER_DEVICE:
+      description: An explicit device identifier is provided when the device has already been identified from the access token
+      value:
+        status: 422
+        code: UNNECESSARY_IDENTIFIER
+        message: The device is already identified by the access token.
+    GENERIC_422_MISSING_IDENTIFIER_PHONE_NUMBER:
+      description: The phone number is not included in the request and cannot be derived from the access token
+      value:
+        status: 422
+        code: MISSING_IDENTIFIER
+        message: The phone number cannot be identified.
+    GENERIC_422_UNNECESSARY_IDENTIFIER_PHONE_NUMBER:
+      description: An explicit phone number is provided when the phone number has already been identified from the access token
+      value:
+        status: 422
+        code: UNNECESSARY_IDENTIFIER
+        message: The phone number is already identified by the access token.
+
+    # ── 429 Too Many Requests ────────────────────────────────────────────────
+    # Responses: TooManyRequests429
+    # Examples: GENERIC_429_TOO_MANY_REQUESTS, GENERIC_429_QUOTA_EXCEEDED
+    GENERIC_429_TOO_MANY_REQUESTS:
+      description: Access to the API has been temporarily blocked due to rate or spike arrest limits being reached
+      value:
+        status: 429
+        code: TOO_MANY_REQUESTS
+        message: Rate limit reached.
+    GENERIC_429_QUOTA_EXCEEDED:
+      description: Request is rejected due to exceeding a business quota limit
+      value:
+        status: 429
+        code: QUOTA_EXCEEDED
+        message: Out of resource quota.
+
+    # ── 5xx Server errors (not documented by default) ────────────────────────
+    # Responses: none — define locally if a use case justifies documenting it
+    # Examples: GENERIC_500_INTERNAL, GENERIC_501_NOT_IMPLEMENTED,
+    #   GENERIC_502_BAD_GATEWAY, GENERIC_503_UNAVAILABLE, GENERIC_504_TIMEOUT
+    GENERIC_500_INTERNAL:
+      description: Problem in Server side. Regular Server Exception
+      value:
+        status: 500
+        code: INTERNAL
+        message: Unknown server error. Typically a server bug.
+    GENERIC_501_NOT_IMPLEMENTED:
+      description: Service not implemented. The use of this code should be avoided as far as possible to get the objective to reach aligned implementations
+      value:
+        status: 501
+        code: NOT_IMPLEMENTED
+        message: This functionality is not implemented yet.
+    GENERIC_502_BAD_GATEWAY:
+      description: Internal routing problem in the Server side that blocks to manage the service properly
+      value:
+        status: 502
+        code: BAD_GATEWAY
+        message: An upstream internal service cannot be reached.
+    GENERIC_503_UNAVAILABLE:
+      description: Service is not available. Temporary situation usually related to maintenance process in the server side
+      value:
+        status: 503
+        code: UNAVAILABLE
+        message: Service Unavailable.
+    GENERIC_504_TIMEOUT:
+      description: API Server Timeout
+      value:
+        status: 504
+        code: TIMEOUT
+        message: Request timeout exceeded.
