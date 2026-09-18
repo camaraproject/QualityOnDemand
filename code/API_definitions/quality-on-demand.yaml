@@ -573,7 +573,7 @@ components:
     SessionInfoWithDevice:
       description: Session information plus an optional `device` property, which is only required to allow the API consumer to disambiguate which device identifier applies when more than one identifier is provided in the request.
       allOf:
-        - $ref: "#/components/schemas/BaseSessionInfo"
+        - $ref: "#/components/schemas/SessionInfo"
         - type: object
           properties:
             device:
