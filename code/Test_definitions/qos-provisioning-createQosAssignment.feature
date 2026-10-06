@@ -103,11 +103,11 @@ Feature: CAMARA QoS Provisioning API, vwip - Operation createQosAssignment
     And the response property "$.message" contains a user friendly text
 
     Examples:
-      | device_identifier                | oas_spec_schema                             |
-      | $.device.phoneNumber             | /components/schemas/PhoneNumber             |
-      | $.device.ipv4Address             | /components/schemas/DeviceIpv4Address       |
-      | $.device.ipv6Address             | /components/schemas/DeviceIpv6Address       |
-      | $.device.networkAccessIdentifier | /components/schemas/NetworkAccessIdentifier |
+      | device_identifier                | oas_spec_schema                              |
+      | $.device.phoneNumber             | #/components/schemas/PhoneNumber             |
+      | $.device.ipv4Address             | #/components/schemas/DeviceIpv4Address       |
+      | $.device.ipv6Address             | #/components/schemas/DeviceIpv6Address       |
+      | $.device.networkAccessIdentifier | #/components/schemas/NetworkAccessIdentifier |
 
   # This scenario may happen e.g. with 2-legged access tokens, which do not identify a single device.
   @qos_provisioning_createQosAssignment_C01.03_device_not_found
