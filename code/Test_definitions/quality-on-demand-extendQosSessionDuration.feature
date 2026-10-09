@@ -17,7 +17,7 @@ Feature: CAMARA Quality On Demand API, vwip - Operation extendQosSessionDuration
     And the header "Authorization" is set to a valid access token
     And the header "x-correlator" complies with the schema at "#/components/schemas/XCorrelator"
     # Properties not explicitly overwritten in the Scenarios can take any values compliant with the schema
-    And the request body is set by default to a request body compliant with the schema at "/components/schemas/ExtendSessionDuration"
+    And the request body is set by default to a request body compliant with the schema at "#/components/schemas/ExtendSessionDuration"
     And the path parameter "sessionId" is set by default to a existing QoS session sessionId
 
   # Success scenarios
@@ -33,7 +33,7 @@ Feature: CAMARA Quality On Demand API, vwip - Operation extendQosSessionDuration
     And the response header "Content-Type" is "application/json"
     And the response header "x-correlator" has same value as the request header "x-correlator"
     # The response has to comply with the generic response schema which is part of the spec
-    And the response body complies with the OAS schema at "/components/schemas/SessionInfo"
+    And the response body complies with the OAS schema at "#/components/schemas/SessionInfo"
     And the response property "$.device" exists only if provided for createSession and with the same value
     And the response property "$.applicationServer" has the same value as in the request body
     And the response property "$.qosProfile" has the value provided for createSession
@@ -55,14 +55,14 @@ Feature: CAMARA Quality On Demand API, vwip - Operation extendQosSessionDuration
     And the response header "Content-Type" is "application/json"
     And the response header "x-correlator" has same value as the request header "x-correlator"
     # The response has to comply with the generic response schema which is part of the spec
-    And the response body complies with the OAS schema at "/components/schemas/SessionInfo"
+    And the response body complies with the OAS schema at "#/components/schemas/SessionInfo"
     And the response property "$.duration" does not exceed the "maxDuration" for the QoS Profile
 
   # Errors 400
 
   @quality_on_demand_extendQosSessionDuration_400.1_schema_not_compliant
   Scenario: Invalid Argument. Generic Syntax Exception
-    Given the request body is set to any value which is not compliant with the schema at "/components/schemas/ExtendSessionDuration"
+    Given the request body is set to any value which is not compliant with the schema at "#/components/schemas/ExtendSessionDuration"
     When the request "extendQosSessionDuration" is sent
     Then the response status code is 400
     And the response header "x-correlator" has same value as the request header "x-correlator"

@@ -39,7 +39,7 @@ Feature: CAMARA QoS Provisioning API, vwip - Operation revokeQosAssignment
     And the response header "x-correlator" has same value as the request header "x-correlator"
     And the response header "Content-Type" is "application/json"
     # The response has to comply with the generic response schema which is part of the spec
-    And the response body complies with the OAS schema at "/components/schemas/AssignmentInfo"
+    And the response body complies with the OAS schema at "#/components/schemas/AssignmentInfo"
     # Additionally any success response has to comply with some constraints beyond the schema compliance
     And the response property "$.device" exists only if provided for createQosAssignment and with the same value
     And the response property "$.qosProfile" has the value provided for createQosAssignment
@@ -59,7 +59,7 @@ Feature: CAMARA QoS Provisioning API, vwip - Operation revokeQosAssignment
     And an event is received at the address of the "$.sink" provided for createQosAssignment
     And the event header "Authorization" is set to "Bearer: " + the value of "$.sinkCredential.accessToken" provided for createQosAssignment
     And the event header "Content-Type" is set to "application/cloudevents+json"
-    And the event body complies with the OAS schema at "/components/schemas/EventStatusChanged"
+    And the event body complies with the OAS schema at "#/components/schemas/EventStatusChanged"
     # Additionally any event body has to comply with some constraints beyond the schema compliance
     And the event body property "$.id" is unique
     And the event body property "$.type" is set to "org.camaraproject.qos-provisioning.v0.status-changed"
@@ -78,7 +78,7 @@ Feature: CAMARA QoS Provisioning API, vwip - Operation revokeQosAssignment
     And an event is received at the address of the "$.sink" provided for createQosAssignment
     And the event header "Authorization" is set to "Bearer " + the value of "$.sinkCredential.accessToken" provided for createQosAssignment
     And the event header "Content-Type" is set to "application/cloudevents+json"
-    And the event body complies with the OAS schema at "/components/schemas/EventStatusChanged"
+    And the event body complies with the OAS schema at "#/components/schemas/EventStatusChanged"
     # Additionally any event body has to comply with some constraints beyond the schema compliance
     And the event body property "$.id" is unique
     And the event body property "$.type" is set to "org.camaraproject.qos-provisioning.v0.status-changed"

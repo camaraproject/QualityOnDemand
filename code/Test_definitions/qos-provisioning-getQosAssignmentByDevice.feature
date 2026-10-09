@@ -31,7 +31,7 @@ Feature: CAMARA QoS Provisioning API, vwip - Operation getQosAssignmentByDevice
     And the response header "x-correlator" has same value as the request header "x-correlator"
     And the response header "Content-Type" is "application/json"
     # The response has to comply with the generic response schema which is part of the spec
-    And the response body complies with the OAS schema at "/components/schemas/AssignmentInfo"
+    And the response body complies with the OAS schema at "#/components/schemas/AssignmentInfo"
     # Additionally any success response has to comply with some constraints beyond the schema compliance
     And the response property "$.device" exists only if provided for createQosAssignment and with the same value
     And the response property "$.qosProfile" has the value provided for createQosAssignment
@@ -63,11 +63,11 @@ Feature: CAMARA QoS Provisioning API, vwip - Operation getQosAssignmentByDevice
     And the response property "$.message" contains a user friendly text
 
     Examples:
-      | device_identifier                | oas_spec_schema                             |
-      | $.device.phoneNumber             | /components/schemas/PhoneNumber             |
-      | $.device.ipv4Address             | /components/schemas/DeviceIpv4Address       |
-      | $.device.ipv6Address             | /components/schemas/DeviceIpv6Address       |
-      | $.device.networkAccessIdentifier | /components/schemas/NetworkAccessIdentifier |
+      | device_identifier                | oas_spec_schema                              |
+      | $.device.phoneNumber             | #/components/schemas/PhoneNumber             |
+      | $.device.ipv4Address             | #/components/schemas/DeviceIpv4Address       |
+      | $.device.ipv6Address             | #/components/schemas/DeviceIpv6Address       |
+      | $.device.networkAccessIdentifier | #/components/schemas/NetworkAccessIdentifier |
 
   # This scenario may happen e.g. with 2-legged access tokens, which do not identify a single device.
   @qos_provisioning_getQosAssignmentByDevice_C01.03_device_not_found
@@ -126,7 +126,7 @@ Feature: CAMARA QoS Provisioning API, vwip - Operation getQosAssignmentByDevice
 
   @qos_provisioning_getQosAssignmentByDevice_400.1_schema_not_compliant
   Scenario: Invalid Argument. Generic Syntax Exception
-    Given the request body is set to any value which is not compliant with the schema at "/components/schemas/RetrieveAssignmentByDevice"
+    Given the request body is set to any value which is not compliant with the schema at "#/components/schemas/RetrieveAssignmentByDevice"
     When the request "getQosAssignmentByDevice" is sent
     And the response header "x-correlator" has same value as the request header "x-correlator"
     And the response header "Content-Type" is "application/json"
