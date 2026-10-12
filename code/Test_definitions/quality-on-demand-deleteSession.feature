@@ -39,7 +39,7 @@ Feature: CAMARA Quality On Demand API, vwip - Operation deleteSession
     And an event is received at the address of the "$.sink" provided for createSession
     And the event header "Authorization" is set to "Bearer " + the value of the property "$.sinkCredential.accessToken" provided for createSession
     And the event header "Content-Type" is set to "application/cloudevents+json"
-    And the event body complies with the OAS schema at "/components/schemas/EventQosStatusChanged"
+    And the event body complies with the OAS schema at "#/components/schemas/EventQosStatusChanged"
     # Additionally any event body has to comply with some constraints beyond the schema compliance
     And the event body property "$.id" is unique
     And the event body property "$.type" is set to "org.camaraproject.qod.v1.qos-status-changed"
