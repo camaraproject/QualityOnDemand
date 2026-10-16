@@ -475,7 +475,7 @@ paths:
         "403":
           $ref: "../common/CAMARA_common.yaml#/components/responses/PermissionDenied403"
         "404":
-          $ref: "#/components/responses/DeviceNotFound404"
+          $ref: "../common/CAMARA_common.yaml#/components/responses/IdentifierNotFound404"
         "422":
           $ref: "../common/CAMARA_common.yaml#/components/responses/DeviceIdentifier422"
         "429":
