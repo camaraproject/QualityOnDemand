@@ -81,7 +81,7 @@ Changes documented below are compared to version 0.4.0-rc.1.
 * Align quality-on-demand and qos-provisioning with Commonalities r4.4 by @hdamker in https://github.com/camaraproject/QualityOnDemand/pull/619
   * Fix schema reference notation in feature files
 * docs: align session access NOTES with Design Guide section 6.7 by @hdamker in https://github.com/camaraproject/QualityOnDemand/pull/623
-  * Clarify that, for assignment retrieval or deletion, the access tokens must identify the same API client and, if 3-legged, the same subject as was used to create the assignment
+  * Clarify that, for assignment retrieval or deletion, the access token must identify the same API client and, if 3-legged, the same subject as was used to create the assignment
 
 ### Removed
 
@@ -115,12 +115,12 @@ Changes documented below are compared to version 1.2.0-rc.3.
 * Align quality-on-demand and qos-provisioning with Commonalities r4.4 by @hdamker in https://github.com/camaraproject/QualityOnDemand/pull/619
   * Fix schema reference notation in feature files
 * docs: align session access NOTES with Design Guide section 6.7 by @hdamker in https://github.com/camaraproject/QualityOnDemand/pull/623
-  * Clarify that, for session retrieval, modification or deletion, the access tokens must identify the same API client and, if 3-legged, the same subject as was used to create the session
+  * Clarify that, for session retrieval, modification or deletion, the access token must identify the same API client and, if 3-legged, the same subject as was used to create the session
 
 #### Removed
 
 * Replace DeviceNotFound404 error with common IdentifierNotFound404 for operation retrieveSessionsByDevice by @eric-murray in https://github.com/camaraproject/QualityOnDemand/pull/622
-  * Remove 404 NOT_FOUND error for POST /retrieve-sessions
+  * Remove the 404 NOT_FOUND error as a possibility for POST /retrieve-sessions
 
 **Full Changelog**: https://github.com/camaraproject/QualityOnDemand/compare/r4.1...r4.2
 
