@@ -1,0 +1,16 @@
+repository:
+  repository_name: QualityOnDemand
+  release_tag: r4.2
+  release_type: pre-release-rc
+  release_date: null
+  src_commit_sha: 471aa355b569ae5c36f23230c7fd16a590740396
+apis:
+- api_name: qos-provisioning
+  api_version: 0.4.0-rc.2
+  api_title: QoS Provisioning
+- api_name: quality-on-demand
+  api_version: 1.2.0-rc.4
+  api_title: Quality-On-Demand
+dependencies:
+  commonalities_release: r4.4 (0.9.0)
+  identity_consent_management_release: r4.2 (0.5.0)
