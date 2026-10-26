@@ -267,8 +267,8 @@ paths:
 
         **NOTES:**
         - The access token may be either 2-legged or 3-legged.
-        - If a 3-legged access token is used, the end user (and device) associated with the session must also be associated with the access token.
-        - The session must have been created by the same API client given in the access token
+        - If a 3-legged access token is used, the subject associated with the session must also be associated with the access token.
+        - The session must have been created by the same API client given in the access token.
 
       operationId: getSession
       security:
@@ -323,7 +323,7 @@ paths:
         **NOTES:**
         - The access token may be either 2-legged or 3-legged.
         - If a 3-legged access token is used, the subject associated with the session must also be associated with the access token.
-        - The session must must have been created by the same API consumer given in the access token
+        - The session must have been created by the same API client given in the access token.
 
       operationId: deleteSession
       security:
@@ -370,7 +370,7 @@ paths:
         **NOTES:**
         - The access token may be either 2-legged or 3-legged.
         - If a 3-legged access token is used, the subject associated with the session must also be associated with the access token.
-        - The session must must have been created by the same API consumer given in the access token
+        - The session must have been created by the same API client given in the access token.
 
       operationId: extendQosSessionDuration
       security:
@@ -429,7 +429,7 @@ paths:
         - The access token may be either 2-legged or 3-legged.
           - If a 3-legged access token is used, the subject associated with the session must also be associated with the access token. In this case the optional `device` parameter MUST NOT be provided in the request.
           - If a 2-legged access token is used, the device parameter must be provided and identify a device.
-        - The session must have been created by the same API consumer given in the access token
+        - The sessions returned must have been created by the same API client given in the access token.
         - If no QoS session is found for the requested device, an empty array is returned.
         - This call uses the POST method instead of GET to comply with the CAMARA Commonalities guidelines for sending sensitive or complex data in API calls. Since the device field may contain personally identifiable information, it should not be sent via GET.
           [CAMARA API Design Guidelines](https://github.com/camaraproject/Commonalities/blob/r4.4/documentation/CAMARA-API-Design-Guide.md#65-post-or-get-for-transferring-sensitive-or-complex-data)
