@@ -2,6 +2,7 @@
 
 <!-- TOC:START -->
 ## Table of Contents
+- [r4.2](#r42)
 - [r4.1](#r41)
 <!-- TOC:END -->
 
@@ -13,6 +14,89 @@ The below sections record the changes for each API version in each release as fo
 * for the first release-candidate, all changes since the last public release
 * for subsequent release-candidate(s), only the delta to the previous release-candidate
 * for a public release, the consolidated changes since the previous public release
+
+# r4.2
+
+## Release Notes
+
+This release candidate contains the definition and documentation of
+* qos-provisioning 0.4.0-rc.2
+* quality-on-demand 1.2.0-rc.4
+
+The API definition(s) are based on
+* Commonalities r4.4 (0.9.0)
+* Identity and Consent Management r4.2 (0.5.0)
+
+## qos-provisioning 0.4.0-rc.2
+
+**qos-provisioning 0.4.0-rc.2 is a release-candidate version of this API.**
+
+Changes documented below are compared to version 0.4.0-rc.1.
+
+- API definition **with inline documentation**:
+  - [View it on ReDoc](https://redocly.github.io/redoc/?url=https://raw.githubusercontent.com/camaraproject/QualityOnDemand/r4.2/code/API_definitions/qos-provisioning.yaml&nocors)
+  - [View it on Swagger Editor](https://camaraproject.github.io/swagger-ui/?url=https://raw.githubusercontent.com/camaraproject/QualityOnDemand/r4.2/code/API_definitions/qos-provisioning.yaml)
+  - OpenAPI [YAML spec file](https://github.com/camaraproject/QualityOnDemand/blob/r4.2/code/API_definitions/qos-provisioning.yaml)
+
+### Breaking changes
+
+* N/A
+
+### Added
+
+* N/A
+
+### Changed
+
+* N/A
+
+### Fixed
+
+* Align quality-on-demand and qos-provisioning with Commonalities r4.4 by @hdamker in https://github.com/camaraproject/QualityOnDemand/pull/619
+  * Fix schema reference notation in feature files
+* docs: align session access NOTES with Design Guide section 6.7 by @hdamker in https://github.com/camaraproject/QualityOnDemand/pull/623
+  * Clarify that, for assignment retrieval or deletion, the access token must identify the same API client and, if 3-legged, the same subject as was used to create the assignment
+
+### Removed
+
+* N/A
+
+## quality-on-demand 1.2.0-rc.4
+
+**quality-on-demand 1.2.0-rc.4 is a release-candidate version of this API.**
+
+Changes documented below are compared to version 1.2.0-rc.3.
+
+- API definition **with inline documentation**:
+  - [View it on ReDoc](https://redocly.github.io/redoc/?url=https://raw.githubusercontent.com/camaraproject/QualityOnDemand/r4.2/code/API_definitions/quality-on-demand.yaml&nocors)
+  - [View it on Swagger Editor](https://camaraproject.github.io/swagger-ui/?url=https://raw.githubusercontent.com/camaraproject/QualityOnDemand/r4.2/code/API_definitions/quality-on-demand.yaml)
+  - OpenAPI [YAML spec file](https://github.com/camaraproject/QualityOnDemand/blob/r4.2/code/API_definitions/quality-on-demand.yaml)
+
+### Breaking changes
+
+* N/A
+
+### Added
+
+* N/A
+
+### Changed
+
+* N/A
+
+### Fixed
+
+* Align quality-on-demand and qos-provisioning with Commonalities r4.4 by @hdamker in https://github.com/camaraproject/QualityOnDemand/pull/619
+  * Fix schema reference notation in feature files
+* docs: align session access NOTES with Design Guide section 6.7 by @hdamker in https://github.com/camaraproject/QualityOnDemand/pull/623
+  * Clarify that, for session retrieval, modification or deletion, the access token must identify the same API client and, if 3-legged, the same subject as was used to create the session
+
+#### Removed
+
+* Replace DeviceNotFound404 error with common IdentifierNotFound404 for operation retrieveSessionsByDevice by @eric-murray in https://github.com/camaraproject/QualityOnDemand/pull/622
+  * Remove the 404 NOT_FOUND error as a possibility for POST /retrieve-sessions
+
+**Full Changelog**: https://github.com/camaraproject/QualityOnDemand/compare/r4.1...r4.2
 
 # r4.1
 
