@@ -309,7 +309,7 @@ Feature: CAMARA Quality On Demand API, vwip - Operation createSession
 
   @quality_on_demand_createSession_400.8_non_compliant_qos_profile_name
   Scenario: Error response for invalid qos profile name in request body
-    Given the request body property "qosProfile" is not compliant with the schema at "#/components/schemas/QosProfileName"
+    Given the request body property "$.qosProfile" is not compliant with the schema at "#/components/schemas/QosProfileName"
     When the request "createSession" is sent
     Then the response status code is 400
     And the response header "x-correlator" has same value as the request header "x-correlator"
@@ -457,7 +457,7 @@ Feature: CAMARA Quality On Demand API, vwip - Operation createSession
 
   @quality_on_demand_createSession_404.1_non_existent_qos_profile
   Scenario: Error response for invalid qos profile in request body
-    Given the request body property "qosProfile" is set to a non-existent QoS profile that is compliant with the schema at "#/components/schemas/QosProfileName"
+    Given the request body property "$.qosProfile" is set to a non-existent QoS profile that is compliant with the schema at "#/components/schemas/QosProfileName"
     When the request "createSession" is sent
     Then the response status code is 404
     And the response header "x-correlator" has same value as the request header "x-correlator"
