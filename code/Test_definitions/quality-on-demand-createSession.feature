@@ -456,7 +456,7 @@ Feature: CAMARA Quality On Demand API, vwip - Operation createSession
   # Errors 404
 
   @quality_on_demand_createSession_404.1_non_existent_qos_profile
-  Scenario: Error response for invalid qos profile in request body
+  Scenario: Error response for non-existent qos profile in request body
     Given the request body property "$.qosProfile" is set to a non-existent QoS profile that is compliant with the schema at "#/components/schemas/QosProfileName"
     When the request "createSession" is sent
     Then the response status code is 404
