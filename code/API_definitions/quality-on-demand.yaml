@@ -19,8 +19,8 @@ info:
     * **QOD service endpoint**:
     The URL pointing to the RESTful resource of the QoD API.
 
-    * **QoS profiles**:
-    Latency, throughput or priority requirements of the application mapped to relevant QoS profile values. The set of QoS Profiles that an API provider is offering may be retrieved via the `qos-profiles` API (cf. https://github.com/camaraproject/QualityOnDemand/) or will be agreed during the onboarding with the API provider.
+    * **QoS Profiles**:
+    A QoS Profile defines the latency, throughput or priority characteristics that an application may require. Each QoS Profile is identified by its name (`QosProfileName`), which is the value of the `qosProfile` property. The set of QoS Profiles (and their names) that an API provider is offering may be retrieved via the `qos-profiles` API (cf. https://github.com/camaraproject/QoSProfiles/) or will be agreed during the onboarding with the API provider.
 
     * **Identifier for the device**:
     At least one identifier for the device (user equipment) out of four options: IPv4 address, IPv6 address, Phone Number, or Network Access Identifier assigned by the mobile network operator for the device. Where more than one device identifier is provided, only one identifier will be selected by the implementation and this choice indicated to the API consumer in the session details. If only a single device identifier is provided, the implementation may or may not include the device identifier in the session details.
@@ -42,13 +42,13 @@ info:
 
     # API functionality
 
-    The usage of the QoD API is based on QoS profile classes and parameters which define App-Flows.
-    Based on the API, QoS session resources can be created, queried, and deleted. Once an offered QoS profile class is requested, application users get a prioritized service with stable latency or throughput even in the case of congestion. The QoD API has the following characteristics:
+    The usage of the QoD API is based on QoS Profiles and parameters which define App-Flows.
+    Based on the API, QoS session resources can be created, queried, and deleted. Once a QoS session is created with an offered QoS Profile, the App-Flow is served according to the characteristics of that QoS Profile, even in the case of congestion. The QoD API has the following characteristics:
 
-    * A specified App-Flow is prioritized to ensure stable latency or throughput for that flow.
+    * The QoS Profile requested for a specified App-Flow is applied to that flow.
     * The prioritized App-Flow is described by providing information such as device IP address (or other device identifier) & application server IP addresses and port/port-ranges.
     * The API consumer specifies the duration for which they need the prioritized App-flow.
-    * Stable latency or throughput is requested by selecting from the list of QoS profiles made available by the service provider (e.g. QOS_E) to map latency and throughput requirements.
+    * The QoS Profile is selected by its name (`qosProfile`) from the list of QoS Profiles made available by the API provider (e.g. `QOS_E`).
     * The API consumer can optionally also specify callback URL (`sink` param) on which notifications for the session can be sent. <br>
 
     Following diagram shows the interaction between different components
@@ -138,7 +138,7 @@ paths:
         - QoS Sessions
       summary: Creates a new session
       description: |
-        Create QoS Session to manage latency/throughput priorities
+        Creates a QoS session that applies the requested QoS Profile to the specified App-Flow.
 
         If the qosStatus in the API response is "AVAILABLE" and a notification callback is provided the API consumer will receive in addition to the response a
         `QOS_STATUS_CHANGED` event notification with `qosStatus` as `AVAILABLE`.
@@ -656,7 +656,7 @@ components:
           - A UUID style string
           - Support for predefined profiles QOS_S, QOS_M, QOS_L, and QOS_E
           - A searchable descriptive name
-        The set of QoS Profiles that an API provider is offering may be retrieved by means of the QoS Profile API (qos-profile) or agreed on onboarding time.
+        The set of QoS Profiles that an API provider is offering may be retrieved by means of the `qos-profiles` API or agreed on onboarding time.
       type: string
       example: voice
       minLength: 3
