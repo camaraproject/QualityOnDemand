@@ -270,7 +270,7 @@ Changes documented below are compared to version 1.2.0-rc.3.
 * docs: align session access NOTES with Design Guide section 6.7 by @hdamker in https://github.com/camaraproject/QualityOnDemand/pull/623
   * Clarify that, for session retrieval, modification or deletion, the access token must identify the same API client and, if 3-legged, the same subject as was used to create the session
 
-#### Removed
+### Removed
 
 * Replace DeviceNotFound404 error with common IdentifierNotFound404 for operation retrieveSessionsByDevice by @eric-murray in https://github.com/camaraproject/QualityOnDemand/pull/622
   * Remove the 404 NOT_FOUND error as a possibility for POST /retrieve-sessions
