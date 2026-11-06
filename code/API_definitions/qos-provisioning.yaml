@@ -10,8 +10,8 @@ info:
 
     # Relevant terms and definitions
 
-    * **QoS profiles and QoS profile labels**:
-    Latency, throughput or priority requirements of the application mapped to relevant QoS profile values. The set of QoS Profiles that a network operator is offering may be retrieved via the `qos-profiles` API (cf. https://github.com/camaraproject/QualityOnDemand/) or will be agreed during the onboarding with the API service provider.
+    * **QoS Profiles**:
+    A QoS Profile defines the latency, throughput or priority characteristics that an application may require. Each QoS Profile is identified by its name (`QosProfileName`), which is the value of the `qosProfile` property. The set of QoS Profiles (and their names) that an API provider is offering may be retrieved via the `qos-profiles` API (cf. https://github.com/camaraproject/QoSProfiles/) or will be agreed during the onboarding with the API provider.
 
     * **Identifier for the device**:
     At least one identifier for the device (user equipment) out of four options: IPv4 address, IPv6 address, Phone Number, or Network Access Identifier assigned by the mobile network operator for the device. Where more than one device identifier is provided, only one identifier will be selected by the implementation and this choice indicated to the API consumer in the provisioning details. If only a single device identifier is provided, the implementation may or may not include the device identifier in the assignment details.
@@ -463,7 +463,7 @@ components:
           - A UUID style string
           - Support for predefined profiles QOS_S, QOS_M, QOS_L, and QOS_E
           - A searchable descriptive name
-        The set of QoS Profiles that an API provider is offering may be retrieved by means of the QoS Profile API (qos-profile) or agreed on onboarding time.
+        The set of QoS Profiles that an API provider is offering may be retrieved by means of the `qos-profiles` API or agreed on onboarding time.
       type: string
       example: QCI_1_voice
       minLength: 3
