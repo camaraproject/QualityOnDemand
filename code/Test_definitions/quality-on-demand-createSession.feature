@@ -75,7 +75,7 @@ Feature: CAMARA Quality On Demand API, vwip - Operation createSession
     And the event header "Content-Type" is set to "application/cloudevents+json"
     And the event body complies with the OAS schema at "#/components/schemas/EventQosStatusChanged"
     And the event body property "$.id" is unique
-    And the event body property "$.type" is set to "org.camaraproject.qod.v1.qos-status-changed"
+    And the event body property "$.type" is set to "org.camaraproject.quality-on-demand.v1.qos-status-changed"
     And the event body property "$.data.sessionId" has the same value as createSession response property "$.sessionId"
     And the event body property "$.data.qosStatus" is "AVAILABLE" or "UNAVAILABLE"
     And the event body property "$.data.statusInfo" exists only if "$.data.qosStatus" is "UNAVAILABLE"
