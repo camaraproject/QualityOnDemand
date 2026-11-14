@@ -401,6 +401,28 @@ Feature: CAMARA Quality On Demand API, vwip - Operation createSession
     And the response property "$.code" is "INVALID_ARGUMENT"
     And the response property "$.message" contains a user friendly text
 
+  # Examples: one top-level path, plus one path inside each object-typed property of the request schema
+  @quality_on_demand_createSession_400.17_request_body_strictness
+  Scenario Outline: Undeclared property in request body
+    Given the request body is set to a valid request body
+    And the request body includes the property "<undeclared_property>" which is not declared in the schema at "#/components/schemas/CreateSession"
+    When the request "createSession" is sent
+    Then the response status code is 400
+    And the response header "x-correlator" has same value as the request header "x-correlator"
+    And the response header "Content-Type" is "application/json"
+    And the response property "$.status" is 400
+    And the response property "$.code" is "INVALID_ARGUMENT"
+    And the response property "$.message" contains a user friendly text
+
+    Examples:
+      | undeclared_property                         |
+      | $.undeclaredProperty                        |
+      | $.device.undeclaredProperty                 |
+      | $.applicationServer.undeclaredProperty      |
+      | $.devicePorts.undeclaredProperty            |
+      | $.applicationServerPorts.undeclaredProperty |
+      | $.sinkCredential.undeclaredProperty         |
+
   # Generic 401 errors
 
   @quality_on_demand_createSession_401.1_no_authorization_header
