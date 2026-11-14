@@ -153,6 +153,24 @@ Feature: CAMARA QoS Provisioning API, vwip - Operation getQosAssignmentByDevice
     And the response property "$.status" is 400
     And the response property "$.code" is "INVALID_ARGUMENT"
 
+  # Examples: one top-level path, plus one path inside each object-typed property of the request schema
+  @qos_provisioning_getQosAssignmentByDevice_400.11_request_body_strictness
+  Scenario Outline: Undeclared property in request body
+    Given the request body is set to a valid request body
+    And the request body includes the property "<undeclared_property>" which is not declared in the schema at "#/components/schemas/RetrieveAssignmentByDevice"
+    When the request "getQosAssignmentByDevice" is sent
+    Then the response status code is 400
+    And the response header "x-correlator" has same value as the request header "x-correlator"
+    And the response header "Content-Type" is "application/json"
+    And the response property "$.status" is 400
+    And the response property "$.code" is "INVALID_ARGUMENT"
+    And the response property "$.message" contains a user friendly text
+
+    Examples:
+      | undeclared_property         |
+      | $.undeclaredProperty        |
+      | $.device.undeclaredProperty |
+
   # Generic 401 errors
 
   @qos_provisioning_getQosAssignmentByDevice_401.1_no_authorization_header
