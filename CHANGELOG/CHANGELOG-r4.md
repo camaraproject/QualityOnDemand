@@ -159,7 +159,7 @@ Changes documented below are compared to version 1.1.0.
 ### Breaking changes
 
 * `sinkCredential.credentialType` now accepts `ACCESSTOKEN` and `PRIVATE_KEY_JWT`; `PLAIN` and `REFRESHTOKEN` are no longer accepted, by @hdamker in https://github.com/camaraproject/QualityOnDemand/pull/579
-  * API consumers that followed the 1.1.0 definition are not affected: it already required `credentialType` to be `ACCESSTOKEN`. Assessed against the 1.1.0 contract as required by the CAMARA API Design Guide, this does not need a major version.
+  * API consumers that followed the 1.1.0 definition are not affected: it already required `credentialType` to be `ACCESSTOKEN`.
 
 ### Added
 
