@@ -42,7 +42,7 @@ Feature: CAMARA Quality On Demand API, vwip - Operation deleteSession
     And the event body complies with the OAS schema at "#/components/schemas/EventQosStatusChanged"
     # Additionally any event body has to comply with some constraints beyond the schema compliance
     And the event body property "$.id" is unique
-    And the event body property "$.type" is set to "org.camaraproject.qod.v1.qos-status-changed"
+    And the event body property "$.type" is set to "org.camaraproject.quality-on-demand.v1.qos-status-changed"
     And the event body property "$.data.sessionId" as returned for createSession
     And the event body property "$.data.qosStatus" is "UNAVAILABLE"
     And the event body property "$.data.statusInfo" is "DELETE_REQUESTED"
