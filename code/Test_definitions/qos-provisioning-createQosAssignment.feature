@@ -69,6 +69,17 @@ Feature: CAMARA QoS Provisioning API, vwip - Operation createQosAssignment
     And the event body property "$.data.status" is "AVAILABLE" or "UNAVAILABLE"
     And the event body property "$.data.statusInfo" exists only if "$.data.status" is "UNAVAILABLE"
 
+  @qos_provisioning_createQosAssignment_02_3_private_key_jwt_sink_credential
+  Scenario: Create QoS assignment with sink and PRIVATE_KEY_JWT sinkCredential, out-of-band provisioning
+    Given a valid testing device supported by the service, identified by the token or provided in the request body
+    And the request property "$.qosProfile" is set to a valid QoS Profile as returned by QoS Profiles API
+    And the request property "$.sink" is set to a URL when events can be monitored
+    And the request property "$.sinkCredential.credentialType" is set to "PRIVATE_KEY_JWT"
+    And a PRIVATE_KEY_JWT configuration has been pre-shared for the notification endpoint
+    When the request "createQosAssignment" is sent
+    Then the response status code is 201
+    And the response property "$.sinkCredential.credentialType" is "PRIVATE_KEY_JWT"
+
   @qos_provisioning_createQosAssignment_03_3_legged_missing_device
   Scenario: Device is not returned if not included in the creation request
     Given the header "Authorization" is set to a valid 3-legged access token associated to a valid testing device supported by the service
@@ -247,6 +258,25 @@ Feature: CAMARA QoS Provisioning API, vwip - Operation createQosAssignment
     Then the response status code is 400
     And the response property "$.status" is 400
     And the response property "$.code" is "INVALID_ARGUMENT"
+
+  # Examples: one top-level path, plus one path inside each object-typed property of the request schema
+  @qos_provisioning_createQosAssignment_400.11_request_body_strictness
+  Scenario Outline: Undeclared property in request body
+    Given the request body is set to a valid request body
+    And the request body includes the property "<undeclared_property>" which is not declared in the schema at "#/components/schemas/CreateAssignment"
+    When the request "createQosAssignment" is sent
+    Then the response status code is 400
+    And the response header "x-correlator" has same value as the request header "x-correlator"
+    And the response header "Content-Type" is "application/json"
+    And the response property "$.status" is 400
+    And the response property "$.code" is "INVALID_ARGUMENT"
+    And the response property "$.message" contains a user friendly text
+
+    Examples:
+      | undeclared_property                 |
+      | $.undeclaredProperty                |
+      | $.device.undeclaredProperty         |
+      | $.sinkCredential.undeclaredProperty |
 
   # Generic 401 errors
 

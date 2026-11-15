@@ -80,6 +80,19 @@ Feature: CAMARA Quality On Demand API, vwip - Operation createSession
     And the event body property "$.data.qosStatus" is "AVAILABLE" or "UNAVAILABLE"
     And the event body property "$.data.statusInfo" exists only if "$.data.qosStatus" is "UNAVAILABLE"
 
+  @quality_on_demand_createSession_02_3_private_key_jwt_sink_credential
+  Scenario: Create QoS session with sink and PRIVATE_KEY_JWT sinkCredential, out-of-band provisioning
+    Given a valid testing device supported by the service, identified by the token or provided in the request body
+    And the request body property "$.applicationServer" is set to a valid application server
+    And the request property "$.qosProfile" is set to a valid QoS Profile as returned by QoS Profiles API
+    And the request body property "$.duration" is set to a valid duration for the selected QoS profile
+    And the request property "$.sink" is set to a URL where events can be monitored
+    And the request property "$.sinkCredential.credentialType" is set to "PRIVATE_KEY_JWT"
+    And a PRIVATE_KEY_JWT configuration has been pre-shared for the notification endpoint
+    When the request "createSession" is sent
+    Then the response status code is 201
+    And the response property "$.sinkCredential.credentialType" is "PRIVATE_KEY_JWT"
+
   @quality_on_demand_createSession_03_3_legged_missing_device
   Scenario: Device is not returned if not included in the creation
     # Valid testing device and default request body compliant with the schema
@@ -400,6 +413,28 @@ Feature: CAMARA Quality On Demand API, vwip - Operation createSession
     And the response property "$.status" is 400
     And the response property "$.code" is "INVALID_ARGUMENT"
     And the response property "$.message" contains a user friendly text
+
+  # Examples: one top-level path, plus one path inside each object-typed property of the request schema
+  @quality_on_demand_createSession_400.17_request_body_strictness
+  Scenario Outline: Undeclared property in request body
+    Given the request body is set to a valid request body
+    And the request body includes the property "<undeclared_property>" which is not declared in the schema at "#/components/schemas/CreateSession"
+    When the request "createSession" is sent
+    Then the response status code is 400
+    And the response header "x-correlator" has same value as the request header "x-correlator"
+    And the response header "Content-Type" is "application/json"
+    And the response property "$.status" is 400
+    And the response property "$.code" is "INVALID_ARGUMENT"
+    And the response property "$.message" contains a user friendly text
+
+    Examples:
+      | undeclared_property                         |
+      | $.undeclaredProperty                        |
+      | $.device.undeclaredProperty                 |
+      | $.applicationServer.undeclaredProperty      |
+      | $.devicePorts.undeclaredProperty            |
+      | $.applicationServerPorts.undeclaredProperty |
+      | $.sinkCredential.undeclaredProperty         |
 
   # Generic 401 errors
 
