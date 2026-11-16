@@ -136,6 +136,7 @@ Changes documented below are compared to version 0.3.0.
 * Clarified that retrieving or revoking a QoS assignment requires an access token for the same API client and, for three-legged tokens, the same subject as was used to create the assignment, by @hdamker in https://github.com/camaraproject/QualityOnDemand/pull/623
 * Clarified the definition of a QoS Profile and how it is selected by name (`qosProfile`); the `qos-profiles` API is now referenced in the QoSProfiles repository, by @hdamker in https://github.com/camaraproject/QualityOnDemand/pull/642
 * Aligned the test definitions with the Commonalities r4.4 test template, by @jlurien and @hdamker in https://github.com/camaraproject/QualityOnDemand/pull/580 and https://github.com/camaraproject/QualityOnDemand/pull/619
+* Added test scenarios for request body strictness (`createQosAssignment`, `getQosAssignmentByDevice`) and for creating a QoS assignment with a `PRIVATE_KEY_JWT` sink credential, by @hdamker in https://github.com/camaraproject/QualityOnDemand/pull/650
 
 ### Fixed
 
@@ -183,12 +184,14 @@ Changes documented below are compared to version 1.1.0.
 * Clarified that retrieving, extending or deleting a QoS session requires an access token for the same API client and, for three-legged tokens, the same subject as was used to create the session, by @hdamker in https://github.com/camaraproject/QualityOnDemand/pull/623
 * Clarified the definition of a QoS Profile, that the session applies the characteristics of the selected QoS Profile, and that the `qos-profiles` API is now in the QoSProfiles repository, by @hdamker in https://github.com/camaraproject/QualityOnDemand/pull/642
 * Aligned the test definitions with the Commonalities r4.4 test template, adding `429`, invalid `x-correlator` and application server list scenarios, by @hdamker and @eric-murray in https://github.com/camaraproject/QualityOnDemand/pull/579, https://github.com/camaraproject/QualityOnDemand/pull/587 and https://github.com/camaraproject/QualityOnDemand/pull/619
+* Added test scenarios for request body strictness (`createSession`, `extendQosSessionDuration`, `retrieveSessionsByDevice`) and for creating a QoS session with a `PRIVATE_KEY_JWT` sink credential, by @hdamker in https://github.com/camaraproject/QualityOnDemand/pull/650
 
 ### Fixed
 
 * Added explicit response examples for `extendQosSessionDuration` by @mohdfarhanakram in https://github.com/camaraproject/QualityOnDemand/pull/538
 * Removed the redundant `format: string` from the `QosProfileName` schema by @eric-murray in https://github.com/camaraproject/QualityOnDemand/pull/549
 * Editorial corrections in the API description (consistent use of "API consumer" and "QoS Session", removed a redundant sentence on authentication) by @tlohmar and @AxelNennker in https://github.com/camaraproject/QualityOnDemand/pull/547, https://github.com/camaraproject/QualityOnDemand/pull/574 and https://github.com/camaraproject/QualityOnDemand/pull/551
+* Corrected the event type expected by the `createSession` and `deleteSession` event test scenarios to `org.camaraproject.quality-on-demand.v1.qos-status-changed` (was `org.camaraproject.qod.v1.qos-status-changed`), by @hdamker in https://github.com/camaraproject/QualityOnDemand/pull/649
 
 ### Removed
 
