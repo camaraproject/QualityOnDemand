@@ -2,7 +2,7 @@ repository:
   repository_name: QualityOnDemand
   release_tag: r4.3
   release_type: public-release
-  release_date: null
+  release_date: '2026-11-19T07:57:53Z'
   src_commit_sha: ff1efe1aa0208eb18024e9f4f592d65acd5f55be
 apis:
 - api_name: qos-provisioning
