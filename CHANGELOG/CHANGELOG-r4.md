@@ -2,6 +2,7 @@
 
 <!-- TOC:START -->
 ## Table of Contents
+- **[r4.3](#r43)**
 - [r4.2](#r42)
 - [r4.1](#r41)
 <!-- TOC:END -->
@@ -14,6 +15,113 @@ The below sections record the changes for each API version in each release as fo
 * for the first release-candidate, all changes since the last public release
 * for subsequent release-candidate(s), only the delta to the previous release-candidate
 * for a public release, the consolidated changes since the previous public release
+
+# r4.3
+
+## Release Notes
+
+This public release contains the definition and documentation of
+* qos-provisioning 0.4.0
+* quality-on-demand 1.2.0
+
+The API definition(s) are based on
+* Commonalities r4.4 (0.9.0)
+* Identity and Consent Management r4.2 (0.5.0)
+
+The qos-profiles API is no longer part of this repository. It is maintained and released in the [QoSProfiles](https://github.com/camaraproject/QoSProfiles) repository; its last public release from this repository was qos-profiles 1.1.0 in r3.2, followed by the release candidate 1.2.0-rc.3 in r4.1.
+
+## qos-provisioning 0.4.0
+
+**qos-provisioning 0.4.0 is an initial public version of this API.**
+
+Changes documented below are compared to version 0.3.0.
+
+- API definition **with inline documentation**:
+  - [View it on ReDoc](https://redocly.github.io/redoc/?url=https://raw.githubusercontent.com/camaraproject/QualityOnDemand/r4.3/code/API_definitions/qos-provisioning.yaml&nocors)
+  - [View it on Swagger Editor](https://camaraproject.github.io/swagger-ui/?url=https://raw.githubusercontent.com/camaraproject/QualityOnDemand/r4.3/code/API_definitions/qos-provisioning.yaml)
+  - OpenAPI [YAML spec file](https://github.com/camaraproject/QualityOnDemand/blob/r4.3/code/API_definitions/qos-provisioning.yaml)
+
+### Breaking changes
+
+* `sinkCredential.credentialType` now accepts `ACCESSTOKEN` and `PRIVATE_KEY_JWT`; `PLAIN` and `REFRESHTOKEN` are no longer accepted, by @jlurien in https://github.com/camaraproject/QualityOnDemand/pull/580
+  * API consumers that followed the 0.3.0 definition are not affected: it already required `credentialType` to be `ACCESSTOKEN`.
+
+### Added
+
+* `PRIVATE_KEY_JWT` as sink credential type for notifications, with the `422 PRIVATE_KEY_JWT_NOT_CONFIGURED` error when no JWK Set was pre-shared with the API provider, by @jlurien in https://github.com/camaraproject/QualityOnDemand/pull/580
+
+### Changed
+
+* Aligned with CAMARA Commonalities r4.4 (0.9.0) by @jlurien and @hdamker in https://github.com/camaraproject/QualityOnDemand/pull/580 and https://github.com/camaraproject/QualityOnDemand/pull/619
+  * QoS status change notifications follow the common CloudEvents model
+  * Request inputs carry explicit length and range limits, e.g. `x-correlator` (256 characters), `assignmentId` (36), device identifiers and `sink` (2048); `device.ipv4Address.publicPort` must be at least 1 (`0` was allowed before but is not a usable port). No request that conforms to the documented semantics is rejected
+  * `accessToken` and `accessTokenType` of `sinkCredential` are write-only: they are accepted in requests and no longer returned in responses
+  * Added the info.description sections on authorization and authentication, additional error responses and request body strictness
+* Clarified that retrieving or revoking a QoS assignment requires an access token for the same API client and, for three-legged tokens, the same subject as was used to create the assignment, by @hdamker in https://github.com/camaraproject/QualityOnDemand/pull/623
+* Clarified the definition of a QoS Profile and how it is selected by name (`qosProfile`); the `qos-profiles` API is now referenced in the QoSProfiles repository, by @hdamker in https://github.com/camaraproject/QualityOnDemand/pull/642
+* Aligned the test definitions with the Commonalities r4.4 test template, by @jlurien and @hdamker in https://github.com/camaraproject/QualityOnDemand/pull/580 and https://github.com/camaraproject/QualityOnDemand/pull/619
+* Added test scenarios for request body strictness (`createQosAssignment`, `getQosAssignmentByDevice`) and for creating a QoS assignment with a `PRIVATE_KEY_JWT` sink credential, by @hdamker in https://github.com/camaraproject/QualityOnDemand/pull/650
+
+### Fixed
+
+* The `data` object of `org.camaraproject.qos-provisioning.v0.status-changed` events now lists `status` as required property, matching the actual property name (was `qosStatus`), by @jlurien in https://github.com/camaraproject/QualityOnDemand/pull/580
+* Removed the redundant `format: string` from the `QosProfileName` schema by @eric-murray in https://github.com/camaraproject/QualityOnDemand/pull/549
+* Editorial corrections in the API description by @Kevsy, @tlohmar and @hdamker in https://github.com/camaraproject/QualityOnDemand/pull/515, https://github.com/camaraproject/QualityOnDemand/pull/547 and https://github.com/camaraproject/QualityOnDemand/pull/595
+
+### Removed
+
+* The `PLAIN` and `REFRESHTOKEN` sink credential types and the `PlainCredential` and `RefreshTokenCredential` schemas by @jlurien in https://github.com/camaraproject/QualityOnDemand/pull/580 (see Breaking changes)
+
+## quality-on-demand 1.2.0
+
+**quality-on-demand 1.2.0 is a minor update of this API.**
+
+Changes documented below are compared to version 1.1.0.
+
+- API definition **with inline documentation**:
+  - [View it on ReDoc](https://redocly.github.io/redoc/?url=https://raw.githubusercontent.com/camaraproject/QualityOnDemand/r4.3/code/API_definitions/quality-on-demand.yaml&nocors)
+  - [View it on Swagger Editor](https://camaraproject.github.io/swagger-ui/?url=https://raw.githubusercontent.com/camaraproject/QualityOnDemand/r4.3/code/API_definitions/quality-on-demand.yaml)
+  - OpenAPI [YAML spec file](https://github.com/camaraproject/QualityOnDemand/blob/r4.3/code/API_definitions/quality-on-demand.yaml)
+
+### Breaking changes
+
+* `sinkCredential.credentialType` now accepts `ACCESSTOKEN` and `PRIVATE_KEY_JWT`; `PLAIN` and `REFRESHTOKEN` are no longer accepted, by @hdamker in https://github.com/camaraproject/QualityOnDemand/pull/579
+  * API consumers that followed the 1.1.0 definition are not affected: it already required `credentialType` to be `ACCESSTOKEN`.
+
+### Added
+
+* Application servers can be identified by a list of up to 16 single IPv4 and/or IPv6 addresses, in addition to a subnet, by @eric-murray in https://github.com/camaraproject/QualityOnDemand/pull/522 and https://github.com/camaraproject/QualityOnDemand/pull/587
+* `PRIVATE_KEY_JWT` as sink credential type for notifications, with the `422 PRIVATE_KEY_JWT_NOT_CONFIGURED` error on `createSession` when no JWK Set was pre-shared with the API provider, by @hdamker in https://github.com/camaraproject/QualityOnDemand/pull/579
+
+### Changed
+
+* A `qosProfile` that matches the `QosProfileName` schema but does not exist now returns `404 NOT_FOUND` on `createSession`; `400 INVALID_ARGUMENT` remains for names that do not match the schema. The 1.1.0 test definitions expected `400 INVALID_ARGUMENT` in both cases, by @eric-murray in https://github.com/camaraproject/QualityOnDemand/pull/637
+* `createSession` may return `201` with `qosStatus` `UNAVAILABLE` and `statusInfo` `NETWORK_TERMINATED` when the network determines during creation that the requested QoS cannot be provided, by @hdamker in https://github.com/camaraproject/QualityOnDemand/pull/576
+* Error responses list only the codes that can occur for each operation, by @maxl2287 and @eric-murray in https://github.com/camaraproject/QualityOnDemand/pull/578 and https://github.com/camaraproject/QualityOnDemand/pull/622
+  * the `400` response of `getSession` and `deleteSession` returns only `INVALID_ARGUMENT` (no longer `OUT_OF_RANGE`)
+  * the `404` response of `retrieveSessionsByDevice` returns only `IDENTIFIER_NOT_FOUND` (no longer `NOT_FOUND`)
+* Aligned with CAMARA Commonalities r4.4 (0.9.0) by @hdamker in https://github.com/camaraproject/QualityOnDemand/pull/579 and https://github.com/camaraproject/QualityOnDemand/pull/619
+  * QoS status change notifications follow the common CloudEvents model
+  * Request inputs carry explicit length and range limits, e.g. `x-correlator` (256 characters), `sessionId` (36), device identifiers, `sink` (2048) and port lists. Port numbers must be at least 1 (`0` was allowed before but is not a usable port). `duration` and `requestedAdditionalDuration` are bounded only by the 32-bit integer range; the effective limit is the `maxDuration` of the QoS Profile. No request that conforms to the documented semantics is rejected. The `retrieveSessionsByDevice` response returns at most 100 sessions
+  * `accessToken` and `accessTokenType` of `sinkCredential` are write-only: they are accepted in requests and no longer returned in responses
+  * Added the info.description sections on authorization and authentication, additional error responses and request body strictness
+* Clarified that retrieving, extending or deleting a QoS session requires an access token for the same API client and, for three-legged tokens, the same subject as was used to create the session, by @hdamker in https://github.com/camaraproject/QualityOnDemand/pull/623
+* Clarified the definition of a QoS Profile, that the session applies the characteristics of the selected QoS Profile, and that the `qos-profiles` API is now in the QoSProfiles repository, by @hdamker in https://github.com/camaraproject/QualityOnDemand/pull/642
+* Aligned the test definitions with the Commonalities r4.4 test template, adding `429`, invalid `x-correlator` and application server list scenarios, by @hdamker and @eric-murray in https://github.com/camaraproject/QualityOnDemand/pull/579, https://github.com/camaraproject/QualityOnDemand/pull/587 and https://github.com/camaraproject/QualityOnDemand/pull/619
+* Added test scenarios for request body strictness (`createSession`, `extendQosSessionDuration`, `retrieveSessionsByDevice`) and for creating a QoS session with a `PRIVATE_KEY_JWT` sink credential, by @hdamker in https://github.com/camaraproject/QualityOnDemand/pull/650
+
+### Fixed
+
+* Added explicit response examples for `extendQosSessionDuration` by @mohdfarhanakram in https://github.com/camaraproject/QualityOnDemand/pull/538
+* Removed the redundant `format: string` from the `QosProfileName` schema by @eric-murray in https://github.com/camaraproject/QualityOnDemand/pull/549
+* Editorial corrections in the API description (consistent use of "API consumer" and "QoS Session", removed a redundant sentence on authentication) by @tlohmar and @AxelNennker in https://github.com/camaraproject/QualityOnDemand/pull/547, https://github.com/camaraproject/QualityOnDemand/pull/574 and https://github.com/camaraproject/QualityOnDemand/pull/551
+* Corrected the event type expected by the `createSession` and `deleteSession` event test scenarios to `org.camaraproject.quality-on-demand.v1.qos-status-changed` (was `org.camaraproject.qod.v1.qos-status-changed`), by @hdamker in https://github.com/camaraproject/QualityOnDemand/pull/649
+
+### Removed
+
+* The `PLAIN` and `REFRESHTOKEN` sink credential types and the `PlainCredential` and `RefreshTokenCredential` schemas by @hdamker in https://github.com/camaraproject/QualityOnDemand/pull/579 (see Breaking changes)
+
+**Full Changelog**: https://github.com/camaraproject/QualityOnDemand/compare/r3.2...r4.3
 
 # r4.2
 
@@ -91,7 +199,7 @@ Changes documented below are compared to version 1.2.0-rc.3.
 * docs: align session access NOTES with Design Guide section 6.7 by @hdamker in https://github.com/camaraproject/QualityOnDemand/pull/623
   * Clarify that, for session retrieval, modification or deletion, the access token must identify the same API client and, if 3-legged, the same subject as was used to create the session
 
-#### Removed
+### Removed
 
 * Replace DeviceNotFound404 error with common IdentifierNotFound404 for operation retrieveSessionsByDevice by @eric-murray in https://github.com/camaraproject/QualityOnDemand/pull/622
   * Remove the 404 NOT_FOUND error as a possibility for POST /retrieve-sessions
