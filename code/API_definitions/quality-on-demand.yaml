@@ -626,6 +626,7 @@ components:
           maxItems: 65536
           items:
             $ref: "../common/CAMARA_common.yaml#/components/schemas/Port"
+      additionalProperties: false
       example:
         ranges:
           - from: 5010
@@ -646,6 +647,7 @@ components:
           minimum: 1
           maximum: 2147483647
           example: 1800
+      additionalProperties: false
       required:
         - requestedAdditionalDuration
 
@@ -828,6 +830,7 @@ components:
       properties:
         device:
           $ref: "../common/CAMARA_common.yaml#/components/schemas/Device"
+      additionalProperties: false
 
     RetrieveSessionsOutput:
       description: QoS session information for a given device
