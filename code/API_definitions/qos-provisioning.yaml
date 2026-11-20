@@ -454,6 +454,7 @@ components:
       properties:
         device:
           $ref: '../common/CAMARA_common.yaml#/components/schemas/Device'
+      additionalProperties: false
 
     QosProfileName:
       description: |
